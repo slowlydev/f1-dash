@@ -14,11 +14,8 @@ export default function DriverMiniSectors({
   return (
     <div className="grid grid-cols-3 gap-x-2 gap-y-1">
       {miniSectors.map((sector, index) => (
-        <div>
-          <div
-            key={`sector.${driverDisplayName}.${index}`}
-            className="flex h-4 flex-row gap-1"
-          >
+        <div key={`sector.${driverDisplayName}.${index}`}>
+          <div className="flex h-4 flex-row gap-1">
             {sector.map((miniSector, index2) => (
               <MiniSector
                 status={miniSector}
