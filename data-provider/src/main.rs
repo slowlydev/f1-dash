@@ -3,6 +3,7 @@ use std::sync::Arc;
 use futures::StreamExt;
 use tokio::sync::Mutex;
 use tokio_tungstenite::connect_async;
+// use zune_inflate::DeflateDecoder;
 
 // use scylla::{transport::errors::NewSessionError, Session, SessionBuilder};
 
@@ -34,12 +35,22 @@ async fn main() {
         while let Some(msg) = ws_stream.next().await {
             match msg {
                 Ok(msg) => {
-                    // Store the received message in the buffer
                     let mut messages = messages.lock().await;
                     messages.push(msg.to_string());
 
-                    // Write the received message to ScyllaDB
-                    let message = msg.into_text().unwrap();
+                    // add mut when parsed w/ json
+                    let message = msg
+                        .into_text()
+                        .expect("Failed to convert WebSocket Message to string");
+
+                    // TODO: parse json
+
+                    // if message.contains(".z") {
+                    //     let mut decoder = DeflateDecoder::new(&message.as_bytes());
+                    //     let decompressed = decoder.decode_zlib().expect("Failed to decode");
+                    //     message = String::from_utf8_lossy(&decompressed).to_string();
+                    // }
+
                     print!("{}", message)
                 }
 
