@@ -1,0 +1,3 @@
+{
+	"rust-analyzer.linkedProjects": ["./data-simulator/Cargo.toml", "./data-provider/Cargo.toml", "./data-provider/Cargo.toml"]
+}
