@@ -1,25 +1,28 @@
-use std::net::SocketAddr;
 use std::sync::Arc;
 
+use futures::StreamExt;
 use tokio::sync::Mutex;
 use tokio_tungstenite::connect_async;
 
-use scylla::{Session, SessionBuilder};
+// use scylla::{transport::errors::NewSessionError, Session, SessionBuilder};
 
-const F1_URL: &str = "livetiming.formula1.com/signalr";
+// const F1_URL: &str = "livetiming.formula1.com/signalr";
 
 #[tokio::main]
 async fn main() {
     // Set up the WebSocket connection
-    let addr: SocketAddr = "localhost:8080".parse().unwrap();
-    let (ws_stream, _) = connect_async(format!("ws://{}", addr))
+    let url = "ws://localhost:8000/";
+
+    let (mut ws_stream, _) = connect_async(url)
         .await
         .expect("Failed to connect to WebSocket");
 
-    // Set up the ScyllaDB connection
-    let session = connect_to_scylla()
-        .await
-        .expect("Failed to connect to ScyllaDB");
+    println!("Connected to WebSocket");
+
+    // let session = connect_to_scylla()
+    //     .await
+    //     .expect("Failed to connect to ScyllaDB");
+    // println!("Connected to ScyllaDB");
 
     // Set up a mutex-protected buffer to hold received messages
     let messages = Arc::new(Mutex::new(Vec::new()));
@@ -37,10 +40,7 @@ async fn main() {
 
                     // Write the received message to ScyllaDB
                     let message = msg.into_text().unwrap();
-                    session
-                        .query("INSERT INTO messages (message) VALUES (?)", message)
-                        .await
-                        .expect("Failed to write message to ScyllaDB");
+                    print!("{}", message)
                 }
 
                 Err(e) => {
@@ -55,8 +55,7 @@ async fn main() {
     tokio::signal::ctrl_c().await.unwrap();
 }
 
-async fn connect_to_scylla() -> Result<Session, Box<(dyn std::error::Error + 'static)>> {
-    let uri = std::env::var("SCYLLA_URI").unwrap_or_else(|_| "127.0.0.1:9042".to_string());
-
-    SessionBuilder::new().known_node(uri).build().await
-}
+// async fn connect_to_scylla() -> Result<Session, NewSessionError> {
+//     let uri = std::env::var("SCYLLA_URI").unwrap_or_else(|_| "127.0.0.1:9042".to_string());
+//     SessionBuilder::new().known_node(uri).build().await
+// }
