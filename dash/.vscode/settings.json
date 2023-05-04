@@ -1,0 +1,14 @@
+{
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "tailwindCSS.experimental.classRegex": [
+    "/\\*\\s*tw\\s*\\*/\\s*'([^']*)'",
+    "/\\*\\s*tw\\s*\\*/\\s*\"([^\"]*)\""
+  ],
+  "tailwindCSS.includeLanguages": {
+    "react": "react"
+  },
+  "files.associations": {
+    "*.css": "tailwindcss"
+  }
+}
