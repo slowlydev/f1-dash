@@ -1,6 +1,8 @@
-# data importer for f1-DASH
+# data provider for f1-DASH
 
 ## stack
 
-- https://github.com/szarykott/signalrs/tree/main
+- https://github.com/tokio-rs/tokio
+- https://github.com/tokio-rs/axum
 - https://github.com/scylladb/scylla-rust-driver
+- https://github.com/szarykott/signalrs

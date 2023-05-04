@@ -1,8 +1,21 @@
 [package]
-name = "data"
+name = "f1-dash-data"
 version = "0.1.0"
 edition = "2021"
+publish = false
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+scylla = "0.8"
+axum = { version = "0.6.18", features = ["headers"] }
+futures = "0.3"
+uuid = "1.0"
+bigdecimal = "0.2.0"
+num-bigint = "0.3"
+headers = "0.3"
+tokio = { version = "1.28", features = ["full"] }
+tokio-stream = "0.1.14"
+tower-http = { version = "0.4.0", features = ["fs", "trace", "cors"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
