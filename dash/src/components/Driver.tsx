@@ -30,7 +30,10 @@ export default function Driver({ driver, position }: Props) {
         <DriverTire tire={driver.tire} />
       </div>
       <div className="col-span-5">
-        <DriverMiniSectors miniSectors={driver.miniSectors} />
+        <DriverMiniSectors
+          miniSectors={driver.miniSectors}
+          driverDisplayName={driver.displayName}
+        />
       </div>
       {/* lap */}
     </motion.div>

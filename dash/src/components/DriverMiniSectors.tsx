@@ -4,16 +4,26 @@ import clsx from "clsx";
 
 type Props = {
   miniSectors: DriverType["miniSectors"];
+  driverDisplayName: string;
 };
 
-export default function DriverMiniSectors({ miniSectors }: Props) {
+export default function DriverMiniSectors({
+  miniSectors,
+  driverDisplayName,
+}: Props) {
   return (
     <div className="grid grid-cols-3 gap-x-2 gap-y-1">
       {miniSectors.map((sector, index) => (
         <div>
-          <div key={`sector.${index}`} className="flex h-4 flex-row gap-1">
+          <div
+            key={`sector.${driverDisplayName}.${index}`}
+            className="flex h-4 flex-row gap-1"
+          >
             {sector.map((miniSector, index2) => (
-              <MiniSector status={miniSector} key={`sector.mini.${index2}`} />
+              <MiniSector
+                status={miniSector}
+                key={`sector.mini.${driverDisplayName}.${index2}`}
+              />
             ))}
           </div>
 
