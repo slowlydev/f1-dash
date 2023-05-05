@@ -1,17 +1,15 @@
-use std::sync::Arc;
-
 use futures::{SinkExt, StreamExt};
+use reqwest::{header::HeaderMap, Result as ReqwestResult};
+use serde::{Deserialize, Serialize};
 use serde_json::Value;
-use tokio::{net::TcpStream, sync::Mutex};
+use tokio::net::TcpStream;
 use tokio_tungstenite::{
     connect_async,
-    tungstenite::{client::IntoClientRequest, handshake::client::Request, Message},
+    tungstenite::{client::IntoClientRequest, Error as TungsteniteError, Message},
     MaybeTlsStream, WebSocketStream,
 };
-// use zune_inflate::DeflateDecoder;
-use reqwest::{header::HeaderMap, Result as ReqwestResult, Url};
-use serde::{Deserialize, Serialize};
 
+// use zune_inflate::DeflateDecoder;
 // use scylla::{transport::errors::NewSessionError, Session, SessionBuilder};
 
 // let F1_BASE_URL = "ws://localhost:8000";
@@ -113,8 +111,7 @@ fn subscribe_request() -> String {
     return string_request;
 }
 
-async fn socket_stream(
-) -> Result<WebSocketStream<MaybeTlsStream<TcpStream>>, tokio_tungstenite::tungstenite::Error> {
+async fn socket_stream() -> Result<WebSocketStream<MaybeTlsStream<TcpStream>>, TungsteniteError> {
     let (negotiate_headers, negotiate_result) = negotiate().await.expect("Failed to negotiate");
 
     let ws_url: String = socket_url(negotiate_result.ConnectionToken);
@@ -147,32 +144,9 @@ async fn socket_stream(
 async fn main() {
     println!("Starting Server");
 
-    // let (negotiate_headers, negotiate_result) = negotiate().await.expect("Failed to negotiate");
-
-    // let ws_url: String = socket_url(negotiate_result.ConnectionToken);
-
-    // let mut request = ws_url
-    //     .into_client_request()
-    //     .expect("Failed to create request");
-
-    // let headers = request.headers_mut();
-    // headers.insert("User-Agent", "BestHTTP".parse().unwrap());
-    // headers.insert("Accept-Encoding", "gzip,identity".parse().unwrap());
-    // headers.insert("Cookie", negotiate_headers["set-cookie"].clone());
-
-    // let ws_stream = match connect_async(request).await {
-    //     Ok((stream, _response)) => {
-    //         println!("Handshake has been completed");
-    //         // println!("Server response was {:?}", response);
-    //         stream
-    //     }
-    //     Err(e) => {
-    //         println!("WebSocket handshake failed with {e}!");
-    //         return;
-    //     }
-    // };
-
-    let ws_stream = socket_stream().await.expect("Failed to start WebSocket");
+    let ws_stream = socket_stream()
+        .await
+        .expect("Failed to connect to WebSocket");
 
     println!("Connected to WebSocket");
 
