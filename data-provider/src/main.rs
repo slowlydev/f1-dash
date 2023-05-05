@@ -12,8 +12,11 @@ use tokio_tungstenite::{
 // use zune_inflate::DeflateDecoder;
 // use scylla::{transport::errors::NewSessionError, Session, SessionBuilder};
 
+mod utils;
+
 // let F1_BASE_URL = "ws://localhost:8000";
 const F1_BASE_URL: &str = "wss://livetiming.formula1.com/signalr";
+// TODO encode instead of predefined value
 const F1_NEGOTIATE_URL: &str = "https://livetiming.formula1.com/signalr/negotiate?connectionData=%5B%7B%22name%22%3A%22Streaming%22%7D%5D&clientProtocol=1.5";
 
 #[allow(non_snake_case)]
@@ -40,26 +43,6 @@ struct SubscriptionRequest {
     I: u8,
 }
 
-fn encode_uri_component(s: &str) -> String {
-    let mut encoded = String::new();
-    for c in s.chars() {
-        match c {
-            '-' | '_' | '.' | '!' | '~' | '*' | '\'' | '(' | ')' => {
-                encoded.push(c);
-            }
-            '0'..='9' | 'a'..='z' | 'A'..='Z' => {
-                encoded.push(c);
-            }
-            _ => {
-                for b in c.to_string().as_bytes() {
-                    encoded.push_str(format!("%{:X}", b).as_str());
-                }
-            }
-        }
-    }
-    encoded
-}
-
 async fn negotiate() -> ReqwestResult<(HeaderMap, NegotiateResult)> {
     let client: reqwest::Client = reqwest::Client::new();
     let res: reqwest::Response = client.get(F1_NEGOTIATE_URL).send().await?;
@@ -70,10 +53,8 @@ async fn negotiate() -> ReqwestResult<(HeaderMap, NegotiateResult)> {
 }
 
 fn socket_url(token: String) -> String {
-    // TODO url encode instead of predefined value
-    // const HUB: &str = "%5B%7B%22name%22%3A%22Streaming%22%7D%5D";
-    let hub = encode_uri_component("[{\"name\":\"Streaming\"}]");
-    let token_encoded = encode_uri_component(&token);
+    let hub = utils::encode_uri_component("[{\"name\":\"Streaming\"}]");
+    let token_encoded = utils::encode_uri_component(&token);
 
     format!("{F1_BASE_URL}/connect?clientProtocol=1.5&transport=webSockets&connectionToken={token_encoded}&connectionData={hub}")
 }
