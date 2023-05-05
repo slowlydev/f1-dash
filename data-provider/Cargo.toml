@@ -8,7 +8,10 @@ edition = "2021"
 [dependencies]
 signalrs-client = "0.1.1"
 zune-inflate = "0.2.54"
-tokio-tungstenite = "0.18.0"
+tokio-tungstenite = { version = "0.18.0", features = ["native-tls"] }
+reqwest = "0.11.17"
+serde = "1.0.162"
+serde_json = "1.0"
 scylla = "0.8"
 tokio = { version = "1.12", features = ["full"] }
 futures = "0.3.6"
