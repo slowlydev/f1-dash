@@ -1,5 +1,6 @@
 use reqwest::{header::HeaderMap, Result as ReqwestResult};
 use serde::{Deserialize, Serialize};
+use serde_json::json;
 use tokio::net::TcpStream;
 use tokio_tungstenite::{
     connect_async,
@@ -29,15 +30,6 @@ pub struct NegotiateResult {
     LongPollDelay: f32,
 }
 
-#[allow(non_snake_case)]
-#[derive(Serialize, Deserialize)]
-pub struct SubscriptionRequest {
-    H: String,
-    M: String,
-    A: [[String; 16]; 1],
-    I: u8,
-}
-
 async fn negotiate() -> ReqwestResult<(HeaderMap, NegotiateResult)> {
     let client: reqwest::Client = reqwest::Client::new();
     let res: reqwest::Response = client.get(F1_NEGOTIATE_URL).send().await?;
@@ -55,36 +47,31 @@ fn url(token: String) -> String {
 }
 
 pub fn subscribe_request() -> String {
-    // maybe the structs owns everything?
-    let request = SubscriptionRequest {
-        H: "Streaming".to_owned(),
-        M: "Subscribe".to_owned(),
-        A: [[
-            "Heartbeat".to_owned(),
-            "CarData.z".to_owned(),
-            "Position.z".to_owned(),
-            "ExtrapolatedClock".to_owned(),
-            "TopThree".to_owned(),
-            "RcmSeries".to_owned(),
-            "TimingStats".to_owned(),
-            "TimingAppData".to_owned(),
-            "WeatherData".to_owned(),
-            "TrackStatus".to_owned(),
-            "DriverList".to_owned(),
-            "RaceControlMessages".to_owned(),
-            "SessionInfo".to_owned(),
-            "SessionData".to_owned(),
-            "LapCount".to_owned(),
-            "TimingData".to_owned(),
-        ]]
-        .to_owned(),
-        I: 1,
-    };
+    let request: serde_json::Value = json!({
+        "H": "Streaming",
+        "M": "Subscribe",
+        "A": [[
+            "Heartbeat",
+            "CarData.z",
+            "Position.z",
+            "ExtrapolatedClock",
+            "TopThree",
+            "RcmSeries",
+            "TimingStats",
+            "TimingAppData",
+            "WeatherData",
+            "TrackStatus",
+            "DriverList",
+            "RaceControlMessages",
+            "SessionInfo",
+            "SessionData",
+            "LapCount",
+            "TimingData",
+        ]],
+        "I": 1,
+    });
 
-    let string_request: String =
-        serde_json::to_string(&request).expect("Failed to create string out of request");
-
-    return string_request;
+    return request.to_string();
 }
 
 pub async fn stream() -> Result<WebSocketStream<MaybeTlsStream<TcpStream>>, TungsteniteError> {
