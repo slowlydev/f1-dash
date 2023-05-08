@@ -41,7 +41,7 @@ async fn handle_connection(peer_map: PeerMap, raw_stream: TcpStream, addr: Socke
 
     // Send each line of the file as a new message
     for line in reader.lines() {
-        sleep(Duration::from_millis(5)).await;
+        sleep(Duration::from_millis(100)).await;
         let message = Message::Text(line.unwrap().to_string());
         outgoing.send(message).await.expect("Failed to send line");
     }

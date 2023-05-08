@@ -77,7 +77,8 @@ pub fn subscribe_request() -> String {
 pub async fn stream() -> Result<WebSocketStream<MaybeTlsStream<TcpStream>>, TungsteniteError> {
     let (negotiate_headers, negotiate_result) = negotiate().await.expect("Failed to negotiate");
 
-    let ws_url: String = url(negotiate_result.ConnectionToken);
+    let ws_url =
+        std::env::var("DEV_WS_URL").unwrap_or_else(|_| url(negotiate_result.ConnectionToken));
 
     let mut request = ws_url
         .into_client_request()
