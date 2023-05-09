@@ -3,12 +3,13 @@ use serde_json::{Map, Value};
 use uuid::Uuid;
 
 use crate::{
+    live_timing_models::{Message, MessageData},
     models::{RaceControlMessage, WeatherData},
     utils::{parse_float, parse_int},
     SocketData,
 };
 
-fn extract_message(socket_data: &SocketData) -> Option<&Vec<Value>> {
+fn extract_message_data(socket_data: &SocketData) -> Option<&Vec<Message>> {
     if let Some(message) = &socket_data.M {
         if let Some(payloads) = message.iter().next() {
             return Some(&payloads.A);
@@ -17,56 +18,73 @@ fn extract_message(socket_data: &SocketData) -> Option<&Vec<Value>> {
     None
 }
 
+fn extract_category(message_data: &[Message]) -> Option<String> {
+    if let Some(MessageData::RaceControlMessage {
+        Category: Some(category),
+        ..
+    }) = message_data.get(0)
+    {
+        Some(category.clone())
+    } else {
+        None
+    }
+}
+
+fn extract_message(message_data: &[Message]) -> Option<&Message> {
+    if let Some(message) = message_data.get(1) {
+        match message {
+            Message::TimingDataMessage { .. } => Some(message),
+            Message::WeatherMessage { .. } => Some(message),
+            Message::RaceControlMessage { .. } => Some(message),
+            _ => None,
+        }
+    } else {
+        None
+    }
+}
+
+fn extract_time(message_data: &[Message]) -> Option<String> {
+    if let Some(MessageData::RaceControlMessage { Utc: time, .. }) = message_data.get(2) {
+        Some(time.clone())
+    } else {
+        None
+    }
+}
+
 pub async fn handle(socket_data: SocketData, session: &Session) {
     // println!("Raw: {:?}", socket_data.M);
 
-    let Some(full_message) = extract_message(&socket_data) else {
-        println!("Failed to extract message");
+    let Some(message_data) = extract_message_data(&socket_data) else {
+        println!("Failed to extract message data");
         return;
     };
 
-    let Some(key) = &full_message.get(0) else {
-        println!("Failed to get key");
+    let Some(cat) = extract_category(message_data) else {
+        println!("Failed to get category");
         return;
     };
 
-    let Some(message) = &full_message.get(1) else {
+    let Some(msg) = extract_message(message_data) else {
         println!("Failed to get message");
         return;
     };
 
-    let Some(time) = &full_message.get(2) else {
+    let Some(time) = extract_time(message_data) else {
         println!("Failed to get time");
         return;
     };
 
-    println!("Key: {:?}", key);
+    println!("Cat: {:?}", cat);
 
-    let temp = Map::new();
-
-    let better_key = key.as_str().unwrap_or("");
-    let better_message = message.as_object().unwrap_or(&temp);
-    let better_time = time.as_str().unwrap_or("");
-
-    match &better_key[..] {
+    match &cat[..] {
         // "TimingData" => extract_timing_data(message, datetime),
-        "RaceControlMessages" => {
-            handle_race_control_messages(Value::Object(better_message.clone()), &session).await
-        }
-        "WeatherData" => {
-            handle_weather_data(
-                Value::Object(better_message.clone()),
-                better_time.to_owned(),
-                &session,
-            )
-            .await
-        }
-        "TimingData" => handle_timing_data(Value::Object(better_message.clone()), &session).await,
+        "RaceControlMessages" => handle_race_control_messages(msg, &session).await,
+        "WeatherData" => handle_weather_data(&msg, time, session).await,
         _ => (),
     };
 }
 
-async fn handle_weather_data(message: Value, time: String, session: &Session) {
+async fn handle_weather_data(message: &Message, time: String, session: &Session) {
     let uuid = Uuid::new_v4();
 
     let humidity = parse_float(message["Humidity"].as_str(), 0.0);
@@ -108,7 +126,7 @@ async fn handle_weather_data(message: Value, time: String, session: &Session) {
         .expect("Failed to insert");
 }
 
-async fn handle_race_control_messages(message: Value, session: &Session) {
+async fn handle_race_control_messages(message: Message, session: &Session) {
     let Some(rc_messages_obj) = message["Messages"].as_object() else {
         println!("Failed to get rcm object");
         return;
@@ -152,4 +170,5 @@ async fn handle_timing_data(message: Value, session: &Session) {
     };
 
     println!("{:?}", lines);
+    // handle_last_lap_time(lines);
 }

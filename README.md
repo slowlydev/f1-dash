@@ -52,3 +52,13 @@ https://www.reddit.com/r/formula1/comments/b4t3q7/where_does_f1tfeednet_get_thei
 	]
 }
 ```
+
+## important code
+
+### reading data out of z zipped CarData
+
+https://github.com/theOehrly/Fast-F1/blob/90fc63fe8121b31f7b66ff5b3e7e11ec1bd1abf4/fastf1/_api.py#L845
+
+### track status
+
+https://github.com/theOehrly/Fast-F1/blob/90fc63fe8121b31f7b66ff5b3e7e11ec1bd1abf4/fastf1/_api.py#L1064

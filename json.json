@@ -1,0 +1,24 @@
+{
+	"Lines": {
+		"10": {
+			"BestSectors": {
+				"1": {
+					"Position": 12
+				}
+			}
+		},
+		"16": {
+			"BestSectors": {
+				"1": {
+					"Position": 10,
+					"Value": "34.749"
+				}
+			}
+		},
+		"23": {
+			"BestSectors": {
+				"1": { "Position": 11 }
+			}
+		}
+	}
+}

@@ -1,32 +1,15 @@
 use futures::{SinkExt, StreamExt};
-use serde::{Deserialize, Serialize};
-use serde_json::Value;
 use tokio_tungstenite::tungstenite::Message;
 
+use crate::live_timing_models::SocketData;
+
 // use zune_inflate::DeflateDecoder;
+mod live_timing_models;
 mod message_handler;
 mod models;
 mod scylladb;
 mod socket;
 mod utils;
-
-#[allow(non_snake_case)]
-#[derive(Serialize, Deserialize, Debug)]
-pub struct SocketDataPayload {
-    A: Vec<Value>,
-    H: String,
-    M: String,
-}
-
-#[allow(non_snake_case)]
-#[derive(Serialize, Deserialize, Debug)]
-pub struct SocketData {
-    C: Option<String>,
-    M: Option<Vec<SocketDataPayload>>, // TODO test
-    G: Option<String>,
-    H: Option<String>,
-    I: Option<String>,
-}
 
 #[tokio::main]
 async fn main() {
@@ -72,7 +55,6 @@ async fn main() {
                         // println!("JSON {:?}", json_data);
 
                         message_handler::handle(json_data, &session).await;
-                        // println!("handled msg");
                     } else {
                         println!("Weird error");
                     };

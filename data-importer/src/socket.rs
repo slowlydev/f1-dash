@@ -12,8 +12,7 @@ use crate::utils;
 
 // let F1_BASE_URL = "ws://localhost:8000";
 const F1_BASE_URL: &str = "wss://livetiming.formula1.com/signalr";
-// TODO encode instead of predefined value
-const F1_NEGOTIATE_URL: &str = "https://livetiming.formula1.com/signalr/negotiate?connectionData=%5B%7B%22name%22%3A%22Streaming%22%7D%5D&clientProtocol=1.5";
+const F1_NEGOTIATE_URL: &str = "https://livetiming.formula1.com/signalr";
 
 #[allow(non_snake_case)]
 #[derive(Serialize, Deserialize)]
@@ -31,11 +30,15 @@ pub struct NegotiateResult {
 }
 
 async fn negotiate() -> ReqwestResult<(HeaderMap, NegotiateResult)> {
+    let hub = utils::encode_uri_component("[{\"name\":\"Streaming\"}]");
+    let url = format!("{F1_NEGOTIATE_URL}/negotiate?connectionData={hub}&clientProtocol=1.5");
+
     let client: reqwest::Client = reqwest::Client::new();
-    let res: reqwest::Response = client.get(F1_NEGOTIATE_URL).send().await?;
+    let res: reqwest::Response = client.get(url).send().await?;
     let header: HeaderMap = res.headers().clone();
     let body: String = res.text().await?;
-    let json: NegotiateResult = serde_json::from_str(&body).expect("Failed to convert to JSON");
+    let json: NegotiateResult =
+        serde_json::from_str(&body).expect("Failed to convert negotiate response to JSON");
     Ok((header, json))
 }
 
