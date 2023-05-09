@@ -61,6 +61,7 @@ pub async fn handle(socket_data: SocketData, session: &Session) {
             )
             .await
         }
+        "TimingData" => handle_timing_data(Value::Object(better_message.clone()), &session).await,
         _ => (),
     };
 }
@@ -142,4 +143,13 @@ async fn handle_race_control_messages(message: Value, session: &Session) {
         )
         .await
         .expect("Failed to insert");
+}
+
+async fn handle_timing_data(message: Value, session: &Session) {
+    let Some(lines) = message["Lines"].as_object() else {
+        println!("Failed to get lines object");
+        return;
+    };
+
+    println!("{:?}", lines);
 }

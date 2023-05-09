@@ -220,7 +220,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "data-provider"
+name = "data-importer"
 version = "0.1.0"
 dependencies = [
  "bigdecimal",
