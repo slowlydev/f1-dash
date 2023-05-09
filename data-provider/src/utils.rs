@@ -25,3 +25,23 @@ pub fn encode_uri_component(s: &str) -> String {
     }
     encoded
 }
+
+pub fn parse_float(input: Option<&str>, default: f64) -> f64 {
+    match input {
+        Some(str_val) => match str_val.parse::<f64>() {
+            Ok(parsed_val) => parsed_val,
+            Err(_) => default,
+        },
+        None => default,
+    }
+}
+
+pub fn parse_int(input: Option<&str>, default: i16) -> i16 {
+    match input {
+        Some(str_val) => match str_val.parse::<i16>() {
+            Ok(parsed_val) => parsed_val,
+            Err(_) => default,
+        },
+        None => default,
+    }
+}

@@ -4,17 +4,11 @@ use serde_json::Value;
 use tokio_tungstenite::tungstenite::Message;
 
 // use zune_inflate::DeflateDecoder;
-use scylla::{transport::errors::NewSessionError, Session, SessionBuilder};
-
 mod message_handler;
 mod models;
+mod scylladb;
 mod socket;
 mod utils;
-
-async fn connect_to_scylla() -> Result<Session, NewSessionError> {
-    let uri = std::env::var("SCYLLA_URI").unwrap_or_else(|_| "127.0.0.1:9042".to_string());
-    SessionBuilder::new().known_node(uri).build().await
-}
 
 #[allow(non_snake_case)]
 #[derive(Serialize, Deserialize, Debug)]
@@ -38,6 +32,15 @@ pub struct SocketData {
 async fn main() {
     println!("Starting Server");
 
+    let session = scylladb::connect()
+        .await
+        .expect("Failed to connect to ScyllaDB");
+
+    println!("Connected to ScyllaDB");
+
+    scylladb::setup(&session).await;
+    println!("Setup ScyllaDB");
+
     let ws_stream = socket::stream()
         .await
         .expect("Failed to connect to WebSocket");
@@ -47,12 +50,6 @@ async fn main() {
     // tx: Sending
     // rx: Receiving
     let (mut tx, mut rx) = ws_stream.split();
-
-    let session = connect_to_scylla()
-        .await
-        .expect("Failed to connect to ScyllaDB");
-
-    println!("Connected to ScyllaDB");
 
     tx.send(Message::Text(socket::subscribe_request()))
         .await

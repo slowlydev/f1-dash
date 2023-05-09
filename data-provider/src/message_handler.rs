@@ -1,8 +1,10 @@
 use scylla::Session;
 use serde_json::{Map, Value};
+use uuid::Uuid;
 
 use crate::{
     models::{RaceControlMessage, WeatherData},
+    utils::{parse_float, parse_int},
     SocketData,
 };
 
@@ -16,7 +18,7 @@ fn extract_message(socket_data: &SocketData) -> Option<&Vec<Value>> {
 }
 
 pub async fn handle(socket_data: SocketData, session: &Session) {
-    println!("Raw: {:?}", socket_data.M);
+    // println!("Raw: {:?}", socket_data.M);
 
     let Some(full_message) = extract_message(&socket_data) else {
         println!("Failed to extract message");
@@ -38,12 +40,12 @@ pub async fn handle(socket_data: SocketData, session: &Session) {
         return;
     };
 
-    println!("Key: {:?} Message: {:?}", key, message);
+    println!("Key: {:?}", key);
 
     let temp = Map::new();
 
     let better_key = key.as_str().unwrap_or("");
-    let better_message = key.as_object().unwrap_or(&temp);
+    let better_message = message.as_object().unwrap_or(&temp);
     let better_time = time.as_str().unwrap_or("");
 
     match &better_key[..] {
@@ -59,27 +61,50 @@ pub async fn handle(socket_data: SocketData, session: &Session) {
             )
             .await
         }
-        _ => {
-            println!("Failed to handle event");
-        }
+        _ => (),
     };
 }
 
 async fn handle_weather_data(message: Value, time: String, session: &Session) {
+    let uuid = Uuid::new_v4();
+
+    let humidity = parse_float(message["Humidity"].as_str(), 0.0);
+    let pressure = parse_float(message["Pressure"].as_str(), 0.0);
+    let rainfall = parse_float(message["Rainfall"].as_str(), 0.0);
+    let wind_speed = parse_float(message["WindSpeed"].as_str(), 0.0);
+    let wind_direction = parse_int(message["WindDirection"].as_str(), 0);
+    let air_temp = parse_float(message["AirTemp"].as_str(), 0.0);
+    let track_temp = parse_float(message["TrackTemp"].as_str(), 0.0);
+
     let weather_data = WeatherData {
-        humidity: message["Humidity"].as_f64().unwrap_or(0.0),
-        pressure: message["Pressure"].as_f64().unwrap_or(0.0),
-        rainfall: message["Rainfall"].as_f64().unwrap_or(0.0),
-        wind_speed: message["WindSpeed"].as_f64().unwrap_or(0.0),
-        wind_direction: message["WindDirection"].as_f64().unwrap_or(0.0),
-        air_temp: message["AirTemp"].as_f64().unwrap_or(0.0),
-        track_temp: message["TrackTemp"].as_f64().unwrap_or(0.0),
+        id: uuid,
+        humidity,
+        pressure,
+        rainfall,
+        wind_direction,
+        wind_speed,
+        air_temp,
+        track_temp,
         time,
     };
 
-    println!("{:?}", weather_data);
-
-    session.query("INSERT INTO weather (humidity, pressure, rainfall, wind_direction, wind_speed, air_temp, track_temp, time) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", weather_data).await.err();
+    session
+        .query(
+            "INSERT INTO f1_dash.weather (
+        id,
+        humidity,
+        pressure,
+        rainfall,
+        wind_direction,
+        wind_speed,
+        air_temp,
+        track_temp,
+        time
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            weather_data,
+        )
+        .await
+        .expect("Failed to insert");
 }
 
 async fn handle_race_control_messages(message: Value, session: &Session) {
@@ -102,16 +127,19 @@ async fn handle_race_control_messages(message: Value, session: &Session) {
         return;
     };
 
+    let uuid = Uuid::new_v4();
+
     let race_control_message = RaceControlMessage {
+        id: uuid,
         message: rcm.to_string(),
         time: time.to_string(),
     };
 
     session
         .query(
-            "INSERT INTO race_control_messages (message, time) VALUES (?, ?)",
+            "INSERT INTO f1_dash.race_control_messages (id, message, time) VALUES (?, ?, ?)",
             race_control_message,
         )
         .await
-        .err();
+        .expect("Failed to insert");
 }

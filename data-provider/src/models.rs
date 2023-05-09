@@ -1,11 +1,13 @@
 use scylla::ValueList;
+use uuid::Uuid;
 
 #[derive(Debug, ValueList)]
 pub struct WeatherData {
+    pub id: Uuid,
     pub humidity: f64,
     pub pressure: f64,
     pub rainfall: f64,
-    pub wind_direction: f64,
+    pub wind_direction: i16, //i16
     pub wind_speed: f64,
     pub air_temp: f64,
     pub track_temp: f64,
@@ -14,6 +16,7 @@ pub struct WeatherData {
 
 #[derive(Debug, ValueList)]
 pub struct RaceControlMessage {
+    pub id: Uuid,
     pub message: String,
     // pub flag: String,
     pub time: String,
