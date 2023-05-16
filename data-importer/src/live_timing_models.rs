@@ -23,36 +23,40 @@ pub struct SocketDataPayload {
     pub M: String,
 }
 
+#[allow(non_snake_case)]
 #[derive(Serialize, Deserialize, Debug)]
-pub enum Message {
-    String,
-    TimingDataMessage {
-        Lines: HashMap<String, Driver>,
-    },
-    WeatherMessage {
-        Humidity: String,
-        Pressure: String,
-        Rainfall: String,
-        WindSpeed: String,
-        WindDirection: String,
-        AirTemp: String,
-        TrackTemp: String,
-    },
-    RaceControlMessage {
-        Lines: Vec<RaceControlMessage>,
-    },
+pub struct TimingDataMessage {
+    pub Lines: HashMap<String, Driver>,
 }
 
 #[allow(non_snake_case)]
 #[derive(Serialize, Deserialize, Debug)]
-struct RaceControlMessage {
-    Message: String,
-    Utc: String,
+pub struct WeatherMessage {
+    pub Humidity: String,
+    pub Pressure: String,
+    pub Rainfall: String,
+    pub WindSpeed: String,
+    pub WindDirection: String,
+    pub AirTemp: String,
+    pub TrackTemp: String,
+}
 
-    Category: Option<String>,
-    Flag: Option<String>,
-    RacingNumber: Option<String>,
-    Scope: Option<String>,
+#[allow(non_snake_case)]
+#[derive(Serialize, Deserialize, Debug)]
+pub struct RaceControlMessages {
+    pub Messages: HashMap<String, RaceControlMessage>,
+}
+
+#[allow(non_snake_case)]
+#[derive(Serialize, Deserialize, Debug)]
+pub struct RaceControlMessage {
+    pub Message: String,
+    pub Utc: String,
+
+    pub Category: Option<String>,
+    pub Flag: Option<String>,
+    pub RacingNumber: Option<String>,
+    pub Scope: Option<String>,
 }
 
 // {

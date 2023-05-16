@@ -50,14 +50,10 @@ async fn main() {
                     // fix f1s incompatible JSON
                     let fixed_data = utils::fix_json(&data);
 
-                    if let Ok(json_data) = serde_json::from_str::<SocketData>(&fixed_data) {
-                        // handle message else where
-                        // println!("JSON {:?}", json_data);
-
-                        message_handler::handle(json_data, &session).await;
-                    } else {
-                        println!("Weird error");
-                    };
+                    match serde_json::from_str::<SocketData>(&fixed_data) {
+                        Ok(parsed) => message_handler::handle(parsed, &session).await,
+                        Err(e) => println!("Error {:?}", e),
+                    }
                 }
 
                 Err(e) => {
