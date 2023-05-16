@@ -23,8 +23,9 @@ pub async fn handle(socket_data: SocketData, session: &Session) {
     // println!("Raw: {:?}", socket_data.M);
 
     let Some(data) = extract_message_data(&socket_data) else {
-        println!("Failed to extract message data");
-        return;
+      println!("Failed to extract message data");
+			println!("MSG: {:?}", socket_data.M);
+      return;
     };
 
     let [cat, msg, time] = &data[..] else {
