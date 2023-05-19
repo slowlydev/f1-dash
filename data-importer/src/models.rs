@@ -37,6 +37,14 @@ pub struct LastLapTime {
     pub time: String,
 }
 
+#[derive(Debug, ValueList)]
+pub struct GapToLeader {
+    pub id: Uuid,
+    pub raw: f64,
+    pub human: String,
+    pub time: String,
+}
+
 // const T = {
 //     "C": String("d-C35AF5C5-B,0|Duq,0|Dur,11|d,153|p,1398|o,139A|a,2|Y,30D|DX,0|n,2E8|W,E7|c,55|g,5|X,24|l,13|j,1|r,15|Z,F|s,42DB"),
 //     "M": Array [

@@ -53,4 +53,18 @@ pub async fn setup(session: &Session) {
         )
         .await
         .err();
+
+    session
+        .query(
+            "CREATE TABLE IF NOT EXISTS f1_dash.gap_to_leader (
+                id uuid,
+                raw double,
+                human text,
+                time text,
+                primary key (id)
+            )",
+            &[],
+        )
+        .await
+        .err();
 }

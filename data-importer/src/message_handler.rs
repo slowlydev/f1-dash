@@ -6,8 +6,8 @@ use uuid::Uuid;
 
 use crate::{
     live_timing_models::{Driver, RaceControlMessages, TimingDataMessage, WeatherMessage},
-    models::{LastLapTime, RaceControlMessage, WeatherData},
-    utils::{parse_float, parse_int},
+    models::{GapToLeader, LastLapTime, RaceControlMessage, WeatherData},
+    utils::{parse_float, parse_gap, parse_int},
     SocketData,
 };
 
@@ -25,9 +25,8 @@ pub async fn handle(socket_data: SocketData, session: &Session) {
     // println!("Raw: {:?}", socket_data.M);
 
     let Some(data) = extract_message_data(&socket_data) else {
-      println!("Failed to extract message data");
-			println!("MSG: {:?}", socket_data.M);
-      return;
+	    println!("Failed to extract message data: {:?}", socket_data.M);
+        return;
     };
 
     let [cat, msg, time] = &data[..] else {
@@ -132,7 +131,7 @@ async fn handle_timing_data(msg: &Value, session: &Session, time: &str) {
         .await
         .expect("Failed to prepare last lap query");
 
-    for entity in handle_last_lap_time(lines, time) {
+    for entity in handle_last_lap_time(&lines, time) {
         println!("{:?}", entity);
 
         session
@@ -140,9 +139,23 @@ async fn handle_timing_data(msg: &Value, session: &Session, time: &str) {
             .await
             .expect("Failed to insert");
     }
+
+    let prepared_gap_to_leader_query = session
+        .prepare("INSERT INTO f1_dash.gap_to_leader (id, raw, human, time) VALUES (?, ?, ?, ?)")
+        .await
+        .expect("Failed to prepare last lap query");
+
+    for entity in handle_gap_to_leader(&lines, time) {
+        println!("{:?}", entity);
+
+        session
+            .execute(&prepared_gap_to_leader_query, entity)
+            .await
+            .expect("Failed to insert");
+    }
 }
 
-fn handle_last_lap_time(lines: HashMap<String, Driver>, time: &str) -> Vec<LastLapTime> {
+fn handle_last_lap_time(lines: &HashMap<String, Driver>, time: &str) -> Vec<LastLapTime> {
     let mut results: Vec<LastLapTime> = Vec::new();
 
     lines.iter().for_each(|(_driver_nr, driver)| {
@@ -157,6 +170,27 @@ fn handle_last_lap_time(lines: HashMap<String, Driver>, time: &str) -> Vec<LastL
             lap_time: lap_time.Value.to_string(),
             personal_best: lap_time.PersonalFastest,
             time: time.to_string(),
+        });
+    });
+
+    results
+}
+
+fn handle_gap_to_leader(lines: &HashMap<String, Driver>, time: &str) -> Vec<GapToLeader> {
+    let mut results: Vec<GapToLeader> = Vec::new();
+
+    lines.iter().for_each(|(_driver_nr, driver)| {
+        let uuid = Uuid::new_v4();
+
+        let Some(gap) = &driver.GapToLeader else {
+            return;
+        };
+
+        results.push(GapToLeader {
+            id: uuid,
+            time: time.to_string(),
+            raw: parse_gap(gap),
+            human: gap.to_string(),
         });
     });
 

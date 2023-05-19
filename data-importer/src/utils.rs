@@ -39,3 +39,18 @@ pub fn parse_int(input: &str, default: i16) -> i16 {
         Err(_) => default,
     }
 }
+
+pub fn parse_gap(input: &str) -> f64 {
+    let prepare: String = input.replace("+", "");
+    let parts: Vec<&str> = prepare.split(".").collect();
+
+    let Some(s) = parts.get(0) else {
+        return 0.0;
+    };
+
+    let Some(ms) = parts.get(1) else {
+        return 0.0;
+    };
+
+    parse_int(s, 0) as f64 + parse_int(ms, 0) as f64 / 1000.0
+}
