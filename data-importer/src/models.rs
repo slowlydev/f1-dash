@@ -29,6 +29,14 @@ pub struct RaceControlMessage {
 //             "Scope":"Driver",
 //             "Utc":"2023-05-05T21:48:04"
 
+#[derive(Debug, ValueList)]
+pub struct LastLapTime {
+    pub id: Uuid,
+    pub lap_time: String,
+    pub personal_best: bool,
+    pub time: String,
+}
+
 // const T = {
 //     "C": String("d-C35AF5C5-B,0|Duq,0|Dur,11|d,153|p,1398|o,139A|a,2|Y,30D|DX,0|n,2E8|W,E7|c,55|g,5|X,24|l,13|j,1|r,15|Z,F|s,42DB"),
 //     "M": Array [

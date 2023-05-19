@@ -39,4 +39,18 @@ pub async fn setup(session: &Session) {
         )
         .await
         .err();
+
+    session
+        .query(
+            "CREATE TABLE IF NOT EXISTS f1_dash.last_lap_time (
+                id uuid,
+                lap_time text,
+                personal_best boolean,
+                time text,
+                primary key (id)
+            )",
+            &[],
+        )
+        .await
+        .err();
 }
