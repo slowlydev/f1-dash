@@ -112,11 +112,18 @@ pub struct Driver {
     pub GapToLeader: Option<String>,
 
     pub IntervalToPositionAhead: Option<ValueObject>,
-    pub LastLapTime: Option<ValueObject>,
+    pub LastLapTime: Option<LastLapTimeObject>,
 
     pub Speeds: Option<HashMap<String, Speed>>,
     pub Sectors: Option<HashMap<String, Sector>>,
     pub BestSectors: Option<HashMap<String, BestSector>>,
+}
+
+#[allow(non_snake_case)]
+#[derive(Serialize, Deserialize, Debug)]
+pub struct LastLapTimeObject {
+    pub Value: String,
+    pub PersonalFastest: bool,
 }
 
 #[allow(non_snake_case)]
