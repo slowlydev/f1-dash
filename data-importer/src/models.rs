@@ -7,7 +7,7 @@ pub struct WeatherData {
     pub humidity: f64,
     pub pressure: f64,
     pub rainfall: f64,
-    pub wind_direction: i16, //i16
+    pub wind_direction: i16,
     pub wind_speed: f64,
     pub air_temp: f64,
     pub track_temp: f64,
@@ -42,6 +42,22 @@ pub struct GapToLeader {
     pub id: Uuid,
     pub raw: f64,
     pub human: String,
+    pub time: String,
+}
+
+#[derive(Debug, ValueList)]
+pub struct Sector {
+    pub id: Uuid,
+    pub number: i8,
+    pub time: String,
+}
+
+#[derive(Debug, ValueList)]
+pub struct MiniSector {
+    pub id: Uuid,
+    pub sector: i8,
+    pub number: i8,
+    pub status: i16,
     pub time: String,
 }
 

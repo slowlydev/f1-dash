@@ -77,6 +77,9 @@ pub struct RaceControlMessage {
 // 				"Segments": {
 // 					"6": {
 // 						"Status": 2049
+// 					},
+// 					"6": {
+// 						"Status": 2051
 // 					}
 // 				}
 // 			}

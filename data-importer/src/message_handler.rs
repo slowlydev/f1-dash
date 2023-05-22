@@ -122,10 +122,6 @@ async fn handle_timing_data(msg: &Value, session: &Session, time: &str) {
 
     let lines: HashMap<String, Driver> = parsed_msg.Lines;
 
-    // println!("{:?}", lines);
-
-    // last lap time
-
     let prepared_lap_time_query = session
         .prepare("INSERT INTO f1_dash.last_lap_time (id, lap_time, personal_best, time) VALUES (?, ?, ?, ?)")
         .await
@@ -196,3 +192,19 @@ fn handle_gap_to_leader(lines: &HashMap<String, Driver>, time: &str) -> Vec<GapT
 
     results
 }
+
+// fn handle_sectors(lines: &HashMap<String, Driver>, time: &str) -> Vec<Sector> {
+//     let mut results: Vec<Sector> = Vec::new();
+
+//     lines.iter().for_each(|(_driver_nr, driver)| {
+//         let uuid = Uuid::new_v4();
+
+//         let Some(sectors) = &driver.Sectors else {
+//             return;
+//         };
+
+//         sectors.iter().for
+//     });
+
+//     results
+// }
