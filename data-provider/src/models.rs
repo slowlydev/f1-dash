@@ -1,20 +1,22 @@
-use scylla::ValueList;
+use rocket::serde::Serialize;
+use scylla::FromRow;
 use uuid::Uuid;
 
-#[derive(Debug, ValueList)]
+#[derive(Debug, FromRow, Serialize)]
+#[serde(crate = "rocket::serde")]
 pub struct WeatherData {
     pub id: Uuid,
+    pub air_temp: f64,
     pub humidity: f64,
     pub pressure: f64,
     pub rainfall: i16,
+    pub time: String,
+    pub track_temp: f64,
     pub wind_direction: i16,
     pub wind_speed: f64,
-    pub air_temp: f64,
-    pub track_temp: f64,
-    pub time: String,
 }
 
-#[derive(Debug, ValueList)]
+#[derive(Debug)]
 pub struct RaceControlMessage {
     pub id: Uuid,
     pub message: String,
@@ -29,7 +31,7 @@ pub struct RaceControlMessage {
 //             "Scope":"Driver",
 //             "Utc":"2023-05-05T21:48:04"
 
-#[derive(Debug, ValueList)]
+#[derive(Debug)]
 pub struct LastLapTime {
     pub id: Uuid,
     pub lap_time: String,
@@ -37,7 +39,7 @@ pub struct LastLapTime {
     pub time: String,
 }
 
-#[derive(Debug, ValueList)]
+#[derive(Debug)]
 pub struct GapToLeader {
     pub id: Uuid,
     pub raw: f64,
@@ -45,14 +47,14 @@ pub struct GapToLeader {
     pub time: String,
 }
 
-#[derive(Debug, ValueList)]
+#[derive(Debug)]
 pub struct Sector {
     pub id: Uuid,
     pub number: i8,
     pub time: String,
 }
 
-#[derive(Debug, ValueList)]
+#[derive(Debug)]
 pub struct MiniSector {
     pub id: Uuid,
     pub sector: i8,

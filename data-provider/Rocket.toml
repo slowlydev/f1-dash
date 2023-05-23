@@ -1,0 +1,6 @@
+[default]
+address = "127.0.0.1"
+port = 4000
+workers = 16
+max_blocking = 512
+keep_alive = 5

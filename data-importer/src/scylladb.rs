@@ -14,7 +14,7 @@ pub async fn setup(session: &Session) {
                     id uuid,
                     humidity double,
                     pressure double,
-                    rainfall double,
+                    rainfall smallint,
                     wind_direction smallint,
                     wind_speed double,
                     air_temp double,
