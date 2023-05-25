@@ -16,12 +16,12 @@ pub struct WeatherData {
     pub wind_speed: f64,
 }
 
-#[derive(Debug)]
+#[derive(Debug, FromRow, Serialize)]
+#[serde(crate = "rocket::serde")]
 pub struct RaceControlMessage {
     pub id: Uuid,
-    pub message: String,
-    // pub flag: String,
     pub time: String,
+    pub message: String,
 }
 // TODO figure out how to use as much data as possible
 //             "Category":"Flag",
