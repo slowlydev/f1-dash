@@ -20,8 +20,8 @@ pub async fn setup(session: &Session) {
                     air_temp double,
                     track_temp double,
                     time text,
-                    primary key (id)
-                )",
+                    primary key (id, time)
+                ) WITH CLUSTERING ORDER BY (time ASC)",
             &[],
         )
         .await
@@ -33,8 +33,8 @@ pub async fn setup(session: &Session) {
                 id uuid,
                 message text,
                 time text,
-                primary key (id)
-            )",
+                primary key (id, time)
+            ) WITH CLUSTERING ORDER BY (time ASC)",
             &[],
         )
         .await
@@ -47,8 +47,8 @@ pub async fn setup(session: &Session) {
                 lap_time text,
                 personal_best boolean,
                 time text,
-                primary key (id)
-            )",
+                primary key (id, time)
+            ) WITH CLUSTERING ORDER BY (time ASC)",
             &[],
         )
         .await
@@ -61,8 +61,8 @@ pub async fn setup(session: &Session) {
                 raw double,
                 human text,
                 time text,
-                primary key (id)
-            )",
+                primary key (id, time)
+            ) WITH CLUSTERING ORDER BY (time ASC)",
             &[],
         )
         .await

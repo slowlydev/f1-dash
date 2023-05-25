@@ -6,11 +6,11 @@ use uuid::Uuid;
 #[serde(crate = "rocket::serde")]
 pub struct WeatherData {
     pub id: Uuid,
+    pub time: String,
     pub air_temp: f64,
     pub humidity: f64,
     pub pressure: f64,
     pub rainfall: i16,
-    pub time: String,
     pub track_temp: f64,
     pub wind_direction: i16,
     pub wind_speed: f64,

@@ -30,7 +30,7 @@ fn weather_stream(database: &State<ScyllaDB>) -> EventStream![] {
                 println!("Send Weather");
             }
 
-            sleep(Duration::from_millis(100)).await;
+            sleep(Duration::from_millis(200)).await;
         }
     };
 
