@@ -32,7 +32,7 @@ fn weather_stream(database: &State<ScyllaDB>) -> EventStream![] {
                 println!("Send Weather");
             }
 
-            sleep(Duration::from_millis(200)).await;
+            sleep(Duration::from_secs(1)).await;
         }
     };
 
@@ -50,7 +50,7 @@ fn rcm_stream(database: &State<ScyllaDB>) -> EventStream![] {
                 println!("Send Race Control Message");
             }
 
-            sleep(Duration::from_millis(200)).await;
+            sleep(Duration::from_secs(1)).await;
         }
     };
 
