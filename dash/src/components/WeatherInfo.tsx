@@ -32,46 +32,52 @@ export default function WeatherInfo() {
     };
   }, []);
 
-  if (!stats) return <p>Failed to load</p>;
+  // if (!stats) return <p>Failed to load</p>;
+
+  const label = "truncate text-sm font-medium text-gray-500";
 
   return (
-    <dl className="mt-5 grid grid-cols-8">
-      <div className="overflow-hidden px-4">
-        <dt className="truncate text-sm font-medium text-gray-500">Air Temp</dt>
-        <dd className="mt-1 text-3xl font-semibold text-white">
-          {stats.air_temp}°
-        </dd>
+    <dl className="mt-2 grid grid-cols-8">
+      <div className="overflow-hidden">
+        <dt className={label}>Air Temp</dt>
+
+        <LazyData data={stats?.air_temp} />
       </div>
 
-      <div className="overflow-hidden px-4">
-        <dt className="truncate text-sm font-medium text-gray-500">
-          Track Temp
-        </dt>
-        <dd className="mt-1 text-3xl font-semibold text-white">
-          {stats.track_temp}°
-        </dd>
+      <div className="overflow-hidden">
+        <dt className={label}>Track Temp</dt>
+        <LazyData data={stats?.track_temp} />
       </div>
 
-      <div className="overflow-hidden px-4">
-        <dt className="truncate text-sm font-medium text-gray-500">Rainfall</dt>
-        <dd className="mt-1 text-3xl font-semibold text-white">
-          {stats.rainfall}
-        </dd>
+      <div className="overflow-hidden">
+        <dt className={label}>Rainfall</dt>
+        <LazyData data={stats?.rainfall} />
       </div>
 
-      <div className="overflow-hidden px-4">
-        <dt className="truncate text-sm font-medium text-gray-500">Humidity</dt>
-        <dd className="mt-1 text-3xl font-semibold text-white">
-          {stats.humidity}
-        </dd>
+      <div className="overflow-hidden">
+        <dt className={label}>Humidity</dt>
+        <LazyData data={stats?.humidity} />
       </div>
 
-      <div className="overflow-hidden px-4">
-        <dt className="truncate text-sm font-medium text-gray-500">Wind</dt>
-        <dd className="mt-1 text-3xl font-semibold text-white">
-          {stats.wind_speed} km/h
-        </dd>
+      <div className="overflow-hidden">
+        <dt className={label}>Wind</dt>
+        <LazyData data={stats?.wind_speed} />
       </div>
     </dl>
+  );
+}
+
+function LazyData({ data }: { data: number | undefined }) {
+  return (
+    <>
+      {data ? (
+        <dd className="mt-1 text-3xl font-semibold text-white">{data}°</dd>
+      ) : (
+        <dd
+          className="mt-1 h-8 animate-pulse rounded-md bg-gray-700 font-semibold"
+          style={{ width: "70%" }}
+        ></dd>
+      )}
+    </>
   );
 }
