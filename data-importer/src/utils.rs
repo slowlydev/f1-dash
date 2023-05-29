@@ -1,3 +1,6 @@
+use chrono::{DateTime, Duration, Local};
+use scylla::frame::value::Timestamp;
+
 pub fn fix_json(line: &str) -> String {
     let fixed_line = line
         .replace("'", "\"")
@@ -53,4 +56,21 @@ pub fn parse_gap(input: &str) -> f64 {
     };
 
     parse_int(s, 0) as f64 + parse_int(ms, 0) as f64 / 1000.0
+}
+
+pub fn parse_timestamp(input: &str) -> Timestamp {
+    let fixed_utc_string = if input.ends_with("Z") {
+        input.to_string()
+    } else {
+        format!("{input}Z")
+    };
+
+    let date_time = DateTime::parse_from_rfc3339(&fixed_utc_string);
+
+    let Ok(utc) = date_time else {
+        let now: DateTime<Local> = Local::now();
+        return Timestamp(Duration::milliseconds(now.timestamp_millis()));
+    };
+
+    Timestamp(Duration::milliseconds(utc.timestamp_millis()))
 }

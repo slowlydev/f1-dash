@@ -8,6 +8,36 @@ pub async fn connect() -> Result<Session, NewSessionError> {
 pub async fn setup(session: &Session) {
     session.query("CREATE KEYSPACE IF NOT EXISTS f1_dash WITH REPLICATION = {'class' : 'SimpleStrategy', 'replication_factor' : 1}", &[]).await.err();
 
+    // session
+    //     .query(
+    //         "CREATE TABLE IF NOT EXISTS f1_dash.weekend (
+    //             id uuid,
+    //             name text,
+    //             official_name text,
+    //             year text,
+    //             PRIMARY KEY (id)
+    //         )",
+    //         &[],
+    //     )
+    //     .await
+    //     .err();
+
+    // session
+    //     .query(
+    //         "CREATE TABLE IF NOT EXISTS f1_dash.session (
+    //             id uuid,
+    //             weekend uuid,
+    //             name text,
+    //             type text,
+    //             start_date timestamp,
+    //             end_date timestamp,
+    //             PRIMARY KEY (weekend)
+    //         )",
+    //         &[],
+    //     )
+    //     .await
+    //     .err();
+
     session
         .query(
             "CREATE TABLE IF NOT EXISTS f1_dash.weather (
@@ -19,8 +49,8 @@ pub async fn setup(session: &Session) {
                     wind_speed double,
                     air_temp double,
                     track_temp double,
-                    time text,
-                    primary key (id, time)
+                    time timestamp,
+                    PRIMARY KEY (id, time)
                 ) WITH CLUSTERING ORDER BY (time ASC)",
             &[],
         )
@@ -32,8 +62,8 @@ pub async fn setup(session: &Session) {
             "CREATE TABLE IF NOT EXISTS f1_dash.race_control_messages (
                 id uuid,
                 message text,
-                time text,
-                primary key (id, time)
+                time timestamp,
+                PRIMARY KEY (id, time)
             ) WITH CLUSTERING ORDER BY (time ASC)",
             &[],
         )
@@ -44,10 +74,11 @@ pub async fn setup(session: &Session) {
         .query(
             "CREATE TABLE IF NOT EXISTS f1_dash.last_lap_time (
                 id uuid,
+                driver_nr smallint,
                 lap_time text,
                 personal_best boolean,
-                time text,
-                primary key (id, time)
+                time timestamp,
+                PRIMARY KEY (id, time)
             ) WITH CLUSTERING ORDER BY (time ASC)",
             &[],
         )
@@ -58,10 +89,11 @@ pub async fn setup(session: &Session) {
         .query(
             "CREATE TABLE IF NOT EXISTS f1_dash.gap_to_leader (
                 id uuid,
+                driver_nr smallint,
                 raw double,
                 human text,
-                time text,
-                primary key (id, time)
+                time timestamp,
+                PRIMARY KEY (id, time)
             ) WITH CLUSTERING ORDER BY (time ASC)",
             &[],
         )
