@@ -15,13 +15,13 @@ export default function RaceInfo() {
         <Image
           src={`/flags/${race.country}.svg`}
           alt={race.country}
-          width={80}
-          height={40}
+          width={60}
+          height={30}
         />
       </div>
 
       <div className="flex flex-col">
-        <h1 className="text-xl font-semibold">
+        <h1 className="text-lg">
           {race.name}: {race.sessionType}
         </h1>
         <p className="text-2xl font-extrabold">{race.sessionTime}</p>

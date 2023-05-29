@@ -30,7 +30,7 @@ const testData: DriverType[] = [
       possible: true,
     },
     number: 15,
-    speed: 300,
+    speed: 250,
     gap: "+0.12",
     miniSectors: [
       ["PB", "PB", "PB", "WR", "PB", "BAD", "PB", "WR", "PB", "BAD"],
@@ -48,7 +48,313 @@ const testData: DriverType[] = [
       possible: false,
     },
     number: 44,
-    speed: 200,
+    speed: 50,
+    gap: "+2.12",
+    miniSectors: [
+      ["PB", "PB", "PB", "WR", "PB", "BAD", "PB", "WR", "PB", "BAD"],
+      ["PB", "BAD"],
+      [],
+    ],
+    lapTimes: [new Date(), new Date(), new Date(), new Date(), new Date()],
+    tire: "HARD",
+  },
+  {
+    name: "Lewis Hamiltion",
+    displayName: "DDD",
+    drs: {
+      on: false,
+      possible: false,
+    },
+    number: 44,
+    speed: 50,
+    gap: "+2.12",
+    miniSectors: [
+      ["PB", "PB", "PB", "WR", "PB", "BAD", "PB", "WR", "PB", "BAD"],
+      ["PB", "BAD"],
+      [],
+    ],
+    lapTimes: [new Date(), new Date(), new Date(), new Date(), new Date()],
+    tire: "HARD",
+  },
+  {
+    name: "Lewis Hamiltion",
+    displayName: "DEV",
+    drs: {
+      on: false,
+      possible: false,
+    },
+    number: 44,
+    speed: 50,
+    gap: "+2.12",
+    miniSectors: [
+      ["PB", "PB", "PB", "WR", "PB", "BAD", "PB", "WR", "PB", "BAD"],
+      ["PB", "BAD"],
+      [],
+    ],
+    lapTimes: [new Date(), new Date(), new Date(), new Date(), new Date()],
+    tire: "HARD",
+  },
+  {
+    name: "Lewis Hamiltion",
+    displayName: "PIA",
+    drs: {
+      on: false,
+      possible: false,
+    },
+    number: 44,
+    speed: 50,
+    gap: "+2.12",
+    miniSectors: [
+      ["PB", "PB", "PB", "WR", "PB", "BAD", "PB", "WR", "PB", "BAD"],
+      ["PB", "BAD"],
+      [],
+    ],
+    lapTimes: [new Date(), new Date(), new Date(), new Date(), new Date()],
+    tire: "HARD",
+  },
+  {
+    name: "Lewis Hamiltion",
+    displayName: "VER",
+    drs: {
+      on: false,
+      possible: false,
+    },
+    number: 44,
+    speed: 50,
+    gap: "+2.12",
+    miniSectors: [
+      ["PB", "PB", "PB", "WR", "PB", "BAD", "PB", "WR", "PB", "BAD"],
+      ["PB", "BAD"],
+      [],
+    ],
+    lapTimes: [new Date(), new Date(), new Date(), new Date(), new Date()],
+    tire: "HARD",
+  },
+  {
+    name: "Lewis Hamiltion",
+    displayName: "BOT",
+    drs: {
+      on: false,
+      possible: false,
+    },
+    number: 44,
+    speed: 50,
+    gap: "+2.12",
+    miniSectors: [
+      ["PB", "PB", "PB", "WR", "PB", "BAD", "PB", "WR", "PB", "BAD"],
+      ["PB", "BAD"],
+      [],
+    ],
+    lapTimes: [new Date(), new Date(), new Date(), new Date(), new Date()],
+    tire: "HARD",
+  },
+  {
+    name: "Lewis Hamiltion",
+    displayName: "PER",
+    drs: {
+      on: false,
+      possible: false,
+    },
+    number: 44,
+    speed: 50,
+    gap: "+2.12",
+    miniSectors: [
+      ["PB", "PB", "PB", "WR", "PB", "BAD", "PB", "WR", "PB", "BAD"],
+      ["PB", "BAD"],
+      [],
+    ],
+    lapTimes: [new Date(), new Date(), new Date(), new Date(), new Date()],
+    tire: "HARD",
+  },
+  {
+    name: "Lewis Hamiltion",
+    displayName: "ZHO",
+    drs: {
+      on: false,
+      possible: false,
+    },
+    number: 44,
+    speed: 50,
+    gap: "+2.12",
+    miniSectors: [
+      ["PB", "PB", "PB", "WR", "PB", "BAD", "PB", "WR", "PB", "BAD"],
+      ["PB", "BAD"],
+      [],
+    ],
+    lapTimes: [new Date(), new Date(), new Date(), new Date(), new Date()],
+    tire: "HARD",
+  },
+  {
+    name: "Lewis Hamiltion",
+    displayName: "TSU",
+    drs: {
+      on: false,
+      possible: false,
+    },
+    number: 44,
+    speed: 50,
+    gap: "+2.12",
+    miniSectors: [
+      ["PB", "PB", "PB", "WR", "PB", "BAD", "PB", "WR", "PB", "BAD"],
+      ["PB", "BAD"],
+      [],
+    ],
+    lapTimes: [new Date(), new Date(), new Date(), new Date(), new Date()],
+    tire: "HARD",
+  },
+  {
+    name: "Lewis Hamiltion",
+    displayName: "ABC",
+    drs: {
+      on: false,
+      possible: false,
+    },
+    number: 44,
+    speed: 50,
+    gap: "+2.12",
+    miniSectors: [
+      ["PB", "PB", "PB", "WR", "PB", "BAD", "PB", "WR", "PB", "BAD"],
+      ["PB", "BAD"],
+      [],
+    ],
+    lapTimes: [new Date(), new Date(), new Date(), new Date(), new Date()],
+    tire: "HARD",
+  },
+  {
+    name: "Lewis Hamiltion",
+    displayName: "DFG",
+    drs: {
+      on: false,
+      possible: false,
+    },
+    number: 44,
+    speed: 50,
+    gap: "+2.12",
+    miniSectors: [
+      ["PB", "PB", "PB", "WR", "PB", "BAD", "PB", "WR", "PB", "BAD"],
+      ["PB", "BAD"],
+      [],
+    ],
+    lapTimes: [new Date(), new Date(), new Date(), new Date(), new Date()],
+    tire: "HARD",
+  },
+  {
+    name: "Lewis Hamiltion",
+    displayName: "HIA",
+    drs: {
+      on: false,
+      possible: false,
+    },
+    number: 44,
+    speed: 50,
+    gap: "+2.12",
+    miniSectors: [
+      ["PB", "PB", "PB", "WR", "PB", "BAD", "PB", "WR", "PB", "BAD"],
+      ["PB", "BAD"],
+      [],
+    ],
+    lapTimes: [new Date(), new Date(), new Date(), new Date(), new Date()],
+    tire: "HARD",
+  },
+  {
+    name: "Lewis Hamiltion",
+    displayName: "DDA",
+    drs: {
+      on: false,
+      possible: false,
+    },
+    number: 44,
+    speed: 50,
+    gap: "+2.12",
+    miniSectors: [
+      ["PB", "PB", "PB", "WR", "PB", "BAD", "PB", "WR", "PB", "BAD"],
+      ["PB", "BAD"],
+      [],
+    ],
+    lapTimes: [new Date(), new Date(), new Date(), new Date(), new Date()],
+    tire: "HARD",
+  },
+  {
+    name: "Lewis Hamiltion",
+    displayName: "LLO",
+    drs: {
+      on: false,
+      possible: false,
+    },
+    number: 44,
+    speed: 50,
+    gap: "+2.12",
+    miniSectors: [
+      ["PB", "PB", "PB", "WR", "PB", "BAD", "PB", "WR", "PB", "BAD"],
+      ["PB", "BAD"],
+      [],
+    ],
+    lapTimes: [new Date(), new Date(), new Date(), new Date(), new Date()],
+    tire: "HARD",
+  },
+  {
+    name: "Lewis Hamiltion",
+    displayName: "BBA",
+    drs: {
+      on: false,
+      possible: false,
+    },
+    number: 44,
+    speed: 50,
+    gap: "+2.12",
+    miniSectors: [
+      ["PB", "PB", "PB", "WR", "PB", "BAD", "PB", "WR", "PB", "BAD"],
+      ["PB", "BAD"],
+      [],
+    ],
+    lapTimes: [new Date(), new Date(), new Date(), new Date(), new Date()],
+    tire: "HARD",
+  },
+  {
+    name: "Lewis Hamiltion",
+    displayName: "ZZO",
+    drs: {
+      on: false,
+      possible: false,
+    },
+    number: 44,
+    speed: 50,
+    gap: "+2.12",
+    miniSectors: [
+      ["PB", "PB", "PB", "WR", "PB", "BAD", "PB", "WR", "PB", "BAD"],
+      ["PB", "BAD"],
+      [],
+    ],
+    lapTimes: [new Date(), new Date(), new Date(), new Date(), new Date()],
+    tire: "HARD",
+  },
+  {
+    name: "Lewis Hamiltion",
+    displayName: "QWE",
+    drs: {
+      on: false,
+      possible: false,
+    },
+    number: 44,
+    speed: 50,
+    gap: "+2.12",
+    miniSectors: [
+      ["PB", "PB", "PB", "WR", "PB", "BAD", "PB", "WR", "PB", "BAD"],
+      ["PB", "BAD"],
+      [],
+    ],
+    lapTimes: [new Date(), new Date(), new Date(), new Date(), new Date()],
+    tire: "HARD",
+  },
+  {
+    name: "Lewis Hamiltion",
+    displayName: "HUL",
+    drs: {
+      on: false,
+      possible: false,
+    },
+    number: 44,
+    speed: 50,
     gap: "+2.12",
     miniSectors: [
       ["PB", "PB", "PB", "WR", "PB", "BAD", "PB", "WR", "PB", "BAD"],
@@ -61,20 +367,10 @@ const testData: DriverType[] = [
 ];
 
 export default function LeaderBoard() {
-  const [drivers, setDrivers] = useState<DriverType[]>(testData);
-
-  const testSort = () => {
-    setDrivers((oldArray) => {
-      const tempArray = [...oldArray];
-      tempArray.sort((a, b) => 0.5 - Math.random());
-      return tempArray;
-    });
-  };
-
   return (
-    <div className="mt-5 flex flex-col divide-y divide-gray-500">
+    <div className="mt-2 flex flex-col divide-y divide-gray-500">
       <AnimatePresence>
-        {drivers.map((driver, index) => (
+        {testData.map((driver, index) => (
           <Driver
             key={`leaderBoard.driver.${driver.displayName}`}
             driver={driver}
@@ -82,8 +378,6 @@ export default function LeaderBoard() {
           />
         ))}
       </AnimatePresence>
-
-      <button onClick={() => testSort()}>test sort</button>
     </div>
   );
 }

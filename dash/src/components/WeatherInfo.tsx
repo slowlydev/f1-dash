@@ -1,25 +1,83 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { sseSession } from "../lib/sse";
+
+type WeatherData = {
+  id: string;
+  air_temp: number;
+  humidity: number;
+  pressure: number;
+  rainfall: number;
+  time: string;
+  track_temp: number;
+  wind_direction: number;
+  wind_speed: number;
+};
+
 export default function WeatherInfo() {
-  const stats = [
-    { name: "Wind", stat: "71,897" },
-    { name: "Track", stat: "58.16%" },
-    { name: "Air", stat: "24.57%" },
-    { name: "Humidity", stat: "24.57%" },
-    { name: "Pressure", stat: "24.57%" },
-    { name: "Rain", stat: "24.57%" },
-  ];
+  const [stats, setStats] = useState<WeatherData | null>(null);
+
+  useEffect(() => {
+    const weather = sseSession("weather");
+
+    weather.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      console.log(data);
+      setStats(data);
+    };
+
+    return () => {
+      weather.close();
+    };
+  }, []);
+
+  // if (!stats) return <p>Failed to load</p>;
+
+  const label = "truncate text-sm font-medium text-gray-500";
 
   return (
-    <dl className="mt-5 grid grid-cols-8">
-      {stats.map((item) => (
-        <div key={item.name} className="overflow-hidden px-4">
-          <dt className="truncate text-sm font-medium text-gray-500">
-            {item.name}
-          </dt>
-          <dd className="mt-1 text-3xl font-semibold text-white">
-            {item.stat}
-          </dd>
-        </div>
-      ))}
+    <dl className="mt-2 grid grid-cols-8">
+      <div className="overflow-hidden">
+        <dt className={label}>Air Temp</dt>
+
+        <LazyData data={stats?.air_temp} />
+      </div>
+
+      <div className="overflow-hidden">
+        <dt className={label}>Track Temp</dt>
+        <LazyData data={stats?.track_temp} />
+      </div>
+
+      <div className="overflow-hidden">
+        <dt className={label}>Rainfall</dt>
+        <LazyData data={stats?.rainfall} />
+      </div>
+
+      <div className="overflow-hidden">
+        <dt className={label}>Humidity</dt>
+        <LazyData data={stats?.humidity} />
+      </div>
+
+      <div className="overflow-hidden">
+        <dt className={label}>Wind</dt>
+        <LazyData data={stats?.wind_speed} />
+      </div>
     </dl>
+  );
+}
+
+function LazyData({ data }: { data: number | undefined }) {
+  return (
+    <>
+      {data ? (
+        <dd className="mt-1 text-3xl font-semibold text-white">{data}°</dd>
+      ) : (
+        <dd
+          className="mt-1 h-8 animate-pulse rounded-md bg-gray-700 font-semibold"
+          style={{ width: "70%" }}
+        ></dd>
+      )}
+    </>
   );
 }

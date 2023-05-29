@@ -5,9 +5,11 @@ type Props = {
 
 export default function DriverGap({ toFront, toLeader }: Props) {
   return (
-    <div className="text-lg font-semibold">
-      <p>{toFront}</p>
-      <p className="text-sm font-normal text-gray-500">LEAD: {toLeader}</p>
+    <div className="ml-2 text-lg font-semibold">
+      <p className=" leading-none">{toFront}</p>
+      <p className="text-sm  font-medium leading-none text-gray-500">
+        {toLeader}
+      </p>
     </div>
   );
 }

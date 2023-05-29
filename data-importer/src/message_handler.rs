@@ -64,7 +64,7 @@ async fn handle_weather_data(msg: &Value, session: &Session, time: &str) {
         id: uuid,
         humidity: parse_float(&parsed_msg.Humidity, 0.0),
         pressure: parse_float(&parsed_msg.Pressure, 0.0),
-        rainfall: parse_float(&parsed_msg.Rainfall, 0.0),
+        rainfall: parse_int(&parsed_msg.Rainfall, 0),
         wind_direction: parse_int(&parsed_msg.WindDirection, 0),
         wind_speed: parse_float(&parsed_msg.WindSpeed, 0.0),
         air_temp: parse_float(&parsed_msg.AirTemp, 0.0),
