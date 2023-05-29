@@ -1,35 +1,50 @@
 import React from "react";
-import { DriverType, MiniSectorStatusType } from "../types/driver.type";
+import { DriverType } from "../types/driver.type";
 import clsx from "clsx";
+import { getTimeColor } from "../lib/getTimeColor";
 
 type Props = {
-  miniSectors: DriverType["miniSectors"];
+  sectors: DriverType["sectors"];
   driverDisplayName: string;
 };
 
 export default function DriverMiniSectors({
-  miniSectors,
+  sectors,
   driverDisplayName,
 }: Props) {
   return (
     <div className="grid grid-cols-3 gap-x-2 gap-y-1">
-      {miniSectors.map((sector, index) => (
+      {sectors.map((sector, index) => (
         <div
           key={`sector.${driverDisplayName}.${index}`}
           className="flex flex-col gap-1"
         >
           <div className="flex h-3 flex-row gap-1">
-            {sector.map((miniSector, index2) => (
+            {sector.segments.map((segmentStatus, index2) => (
               <MiniSector
-                status={miniSector}
+                status={segmentStatus}
                 key={`sector.mini.${driverDisplayName}.${index2}`}
               />
             ))}
           </div>
 
           <div className="flex items-center gap-2">
-            <p className="text-xl font-semibold leading-none">30.200</p>
-            <p className="leading-none">30.500</p>
+            <p
+              className={clsx(
+                "text-xl font-semibold leading-none",
+                getTimeColor(sector.last.fastest, sector.last.pb)
+              )}
+            >
+              {sector.last.time}
+            </p>
+            <p
+              className={clsx(
+                "leading-none",
+                getTimeColor(sector.best.fastest, sector.best.pb)
+              )}
+            >
+              {sector.best.time}
+            </p>
           </div>
         </div>
       ))}
@@ -37,13 +52,14 @@ export default function DriverMiniSectors({
   );
 }
 
-function MiniSector({ status }: { status: MiniSectorStatusType }) {
+function MiniSector({ status }: { status: number }) {
   return (
     <div
-      className={clsx("h-3 w-3 rounded-[0.2rem]", {
-        "bg-yellow-500": status === "BAD",
-        "bg-emerald-500": status === "PB",
-        "bg-indigo-500": status === "WR",
+      className={clsx("h-3 w-2 rounded-[0.2rem]", {
+        "bg-yellow-500": status === 2048,
+        "bg-emerald-500": status === 2049,
+        "bg-indigo-500": status === 2051,
+        "bg-blue-500": status === 2064,
       })}
     />
   );

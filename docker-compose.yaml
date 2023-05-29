@@ -6,3 +6,6 @@ services:
     container_name: f1-dash-scylladb
     ports:
       - 9042:9042
+  # f1-dash-data-importer:
+  # f1-dash-data-provider:
+  # f1-dash:

@@ -8,6 +8,8 @@ import DriverGap from "./DriverGap";
 import DriverTire from "./DriverTire";
 import DriverMiniSectors from "./DriverMiniSectors";
 import DriverRPM from "./DriverRPM";
+import DriverLapTime from "./DriverLapTime";
+import DriverInfo from "./DriverInfo";
 
 type Props = {
   driver: DriverType;
@@ -27,17 +29,40 @@ export default function Driver({ driver, position }: Props) {
         <DriverDRS on={driver.drs.on} possible={driver.drs.possible} />
       </div>
 
-      <div className="col-span-3 flex items-center gap-2">
-        <DriverRPM rpm={10000} gear={0} />
-        <DriverTire tire={driver.tire} age={10} />
-        <DriverGap toFront={driver.gap} toLeader={driver.gap} />
+      <div className={centerClass}>
+        <DriverTire tire={driver.tire} age={10} stops={0} />
       </div>
 
-      <div className="col-span-6">
+      <div className={centerClass}>
+        <DriverInfo status={"OUT"} laps={10} />
+      </div>
+
+      <div className="col-span-2 flex items-center gap-2">
+        <DriverGap toFront={driver.gap} toLeader={driver.gap} />
+
+        <DriverLapTime
+          last={{
+            time: "1:42.600",
+            fastest: false,
+            pb: false,
+          }}
+          best={{
+            time: "1:42.352",
+            fastest: true,
+            pb: true,
+          }}
+        />
+      </div>
+
+      <div className="col-span-5">
         <DriverMiniSectors
-          miniSectors={driver.miniSectors}
+          sectors={driver.sectors}
           driverDisplayName={driver.displayName}
         />
+      </div>
+
+      <div className={centerClass}>
+        <DriverRPM rpm={10000} gear={0} />
       </div>
     </motion.div>
   );
