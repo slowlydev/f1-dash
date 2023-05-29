@@ -1,7 +1,20 @@
-export type MiniSectorStatusType = "PB" | "WR" | "BAD";
 export type TireType = "SOFT" | "MEDIUM" | "HARD" | "WET" | "INTER";
 
 export type LapTimeType = Date;
+
+export type Sector = {
+  last: {
+    time: string;
+    fastest: boolean;
+    pb: boolean;
+  };
+  best: {
+    time: string;
+    fastest: boolean;
+    pb: boolean;
+  };
+  segments: number[];
+};
 
 export type DriverType = {
   name: string;
@@ -15,5 +28,5 @@ export type DriverType = {
   gap: string;
   tire: TireType;
   lapTimes: LapTimeType[];
-  miniSectors: MiniSectorStatusType[][];
+  sectors: Sector[];
 };

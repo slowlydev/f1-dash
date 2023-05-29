@@ -35,10 +35,13 @@ async fn negotiate() -> ReqwestResult<(HeaderMap, NegotiateResult)> {
 
     let client: reqwest::Client = reqwest::Client::new();
     let res: reqwest::Response = client.get(url).send().await?;
+
     let header: HeaderMap = res.headers().clone();
     let body: String = res.text().await?;
+
     let json: NegotiateResult =
         serde_json::from_str(&body).expect("Failed to convert negotiate response to JSON");
+
     Ok((header, json))
 }
 

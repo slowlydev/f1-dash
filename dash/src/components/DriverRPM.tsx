@@ -8,9 +8,9 @@ type Props = {
 
 export default function DriverRPM({ rpm, gear }: Props) {
   return (
-    <div className="flex h-10 w-10 items-center justify-center text-blue-500">
+    <div className="flex items-center justify-center text-blue-500">
       <motion.svg
-        className="h-10 w-10"
+        className="h-9 w-9"
         viewBox="0 0 172 150"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
