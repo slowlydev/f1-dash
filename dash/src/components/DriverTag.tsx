@@ -13,15 +13,13 @@ export default function DriverTag({ position, driver }: Props) {
 
   return (
     <div
-      className="flex w-20 justify-between gap-0.5 rounded-md p-1"
+      className="flex w-20 items-center justify-between gap-0.5 rounded-md p-0.5 px-1 font-black"
       style={{ backgroundColor: foundDriver?.color }}
     >
-      <p className="px-1 text-xl font-semibold">{position}</p>
+      <p className="px-1 text-xl">{position}</p>
 
-      <div className="flex h-min w-min items-center justify-center rounded-md bg-white p-0.5">
-        <p className=" font-extrabold" style={{ color: foundDriver?.color }}>
-          {driver?.displayName}
-        </p>
+      <div className="flex h-min w-min items-center justify-center rounded-md bg-white px-1">
+        <p style={{ color: foundDriver?.color }}>{driver?.displayName}</p>
       </div>
     </div>
   );

@@ -30,7 +30,7 @@ const testData: DriverType[] = [
       {
         last: {
           fastest: false,
-          pb: false,
+          pb: true,
           time: "30.022",
         },
         best: {

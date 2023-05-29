@@ -13,7 +13,7 @@ export default function DriverDRS({ on, possible }: Props) {
   return (
     <span
       className={clsx(
-        "text-md inline-flex h-8 items-center rounded-md border-2 px-2.5 py-0.5 font-semibold",
+        "text-md inline-flex h-8 items-center rounded-md border-2 px-2.5 py-0.5 font-black",
         {
           "border-gray-500 text-gray-500": !on && !possible,
           "border-gray-300 text-gray-300": !on && possible,
