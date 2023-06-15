@@ -31,20 +31,20 @@ export default function DriverMiniSectors({
           <div className="flex items-center gap-2">
             <p
               className={clsx(
-                "text-xl font-semibold leading-none",
+                "text-lg font-semibold leading-none",
                 getTimeColor(sector.last.fastest, sector.last.pb)
               )}
             >
               {sector.last.time}
             </p>
-            <p
+            {/* <p
               className={clsx(
                 "leading-none",
                 getTimeColor(sector.best.fastest, sector.best.pb)
               )}
             >
               {sector.best.time}
-            </p>
+            </p> */}
           </div>
         </div>
       ))}

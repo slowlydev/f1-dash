@@ -12,7 +12,7 @@ const testData: DriverType[] = [
     },
     number: 63,
     speed: 300,
-    gap: "+0.12",
+    gap: "+10.120",
     sectors: [
       {
         last: {

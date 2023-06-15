@@ -28,7 +28,7 @@ export default function DriverLapTime({ last, best }: Props) {
       </p>
       <p
         className={clsx(
-          "text-md leading-none",
+          "text-sm font-medium leading-none text-gray-500",
           getTimeColor(last.fastest, last.pb)
         )}
       >

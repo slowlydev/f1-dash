@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { sseSession } from "../lib/sse";
+import { useState } from "react";
 
 type WeatherData = {
   id: string;
@@ -17,22 +16,6 @@ type WeatherData = {
 
 export default function WeatherInfo() {
   const [stats, setStats] = useState<WeatherData | null>(null);
-
-  useEffect(() => {
-    const weather = sseSession("weather");
-
-    weather.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      console.log(data);
-      setStats(data);
-    };
-
-    return () => {
-      weather.close();
-    };
-  }, []);
-
-  // if (!stats) return <p>Failed to load</p>;
 
   const label = "truncate text-sm font-medium text-gray-500";
 
