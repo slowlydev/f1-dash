@@ -6,7 +6,7 @@ type Props = {
 export default function DriverInfo({ laps, status }: Props) {
   return (
     <div className="ml-2 text-lg font-semibold">
-      <p className="leading-none">{laps}</p>
+      <p className="leading-none">{laps}L</p>
       <p className="text-sm font-medium leading-none text-gray-500">{status}</p>
     </div>
   );

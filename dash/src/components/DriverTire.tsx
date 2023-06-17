@@ -17,7 +17,7 @@ export default function DriverTire({ tire, age, stops }: Props) {
       <div>
         <p className="font-bold leading-none">L {age}</p>
         <p className="text-sm font-medium leading-none text-gray-500">
-          S {stops}
+          St {stops}
         </p>
       </div>
     </div>
