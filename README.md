@@ -1,10 +1,14 @@
 # f1-dash
 
 ```
-f1 > data-provider > scylladb > data > dash
+f1 > data-tunnel > dash
 ```
 
 Depreacted:
+
+```
+f1 > data-provider > scylladb > data > dash
+```
 
 ```
 data-simulator > data-provider > scylladb > data > dash
