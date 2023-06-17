@@ -1,32 +1,65 @@
-export type TireType = "SOFT" | "MEDIUM" | "HARD" | "WET" | "INTER";
+export type Driver = {
+  nr: string;
 
-export type LapTimeType = Date;
+  broadcastName: string;
+  fullName: string;
+  firstName: string;
+  lastName: string;
+  short: string;
+  country: string;
+
+  line: number;
+  position: string;
+
+  teamName: string;
+  teamColor: string;
+
+  status: number;
+
+  gapToLeader: string;
+  gapToFront: string;
+  catchingFront: boolean;
+
+  sectors: Sector[];
+  stints: Stint[];
+
+  drs: Drs;
+  laps: number;
+  lapTimes: LapTimes;
+
+  metrics: Metrics;
+};
+
+export type TimeStats = {
+  value: string;
+  fastest: boolean;
+  pb: boolean;
+};
 
 export type Sector = {
-  last: {
-    time: string;
-    fastest: boolean;
-    pb: boolean;
-  };
-  best: {
-    time: string;
-    fastest: boolean;
-    pb: boolean;
-  };
+  current: TimeStats;
+  fastest: TimeStats;
   segments: number[];
 };
 
-export type DriverType = {
-  name: string;
-  displayName: string;
-  number: number;
-  drs: {
-    on: boolean;
-    possible: boolean;
-  };
+export type LapTimes = {
+  last: TimeStats;
+  best: TimeStats;
+};
+
+export type Stint = {
+  compound: string;
+  laps: string;
+  new: boolean;
+};
+
+export type Drs = {
+  on: boolean;
+  possible: boolean;
+};
+
+export type Metrics = {
+  gear: number;
+  rpm: number;
   speed: number;
-  gap: string;
-  tire: TireType;
-  lapTimes: LapTimeType[];
-  sectors: Sector[];
 };

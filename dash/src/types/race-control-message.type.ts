@@ -1,8 +1,10 @@
-export type RaceControlMessageType = "FLAG";
-
 export type RaceControlMessage = {
-  id: string;
+  utc: string;
+  lap: number;
   message: string;
-  time: string;
-  type: RaceControlMessageType;
+  category: string;
+
+  flag?: string;
+  scope?: string;
+  sector?: number;
 };
