@@ -1,0 +1,16 @@
+[package]
+name = "data-tunnel"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+tokio-tungstenite = { version = "0.19.0", features = ["native-tls"]}
+tokio = { version = "1.28.2", features = ["full"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+futures = "0.3.28"
+reqwest = "0.11.18"
+base64 = "0.21.2"
+zune-inflate = "0.2.54"
