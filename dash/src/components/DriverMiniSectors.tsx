@@ -32,19 +32,12 @@ export default function DriverMiniSectors({
             <p
               className={clsx(
                 "text-lg font-semibold leading-none",
-                getTimeColor(sector.last.fastest, sector.last.pb)
+                getTimeColor(sector.current.fastest, sector.current.pb),
+                !sector.current.value ? "text-gray-500" : ""
               )}
             >
-              {sector.last.time}
+              {!!sector.current.value ? sector.current.value : "00.000"}
             </p>
-            {/* <p
-              className={clsx(
-                "leading-none",
-                getTimeColor(sector.best.fastest, sector.best.pb)
-              )}
-            >
-              {sector.best.time}
-            </p> */}
           </div>
         </div>
       ))}
@@ -56,10 +49,11 @@ function MiniSector({ status }: { status: number }) {
   return (
     <div
       className={clsx("h-3 w-2 rounded-[0.2rem]", {
-        "bg-yellow-500": status === 2048,
+        "bg-yellow-500": status === 2048 || status === 2052, // TODO unsure
         "bg-emerald-500": status === 2049,
         "bg-indigo-500": status === 2051,
         "bg-blue-500": status === 2064,
+        "bg-gray-800": status === 0,
       })}
     />
   );

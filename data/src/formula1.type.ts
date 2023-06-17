@@ -73,12 +73,18 @@ export type F1TimingAppData = {
 	Lines: {
 		[key: string]: {
 			RacingNumber: string;
-			Stints: any[];
+			Stints: F1Stint[];
 			Line: number;
 			GridPos: string;
 		};
 	};
 	_kf: boolean;
+};
+
+export type F1Stint = {
+	TotalLaps?: number;
+	Compound?: "SOFT" | "MEDIUM" | "HARD" | "INTERMEDIATE" | "WET";
+	New?: string; // TRUE | FALSE
 };
 
 export type F1WeatherData = {
@@ -201,7 +207,7 @@ export type F1TimingData = {
 
 export type F1TimingDataDriver = {
 	GapToLeader: string;
-	IntervalToPositionAhead: {
+	IntervalToPositionAhead?: {
 		Value: string;
 		Catching: boolean;
 	};
@@ -312,6 +318,15 @@ export type F1Entry = {
 	};
 };
 
+/**
+ * @namespace
+ * @property {number} 0 - RPM
+ * @property {number} 2 - Speed number km/h
+ * @property {number} 3 - gear number
+ * @property {number} 4 - Throttle int 0-100
+ * @property {number} 5 - Brake number boolean
+ * @property {number} 45 - DRS
+ */
 export type F1CarDataChannels = {
 	"0": number;
 	"2": number;

@@ -1,4 +1,4 @@
-export type Driver = {
+export type DriverType = {
   nr: string;
 
   broadcastName: string;
@@ -48,8 +48,8 @@ export type LapTimes = {
 };
 
 export type Stint = {
-  compound: string;
-  laps: string;
+  compound: "soft" | "medium" | "hard" | "intermediate" | "wet";
+  laps: number;
   new: boolean;
 };
 

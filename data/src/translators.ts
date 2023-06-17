@@ -13,7 +13,19 @@ import {
 	F1TrackStatus,
 	F1WeatherData,
 } from "./formula1.type";
-import { Driver, ExtrapolatedClock, LapCount, RaceControlMessage, Sector, SessionData, SessionInfo, State, TrackStatus, Weather } from "./models";
+import {
+	Driver,
+	ExtrapolatedClock,
+	LapCount,
+	RaceControlMessage,
+	Sector,
+	SessionData,
+	SessionInfo,
+	State,
+	Stint,
+	TrackStatus,
+	Weather,
+} from "./models";
 
 export const translateExtrapolatedClock = (e: F1ExtrapolatedClock): ExtrapolatedClock => {
 	return {
@@ -71,14 +83,15 @@ export const translateRaceControlMessages = (e: F1RaceControlMessages): RaceCont
 	}));
 };
 
-export const translateDrivers = (dl: F1DriverList, td: F1TimingData, ts: F1TimingStats, cd: F1CarData): Driver[] => {
+export const translateDrivers = (dl: F1DriverList, td: F1TimingData, ts: F1TimingStats, cd: F1CarData, tad: F1TimingAppData): Driver[] => {
 	return Object.entries(dl)
 		.map(([nr, driver]): Driver | null => {
 			const tdDriver = td.Lines[nr];
 			const car = cd.Entries[cd.Entries.length - 1]?.Cars[nr]?.Channels ?? null;
-			const timingStats = ts.Lines[nr];
+			const timingStats = ts.Lines?.[nr] ?? null;
+			const appTiming = tad.Lines?.[nr] ?? null;
 
-			if (!tdDriver || !timingStats || !car) return null;
+			if (!tdDriver || !timingStats || !car || !appTiming) return null;
 
 			return {
 				nr,
@@ -101,8 +114,8 @@ export const translateDrivers = (dl: F1DriverList, td: F1TimingData, ts: F1Timin
 				laps: tdDriver.NumberOfLaps,
 
 				gapToLeader: tdDriver.GapToLeader,
-				gapToFront: tdDriver.IntervalToPositionAhead.Value,
-				catchingFront: tdDriver.IntervalToPositionAhead.Catching,
+				gapToFront: tdDriver.IntervalToPositionAhead?.Value ?? "",
+				catchingFront: tdDriver.IntervalToPositionAhead?.Catching ?? false,
 
 				sectors: tdDriver.Sectors.map(
 					(e): Sector => ({
@@ -112,8 +125,8 @@ export const translateDrivers = (dl: F1DriverList, td: F1TimingData, ts: F1Timin
 							pb: e.PersonalFastest,
 						},
 						// TODO
-						fastest: {
-							value: "",
+						last: {
+							value: e.Value,
 							fastest: false,
 							pb: false,
 						},
@@ -121,7 +134,13 @@ export const translateDrivers = (dl: F1DriverList, td: F1TimingData, ts: F1Timin
 					})
 				),
 
-				stints: [],
+				stints: appTiming.Stints.map(
+					(e): Stint => ({
+						compound: (e.Compound ?? "hard").toLowerCase() as Stint["compound"],
+						laps: e.TotalLaps ?? 0,
+						new: e.New === "True",
+					})
+				),
 
 				lapTimes: {
 					best: {
@@ -138,14 +157,13 @@ export const translateDrivers = (dl: F1DriverList, td: F1TimingData, ts: F1Timin
 
 				drs: {
 					on: [10, 12, 14].includes(car[45] ?? 0),
-					// on: false,
-					possible: true,
+					possible: tdDriver.IntervalToPositionAhead ? parseFloat(tdDriver.IntervalToPositionAhead.Value.substring(1)) < 1 : false, // TODO check if valid
 				},
 
 				metrics: {
-					gear: 0,
-					rpm: 0,
-					speed: 0,
+					gear: car["3"],
+					rpm: car["0"],
+					speed: car["2"],
 				},
 			};
 		})
@@ -154,7 +172,7 @@ export const translateDrivers = (dl: F1DriverList, td: F1TimingData, ts: F1Timin
 
 export const translateSession = (e: F1SessionInfo): SessionInfo => {
 	return {
-		name: e.Name,
+		name: e.Meeting.Name,
 		officialName: e.Meeting.OfficialName,
 		location: e.Meeting.Location,
 
@@ -182,10 +200,14 @@ export const translate = (state: F1State): State => {
 
 		...(state.RaceControlMessages && { raceControlMessages: translateRaceControlMessages(state.RaceControlMessages) }),
 
+		// TODO make work without other cats
 		...(state.DriverList &&
 			state.TimingData &&
 			state.TimingStats &&
-			state.CarData && { drivers: translateDrivers(state.DriverList, state.TimingData, state.TimingStats, state.CarData) }),
+			state.CarData &&
+			state.TimingAppData && {
+				drivers: translateDrivers(state.DriverList, state.TimingData, state.TimingStats, state.CarData, state.TimingAppData),
+			}),
 
 		...(state.SessionInfo && { session: translateSession(state.SessionInfo) }),
 	};

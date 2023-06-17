@@ -1,4 +1,4 @@
-import { Driver } from "./driver.type";
+import { DriverType } from "./driver.type";
 import { ExtrapolatedClock } from "./extrapolated-clock.type";
 import { LapCount } from "./lap-count.type";
 import { RaceControlMessage } from "./race-control-message.type";
@@ -15,7 +15,7 @@ export type State = {
   weather?: Weather;
 
   raceControlMessages?: RaceControlMessage[];
-  drivers?: Driver[];
+  drivers?: DriverType[];
 
   session?: SessionInfo;
 };

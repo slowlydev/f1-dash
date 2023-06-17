@@ -120,7 +120,7 @@ export type TimeStats = {
 
 export type Sector = {
 	current: TimeStats;
-	fastest: TimeStats;
+	last: TimeStats;
 	segments: number[];
 };
 
@@ -130,8 +130,8 @@ export type LapTimes = {
 };
 
 export type Stint = {
-	compound: string;
-	laps: string;
+	compound: "soft" | "medium" | "hard" | "intermediate" | "wet";
+	laps: number;
 	new: boolean;
 };
 

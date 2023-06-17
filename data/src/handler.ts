@@ -14,6 +14,8 @@ export const updateState = (state: F1State, data: SocketData): F1State => {
 
 			let [cat, msg] = message.A;
 
+			console.log("update: ", cat);
+
 			let parsedMsg: null | F1CarData | F1Position = null;
 			let parsedCat: null | string = null;
 
