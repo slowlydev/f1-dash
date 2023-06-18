@@ -1,9 +1,3 @@
 {
-	"rust-analyzer.linkedProjects": [
-		"./data-simulator/Cargo.toml",
-		"./data-importer/Cargo.toml",
-		"./data-provider/Cargo.toml",
-		"./data-saver/Cargo.toml",
-		"./data-tunnel/Cargo.toml"
-	]
+	"rust-analyzer.linkedProjects": ["./data-simulator/Cargo.toml", "./data-saver/Cargo.toml"]
 }
