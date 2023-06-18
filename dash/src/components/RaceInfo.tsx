@@ -6,14 +6,17 @@ import { ExtrapolatedClock } from "../types/extrapolated-clock.type";
 import moment from "moment";
 import { TrackStatus } from "../types/track-status.type";
 import clsx from "clsx";
+import { LapCount } from "../types/lap-count.type";
+import { getTrackStatusMessage } from "../lib/getTrackStatusMessage";
 
 type Props = {
-  session?: SessionInfo;
-  clock?: ExtrapolatedClock;
-  track?: TrackStatus;
+  session: SessionInfo | undefined;
+  clock: ExtrapolatedClock | undefined;
+  track: TrackStatus | undefined;
+  lapCount: LapCount | undefined;
 };
 
-export default function RaceInfo({ session, clock, track }: Props) {
+export default function RaceInfo({ session, clock, track, lapCount }: Props) {
   const timeRemaining =
     !!clock && !!clock.remaining
       ? clock.extrapolating
@@ -30,13 +33,13 @@ export default function RaceInfo({ session, clock, track }: Props) {
 
   return (
     <div className="flex justify-between gap-1">
-      <div className="flex items-center justify-center gap-2">
+      <div className="flex flex-auto items-center space-x-3 overflow-hidden">
         <Flag countryCode={session?.countryCode} />
 
-        <div className="flex flex-col">
+        <div className="flex w-3/4 flex-col justify-center">
           {session ? (
-            <h1 className="text-lg">
-              {session.countryName} {session.name}: {session.type ?? "unknown"}
+            <h1 className="truncate text-sm font-medium text-gray-500">
+              {session.name}: {session.type ?? "unknown"}
             </h1>
           ) : (
             <div className="h-6 w-[30rem] animate-pulse rounded-md bg-gray-700 font-semibold" />
@@ -50,14 +53,33 @@ export default function RaceInfo({ session, clock, track }: Props) {
         </div>
       </div>
 
-      <div className="items- flex">
+      <div className="flex items-center gap-4">
+        <p className="text-3xl font-extrabold">
+          {lapCount?.current} / {lapCount?.total}
+        </p>
+
         <div
-          className={clsx("flex h-8 items-center rounded-md px-2", {
-            "bg-red-500": track?.status === 5,
-            "bg-emerald-500": track?.status === 1,
-          })}
+          className={clsx(
+            "flex h-8 items-center rounded-md px-2",
+            getTrackStatusMessage(track?.status ?? null).color
+          )}
         >
-          <p>{track?.statusMessage}</p>
+          <p className="text-xl font-semibold">
+            {getTrackStatusMessage(track?.status ?? null).message}
+          </p>
+        </div>
+
+        <div
+          className={clsx(
+            getTrackStatusMessage(track?.status ?? null).color,
+            "fixed right-0 top-0 z-[-10] h-[2rem] w-[15rem]"
+          )}
+        >
+          <div
+            className={clsx(
+              "fixed right-0 top-0 z-[-10] h-[8rem] w-[25rem] backdrop-blur-[40px]"
+            )}
+          />
         </div>
       </div>
     </div>
@@ -79,10 +101,10 @@ const Flag = ({ countryCode }: FlagProps) => {
           alt={countryCode}
           width={70}
           height={35}
-          className="w-21 h-14 overflow-hidden rounded-lg"
+          className="relative h-12 w-14 overflow-hidden rounded-lg"
         />
       ) : (
-        <div className="w-21 h-14 animate-pulse rounded-lg bg-gray-700" />
+        <div className="relative h-12 w-14 animate-pulse overflow-hidden rounded-lg bg-gray-700" />
       )}
     </div>
   );

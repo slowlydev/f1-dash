@@ -1,6 +1,8 @@
 import React from "react";
-import { DriverType } from "../types/driver.type";
 import clsx from "clsx";
+
+import { DriverType } from "../types/driver.type";
+
 import { getTimeColor } from "../lib/getTimeColor";
 
 type Props = {
@@ -36,7 +38,7 @@ export default function DriverMiniSectors({
                 !sector.current.value ? "text-gray-500" : ""
               )}
             >
-              {!!sector.current.value ? sector.current.value : "00.000"}
+              {!!sector.current.value ? sector.current.value : "-"}
             </p>
           </div>
         </div>

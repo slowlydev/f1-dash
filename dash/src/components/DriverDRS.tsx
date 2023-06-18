@@ -6,10 +6,6 @@ type Props = {
 };
 
 export default function DriverDRS({ on, possible }: Props) {
-  const color = on
-    ? "border-emerald-500 text-emerald-500"
-    : "border-gray-500 text-gray-500";
-
   return (
     <span
       className={clsx(

@@ -8,7 +8,7 @@ type Props = {
 
 export default function DriverGap({ toFront, toLeader, catching }: Props) {
   return (
-    <div className="ml-2 text-lg font-semibold">
+    <div className="place-self-start text-lg font-semibold">
       <p className={clsx("leading-none", { "text-emerald-500": catching })}>
         {!!toFront ? toFront : "+0.000"}
       </p>

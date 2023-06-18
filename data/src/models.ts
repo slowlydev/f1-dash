@@ -34,7 +34,6 @@ export type RaceControlMessage = {
 };
 
 export type SessionData = {
-	//  series: []string we ignore for now
 	status: StatusUpdate[];
 };
 
@@ -96,7 +95,7 @@ export type Driver = {
 	teamName: string;
 	teamColor: string;
 
-	status: number;
+	status: "OUT" | "RETIRED" | "STOPPED" | "PIT" | "PIT OUT" | null;
 
 	gapToLeader: string;
 	gapToFront: string;

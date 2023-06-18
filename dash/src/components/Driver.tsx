@@ -7,9 +7,9 @@ import DriverDRS from "./DriverDRS";
 import DriverGap from "./DriverGap";
 import DriverTire from "./DriverTire";
 import DriverMiniSectors from "./DriverMiniSectors";
-import DriverRPM from "./DriverRPM";
 import DriverLapTime from "./DriverLapTime";
 import DriverInfo from "./DriverInfo";
+import clsx from "clsx";
 
 type Props = {
   driver: DriverType;
@@ -17,50 +17,39 @@ type Props = {
 };
 
 export default function Driver({ driver, position }: Props) {
-  const centerClass = "flex flex-row items-center justify-center";
-
   return (
-    <motion.div className="h-18 grid grid-cols-12 items-center py-1" layout>
-      <div className={centerClass}>
-        <DriverTag driver={driver} position={position} />
-      </div>
+    <motion.div
+      className={clsx("h-18 grid place-items-center items-center gap-1 py-1", {
+        "opacity-60": driver.status === "OUT" || driver.status === "RETIRED",
+        "bg-indigo-800 bg-opacity-30": driver.lapTimes.best.fastest,
+      })}
+      style={{
+        gridTemplateColumns: "6rem 4rem 4.5rem 4rem 5rem 5rem 20rem auto",
+      }}
+      layout
+    >
+      <DriverTag driver={driver} position={position} />
 
-      <div className={centerClass}>
-        <DriverDRS on={driver.drs.on} possible={driver.drs.possible} />
-      </div>
+      <DriverDRS on={driver.drs.on} possible={driver.drs.possible} />
 
-      <div className={centerClass}>
-        <DriverTire stints={driver.stints} />
-      </div>
+      <DriverTire stints={driver.stints} />
 
-      <div className="col-span-3 flex items-center justify-around gap-2 pr-4">
-        <DriverInfo status={null} laps={driver.laps} />
+      <DriverInfo status={driver.status} laps={driver.laps} />
 
-        <DriverGap
-          toFront={driver.gapToFront}
-          toLeader={driver.gapToLeader}
-          catching={driver.catchingFront}
-        />
+      <DriverGap
+        toFront={driver.gapToFront}
+        toLeader={driver.gapToLeader}
+        catching={driver.catchingFront}
+      />
 
-        <DriverLapTime
-          last={driver.lapTimes.last}
-          best={driver.lapTimes.best}
-        />
-      </div>
+      <DriverLapTime last={driver.lapTimes.last} best={driver.lapTimes.best} />
 
-      <div className="col-span-4">
-        <DriverMiniSectors
-          sectors={driver.sectors}
-          driverDisplayName={driver.short}
-        />
-      </div>
+      <DriverMiniSectors
+        sectors={driver.sectors}
+        driverDisplayName={driver.short}
+      />
 
-      <div className={centerClass}>
-        <DriverRPM rpm={driver.metrics.rpm} gear={driver.metrics.gear} />
-
-        {/* TODO in dev */}
-        {/* <DriverSpeed speed={driver.metrics.speed} /> */}
-      </div>
+      {/* <DriverRPM rpm={driver.metrics.rpm} gear={driver.metrics.gear} /> */}
     </motion.div>
   );
 }

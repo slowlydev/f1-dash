@@ -142,7 +142,7 @@ export type F1SessionInfo = {
 	Meeting: F1Meeting;
 	ArchiveStatus: F1ArchiveStatus;
 	Key: number;
-	type: string;
+	Type: string;
 	Name: string;
 	StartDate: string;
 	EndDate: string;
@@ -225,6 +225,7 @@ export type F1TimingDataDriver = {
 	BestLapTime: F1PersonalBestLapTime;
 	LastLapTime: F1I1;
 	NumberOfLaps: number; // TODO check
+	KnockedOut?: boolean;
 };
 
 export type F1Sector = {

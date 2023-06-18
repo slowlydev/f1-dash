@@ -44,6 +44,26 @@ export const translateSessionData = (e: F1SessionData): SessionData => {
 	};
 };
 
+export const translateSession = (e: F1SessionInfo): SessionInfo => {
+	return {
+		name: e.Meeting.Name,
+		officialName: e.Meeting.OfficialName,
+		location: e.Meeting.Location,
+
+		countryName: e.Meeting.Country.Name,
+		countryCode: e.Meeting.Country.Code,
+
+		circuitName: e.Meeting.Circuit.ShortName,
+		circuitKey: e.Meeting.Circuit.Key,
+
+		startDate: e.StartDate,
+		endDate: e.EndDate,
+		offset: e.GmtOffset,
+
+		type: e.Type,
+	};
+};
+
 export const translateTrackStatus = (e: F1TrackStatus): TrackStatus => {
 	return {
 		status: parseInt(e.Status), // TODO check
@@ -60,13 +80,13 @@ export const translateLapCount = (e: F1LapCount): LapCount => {
 
 export const translateWeather = (e: F1WeatherData): Weather => {
 	return {
-		humidity: parseInt(e.Humidity),
-		pressure: parseInt(e.Pressure),
+		humidity: parseFloat(e.Humidity),
+		pressure: parseFloat(e.Pressure),
 		rainfall: parseInt(e.Rainfall),
 		wind_direction: parseInt(e.WindDirection),
-		wind_speed: parseInt(e.WindSpeed),
-		air_temp: parseInt(e.AirTemp),
-		track_temp: parseInt(e.TrackTemp),
+		wind_speed: parseFloat(e.WindSpeed),
+		air_temp: parseFloat(e.AirTemp),
+		track_temp: parseFloat(e.TrackTemp),
 	};
 };
 
@@ -109,7 +129,17 @@ export const translateDrivers = (dl: F1DriverList, td: F1TimingData, ts: F1Timin
 				teamName: driver.TeamName,
 				teamColor: driver.TeamColour,
 
-				status: tdDriver.Status,
+				status: tdDriver.KnockedOut
+					? "OUT"
+					: tdDriver.Retired
+					? "RETIRED"
+					: tdDriver.Stopped
+					? "STOPPED"
+					: tdDriver.InPit
+					? "PIT"
+					: tdDriver.PitOut
+					? "PIT OUT"
+					: null,
 
 				laps: tdDriver.NumberOfLaps,
 
@@ -168,26 +198,6 @@ export const translateDrivers = (dl: F1DriverList, td: F1TimingData, ts: F1Timin
 			};
 		})
 		.filter((v) => v !== null) as Driver[];
-};
-
-export const translateSession = (e: F1SessionInfo): SessionInfo => {
-	return {
-		name: e.Meeting.Name,
-		officialName: e.Meeting.OfficialName,
-		location: e.Meeting.Location,
-
-		countryName: e.Meeting.Country.Name,
-		countryCode: e.Meeting.Country.Code,
-
-		circuitName: e.Meeting.Circuit.ShortName,
-		circuitKey: e.Meeting.Circuit.Key,
-
-		startDate: e.StartDate,
-		endDate: e.EndDate,
-		offset: e.GmtOffset,
-
-		type: e.type,
-	};
 };
 
 export const translate = (state: F1State): State => {

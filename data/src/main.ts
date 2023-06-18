@@ -5,8 +5,8 @@ import { updateState } from "./handler";
 import { State } from "./models";
 import { translate } from "./translators";
 
-// const F1_BASE_URL = "wss://livetiming.formula1.com/signalr";
-const F1_BASE_URL = "ws://localhost:8000"; // testing
+const F1_BASE_URL = "wss://livetiming.formula1.com/signalr";
+// const F1_BASE_URL = "ws://localhost:8000"; // testing
 const F1_NEGOTIATE_URL = "https://livetiming.formula1.com/signalr";
 
 console.log("starting...");
@@ -15,16 +15,6 @@ let state: F1State = {};
 let f1_ws_global: WebSocket | null;
 
 serve({
-	// fetch(req, server) {
-	// 	const url = new URL(req.url);
-	// 	if (url.pathname === "/") {
-	// 		const upgraded = server.upgrade(req);
-	// 		if (!upgraded) {
-	// 			return new Response("Upgrade failed", { status: 400 });
-	// 		}
-	// 	}
-	// 	return new Response("Hello World");
-	// },
 	fetch(req, server) {
 		if (server.upgrade(req)) return;
 		return new Response("Upgrade failed :(", { status: 500 });
@@ -40,7 +30,7 @@ serve({
 			const token = encodeURIComponent(body.ConnectionToken);
 			const url = `${F1_BASE_URL}/connect?clientProtocol=1.5&transport=webSockets&connectionToken=${token}&connectionData=${hub}`;
 
-			const f1_ws = new WebSocket(url, {
+			const f1_ws = new WebSocket(F1_BASE_URL, {
 				headers: {
 					"User-Agent": "BestHTTP",
 					"Accept-Encoding": "gzip,identity",

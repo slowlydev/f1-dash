@@ -7,7 +7,6 @@ import WeatherInfo from "../components/WeatherInfo";
 import LeaderBoard from "../components/LeaderBoard";
 
 import { State } from "../types/state.type";
-import RaceControlMessages from "../components/RaceControlMessages";
 
 export default function Page() {
   const [state, setState] = useState<null | State>(null);
@@ -33,6 +32,7 @@ export default function Page() {
   return (
     <div className="w-full">
       <RaceInfo
+        lapCount={state?.lapCount}
         session={state?.session}
         clock={state?.extrapolatedClock}
         track={state?.trackStatus}

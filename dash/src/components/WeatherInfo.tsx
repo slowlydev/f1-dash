@@ -1,3 +1,4 @@
+import { getWindDirection } from "../lib/getWindDirection";
 import { Weather } from "../types/weather.type";
 
 type Props = {
@@ -7,40 +8,47 @@ type Props = {
 export default function DataWeatherInfo({ weather }: Props) {
   const label = "truncate text-sm font-medium text-gray-500";
 
+  const handleRain = (rainfall: number | undefined) => {
+    if (rainfall === 1) return "Yes";
+    if (rainfall === 0) return "No";
+    return undefined;
+  };
+
   return (
-    <dl className="mt-2 grid grid-cols-10 gap-1">
-      <div className="col-span-2">
+    <dl
+      className="mt-2 grid gap-4"
+      style={{
+        gridTemplateColumns: "5rem 7rem 5rem 4rem 8rem 7rem auto",
+      }}
+    >
+      <div>
         <dt className={label}>Air Temp</dt>
         <LazyData data={weather?.air_temp} unit="°" />
       </div>
 
-      <div className="col-span-2">
+      <div>
         <dt className={label}>Track Temp</dt>
-        <LazyData data={weather?.track_temp} unit="°" />
+        <LazyData data={weather?.track_temp} unit="°C" />
       </div>
 
-      <div className="col-span-2">
+      <div>
         <dt className={label}>Humidity</dt>
         <LazyData data={weather?.humidity} unit="%" />
       </div>
 
-      <div className="col-span-2">
+      <div>
         <dt className={label}>Rainfall</dt>
-        <LazyData
-          data={
-            weather?.rainfall === 1
-              ? "Yes"
-              : weather?.rainfall === 0
-              ? "No"
-              : undefined
-          }
-          unit=""
-        />
+        <LazyData data={handleRain(weather?.rainfall)} />
       </div>
 
-      <div className="col-span-2">
-        <dt className={label}>Wind</dt>
+      <div>
+        <dt className={label}>Wind Speed</dt>
         <LazyData data={weather?.wind_speed} unit=" km/h" />
+      </div>
+
+      <div>
+        <dt className={label}>Wind Direction</dt>
+        <LazyData data={getWindDirection(weather?.wind_direction ?? 0)} />
       </div>
     </dl>
   );
@@ -51,7 +59,7 @@ function LazyData({
   unit,
 }: {
   data: string | number | undefined;
-  unit: string;
+  unit?: string;
 }) {
   return (
     <>

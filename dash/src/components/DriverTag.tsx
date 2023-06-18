@@ -8,7 +8,7 @@ type Props = {
 export default function DriverTag({ position, driver }: Props) {
   return (
     <div
-      className="flex w-20 items-center justify-between gap-0.5 rounded-md p-0.5 px-1 font-black"
+      className="flex min-w-[5.5rem]  items-center justify-between gap-0.5 rounded-md p-0.5 px-1 font-black"
       style={{ backgroundColor: `#${driver.teamColor}` }}
     >
       <p className="px-1 text-xl">{position}</p>

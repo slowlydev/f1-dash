@@ -27,9 +27,11 @@ http://localhost:9042/
 
 ## important api stuff
 
+https://api.formula1.com/v1/event-tracker
 https://livetiming.formula1.com/static/SessionInfo.json
 https://livetiming.formula1.com/static/StreamingStatus.json
 https://www.reddit.com/r/formula1/comments/b4t3q7/where_does_f1tfeednet_get_their_data/
+https://github.com/marcokreeft87/formulaone-card
 
 ## important events
 
