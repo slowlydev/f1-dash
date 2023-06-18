@@ -7,6 +7,7 @@ import WeatherInfo from "../components/WeatherInfo";
 import LeaderBoard from "../components/LeaderBoard";
 
 import { State } from "../types/state.type";
+import { env } from "../env.mjs";
 
 export default function Page() {
   const [state, setState] = useState<null | State>(null);
@@ -15,7 +16,7 @@ export default function Page() {
   const ws = useRef<WebSocket | null>();
 
   useEffect(() => {
-    const socket = new WebSocket(`ws://localhost:4000/`);
+    const socket = new WebSocket(`${env.NEXT_PUBLIC_SERVER_URL}`);
     console.log("connected");
 
     socket.onclose = () => setConnected(false);
