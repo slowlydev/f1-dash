@@ -2,12 +2,11 @@ import { serve } from "bun";
 
 import { F1State, SocketData } from "./formula1.type";
 import { updateState } from "./handler";
-import { State } from "./models";
 import { translate } from "./translators";
 
-const F1_BASE_URL = "wss://livetiming.formula1.com/signalr";
-// const F1_BASE_URL = "ws://localhost:8000"; // testing
 const F1_NEGOTIATE_URL = "https://livetiming.formula1.com/signalr";
+const DEFAULT_F1_BASE_URL = "wss://livetiming.formula1.com/signalr";
+const F1_BASE_URL = process.env.F1_BASE_URL ?? DEFAULT_F1_BASE_URL;
 
 console.log("starting...");
 
@@ -19,7 +18,7 @@ serve({
 		if (server.upgrade(req)) return;
 		return new Response("Upgrade failed :(", { status: 500 });
 	},
-	port: 4000,
+	port: process.env.PORT ?? 4000,
 	websocket: {
 		async open(ws) {
 			console.log("connected!");
@@ -30,6 +29,8 @@ serve({
 			const token = encodeURIComponent(body.ConnectionToken);
 			const url = `${F1_BASE_URL}/connect?clientProtocol=1.5&transport=webSockets&connectionToken=${token}&connectionData=${hub}`;
 
+			console.log("connecting to", F1_BASE_URL);
+
 			const f1_ws = new WebSocket(url, {
 				headers: {
 					"User-Agent": "BestHTTP",
@@ -39,7 +40,7 @@ serve({
 			});
 
 			f1_ws.onopen = () => {
-				console.log("connected to f1!");
+				console.log("connected to f1!", F1_BASE_URL);
 				f1_ws.send(subscribeRequest());
 			};
 
@@ -53,7 +54,7 @@ serve({
 			};
 
 			f1_ws.onclose = () => {
-				console.log("disconnected from f1!");
+				console.log("disconnected from f1!", F1_BASE_URL);
 			};
 
 			f1_ws_global = f1_ws;
@@ -65,7 +66,7 @@ serve({
 			f1_ws_global?.close();
 			console.log("disconnected!");
 		},
-	}, // handlers
+	},
 });
 
 const negotiate = async (hub: string) => {
@@ -110,4 +111,4 @@ const subscribeRequest = (): string => {
 	});
 };
 
-console.log("running...");
+console.log("listening on port:", process.env.PORT ?? 4000);
