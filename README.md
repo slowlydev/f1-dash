@@ -18,28 +18,6 @@ on connection start grabbing data from f1, reformats it and sends it to the dash
 `bun i` install dependencies  
 `bun start` start in backend
 
-## data-tunnel (backend) (not used right now) (wip)
-
-on connection start grabbing data from f1, reformats it and sends it to the dashboard  
-but also planned to save it to the scylla db for data history
-
-`cargo run` install dependencies & start program  
-`cargo build` install dependencies & build program
-
-## data-provider (backend) (not used right now)
-
-connects to the scylla db and reads the data from it every 100-200ms
-
-`cargo run` install dependencies & start program  
-`cargo build` install dependencies & build program
-
-## data-importer (backend) (not used right now)
-
-connects to f1 and writes the received data into a scylla db in out own data schema
-
-`cargo run` install dependencies & start program  
-`cargo build` install dependencies & build program
-
 ## data-saver (backend)
 
 connects to f1 and writes the received raw data into a txt for the simulator to read and use (used for testing)
