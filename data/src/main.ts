@@ -30,7 +30,7 @@ serve({
 			const token = encodeURIComponent(body.ConnectionToken);
 			const url = `${F1_BASE_URL}/connect?clientProtocol=1.5&transport=webSockets&connectionToken=${token}&connectionData=${hub}`;
 
-			const f1_ws = new WebSocket(F1_BASE_URL, {
+			const f1_ws = new WebSocket(url, {
 				headers: {
 					"User-Agent": "BestHTTP",
 					"Accept-Encoding": "gzip,identity",
