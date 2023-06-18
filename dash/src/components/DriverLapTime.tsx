@@ -14,20 +14,20 @@ export default function DriverLapTime({ last, best }: Props) {
       <p
         className={clsx(
           "text-sm font-medium leading-none text-gray-500",
-          getTimeColor(last.fastest, last.pb),
-          !last.value ? "text-gray-500" : ""
-        )}
-      >
-        {!!last.value ? last.value : "-"}
-      </p>
-      <p
-        className={clsx(
-          "text-lg font-semibold leading-none",
           getTimeColor(best.fastest, best.pb),
           !best.value ? "text-gray-500" : ""
         )}
       >
         {!!best.value ? best.value : "-"}
+      </p>
+      <p
+        className={clsx(
+          "text-lg font-semibold leading-none",
+          getTimeColor(last.fastest, last.pb),
+          !last.value ? "text-gray-500" : ""
+        )}
+      >
+        {!!last.value ? last.value : "-"}
       </p>
     </div>
   );

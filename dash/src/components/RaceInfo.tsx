@@ -54,9 +54,11 @@ export default function RaceInfo({ session, clock, track, lapCount }: Props) {
       </div>
 
       <div className="flex items-center gap-4">
-        <p className="text-3xl font-extrabold">
-          {lapCount?.current} / {lapCount?.total}
-        </p>
+        {!!lapCount && (
+          <p className="text-3xl font-extrabold">
+            {lapCount?.current} / {lapCount?.total}
+          </p>
+        )}
 
         <div
           className={clsx(
@@ -72,12 +74,12 @@ export default function RaceInfo({ session, clock, track, lapCount }: Props) {
         <div
           className={clsx(
             getTrackStatusMessage(track?.status ?? null).color,
-            "fixed right-0 top-0 z-[-10] h-[2rem] w-[15rem]"
+            "absolute right-0 top-0 z-[-10] h-[2rem] w-[15rem]"
           )}
         >
           <div
             className={clsx(
-              "fixed right-0 top-0 z-[-10] h-[8rem] w-[25rem] backdrop-blur-[40px]"
+              "absolute right-0 top-0 z-[-10] h-[8rem] w-[25rem] backdrop-blur-[40px]"
             )}
           />
         </div>

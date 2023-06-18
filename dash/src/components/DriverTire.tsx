@@ -8,7 +8,7 @@ type Props = {
 };
 
 export default function DriverTire({ stints }: Props) {
-  const stops = stints ? stints.length : 0;
+  const stops = stints ? stints.length - 1 : 0;
   const currentStint = stints ? stints[stints.length - 1] : null;
   const unknownCompound = ![
     "soft",
@@ -20,7 +20,7 @@ export default function DriverTire({ stints }: Props) {
 
   return (
     <div className="flex flex-row items-center gap-2">
-      {currentStint && (
+      {currentStint && !unknownCompound && (
         <Image
           src={`/tires/${currentStint.compound.toLowerCase()}.svg`}
           width={32}
@@ -30,13 +30,13 @@ export default function DriverTire({ stints }: Props) {
       )}
 
       {currentStint && unknownCompound && (
-        <div className="h-8 w-8">
+        <div className="flex h-8 w-8 items-center justify-center">
           <p>?</p>
         </div>
       )}
 
-      {!currentStint && unknownCompound && (
-        <div className="mt-1 h-8 w-8 animate-pulse rounded-md bg-gray-700 font-semibold" />
+      {!currentStint && (
+        <div className="h-8 w-8 animate-pulse rounded-md bg-gray-700 font-semibold" />
       )}
 
       {/* TODO move this to a tooltip */}
