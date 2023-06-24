@@ -32,7 +32,7 @@ export default function RaceInfo({ session, clock, track, lapCount }: Props) {
       : undefined;
 
   return (
-    <div className="flex justify-between gap-1">
+    <div className="flex flex-wrap-reverse justify-between gap-1">
       <div className="flex flex-auto items-center space-x-3 overflow-hidden">
         <Flag countryCode={session?.countryCode} />
 
@@ -55,14 +55,14 @@ export default function RaceInfo({ session, clock, track, lapCount }: Props) {
 
       <div className="flex items-center gap-4">
         {!!lapCount && (
-          <p className="text-3xl font-extrabold">
+          <p className="text-3xl font-extrabold sm:text-3xl">
             {lapCount?.current} / {lapCount?.total}
           </p>
         )}
 
         <div
           className={clsx(
-            "flex h-8 items-center rounded-md px-2",
+            "flex h-8 items-center truncate rounded-md px-2",
             getTrackStatusMessage(track?.status ?? null).color
           )}
         >
@@ -97,16 +97,20 @@ const Flag = ({ countryCode }: FlagProps) => {
     <div className="flex content-center justify-center">
       {countryCode ? (
         <Image
-          src={`/flags/${countryCode
-            .toLowerCase()
-            .substring(0, countryCode.toLowerCase().length - 1)}.svg`}
+          src={`/country-flags/${
+            countryCode.length > 2
+              ? countryCode
+                  .toLowerCase()
+                  .substring(0, countryCode.toLowerCase().length - 1)
+              : countryCode
+          }.svg`}
           alt={countryCode}
           width={70}
           height={35}
-          className="relative h-12 w-14 overflow-hidden rounded-lg"
+          className="relative h-12 w-16 overflow-hidden rounded-lg"
         />
       ) : (
-        <div className="relative h-12 w-14 animate-pulse overflow-hidden rounded-lg bg-gray-700" />
+        <div className="relative h-12 w-16 animate-pulse overflow-hidden rounded-lg bg-gray-700" />
       )}
     </div>
   );
