@@ -52,7 +52,18 @@ version = "0.2.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d1e50562e37200edf7c6c43e54a08e64a5553bfb59d9c297d5572512aa517256"
 dependencies = [
- "num-bigint",
+ "num-bigint 0.3.3",
+ "num-integer",
+ "num-traits",
+]
+
+[[package]]
+name = "bigdecimal"
+version = "0.3.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a6773ddc0eafc0e509fb60e48dff7f450f8e674a0686ae8605e8d9901bd5eefa"
+dependencies = [
+ "num-bigint 0.4.3",
  "num-integer",
  "num-traits",
 ]
@@ -166,19 +177,25 @@ dependencies = [
 ]
 
 [[package]]
+name = "data-encoding"
+version = "2.4.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c2e66c9d817f1720209181c316d28635c050fa304f9c79e47a520882661b7308"
+
+[[package]]
 name = "data-saver"
 version = "0.1.0"
 dependencies = [
- "bigdecimal",
+ "bigdecimal 0.3.1",
  "futures",
- "num-bigint",
+ "num-bigint 0.4.3",
  "reqwest",
  "scylla",
  "serde",
  "serde_json",
  "signalrs-client",
  "tokio",
- "tokio-tungstenite 0.18.0",
+ "tokio-tungstenite 0.19.0",
  "tracing",
  "tracing-subscriber",
  "uuid",
@@ -742,6 +759,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "num-bigint"
+version = "0.4.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f93ab6289c7b344a8a9f60f88d80aa20032336fe78da341afc91c8a2341fc75f"
+dependencies = [
+ "autocfg",
+ "num-integer",
+ "num-traits",
+]
+
+[[package]]
 name = "num-integer"
 version = "0.1.45"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1158,7 +1186,7 @@ checksum = "530af73ae66ea56dcc2dd6a8900b442c31da0f068923ea41e0b0f3d0703b067c"
 dependencies = [
  "arc-swap",
  "async-trait",
- "bigdecimal",
+ "bigdecimal 0.2.2",
  "byteorder",
  "bytes",
  "chrono",
@@ -1167,7 +1195,7 @@ dependencies = [
  "histogram",
  "itertools",
  "lz4_flex",
- "num-bigint",
+ "num-bigint 0.3.3",
  "num_enum",
  "rand",
  "rand_pcg",
@@ -1190,12 +1218,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0fc8568c89b1d70547881610ad2423157267d57552edb4861e6bd4394e53f26c"
 dependencies = [
  "async-trait",
- "bigdecimal",
+ "bigdecimal 0.2.2",
  "byteorder",
  "bytes",
  "chrono",
  "lz4_flex",
- "num-bigint",
+ "num-bigint 0.3.3",
  "num_enum",
  "scylla-macros",
  "snap",
@@ -1588,16 +1616,16 @@ dependencies = [
 
 [[package]]
 name = "tokio-tungstenite"
-version = "0.18.0"
+version = "0.19.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "54319c93411147bced34cb5609a80e0a8e44c5999c93903a81cd866630ec0bfd"
+checksum = "ec509ac96e9a0c43427c74f003127d953a265737636129424288d27cb5c4b12c"
 dependencies = [
  "futures-util",
  "log",
  "native-tls",
  "tokio",
  "tokio-native-tls",
- "tungstenite 0.18.0",
+ "tungstenite 0.19.0",
 ]
 
 [[package]]
@@ -1727,13 +1755,13 @@ dependencies = [
 
 [[package]]
 name = "tungstenite"
-version = "0.18.0"
+version = "0.19.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "30ee6ab729cd4cf0fd55218530c4522ed30b7b6081752839b68fcec8d0960788"
+checksum = "15fba1a6d6bb030745759a9a2a588bfe8490fc8b4751a277db3a0be1c9ebbf67"
 dependencies = [
- "base64 0.13.1",
  "byteorder",
  "bytes",
+ "data-encoding",
  "http",
  "httparse",
  "log",
