@@ -3,6 +3,7 @@ import {
 	F1DriverList,
 	F1ExtrapolatedClock,
 	F1LapCount,
+	F1Position,
 	F1RaceControlMessages,
 	F1SessionData,
 	F1SessionInfo,
@@ -15,6 +16,8 @@ import {
 } from "./formula1.type";
 import {
 	Driver,
+	DriverPosition,
+	DriverPositionBatch,
 	ExtrapolatedClock,
 	LapCount,
 	RaceControlMessage,
@@ -100,7 +103,36 @@ export const translateRaceControlMessages = (e: F1RaceControlMessages): RaceCont
 		...(e2.Flag && { flag: e2.Flag }),
 		...(e2.Scope && { scope: e2.Scope }),
 		...(e2.Sector && { sector: e2.Sector }),
+		...(e2.Status && { drsEnabled: e2.Status === "ENABLED" }),
 	}));
+};
+
+export const translatePositions = (e: F1Position, drivers: F1DriverList): DriverPositionBatch[] => {
+	return e.Position.map(
+		(e): DriverPositionBatch => ({
+			utc: e.Timestamp,
+			positions: Object.entries(e.Entries).map(([nr, e2]): DriverPosition => {
+				const driver = drivers[nr];
+
+				return {
+					driverNr: nr,
+
+					broadcastName: driver.BroadcastName,
+					fullName: driver.FullName,
+					firstName: driver.FirstName,
+					lastName: driver.LastName,
+					short: driver.Tla,
+
+					teamColor: driver.TeamColour,
+
+					status: e2.Status,
+					x: e2.X,
+					y: e2.Y,
+					z: e2.Z,
+				};
+			}),
+		})
+	);
 };
 
 export const translateDrivers = (dl: F1DriverList, td: F1TimingData, ts: F1TimingStats, cd: F1CarData, tad: F1TimingAppData): Driver[] => {
@@ -154,7 +186,7 @@ export const translateDrivers = (dl: F1DriverList, td: F1TimingData, ts: F1Timin
 							fastest: e.OverallFastest,
 							pb: e.PersonalFastest,
 						},
-						// TODO
+						// TODO find a smart way to keep the old state
 						last: {
 							value: e.Value,
 							fastest: false,
@@ -207,7 +239,9 @@ export const translate = (state: F1State): State => {
 		...(state.TrackStatus && { trackStatus: translateTrackStatus(state.TrackStatus) }),
 		...(state.LapCount && { lapCount: translateLapCount(state.LapCount) }),
 		...(state.WeatherData && { weather: translateWeather(state.WeatherData) }),
+		...(state.SessionInfo && { session: translateSession(state.SessionInfo) }),
 
+		...(state.Position && state.DriverList && { positionBatches: translatePositions(state.Position, state.DriverList) }),
 		...(state.RaceControlMessages && { raceControlMessages: translateRaceControlMessages(state.RaceControlMessages) }),
 
 		// TODO make work without other cats
@@ -218,7 +252,5 @@ export const translate = (state: F1State): State => {
 			state.TimingAppData && {
 				drivers: translateDrivers(state.DriverList, state.TimingData, state.TimingStats, state.CarData, state.TimingAppData),
 			}),
-
-		...(state.SessionInfo && { session: translateSession(state.SessionInfo) }),
 	};
 };

@@ -136,6 +136,7 @@ export type F1Message = {
 	Flag?: string;
 	Scope?: string;
 	Sector?: number;
+	Status?: "ENABLED" | "DISABLED";
 };
 
 export type F1SessionInfo = {

@@ -10,11 +10,11 @@ const F1_BASE_URL = process.env.F1_BASE_URL ?? DEFAULT_F1_BASE_URL;
 
 console.log("starting...");
 
-let state: F1State = {};
 let f1_ws_global: WebSocket | null;
 
 serve({
 	fetch(req, server) {
+		if (req.url.includes("/api/ping")) return new Response(null, { status: 200 });
 		if (server.upgrade(req)) return;
 		return new Response("Upgrade failed :(", { status: 500 });
 	},
@@ -29,7 +29,9 @@ serve({
 			const token = encodeURIComponent(body.ConnectionToken);
 			const url = `${F1_BASE_URL}/connect?clientProtocol=1.5&transport=webSockets&connectionToken=${token}&connectionData=${hub}`;
 
-			console.log("connecting to", F1_BASE_URL);
+			console.log("connecting to f1!", F1_BASE_URL);
+
+			let state: F1State = {};
 
 			const f1_ws = new WebSocket(url, {
 				headers: {
@@ -54,7 +56,7 @@ serve({
 			};
 
 			f1_ws.onclose = () => {
-				console.log("disconnected from f1!", F1_BASE_URL);
+				console.log("got disconnect from f1!", F1_BASE_URL);
 			};
 
 			f1_ws_global = f1_ws;
@@ -64,7 +66,8 @@ serve({
 		},
 		close() {
 			f1_ws_global?.close();
-			console.log("disconnected!");
+			console.log("disconnected from f1!", F1_BASE_URL);
+			console.log("got disconnect!");
 		},
 	},
 });

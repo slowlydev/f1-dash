@@ -9,6 +9,8 @@ export type State = {
 	drivers?: Driver[];
 
 	session?: SessionInfo;
+
+	positionBatches?: DriverPositionBatch[];
 };
 
 export type ExtrapolatedClock = {
@@ -31,6 +33,7 @@ export type RaceControlMessage = {
 	flag?: string;
 	scope?: string;
 	sector?: number;
+	drsEnabled?: boolean;
 };
 
 export type SessionData = {
@@ -143,4 +146,27 @@ export type Metrics = {
 	gear: number;
 	rpm: number;
 	speed: number;
+};
+
+export type DriverPositionBatch = {
+	utc: string;
+	positions: DriverPosition[];
+};
+
+export type DriverPosition = {
+	driverNr: string;
+
+	broadcastName: string;
+	fullName: string;
+	firstName: string;
+	lastName: string;
+	short: string;
+
+	teamColor: string;
+
+	status: string;
+
+	x: number;
+	y: number;
+	z: number;
 };
