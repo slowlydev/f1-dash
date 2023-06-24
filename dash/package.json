@@ -10,6 +10,7 @@
     "prettier": "prettier --write src"
   },
   "dependencies": {
+    "@headlessui/react": "1.7.15",
     "chart.js": "4.3.0",
     "clsx": "1.2.1",
     "framer-motion": "10.12.7",
