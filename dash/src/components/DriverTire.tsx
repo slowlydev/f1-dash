@@ -19,7 +19,7 @@ export default function DriverTire({ stints }: Props) {
   ].includes(currentStint?.compound ?? "");
 
   return (
-    <div className="flex flex-row items-center gap-2">
+    <div className="flex flex-row items-center gap-2 place-self-start">
       {currentStint && !unknownCompound && (
         <Image
           src={`/tires/${currentStint.compound.toLowerCase()}.svg`}

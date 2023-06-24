@@ -38,7 +38,7 @@ export default function DriverMiniSectors({
                 !sector.current.value ? "text-gray-500" : ""
               )}
             >
-              {!!sector.current.value ? sector.current.value : "-"}
+              {!!sector.current.value ? sector.current.value : "----"}
             </p>
           </div>
         </div>

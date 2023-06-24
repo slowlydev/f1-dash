@@ -32,11 +32,11 @@ export default function RaceInfo({ session, clock, track, lapCount }: Props) {
       : undefined;
 
   return (
-    <div className="flex flex-wrap-reverse justify-between gap-1">
-      <div className="flex flex-auto items-center space-x-3 overflow-hidden">
+    <div className="flex gap-1">
+      <div className="flex flex-auto items-center gap-3">
         <Flag countryCode={session?.countryCode} />
 
-        <div className="flex w-3/4 flex-col justify-center">
+        <div className="flex flex-col justify-center">
           {session ? (
             <h1 className="truncate text-sm font-medium text-gray-500">
               {session.name}: {session.type ?? "unknown"}
@@ -53,9 +53,9 @@ export default function RaceInfo({ session, clock, track, lapCount }: Props) {
         </div>
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center justify-end gap-2">
         {!!lapCount && (
-          <p className="text-3xl font-extrabold sm:text-3xl">
+          <p className="whitespace-nowrap text-3xl font-extrabold sm:text-3xl">
             {lapCount?.current} / {lapCount?.total}
           </p>
         )}
@@ -74,7 +74,7 @@ export default function RaceInfo({ session, clock, track, lapCount }: Props) {
         <div
           className={clsx(
             getTrackStatusMessage(track?.status ?? null).color,
-            "absolute right-0 top-0 z-[-10] h-[2rem] w-[15rem]"
+            "absolute right-0 top-0 z-[-10] h-[2rem] w-2/5 sm:w-[15rem]"
           )}
         >
           <div
@@ -94,7 +94,7 @@ type FlagProps = {
 
 const Flag = ({ countryCode }: FlagProps) => {
   return (
-    <div className="flex content-center justify-center">
+    <div className="hidden content-center justify-center sm:flex">
       {countryCode ? (
         <Image
           src={`/country-flags/${
