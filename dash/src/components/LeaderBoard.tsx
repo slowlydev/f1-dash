@@ -13,98 +13,71 @@ const sortPos = (a: DriverType, b: DriverType) => {
 
 export default function LeaderBoard({ drivers }: Props) {
   return (
-    <div className="mt-2 flex flex-col divide-y divide-gray-500 overflow-x-auto">
-      <AnimatePresence>
-        {!drivers &&
-          new Array(20)
-            .fill("")
-            .map((_, index) => <SkeletonDriver key={index} />)}
+    <div className="mt-2 flex w-fit flex-col divide-y divide-gray-500">
+      {!drivers &&
+        new Array(20)
+          .fill("")
+          .map((_, index) => (
+            <SkeletonDriver key={`driver.loading.${index}`} />
+          ))}
 
-        {drivers &&
-          drivers
-            .sort(sortPos)
-            .map((driver, index) => (
-              <Driver
-                key={`leaderBoard.driver.${driver.short}`}
-                driver={driver}
-                position={index + 1}
-              />
-            ))}
-      </AnimatePresence>
+      {drivers && (
+        <AnimatePresence>
+          {drivers.sort(sortPos).map((driver, index) => (
+            <Driver
+              key={`leaderBoard.driver.${driver.short}`}
+              driver={driver}
+              position={index + 1}
+            />
+          ))}
+        </AnimatePresence>
+      )}
     </div>
   );
 }
 
 const SkeletonDriver = () => {
-  const centerClass = "flex flex-row items-center justify-center";
+  const animateClass = "h-8 animate-pulse rounded-md bg-gray-700";
 
   return (
-    <div className="h-18 grid grid-cols-12 items-center gap-1 py-1">
-      <div className={centerClass}>
-        <div
-          className=" h-8 animate-pulse rounded-md bg-gray-700 font-semibold"
-          style={{ width: "100%" }}
-        />
-      </div>
+    <div
+      className="h-18 grid place-items-center items-center gap-1 py-1"
+      style={{
+        gridTemplateColumns: "6rem 4rem 5rem 4rem 5rem 5rem 19.5rem",
+      }}
+    >
+      <div className={animateClass} style={{ width: "95%" }} />
 
-      <div className={centerClass}>
-        <div
-          className=" h-8 animate-pulse rounded-md bg-gray-700 font-semibold"
-          style={{ width: "70%" }}
-        />
-      </div>
+      <div className={animateClass} style={{ width: "90%" }} />
 
-      <div className={clsx(centerClass, "gap-1")}>
-        <div className="h-8 w-8 animate-pulse rounded-md bg-gray-700 font-semibold" />
+      <div className="flex w-full gap-2">
+        <div className={clsx(animateClass, "w-8")} />
 
-        <div className="h-8 w-10 animate-pulse rounded-md bg-gray-700 font-semibold" />
-      </div>
-
-      <div className="col-span-3 flex items-center justify-center gap-1">
-        <div className="h-8 w-8 animate-pulse rounded-md bg-gray-700 font-semibold" />
-
-        <div className="flex flex-col gap-1">
-          <div className="h-5 w-16 animate-pulse rounded-md bg-gray-700 font-semibold" />
-          <div className="h-3 w-16 animate-pulse rounded-md bg-gray-700 font-semibold" />
-        </div>
-
-        <div className="flex flex-col gap-1">
-          <div className="h-5 w-20 animate-pulse rounded-md bg-gray-700 font-semibold" />
-          <div className="h-3 w-20 animate-pulse rounded-md bg-gray-700 font-semibold" />
+        <div className="flex flex-1 flex-col gap-1">
+          <div className={clsx(animateClass, "!h-4")} />
+          <div className={clsx(animateClass, "!h-3 w-2/3")} />
         </div>
       </div>
 
-      <div className="col-span-4 grid grid-cols-3 gap-x-2 gap-y-1">
-        <div className="flex flex-col gap-1">
-          <div
-            className="h-3 animate-pulse rounded-md bg-gray-700 font-semibold"
-            style={{ width: "100%" }}
-          />
-
-          <div className="w-30 h-5 animate-pulse rounded-md bg-gray-700 font-semibold" />
+      {new Array(2).fill(null).map(() => (
+        <div className="flex w-full flex-col gap-1">
+          <div className={clsx(animateClass, "!h-4")} />
+          <div className={clsx(animateClass, "!h-3 w-2/3")} />
         </div>
+      ))}
 
-        <div className="flex flex-col gap-1">
-          <div
-            className="h-3 animate-pulse rounded-md bg-gray-700 font-semibold"
-            style={{ width: "100%" }}
-          />
-
-          <div className="w-30 h-5 animate-pulse rounded-md bg-gray-700 font-semibold" />
-        </div>
-
-        <div className="flex flex-col gap-1">
-          <div
-            className="h-3 animate-pulse rounded-md bg-gray-700 font-semibold"
-            style={{ width: "100%" }}
-          />
-
-          <div className="w-30 h-5 animate-pulse rounded-md bg-gray-700 font-semibold" />
-        </div>
+      <div className="flex w-full flex-col gap-1">
+        <div className={clsx(animateClass, "!h-3 w-4/5")} />
+        <div className={clsx(animateClass, "!h-4")} />
       </div>
 
-      <div className={centerClass}>
-        <div className="h-8 w-8 animate-pulse rounded-md bg-gray-700 font-semibold" />
+      <div className="flex w-full gap-1">
+        {new Array(3).fill(null).map(() => (
+          <div className="flex w-full flex-col gap-1">
+            <div className={clsx(animateClass, "!h-4")} />
+            <div className={clsx(animateClass, "!h-3 w-2/3")} />
+          </div>
+        ))}
       </div>
     </div>
   );
