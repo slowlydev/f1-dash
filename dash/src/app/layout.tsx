@@ -5,10 +5,13 @@ import { type ReactNode } from "react";
 
 import "@/styles/globals.css";
 import Script from "next/script";
+import { env } from "../env.mjs";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export default function RootLayout({ children }: { children: ReactNode }) {
+  const enableTracking = !!!env.NEXT_PUBLIC_DISABLE_TRACKING;
+
   return (
     <html
       lang="en"
@@ -16,12 +19,14 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     >
       <head />
 
-      <Script
-        async
-        defer
-        data-website-id="f1f0eb93-0656-4791-900d-b9a1b0e7af96"
-        src="https://slowly-base.vercel.app/rep.js"
-      />
+      {enableTracking && (
+        <Script
+          async
+          defer
+          data-website-id="f1f0eb93-0656-4791-900d-b9a1b0e7af96"
+          src="https://slowly-base.vercel.app/rep.js"
+        />
+      )}
 
       <body>{children}</body>
     </html>
