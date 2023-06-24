@@ -1,5 +1,8 @@
+import Image from "next/image";
 import { getWindDirection } from "../lib/getWindDirection";
 import { Weather } from "../types/weather.type";
+
+import arrowIcon from "../../public/icons/arrow-up.svg";
 
 type Props = {
   weather: Weather | undefined;
@@ -48,7 +51,25 @@ export default function DataWeatherInfo({ weather }: Props) {
 
       <div>
         <dt className={label}>Wind Direction</dt>
-        <LazyData data={getWindDirection(weather?.wind_direction ?? 0)} />
+        <div className="flex items-center gap-1">
+          <LazyData
+            data={
+              weather?.wind_direction
+                ? getWindDirection(weather.wind_direction)
+                : undefined
+            }
+          />
+          {weather?.wind_direction && (
+            <div className="mt-1 h-8 w-8 overflow-hidden">
+              <Image
+                src={arrowIcon}
+                alt="arrow"
+                className="h-8 w-8"
+                style={{ rotate: `${weather.wind_direction}deg` }}
+              />
+            </div>
+          )}
+        </div>
       </div>
     </dl>
   );
