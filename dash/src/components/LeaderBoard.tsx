@@ -59,8 +59,8 @@ const SkeletonDriver = () => {
         </div>
       </div>
 
-      {new Array(2).fill(null).map(() => (
-        <div className="flex w-full flex-col gap-1">
+      {new Array(2).fill(null).map((_, index) => (
+        <div className="flex w-full flex-col gap-1" key={`skeleton.${index}`}>
           <div className={clsx(animateClass, "!h-4")} />
           <div className={clsx(animateClass, "!h-3 w-2/3")} />
         </div>
@@ -72,8 +72,11 @@ const SkeletonDriver = () => {
       </div>
 
       <div className="flex w-full gap-1">
-        {new Array(3).fill(null).map(() => (
-          <div className="flex w-full flex-col gap-1">
+        {new Array(3).fill(null).map((_, index) => (
+          <div
+            className="flex w-full flex-col gap-1"
+            key={`skeleton.sector.${index}`}
+          >
             <div className={clsx(animateClass, "!h-4")} />
             <div className={clsx(animateClass, "!h-3 w-2/3")} />
           </div>
