@@ -20,14 +20,14 @@ export default function Driver({ driver, position }: Props) {
   return (
     <motion.div
       className={clsx("h-18 grid place-items-center items-center gap-1 py-1", {
-        "opacity-60":
+        "opacity-50":
           driver.status === "OUT" ||
           driver.status === "RETIRED" ||
           driver.status === "STOPPED",
         "bg-indigo-800 bg-opacity-30": driver.lapTimes.best.fastest,
       })}
       style={{
-        gridTemplateColumns: "6rem 4rem 5rem 4rem 5rem 5rem 20rem auto",
+        gridTemplateColumns: "6rem 4rem 5rem 4rem 5rem 5rem 19.5rem",
       }}
       layout
     >
