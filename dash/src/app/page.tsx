@@ -1,18 +1,22 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
-// import Map from "../components/Map";
+import Map from "../components/Map";
 import RaceInfo from "../components/RaceInfo";
 import WeatherInfo from "../components/WeatherInfo";
 import LeaderBoard from "../components/LeaderBoard";
-// import RaceControlMessages from "../components/RaceControlMessages";
+import RaceControlMessages from "../components/RaceControlMessages";
 
 import { State } from "../types/state.type";
 
 import { env } from "../env.mjs";
 
+import { getEnabledFeatures } from "../lib/getEnabledFeatures";
+
 export default function Page() {
+  const enabledFeatures = useMemo(getEnabledFeatures, []);
+
   const [state, setState] = useState<null | State>(null);
   const [connected, setConnected] = useState(false);
 
@@ -20,7 +24,6 @@ export default function Page() {
 
   useEffect(() => {
     const socket = new WebSocket(`${env.NEXT_PUBLIC_SERVER_URL}`);
-    console.log("connected");
 
     socket.onclose = () => setConnected(false);
     socket.onopen = () => setConnected(true);
@@ -53,15 +56,19 @@ export default function Page() {
           <LeaderBoard drivers={state?.drivers} />
         </div>
 
-        {/* <div className="min-w-fit flex-1">
-          <Map
-            circuitKey={state?.session?.circuitKey}
-            positionBatches={state?.positionBatches}
-          />
-        </div> */}
+        {enabledFeatures.includes("map") && (
+          <div className="min-w-fit flex-1">
+            <Map
+              circuitKey={state?.session?.circuitKey}
+              positionBatches={state?.positionBatches}
+            />
+          </div>
+        )}
       </div>
 
-      {/* <RaceControlMessages messages={state?.raceControlMessages} /> */}
+      {enabledFeatures.includes("rcm") && (
+        <RaceControlMessages messages={state?.raceControlMessages} />
+      )}
     </div>
   );
 }
