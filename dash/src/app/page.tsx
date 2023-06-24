@@ -2,11 +2,14 @@
 
 import { useEffect, useRef, useState } from "react";
 
+// import Map from "../components/Map";
 import RaceInfo from "../components/RaceInfo";
 import WeatherInfo from "../components/WeatherInfo";
 import LeaderBoard from "../components/LeaderBoard";
+// import RaceControlMessages from "../components/RaceControlMessages";
 
 import { State } from "../types/state.type";
+
 import { env } from "../env.mjs";
 
 export default function Page() {
@@ -28,6 +31,8 @@ export default function Page() {
     };
 
     ws.current = socket;
+
+    return () => socket.close();
   }, []);
 
   return (
@@ -43,16 +48,20 @@ export default function Page() {
         <WeatherInfo weather={state?.weather} />
       </div>
 
-      <div className="overflow-x-auto">
-        <LeaderBoard drivers={state?.drivers} />
+      <div className="flex flex-row flex-wrap gap-2">
+        <div className="overflow-x-auto">
+          <LeaderBoard drivers={state?.drivers} />
+        </div>
+
+        {/* <div className="min-w-fit flex-1">
+          <Map
+            circuitKey={state?.session?.circuitKey}
+            positionBatches={state?.positionBatches}
+          />
+        </div> */}
       </div>
 
-      {/* <div className="grid grid-cols-12 gap-4">
-        <section className="col-span-9"></section>
-        <section className="col-span-3">
-          <RaceControlMessages messages={state?.raceControlMessages} />
-        </section>
-      </div> */}
+      {/* <RaceControlMessages messages={state?.raceControlMessages} /> */}
     </div>
   );
 }
