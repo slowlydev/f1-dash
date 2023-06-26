@@ -1,11 +1,30 @@
 import { Metadata } from "next";
 
+const title = "f1-dash";
+const description =
+  "f1-dash lets you see realtime formula 1 telemetry and timing";
+
+const url = "https://f1-dash.vercel.app";
+
 export const metadata: Metadata = {
   generator: "Next.js",
 
-  applicationName: "f1-dash",
-  title: "f1-dash",
-  description: "f1-dash lets you see realtime formula 1 telemetry and timing",
+  applicationName: title,
+
+  title,
+  description,
+
+  openGraph: {
+    title,
+    description,
+    url,
+  },
+
+  twitter: {
+    title,
+    description,
+    creator: "Slowlydev",
+  },
 
   category: "dashboard",
 
@@ -13,9 +32,9 @@ export const metadata: Metadata = {
 
   keywords: ["Formula 1", "F1", "dashboard", "timing", "telemetry", "realtime"],
 
-  authors: [{ name: "Slowlydev", url: "https://slowlydev.vercel.app" }],
   creator: "Slowlydev",
   publisher: "Slowlydev",
+  authors: [{ name: "Slowlydev", url: "https://slowlydev.vercel.app" }],
 
   colorScheme: "dark",
   themeColor: "#18181B",
@@ -27,14 +46,14 @@ export const metadata: Metadata = {
   },
 
   assets: [
-    "https://f1-dash.vercel.app/fonts",
-    "https://f1-dash.vercel.app/tires",
-    "https://f1-dash.vercel.app/icons",
-    "https://f1-dash.vercel.app/flags",
-    "https://f1-dash.vercel.app/country-flags",
+    `${url}/fonts`,
+    `${url}/tires`,
+    `${url}/icons`,
+    `${url}/flags`,
+    `${url}/country-flags`,
   ],
 
-  metadataBase: new URL("https://f1-dash.vercel.app"),
+  metadataBase: new URL(url),
 
   verification: {
     google: "hKv0h7XtWgQ-pVNVKpwwb2wcCC2f0tBQ1X1IcDX50hg",
