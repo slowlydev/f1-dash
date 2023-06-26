@@ -35,4 +35,8 @@ export const metadata: Metadata = {
   ],
 
   metadataBase: new URL("https://f1-dash.vercel.app"),
+
+  verification: {
+    google: "hKv0h7XtWgQ-pVNVKpwwb2wcCC2f0tBQ1X1IcDX50hg",
+  },
 };
