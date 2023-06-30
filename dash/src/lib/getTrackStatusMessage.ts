@@ -8,8 +8,8 @@ type MessageMap = {
 };
 
 export const getTrackStatusMessage = (
-  statusCode: number | null
-): StatusMessage => {
+  statusCode: number | undefined
+): StatusMessage | null => {
   const messageMap: MessageMap = {
     1: { message: "Track Clear", color: "bg-emerald-500" },
     2: { message: "Yellow Flag", color: "bg-yellow-500" },
@@ -20,5 +20,5 @@ export const getTrackStatusMessage = (
     7: { message: "VSC Ending", color: "bg-yellow-500" },
   };
 
-  return messageMap[statusCode ?? 1] ?? messageMap[1];
+  return statusCode ? messageMap[statusCode] ?? messageMap[0] : null;
 };

@@ -34,7 +34,7 @@ export default function RaceInfo({ session, clock, track, lapCount }: Props) {
         : clock.remaining
       : undefined;
 
-  const currentTrackStatus = getTrackStatusMessage(track?.status ?? null);
+  const currentTrackStatus = getTrackStatusMessage(track?.status);
 
   return (
     <div className="flex flex-wrap justify-between gap-2">
@@ -83,28 +83,36 @@ export default function RaceInfo({ session, clock, track, lapCount }: Props) {
           </p>
         )}
 
-        <div
-          className={clsx(
-            "flex h-8 items-center truncate rounded-md px-2",
-            currentTrackStatus.color
-          )}
-        >
-          <p className="text-xl font-semibold">{currentTrackStatus.message}</p>
-        </div>
-
-        <div
-          className={clsx(
-            currentTrackStatus.color,
-            "absolute right-0 top-0 z-[-10] h-[2rem] w-2/5 sm:w-[15rem]",
-            "invisible sm:visible"
-          )}
-        >
+        {!!currentTrackStatus ? (
           <div
             className={clsx(
-              "absolute right-0 top-0 z-[-10] h-[8rem] w-[25rem] backdrop-blur-[40px]"
+              "flex h-8 items-center truncate rounded-md px-2",
+              currentTrackStatus.color
             )}
-          />
-        </div>
+          >
+            <p className="text-xl font-semibold">
+              {currentTrackStatus.message}
+            </p>
+          </div>
+        ) : (
+          <div className="relative h-8 w-28 animate-pulse overflow-hidden rounded-lg bg-gray-700" />
+        )}
+
+        {!!currentTrackStatus && (
+          <div
+            className={clsx(
+              currentTrackStatus.color,
+              "absolute right-0 top-0 z-[-10] h-[2rem] w-2/5 sm:w-[15rem]",
+              "invisible sm:visible"
+            )}
+          >
+            <div
+              className={clsx(
+                "absolute right-0 top-0 z-[-10] h-[8rem] w-[25rem] backdrop-blur-[40px]"
+              )}
+            />
+          </div>
+        )}
       </div>
     </div>
   );
@@ -119,13 +127,7 @@ const Flag = ({ countryCode }: FlagProps) => {
     <div className="flex h-12 w-16  content-center justify-center">
       {countryCode ? (
         <Image
-          src={`/country-flags/${
-            countryCode.length > 2
-              ? countryCode
-                  .toLowerCase()
-                  .substring(0, countryCode.toLowerCase().length - 1)
-              : countryCode
-          }.svg`}
+          src={`/country-flags/${countryCode.toLowerCase()}.svg`}
           alt={countryCode}
           width={70}
           height={35}
