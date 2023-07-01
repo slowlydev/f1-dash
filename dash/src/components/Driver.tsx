@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import { motion } from "framer-motion";
 
 import { DriverType } from "../types/driver.type";
@@ -9,7 +10,6 @@ import DriverTire from "./DriverTire";
 import DriverMiniSectors from "./DriverMiniSectors";
 import DriverLapTime from "./DriverLapTime";
 import DriverInfo from "./DriverInfo";
-import clsx from "clsx";
 
 type Props = {
   driver: DriverType;
@@ -55,8 +55,6 @@ export default function Driver({ driver, position }: Props) {
         sectors={driver.sectors}
         driverDisplayName={driver.short}
       />
-
-      {/* <DriverRPM rpm={driver.metrics.rpm} gear={driver.metrics.gear} /> */}
     </motion.div>
   );
 }
