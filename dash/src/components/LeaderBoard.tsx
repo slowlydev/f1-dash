@@ -1,7 +1,9 @@
-import { DriverType } from "@/types/driver.type";
-import Driver from "./Driver";
 import { AnimatePresence } from "framer-motion";
 import clsx from "clsx";
+
+import { DriverType } from "@/types/driver.type";
+
+import Driver from "./Driver";
 
 type Props = {
   drivers: DriverType[] | undefined;
