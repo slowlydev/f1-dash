@@ -65,7 +65,10 @@ export default function DataWeatherInfo({ weather }: Props) {
                 src={arrowIcon}
                 alt="arrow"
                 className="h-8 w-8"
-                style={{ rotate: `${weather.wind_direction}deg` }}
+                style={{
+                  rotate: `${weather.wind_direction}deg`,
+                  transition: "1s linear",
+                }}
               />
             </div>
           )}
