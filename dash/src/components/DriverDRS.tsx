@@ -1,23 +1,28 @@
 import clsx from "clsx";
+import { DriverType } from "../types/driver.type";
 
 type Props = {
   on: boolean;
   possible: boolean;
+  driverStatus: DriverType["status"];
 };
 
-export default function DriverDRS({ on, possible }: Props) {
+export default function DriverDRS({ on, possible, driverStatus }: Props) {
+  const pit = driverStatus === "PIT" || driverStatus === "PIT OUT";
+
   return (
     <span
       className={clsx(
-        "text-md inline-flex h-8 items-center rounded-md border-2 px-2.5 py-0.5 font-black",
+        "text-md inline-flex h-8 w-full items-center justify-center rounded-md border-2 font-black",
         {
-          "border-gray-500 text-gray-500": !on && !possible,
-          "border-gray-300 text-gray-300": !on && possible,
-          "border-emerald-500 text-emerald-500": on && possible,
+          "border-gray-500 text-gray-500": !pit && !on && !possible,
+          "border-gray-300 text-gray-300": !pit && !on && possible,
+          "border-emerald-500 text-emerald-500": !pit && on,
+          "border-cyan-500 text-cyan-500": pit,
         }
       )}
     >
-      DRS
+      {pit ? "PIT" : "DRS"}
     </span>
   );
 }

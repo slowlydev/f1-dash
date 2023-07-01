@@ -33,7 +33,11 @@ export default function Driver({ driver, position }: Props) {
     >
       <DriverTag driver={driver} position={position} />
 
-      <DriverDRS on={driver.drs.on} possible={driver.drs.possible} />
+      <DriverDRS
+        on={driver.drs.on}
+        possible={driver.drs.possible}
+        driverStatus={driver.status}
+      />
 
       <DriverTire stints={driver.stints} />
 

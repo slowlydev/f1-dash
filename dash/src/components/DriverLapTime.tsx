@@ -10,7 +10,7 @@ type Props = {
 
 export default function DriverLapTime({ last, best }: Props) {
   return (
-    <div>
+    <div className="place-self-start">
       <p
         className={clsx(
           "text-sm font-medium leading-none text-gray-500",
@@ -18,7 +18,7 @@ export default function DriverLapTime({ last, best }: Props) {
           !best.value ? "text-gray-500" : ""
         )}
       >
-        {!!best.value ? best.value : "-"}
+        {!!best.value ? best.value : "-- -- ---"}
       </p>
       <p
         className={clsx(
@@ -27,7 +27,7 @@ export default function DriverLapTime({ last, best }: Props) {
           !last.value ? "text-gray-500" : ""
         )}
       >
-        {!!last.value ? last.value : "-"}
+        {!!last.value ? last.value : "-- -- ---"}
       </p>
     </div>
   );
