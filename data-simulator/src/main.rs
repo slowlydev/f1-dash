@@ -35,13 +35,17 @@ async fn handle_connection(peer_map: PeerMap, raw_stream: TcpStream, addr: Socke
 
     let (mut outgoing, _) = ws_stream.split();
 
+    let arg_path = env::args()
+        .nth(1)
+        .expect("Failed to get data file, please add as an argument");
+
     // Open the file
-    let file = File::open("data.txt").unwrap();
+    let file = File::open(arg_path).unwrap();
     let reader = BufReader::new(file);
 
     // Send each line of the file as a new message
     for line in reader.lines() {
-        sleep(Duration::from_millis(100)).await;
+        sleep(Duration::from_millis(50)).await;
         let message = Message::Text(line.unwrap().to_string());
         outgoing.send(message).await.expect("Failed to send line");
     }
@@ -54,9 +58,7 @@ async fn handle_connection(peer_map: PeerMap, raw_stream: TcpStream, addr: Socke
 async fn main() -> Result<(), IoError> {
     tracing_subscriber::fmt::init();
 
-    let addr = env::args()
-        .nth(1)
-        .unwrap_or_else(|| "127.0.0.1:8000".to_string());
+    let addr = "127.0.0.1:8000".to_string();
 
     let state = PeerMap::new(Mutex::new(HashMap::new()));
 
