@@ -38,7 +38,7 @@ export type TimeStats = {
 
 export type Sector = {
   current: TimeStats;
-  fastest: TimeStats;
+  last: TimeStats;
   segments: number[];
 };
 

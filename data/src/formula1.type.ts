@@ -149,6 +149,7 @@ export type F1SessionInfo = {
 	EndDate: string;
 	GmtOffset: string;
 	Path: string;
+	Number?: number;
 	_kf: boolean;
 };
 
@@ -232,6 +233,7 @@ export type F1TimingDataDriver = {
 export type F1Sector = {
 	Stopped: boolean;
 	Value: string;
+	PreviousValue?: string;
 	Status: number;
 	OverallFastest: boolean;
 	PersonalFastest: boolean;

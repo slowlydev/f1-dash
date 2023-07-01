@@ -14,4 +14,6 @@ export type SessionInfo = {
   offset: string;
 
   type: string;
+  typeName: string;
+  number?: number;
 };

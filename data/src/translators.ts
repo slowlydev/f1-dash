@@ -64,6 +64,8 @@ export const translateSession = (e: F1SessionInfo): SessionInfo => {
 		offset: e.GmtOffset,
 
 		type: e.Type,
+		typeName: e.Name,
+		...(e.Number && { number: e.Number }),
 	};
 };
 
@@ -188,7 +190,7 @@ export const translateDrivers = (dl: F1DriverList, td: F1TimingData, ts: F1Timin
 						},
 						// TODO find a smart way to keep the old state
 						last: {
-							value: e.Value,
+							value: e.PreviousValue ?? "",
 							fastest: false,
 							pb: false,
 						},
