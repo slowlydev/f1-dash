@@ -113,8 +113,10 @@ export const translatePositions = (e: F1Position, drivers: F1DriverList): Driver
 	return e.Position.map(
 		(e): DriverPositionBatch => ({
 			utc: e.Timestamp,
-			positions: Object.entries(e.Entries).map(([nr, e2]): DriverPosition => {
-				const driver = drivers[nr];
+			positions: Object.entries(e.Entries).map(([nr, e2]): DriverPosition | null => {
+				const driver = drivers[nr] ?? null;
+
+				if (!driver) return null;
 
 				return {
 					driverNr: nr,
@@ -132,7 +134,7 @@ export const translatePositions = (e: F1Position, drivers: F1DriverList): Driver
 					y: e2.Y,
 					z: e2.Z,
 				};
-			}),
+			}).filter((v) => v !== null) as DriverPosition[],
 		})
 	);
 };
