@@ -13,12 +13,13 @@ import { State } from "../types/state.type";
 import { env } from "../env.mjs";
 
 import { getEnabledFeatures } from "../lib/getEnabledFeatures";
+import DelayInput from "../components/DelayInput";
 
 export default function Page() {
-  const enabledFeatures = useMemo(getEnabledFeatures, []);
-
   const [state, setState] = useState<null | State>(null);
   const [connected, setConnected] = useState(false);
+
+  const [delay, setDelay] = useState(0);
 
   const ws = useRef<WebSocket | null>();
 
@@ -30,13 +31,14 @@ export default function Page() {
 
     socket.onmessage = (event) => {
       const data: State = JSON.parse(event.data);
-      setState(data);
+      if (Object.keys(data).length === 0) return;
+      setTimeout(() => setState(data), delay * 1000);
     };
 
     ws.current = socket;
 
     return () => socket.close();
-  }, []);
+  }, [delay]);
 
   return (
     <div className="w-full">
@@ -56,19 +58,13 @@ export default function Page() {
           <LeaderBoard drivers={state?.drivers} />
         </div>
 
-        {enabledFeatures.includes("map") && (
-          <div className="min-w-fit flex-1">
-            <Map
-              circuitKey={state?.session?.circuitKey}
-              positionBatches={state?.positionBatches}
-            />
-          </div>
-        )}
+        <div className="min-w-fit flex-1">
+          <Map
+            circuitKey={state?.session?.circuitKey}
+            positionBatches={state?.positionBatches}
+          />
+        </div>
       </div>
-
-      {enabledFeatures.includes("rcm") && (
-        <RaceControlMessages messages={state?.raceControlMessages} />
-      )}
     </div>
   );
 }
