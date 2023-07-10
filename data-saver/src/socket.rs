@@ -70,6 +70,7 @@ pub fn subscribe_request() -> String {
             "SessionData",
             "LapCount",
             "TimingData",
+            "TeamRadio",
         ]],
         "I": 1,
     });

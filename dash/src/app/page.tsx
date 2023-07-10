@@ -6,19 +6,18 @@ import Map from "../components/Map";
 import RaceInfo from "../components/RaceInfo";
 import WeatherInfo from "../components/WeatherInfo";
 import LeaderBoard from "../components/LeaderBoard";
-import RaceControlMessages from "../components/RaceControlMessages";
+import RaceControl from "../components/RaceControl";
 
 import { State } from "../types/state.type";
 
 import { env } from "../env.mjs";
-
-import { getEnabledFeatures } from "../lib/getEnabledFeatures";
+import DelayInput from "../components/DelayInput";
 
 export default function Page() {
-  const enabledFeatures = useMemo(getEnabledFeatures, []);
-
   const [state, setState] = useState<null | State>(null);
   const [connected, setConnected] = useState(false);
+
+  const [delay, setDelay] = useState(0);
 
   const ws = useRef<WebSocket | null>();
 
@@ -30,6 +29,7 @@ export default function Page() {
 
     socket.onmessage = (event) => {
       const data: State = JSON.parse(event.data);
+      if (Object.keys(data).length === 0) return;
       setState(data);
     };
 
@@ -45,30 +45,25 @@ export default function Page() {
         session={state?.session}
         clock={state?.extrapolatedClock}
         track={state?.trackStatus}
+        connected={connected}
       />
 
       <div className="overflow-x-auto">
         <WeatherInfo weather={state?.weather} />
       </div>
 
-      <div className="flex flex-row flex-wrap gap-2">
-        <div className="overflow-x-auto">
-          <LeaderBoard drivers={state?.drivers} />
-        </div>
-
-        {enabledFeatures.includes("map") && (
-          <div className="min-w-fit flex-1">
-            <Map
-              circuitKey={state?.session?.circuitKey}
-              positionBatches={state?.positionBatches}
-            />
-          </div>
-        )}
+      <div className="overflow-x-auto">
+        <LeaderBoard drivers={state?.drivers} />
       </div>
 
-      {enabledFeatures.includes("rcm") && (
-        <RaceControlMessages messages={state?.raceControlMessages} />
-      )}
+      <div className="overflow-y-auto">
+        <RaceControl messages={state?.raceControlMessages} />
+      </div>
+
+      <Map
+        circuitKey={state?.session?.circuitKey}
+        positionBatches={state?.positionBatches}
+      />
     </div>
   );
 }

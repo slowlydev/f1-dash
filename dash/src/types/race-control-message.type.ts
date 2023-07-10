@@ -1,4 +1,4 @@
-export type RaceControlMessage = {
+export type RaceControlMessageType = {
   utc: string;
   lap: number;
   message: string;

@@ -4,13 +4,10 @@ import clsx from "clsx";
 import { DriverType } from "@/types/driver.type";
 
 import Driver from "./Driver";
+import { sortPos } from "../lib/sortPos";
 
 type Props = {
   drivers: DriverType[] | undefined;
-};
-
-const sortPos = (a: DriverType, b: DriverType) => {
-  return parseInt(a.position) - parseInt(b.position);
 };
 
 export default function LeaderBoard({ drivers }: Props) {
@@ -45,9 +42,11 @@ const SkeletonDriver = () => {
     <div
       className="h-18 grid place-items-center items-center gap-1 py-1"
       style={{
-        gridTemplateColumns: "6rem 4rem 5rem 4rem 5rem 5rem 19.5rem",
+        gridTemplateColumns: "1rem 6rem 4rem 5rem 4rem 5rem 5rem 19.5rem",
       }}
     >
+      <div className={animateClass} style={{ width: "95%" }} />
+
       <div className={animateClass} style={{ width: "95%" }} />
 
       <div className={animateClass} style={{ width: "90%" }} />

@@ -109,32 +109,36 @@ export const translateRaceControlMessages = (e: F1RaceControlMessages): RaceCont
 	}));
 };
 
-export const translatePositions = (e: F1Position, drivers: F1DriverList): DriverPositionBatch[] => {
+export const translatePositions = (e: F1Position, drivers: F1DriverList, td: F1TimingData): DriverPositionBatch[] => {
 	return e.Position.map(
 		(e): DriverPositionBatch => ({
 			utc: e.Timestamp,
-			positions: Object.entries(e.Entries).map(([nr, e2]): DriverPosition | null => {
-				const driver = drivers[nr] ?? null;
+			positions: Object.entries(e.Entries)
+				.map(([nr, e2]): DriverPosition | null => {
+					const driver = drivers[nr] ?? null;
+					const tdDriver = td.Lines[nr];
 
-				if (!driver) return null;
+					if (!driver) return null;
 
-				return {
-					driverNr: nr,
+					return {
+						driverNr: nr,
+						position: tdDriver.Position,
 
-					broadcastName: driver.BroadcastName,
-					fullName: driver.FullName,
-					firstName: driver.FirstName,
-					lastName: driver.LastName,
-					short: driver.Tla,
+						broadcastName: driver.BroadcastName,
+						fullName: driver.FullName,
+						firstName: driver.FirstName,
+						lastName: driver.LastName,
+						short: driver.Tla,
 
-					teamColor: driver.TeamColour,
+						teamColor: driver.TeamColour,
 
-					status: e2.Status,
-					x: e2.X,
-					y: e2.Y,
-					z: e2.Z,
-				};
-			}).filter((v) => v !== null) as DriverPosition[],
+						status: e2.Status,
+						x: e2.X,
+						y: e2.Y,
+						z: e2.Z,
+					};
+				})
+				.filter((v) => v !== null) as DriverPosition[],
 		})
 	);
 };
@@ -147,7 +151,7 @@ export const translateDrivers = (dl: F1DriverList, td: F1TimingData, ts: F1Timin
 			const timingStats = ts.Lines?.[nr] ?? null;
 			const appTiming = tad.Lines?.[nr] ?? null;
 
-			if (!tdDriver || !timingStats || !car || !appTiming) return null;
+			if (!tdDriver || !timingStats || !appTiming) return null;
 
 			return {
 				nr,
@@ -161,6 +165,7 @@ export const translateDrivers = (dl: F1DriverList, td: F1TimingData, ts: F1Timin
 
 				line: driver.Line,
 				position: tdDriver.Position,
+				positionChange: parseInt(appTiming.GridPos) - parseInt(tdDriver.Position),
 
 				teamName: driver.TeamName,
 				teamColor: driver.TeamColour,
@@ -190,7 +195,6 @@ export const translateDrivers = (dl: F1DriverList, td: F1TimingData, ts: F1Timin
 							fastest: e.OverallFastest,
 							pb: e.PersonalFastest,
 						},
-						// TODO find a smart way to keep the old state
 						last: {
 							value: e.PreviousValue ?? "",
 							fastest: false,
@@ -200,13 +204,15 @@ export const translateDrivers = (dl: F1DriverList, td: F1TimingData, ts: F1Timin
 					})
 				),
 
-				stints: appTiming.Stints.map(
-					(e): Stint => ({
-						compound: (e.Compound ?? "hard").toLowerCase() as Stint["compound"],
-						laps: e.TotalLaps ?? 0,
-						new: e.New === "True",
-					})
-				),
+				stints: appTiming.Stints
+					? appTiming.Stints.map(
+							(e): Stint => ({
+								compound: (e.Compound ?? "hard").toLowerCase() as Stint["compound"],
+								laps: e.TotalLaps ?? 0,
+								new: e.New === "True",
+							})
+					  )
+					: [],
 
 				lapTimes: {
 					best: {
@@ -227,9 +233,9 @@ export const translateDrivers = (dl: F1DriverList, td: F1TimingData, ts: F1Timin
 				},
 
 				metrics: {
-					gear: car["3"],
-					rpm: car["0"],
-					speed: car["2"],
+					gear: car["3"] ?? 0,
+					rpm: car["0"] ?? 0,
+					speed: car["2"] ?? 0,
 				},
 			};
 		})
@@ -245,8 +251,11 @@ export const translate = (state: F1State): State => {
 		...(state.WeatherData && { weather: translateWeather(state.WeatherData) }),
 		...(state.SessionInfo && { session: translateSession(state.SessionInfo) }),
 
-		...(state.Position && state.DriverList && { positionBatches: translatePositions(state.Position, state.DriverList) }),
 		...(state.RaceControlMessages && { raceControlMessages: translateRaceControlMessages(state.RaceControlMessages) }),
+
+		...(state.Position &&
+			state.DriverList &&
+			state.TimingData && { positionBatches: translatePositions(state.Position, state.DriverList, state.TimingData) }),
 
 		// TODO make work without other cats
 		...(state.DriverList &&

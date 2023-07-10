@@ -29,6 +29,12 @@ const experimentalFeatures: ExperimentalFeature[] = [
     description:
       "See Race Control's Messages in real-time, includes incidents, penalties, flags, track status",
   },
+  {
+    key: "delay",
+    title: "Delay",
+    description:
+      "Delay the live timing so you don't get spoiled by the live timing",
+  },
 ];
 
 const selectSavedFeatures = (savedFeatures: string[]) => {

@@ -10,6 +10,7 @@ import DriverTire from "./DriverTire";
 import DriverMiniSectors from "./DriverMiniSectors";
 import DriverLapTime from "./DriverLapTime";
 import DriverInfo from "./DriverInfo";
+import DriverPosChanage from "./DriverPosChange";
 
 type Props = {
   driver: DriverType;
@@ -27,10 +28,12 @@ export default function Driver({ driver, position }: Props) {
         "bg-indigo-800 bg-opacity-30": driver.lapTimes.best.fastest,
       })}
       style={{
-        gridTemplateColumns: "6rem 4rem 5rem 4rem 5rem 5rem 19.5rem",
+        gridTemplateColumns: "1rem 6rem 4rem 5rem 4rem 5rem 5rem 19.5rem auto",
       }}
       layout
     >
+      <DriverPosChanage positionChange={driver.positionChange} />
+
       <DriverTag driver={driver} position={position} />
 
       <DriverDRS

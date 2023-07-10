@@ -96,6 +96,7 @@ export type Driver = {
 
 	line: number;
 	position: string;
+	positionChange: number;
 
 	teamName: string;
 	teamColor: string;
@@ -157,6 +158,7 @@ export type DriverPositionBatch = {
 
 export type DriverPosition = {
 	driverNr: string;
+	position: string;
 
 	broadcastName: string;
 	fullName: string;

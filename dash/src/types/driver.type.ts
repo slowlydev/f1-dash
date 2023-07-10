@@ -10,6 +10,7 @@ export type DriverType = {
 
   line: number;
   position: string;
+  positionChange: number;
 
   teamName: string;
   teamColor: string;
