@@ -2,7 +2,7 @@ import { DriverType } from "./driver.type";
 import { ExtrapolatedClock } from "./extrapolated-clock.type";
 import { LapCount } from "./lap-count.type";
 import { DriverPositionBatch } from "./positions.type";
-import { RaceControlMessage } from "./race-control-message.type";
+import { RaceControlMessageType } from "./race-control-message.type";
 import { SessionData } from "./sesion-data.type";
 import { SessionInfo } from "./session.type";
 import { TrackStatus } from "./track-status.type";
@@ -15,7 +15,7 @@ export type State = {
   lapCount?: LapCount;
   weather?: Weather;
 
-  raceControlMessages?: RaceControlMessage[];
+  raceControlMessages?: RaceControlMessageType[];
   drivers?: DriverType[];
 
   session?: SessionInfo;

@@ -21,9 +21,18 @@ type Props = {
   clock: ExtrapolatedClock | undefined;
   track: TrackStatus | undefined;
   lapCount: LapCount | undefined;
+  connected: boolean;
+  className?: string;
 };
 
-export default function RaceInfo({ session, clock, track, lapCount }: Props) {
+export default function RaceInfo({
+  session,
+  clock,
+  track,
+  lapCount,
+  connected,
+  className,
+}: Props) {
   const timeRemaining =
     !!clock && !!clock.remaining
       ? clock.extrapolating
@@ -38,8 +47,8 @@ export default function RaceInfo({ session, clock, track, lapCount }: Props) {
   const currentTrackStatus = getTrackStatusMessage(track?.status);
 
   return (
-    <div className="flex flex-wrap justify-between gap-2">
-      <div className="flex flex-1 items-center justify-between gap-8">
+    <div className={clsx("flex flex-wrap justify-between gap-2", className)}>
+      <div className="flex flex-1 items-center justify-between gap-5">
         <div className="flex flex-auto items-center gap-3">
           <Flag countryCode={session?.countryCode} />
 
@@ -60,6 +69,13 @@ export default function RaceInfo({ session, clock, track, lapCount }: Props) {
           </div>
         </div>
 
+        <div
+          className={clsx(
+            "h-4 w-4 rounded-full sm:hidden",
+            connected ? "bg-emerald-500" : "bg-red-500"
+          )}
+        />
+
         <Link href="/help" className="block cursor-pointer sm:hidden">
           <Image src={helpIcon} alt="help" className="mr-1 opacity-40" />
         </Link>
@@ -79,6 +95,13 @@ export default function RaceInfo({ session, clock, track, lapCount }: Props) {
           { "!flex-row": !!!lapCount }
         )}
       >
+        <div
+          className={clsx(
+            "hidden h-4 w-4 rounded-full sm:block",
+            connected ? "bg-emerald-500" : "bg-red-500"
+          )}
+        />
+
         <Link href="/help" className="hidden cursor-pointer sm:block">
           <Image src={helpIcon} alt="help" className="mr-1 opacity-40" />
         </Link>

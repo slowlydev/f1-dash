@@ -5,6 +5,7 @@ export type DriverPositionBatch = {
 
 export type DriverPosition = {
   driverNr: string;
+  position: string;
 
   broadcastName: string;
   fullName: string;
