@@ -91,4 +91,5 @@ const exampleDriver: DriverType = {
     rpm: 7734,
     speed: 87,
   },
+  positionChange: 0,
 };
