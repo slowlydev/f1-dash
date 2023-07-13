@@ -34,7 +34,12 @@ export default function Driver({ driver, position }: Props) {
     >
       <DriverPosChanage positionChange={driver.positionChange} />
 
-      <DriverTag driver={driver} position={position} />
+      <DriverTag
+        className="!min-w-[5.5rem]"
+        short={driver.short}
+        teamColor={driver.teamColor}
+        position={position}
+      />
 
       <DriverDRS
         on={driver.drs.on}

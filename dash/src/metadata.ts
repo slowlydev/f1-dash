@@ -2,7 +2,7 @@ import { Metadata } from "next";
 
 const title = "f1-dash";
 const description =
-  "f1-dash lets you see realtime formula 1 telemetry and timing";
+  "A Formula 1 dashboard for realtime telemetry and timing data. It shows the leaderboard, tires, gaps, laps, mini sectors and much more.";
 
 const url = "https://f1-dash.vercel.app";
 
@@ -54,6 +54,10 @@ export const metadata: Metadata = {
   ],
 
   metadataBase: new URL(url),
+
+  alternates: {
+    canonical: url,
+  },
 
   verification: {
     google: "hKv0h7XtWgQ-pVNVKpwwb2wcCC2f0tBQ1X1IcDX50hg",

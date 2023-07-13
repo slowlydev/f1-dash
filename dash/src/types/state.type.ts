@@ -5,6 +5,7 @@ import { DriverPositionBatch } from "./positions.type";
 import { RaceControlMessageType } from "./race-control-message.type";
 import { SessionData } from "./sesion-data.type";
 import { SessionInfo } from "./session.type";
+import { TeamRadioType } from "./team-radio.type";
 import { TrackStatus } from "./track-status.type";
 import { Weather } from "./weather.type";
 
@@ -16,6 +17,7 @@ export type State = {
   weather?: Weather;
 
   raceControlMessages?: RaceControlMessageType[];
+  teamRadios?: TeamRadioType[];
   drivers?: DriverType[];
 
   session?: SessionInfo;

@@ -8,6 +8,7 @@ import {
 	F1SessionData,
 	F1SessionInfo,
 	F1State,
+	F1TeamRadio,
 	F1TimingAppData,
 	F1TimingData,
 	F1TimingStats,
@@ -26,6 +27,7 @@ import {
 	SessionInfo,
 	State,
 	Stint,
+	TeamRadio,
 	TrackStatus,
 	Weather,
 } from "./models";
@@ -107,6 +109,29 @@ export const translateRaceControlMessages = (e: F1RaceControlMessages): RaceCont
 		...(e2.Sector && { sector: e2.Sector }),
 		...(e2.Status && { drsEnabled: e2.Status === "ENABLED" }),
 	}));
+};
+
+export const translateTeamRadios = (e: F1TeamRadio, drivers: F1DriverList, sessionInfo: F1SessionInfo): TeamRadio[] => {
+	return e.Captures.map((capture): TeamRadio | null => {
+		const driver = drivers[capture.RacingNumber] ?? null;
+
+		if (!driver) return null;
+
+		return {
+			driverNr: capture.RacingNumber,
+
+			broadcastName: driver.BroadcastName,
+			fullName: driver.FullName,
+			firstName: driver.FirstName,
+			lastName: driver.LastName,
+			short: driver.Tla,
+
+			teamColor: driver.TeamColour,
+
+			utc: capture.Utc,
+			audioUrl: `https://livetiming.formula1.com/static/${sessionInfo.Path}${capture.Path}`,
+		};
+	}).filter((v) => v !== null) as TeamRadio[];
 };
 
 export const translatePositions = (e: F1Position, drivers: F1DriverList, td: F1TimingData): DriverPositionBatch[] => {
@@ -252,6 +277,10 @@ export const translate = (state: F1State): State => {
 		...(state.SessionInfo && { session: translateSession(state.SessionInfo) }),
 
 		...(state.RaceControlMessages && { raceControlMessages: translateRaceControlMessages(state.RaceControlMessages) }),
+
+		...(state.TeamRadio &&
+			state.DriverList &&
+			state.SessionInfo && { teamRadios: translateTeamRadios(state.TeamRadio, state.DriverList, state.SessionInfo) }),
 
 		...(state.Position &&
 			state.DriverList &&
