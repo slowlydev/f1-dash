@@ -14,10 +14,10 @@ export function RaceControlMessage({ msg }: Props) {
     <motion.li
       animate={{ opacity: 1, y: 0 }}
       initial={{ opacity: 0, y: -20 }}
-      className="flex flex-col gap-0 pt-2"
+      className="flex flex-col gap-1"
     >
       <time
-        className="text-sm font-medium text-gray-500"
+        className="text-sm font-medium leading-none text-gray-500"
         dateTime={utc(msg.utc).format("HH:mm:ss")}
       >
         {utc(msg.utc).format("HH:mm:ss")}
