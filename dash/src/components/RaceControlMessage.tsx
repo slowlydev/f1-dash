@@ -14,7 +14,7 @@ export function RaceControlMessage({ msg }: Props) {
     <motion.li
       animate={{ opacity: 1, y: 0 }}
       initial={{ opacity: 0, y: -20 }}
-      className="flex flex-col gap-0 pt-2"
+      className="flex flex-col"
     >
       <time
         className="text-sm font-medium text-gray-500"
