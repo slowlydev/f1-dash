@@ -76,7 +76,7 @@ export default function TeamRadioMessage({ teamRadio }: Props) {
       <div
         className="grid place-items-center items-center gap-4"
         style={{
-          gridTemplateColumns: "2rem  20rem 2rem",
+          gridTemplateColumns: "2rem 20rem",
         }}
       >
         <div className="w-10 place-self-start">
