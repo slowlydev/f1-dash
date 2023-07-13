@@ -168,11 +168,17 @@ export const translatePositions = (e: F1Position, drivers: F1DriverList, td: F1T
 	);
 };
 
-export const translateDrivers = (dl: F1DriverList, td: F1TimingData, ts: F1TimingStats, cd: F1CarData, tad: F1TimingAppData): Driver[] => {
+export const translateDrivers = (
+	dl: F1DriverList,
+	td: F1TimingData,
+	ts: F1TimingStats,
+	cd: F1CarData | undefined,
+	tad: F1TimingAppData
+): Driver[] => {
 	return Object.entries(dl)
 		.map(([nr, driver]): Driver | null => {
 			const tdDriver = td.Lines[nr];
-			const car = cd.Entries[cd.Entries.length - 1]?.Cars[nr]?.Channels ?? null;
+			const car = cd ? cd.Entries[cd.Entries.length - 1]?.Cars[nr]?.Channels : null;
 			const timingStats = ts.Lines?.[nr] ?? null;
 			const appTiming = tad.Lines?.[nr] ?? null;
 
@@ -253,14 +259,14 @@ export const translateDrivers = (dl: F1DriverList, td: F1TimingData, ts: F1Timin
 				},
 
 				drs: {
-					on: [10, 12, 14].includes(car[45] ?? 0),
+					on: [10, 12, 14].includes(car ? car[45] : 0),
 					possible: tdDriver.IntervalToPositionAhead ? parseFloat(tdDriver.IntervalToPositionAhead.Value.substring(1)) < 1 : false, // TODO check if valid
 				},
 
 				metrics: {
-					gear: car["3"] ?? 0,
-					rpm: car["0"] ?? 0,
-					speed: car["2"] ?? 0,
+					gear: car ? car["3"] : 0,
+					rpm: car ? car["0"] : 0,
+					speed: car ? car["2"] : 0,
 				},
 			};
 		})
@@ -290,7 +296,6 @@ export const translate = (state: F1State): State => {
 		...(state.DriverList &&
 			state.TimingData &&
 			state.TimingStats &&
-			state.CarData &&
 			state.TimingAppData && {
 				drivers: translateDrivers(state.DriverList, state.TimingData, state.TimingStats, state.CarData, state.TimingAppData),
 			}),
