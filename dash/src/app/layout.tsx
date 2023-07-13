@@ -1,15 +1,14 @@
-"use client";
-
 import { Inter } from "next/font/google";
 import { type ReactNode } from "react";
+import Script from "next/script";
 
 import "@/styles/globals.css";
-import Script from "next/script";
+
 import { env } from "../env.mjs";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
-// export { metadata } from "../metadata";
+export { metadata } from "../metadata";
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   const disableTracking = !!env.NEXT_PUBLIC_DISABLE_TRACKING;
