@@ -67,7 +67,7 @@ export default function TeamRadioMessage({ teamRadio }: Props) {
       className="flex flex-col gap-1"
     >
       <time
-        className="text-sm font-medium text-gray-500"
+        className="text-sm font-medium leading-none text-gray-500"
         dateTime={utc(teamRadio.utc).format("HH:mm:ss")}
       >
         {utc(teamRadio.utc).format("HH:mm:ss")}
