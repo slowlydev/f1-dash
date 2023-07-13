@@ -1,19 +1,18 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import clsx from "clsx";
 
 import Map from "../components/Map";
 import RaceInfo from "../components/RaceInfo";
 import WeatherInfo from "../components/WeatherInfo";
 import LeaderBoard from "../components/LeaderBoard";
 import RaceControl from "../components/RaceControl";
+import TeamRadios from "../components/TeamRadios";
 
 import { State } from "../types/state.type";
 
 import { env } from "../env.mjs";
-import DelayInput from "../components/DelayInput";
-import TeamRadios from "../components/TeamRadios";
-import clsx from "clsx";
 
 export default function Page() {
   const [state, setState] = useState<null | State>(null);

@@ -13,7 +13,6 @@ import { SessionInfo } from "../types/session.type";
 import { LapCount } from "../types/lap-count.type";
 import { TrackStatus } from "../types/track-status.type";
 
-import settingsIcon from "../../public/icons/settings.svg";
 import helpIcon from "../../public/icons/help-circle.svg";
 
 type Props = {
@@ -79,14 +78,6 @@ export default function RaceInfo({
         <Link href="/help" className="block cursor-pointer sm:hidden">
           <Image src={helpIcon} alt="help" className="mr-1 opacity-40" />
         </Link>
-
-        <Link href="/settings" className="block cursor-pointer sm:hidden">
-          <Image
-            src={settingsIcon}
-            alt="settings"
-            className="mr-1 opacity-40"
-          />
-        </Link>
       </div>
 
       <div
@@ -104,14 +95,6 @@ export default function RaceInfo({
 
         <Link href="/help" className="hidden cursor-pointer sm:block">
           <Image src={helpIcon} alt="help" className="mr-1 opacity-40" />
-        </Link>
-
-        <Link href="/settings" className="hidden cursor-pointer sm:block">
-          <Image
-            src={settingsIcon}
-            alt="settings"
-            className="mr-1 opacity-40"
-          />
         </Link>
 
         {!!lapCount && (
