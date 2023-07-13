@@ -64,33 +64,37 @@ export default function TeamRadioMessage({ teamRadio }: Props) {
     <motion.li
       animate={{ opacity: 1, y: 0 }}
       initial={{ opacity: 0, y: -20 }}
-      className="grid place-items-center items-center gap-4"
-      style={{
-        gridTemplateColumns: "2rem  20rem 2rem",
-      }}
+      className="flex flex-col gap-1"
     >
-      <div className="w-10 place-self-start">
-        <DriverTag teamColor={teamRadio.teamColor} short={teamRadio.short} />
-      </div>
-
-      <div className="flex items-center gap-4">
-        <AudioControls playing={playing} onClick={togglePlayback} />
-        <AudioProgress duration={duration} progress={progress} />
-
-        <audio
-          src={teamRadio.audioUrl}
-          ref={audioRef}
-          onEnded={() => onEnded()}
-          onLoadedMetadata={() => loadMeta()}
-        />
-      </div>
-
       <time
         className="text-sm font-medium text-gray-500"
         dateTime={utc(teamRadio.utc).format("HH:mm:ss")}
       >
         {utc(teamRadio.utc).format("HH:mm:ss")}
       </time>
+
+      <div
+        className="grid place-items-center items-center gap-4"
+        style={{
+          gridTemplateColumns: "2rem  20rem 2rem",
+        }}
+      >
+        <div className="w-10 place-self-start">
+          <DriverTag teamColor={teamRadio.teamColor} short={teamRadio.short} />
+        </div>
+
+        <div className="flex items-center gap-4">
+          <AudioControls playing={playing} onClick={togglePlayback} />
+          <AudioProgress duration={duration} progress={progress} />
+
+          <audio
+            src={teamRadio.audioUrl}
+            ref={audioRef}
+            onEnded={() => onEnded()}
+            onLoadedMetadata={() => loadMeta()}
+          />
+        </div>
+      </div>
     </motion.li>
   );
 }
