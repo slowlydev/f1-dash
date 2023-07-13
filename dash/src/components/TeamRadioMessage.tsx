@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { utc } from "moment";
 
@@ -7,7 +7,6 @@ import AudioControls from "./AudioControls";
 import AudioProgress from "./AudioProgress";
 
 import { TeamRadioType } from "../types/team-radio.type";
-import { set } from "zod";
 
 type Props = {
   teamRadio: TeamRadioType;
