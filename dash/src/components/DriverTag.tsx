@@ -1,20 +1,30 @@
-import { DriverType } from "../types/driver.type";
+import clsx from "clsx";
 
 type Props = {
-  driver: DriverType;
-  position: number;
+  teamColor: string;
+  short: string;
+  position?: number;
+  className?: string;
 };
 
-export default function DriverTag({ position, driver }: Props) {
+export default function DriverTag({
+  position,
+  teamColor,
+  short,
+  className,
+}: Props) {
   return (
     <div
-      className="flex min-w-[5.5rem]  items-center justify-between gap-0.5 rounded-md p-0.5 px-1 font-black"
-      style={{ backgroundColor: `#${driver.teamColor}` }}
+      className={clsx(
+        "flex w-fit items-center justify-between gap-0.5 rounded-lg px-1 py-1 font-black",
+        className
+      )}
+      style={{ backgroundColor: `#${teamColor}` }}
     >
-      <p className="px-1 text-xl">{position}</p>
+      {position && <p className="px-1 text-xl leading-none">{position}</p>}
 
       <div className="flex h-min w-min items-center justify-center rounded-md bg-white px-1">
-        <p style={{ color: `#${driver.teamColor}` }}>{driver.short}</p>
+        <p style={{ color: `#${teamColor}` }}>{short}</p>
       </div>
     </div>
   );
