@@ -13,6 +13,7 @@ const exampleDriver: DriverType = {
   teamName: "Mercedes",
   teamColor: "6CD3BF",
   status: null,
+  cutoff: false,
   laps: 10,
   gapToFront: "",
   gapToLeader: "",
