@@ -15,7 +15,8 @@ export type DriverType = {
   teamName: string;
   teamColor: string;
 
-  status: "OUT" | "RETIRED" | "STOPPED" | "PIT" | "PIT OUT" | null;
+  status: "OUT" | "RETIRED" | "STOPPED" | "PIT" | "PIT OUT" | "CUTOFF" | null;
+  cutoff: boolean;
 
   gapToLeader: string;
   gapToFront: string;

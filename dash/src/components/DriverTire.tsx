@@ -41,7 +41,10 @@ export default function DriverTire({ stints }: Props) {
 
       {/* TODO move this to a tooltip */}
       <div>
-        <p className="font-bold leading-none">L {currentStint?.laps ?? 0}</p>
+        <p className="font-bold leading-none">
+          L {currentStint?.laps ?? 0}
+          {currentStint?.new ? "" : "*"}
+        </p>
         <p className="text-sm font-medium leading-none text-gray-500">
           St {stops}
         </p>

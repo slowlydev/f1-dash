@@ -15,13 +15,13 @@ export default function DriverMiniSectors({
   driverDisplayName,
 }: Props) {
   return (
-    <div className="grid grid-cols-3 gap-x-2 gap-y-1">
+    <div className="flex gap-2">
       {sectors.map((sector, index) => (
         <div
           key={`sector.${driverDisplayName}.${index}`}
-          className="flex flex-col gap-1"
+          className="flex flex-col gap-[0.2rem]"
         >
-          <div className="flex h-3 flex-row gap-1">
+          <div className="flex h-[10px] flex-row gap-1">
             {sector.segments.map((segmentStatus, index2) => (
               <MiniSector
                 status={segmentStatus}
@@ -30,21 +30,19 @@ export default function DriverMiniSectors({
             ))}
           </div>
 
-          <div className="flex items-center gap-2">
-            <p
-              className={clsx(
-                "text-lg font-semibold leading-none",
-                getTimeColor(sector.current.fastest, sector.current.pb),
-                !sector.current.value ? "text-gray-500" : ""
-              )}
-            >
-              {!!sector.current.value
-                ? sector.current.value
-                : !!sector.last.value
-                ? sector.last.value
-                : "-- ---"}
-            </p>
-          </div>
+          <p
+            className={clsx(
+              "text-lg font-semibold leading-none",
+              getTimeColor(sector.current.fastest, sector.current.pb),
+              !sector.current.value ? "text-gray-500" : ""
+            )}
+          >
+            {!!sector.current.value
+              ? sector.current.value
+              : !!sector.last.value
+              ? sector.last.value
+              : "-- ---"}
+          </p>
         </div>
       ))}
     </div>
@@ -54,7 +52,7 @@ export default function DriverMiniSectors({
 function MiniSector({ status }: { status: number }) {
   return (
     <div
-      className={clsx("h-3 w-2 rounded-[0.2rem]", {
+      className={clsx("h-[10px] w-2 rounded-[0.2rem]", {
         "bg-yellow-500": status === 2048 || status === 2052, // TODO unsure
         "bg-emerald-500": status === 2049,
         "bg-indigo-500": status === 2051,

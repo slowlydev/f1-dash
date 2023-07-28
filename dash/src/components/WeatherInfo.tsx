@@ -88,13 +88,13 @@ function LazyData({
   return (
     <>
       {data !== undefined ? (
-        <dd className="mt-1 whitespace-nowrap text-3xl font-semibold text-white">
+        <dd className="whitespace-nowrap text-3xl font-semibold text-white">
           {data}
           {unit}
         </dd>
       ) : (
         <dd
-          className="mt-1 h-8 animate-pulse rounded-md bg-gray-700 font-semibold"
+          className="h-8 animate-pulse rounded-md bg-gray-700 font-semibold"
           style={{ width: "70%" }}
         ></dd>
       )}

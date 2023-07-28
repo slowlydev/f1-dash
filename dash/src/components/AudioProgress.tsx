@@ -13,6 +13,7 @@ export default function AudioProgress({ duration, progress }: Props) {
       <motion.div
         className="h-2 bg-white"
         style={{ width: `${percent * 100}%` }}
+        animate={{ transitionDuration: "0.1s" }}
         layout
       />
     </div>

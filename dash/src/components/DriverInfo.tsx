@@ -1,6 +1,6 @@
 type Props = {
   laps: number;
-  status: "OUT" | "RETIRED" | "STOPPED" | "PIT" | "PIT OUT" | null;
+  status: "OUT" | "RETIRED" | "STOPPED" | "PIT" | "PIT OUT" | "CUTOFF" | null;
 };
 
 export default function DriverInfo({ laps, status }: Props) {

@@ -26,9 +26,10 @@ export default function Driver({ driver, position }: Props) {
           driver.status === "RETIRED" ||
           driver.status === "STOPPED",
         "bg-indigo-800 bg-opacity-30": driver.lapTimes.best.fastest,
+        "bg-red-800 bg-opacity-30": false, // TODO use this for danger zone in quali
       })}
       style={{
-        gridTemplateColumns: "1rem 6rem 4rem 5rem 4rem 5rem 5rem 19.5rem auto",
+        gridTemplateColumns: "1rem 6rem 4rem 5rem 4rem 5rem 5rem auto auto",
       }}
       layout
     >

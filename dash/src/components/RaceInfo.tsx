@@ -55,6 +55,7 @@ export default function RaceInfo({
             {session ? (
               <h1 className="truncate text-sm font-medium text-gray-500">
                 {session.name}: {session.typeName ?? "unknown"}
+                {!!session.number ? ` Q${session.number}` : ""}
               </h1>
             ) : (
               <div className="h-4 w-2/3 animate-pulse rounded-md bg-gray-700" />
