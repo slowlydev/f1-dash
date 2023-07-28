@@ -65,7 +65,7 @@ async fn main() -> Result<(), IoError> {
     // Start the WebSocket server
     let try_socket = TcpListener::bind(&addr).await;
     let listener = try_socket.expect("Failed to bind");
-    println!("Listening");
+    println!("Listening on {}", addr);
 
     while let Ok((stream, addr)) = listener.accept().await {
         tokio::spawn(handle_connection(state.clone(), stream, addr));
