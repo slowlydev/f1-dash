@@ -201,6 +201,11 @@ export type F1LapCount = {
 };
 
 export type F1TimingData = {
+	NoEntries?: number[];
+	SessionPart?: number;
+	CutOffTime?: string;
+	CutOffPercentage?: string;
+
 	Lines: {
 		[key: string]: F1TimingDataDriver;
 	};
@@ -209,6 +214,9 @@ export type F1TimingData = {
 };
 
 export type F1TimingDataDriver = {
+	Stats?: { TimeDiffToFastest: string; TimeDifftoPositionAhead: string }[];
+	TimeDiffToFastest?: string;
+	TimeDiffToPositionAhead?: string;
 	GapToLeader: string;
 	IntervalToPositionAhead?: {
 		Value: string;
@@ -229,6 +237,7 @@ export type F1TimingDataDriver = {
 	LastLapTime: F1I1;
 	NumberOfLaps: number; // TODO check
 	KnockedOut?: boolean;
+	Cutoff?: boolean;
 };
 
 export type F1Sector = {

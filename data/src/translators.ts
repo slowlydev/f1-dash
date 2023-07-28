@@ -49,7 +49,7 @@ export const translateSessionData = (e: F1SessionData): SessionData => {
 	};
 };
 
-export const translateSession = (e: F1SessionInfo): SessionInfo => {
+export const translateSession = (e: F1SessionInfo, td: F1TimingData): SessionInfo => {
 	return {
 		name: e.Meeting.Name,
 		officialName: e.Meeting.OfficialName,
@@ -67,7 +67,7 @@ export const translateSession = (e: F1SessionInfo): SessionInfo => {
 
 		type: e.Type,
 		typeName: e.Name,
-		...(e.Number && { number: e.Number }),
+		...(td.SessionPart && { number: td.SessionPart }),
 	};
 };
 
@@ -182,6 +182,8 @@ export const translateDrivers = (
 			const timingStats = ts.Lines?.[nr] ?? null;
 			const appTiming = tad.Lines?.[nr] ?? null;
 
+			const statsNumber = td.SessionPart ? td.SessionPart - 1 : 0;
+
 			if (!tdDriver || !timingStats || !appTiming) return null;
 
 			return {
@@ -203,6 +205,8 @@ export const translateDrivers = (
 
 				status: tdDriver.KnockedOut
 					? "OUT"
+					: !!tdDriver.Cutoff
+					? "CUTOFF"
 					: tdDriver.Retired
 					? "RETIRED"
 					: tdDriver.Stopped
@@ -213,10 +217,18 @@ export const translateDrivers = (
 					? "PIT OUT"
 					: null,
 
+				danger: !!tdDriver.Cutoff,
+
 				laps: tdDriver.NumberOfLaps,
 
-				gapToLeader: tdDriver.GapToLeader,
-				gapToFront: tdDriver.IntervalToPositionAhead?.Value ?? "",
+				gapToLeader:
+					tdDriver.GapToLeader ?? (tdDriver.Stats ? tdDriver.Stats[statsNumber].TimeDiffToFastest : undefined) ?? tdDriver.TimeDiffToFastest ?? "",
+				gapToFront:
+					tdDriver.IntervalToPositionAhead?.Value ??
+					(tdDriver.Stats ? tdDriver.Stats[statsNumber].TimeDifftoPositionAhead : undefined) ??
+					tdDriver.TimeDiffToPositionAhead ??
+					"",
+
 				catchingFront: tdDriver.IntervalToPositionAhead?.Catching ?? false,
 
 				sectors: tdDriver.Sectors.map(
@@ -240,7 +252,7 @@ export const translateDrivers = (
 							(e): Stint => ({
 								compound: (e.Compound ?? "hard").toLowerCase() as Stint["compound"],
 								laps: e.TotalLaps ?? 0,
-								new: e.New === "True",
+								new: e.New === "true",
 							})
 					  )
 					: [],
@@ -280,7 +292,7 @@ export const translate = (state: F1State): State => {
 		...(state.TrackStatus && { trackStatus: translateTrackStatus(state.TrackStatus) }),
 		...(state.LapCount && { lapCount: translateLapCount(state.LapCount) }),
 		...(state.WeatherData && { weather: translateWeather(state.WeatherData) }),
-		...(state.SessionInfo && { session: translateSession(state.SessionInfo) }),
+		...(state.SessionInfo && state.TimingData && { session: translateSession(state.SessionInfo, state.TimingData) }),
 
 		...(state.RaceControlMessages && { raceControlMessages: translateRaceControlMessages(state.RaceControlMessages) }),
 

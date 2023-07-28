@@ -102,7 +102,8 @@ export type Driver = {
 	teamName: string;
 	teamColor: string;
 
-	status: "OUT" | "RETIRED" | "STOPPED" | "PIT" | "PIT OUT" | null;
+	status: "OUT" | "RETIRED" | "STOPPED" | "PIT" | "PIT OUT" | "CUTOFF" | null;
+	danger: boolean;
 
 	gapToLeader: string;
 	gapToFront: string;
