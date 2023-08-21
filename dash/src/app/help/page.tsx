@@ -10,6 +10,7 @@ import helpDriverImage from "../../../public/help-driver.png";
 import HelpDRS from "../../components/HelpDRS";
 import HelpColors from "../../components/HelpColors";
 import HelpTires from "../../components/HelpTires";
+import Footer from "../../components/Footer";
 
 export default function Page() {
   return (
@@ -42,6 +43,8 @@ export default function Page() {
         <HelpColors />
         <HelpTires />
       </div>
+
+      <Footer />
     </div>
   );
 }

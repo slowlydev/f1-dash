@@ -13,6 +13,7 @@ import TeamRadios from "../components/TeamRadios";
 import { State } from "../types/state.type";
 
 import { env } from "../env.mjs";
+import Footer from "../components/Footer";
 
 export default function Page() {
   const [state, setState] = useState<null | State>(null);
@@ -109,6 +110,8 @@ export default function Page() {
           />
         </div>
       </div>
+
+      <Footer />
     </div>
   );
 }
