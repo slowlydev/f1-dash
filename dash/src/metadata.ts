@@ -1,8 +1,8 @@
 import { Metadata } from "next";
 
-const title = "f1-dash";
+const title = "f1-dash | Formula 1 live timing";
 const description =
-  "A Formula 1 dashboard for realtime telemetry and timing data. It shows the leaderboard, tires, gaps, laps, mini sectors and much more.";
+  "Experience live telemetry and timing data from Formula 1 races. Get insights into leaderboards, tire choices, gaps, lap times, sector times, team radios, and more.";
 
 const url = "https://f1-dash.vercel.app";
 
@@ -18,19 +18,46 @@ export const metadata: Metadata = {
     title,
     description,
     url,
+    type: "website",
+    siteName: "F1 Realtime Dashboard",
+    images: [
+      {
+        alt: "Realtime Formula 1 Dashboard",
+        url: `${url}/og-image.png`,
+        width: 1200,
+        height: 630,
+      },
+    ],
   },
 
   twitter: {
+    site: "@f1_dash",
     title,
     description,
-    creator: "Slowlydev",
+    creator: "@Slowlydev",
+    card: "summary_large_image",
+    images: [
+      {
+        url: `${url}/twitter-image.png`,
+        alt: "Realtime Formula 1 Dashboard",
+        width: 1200,
+        height: 630,
+      },
+    ],
   },
 
-  category: "dashboard",
+  category: "Sports & Recreation",
 
-  referrer: "origin-when-cross-origin",
+  referrer: "strict-origin-when-cross-origin",
 
-  keywords: ["Formula 1", "F1", "dashboard", "timing", "telemetry", "realtime"],
+  keywords: [
+    "Formula 1",
+    "F1",
+    "dashboard",
+    "realtime telemetry",
+    "timing",
+    "live updates",
+  ],
 
   creator: "Slowlydev",
   publisher: "Slowlydev",
