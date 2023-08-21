@@ -11,6 +11,7 @@ import HelpDRS from "../../components/HelpDRS";
 import HelpColors from "../../components/HelpColors";
 import HelpTires from "../../components/HelpTires";
 import Footer from "../../components/Footer";
+import HelpDelay from "../../components/HelpDelay";
 
 export default function Page() {
   return (
@@ -42,6 +43,7 @@ export default function Page() {
         <HelpDRS />
         <HelpColors />
         <HelpTires />
+        <HelpDelay />
       </div>
 
       <Footer />

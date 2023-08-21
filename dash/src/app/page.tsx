@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import clsx from "clsx";
 
 import Map from "../components/Map";
-import RaceInfo from "../components/RaceInfo";
+import TrackInfo from "../components/TrackInfo";
 import WeatherInfo from "../components/WeatherInfo";
 import LeaderBoard from "../components/LeaderBoard";
 import RaceControl from "../components/RaceControl";
@@ -14,16 +14,26 @@ import { State } from "../types/state.type";
 
 import { env } from "../env.mjs";
 import Footer from "../components/Footer";
+import DelayInput from "../components/DelayInput";
+import SessionInfo from "../components/SessionInfo";
+import ConnectionStatus from "../components/ConnectionStatus";
+import HelpButton from "../components/HelpButton";
+
+type Timeout = NodeJS.Timeout;
 
 export default function Page() {
   const [state, setState] = useState<null | State>(null);
   const [connected, setConnected] = useState(false);
 
-  const [delay, setDelay] = useState(0);
+  const [delay, setDelay] = useState<number>(0);
+  const [timeouts, setTimeouts] = useState<Timeout[]>([]);
 
   const ws = useRef<WebSocket | null>();
 
   useEffect(() => {
+    timeouts.map(clearTimeout);
+    setTimeouts([]);
+
     const socket = new WebSocket(`${env.NEXT_PUBLIC_SERVER_URL}`);
 
     socket.onclose = () => setConnected(false);
@@ -31,24 +41,44 @@ export default function Page() {
 
     socket.onmessage = (event) => {
       const data: State = JSON.parse(event.data);
+
       if (Object.keys(data).length === 0) return;
-      setState(data);
+
+      if (delay > 0) {
+        const newTimeout = setTimeout(() => setState(data), delay * 1000);
+        setTimeouts((otherTimeouts) => [...otherTimeouts, newTimeout]);
+      } else {
+        setState(data);
+      }
     };
 
     ws.current = socket;
 
     return () => socket.close();
-  }, []);
+  }, [delay]);
 
   return (
     <div className="w-full">
-      <RaceInfo
-        lapCount={state?.lapCount}
-        session={state?.session}
-        clock={state?.extrapolatedClock}
-        track={state?.trackStatus}
-        connected={connected}
-      />
+      <div className="flex flex-wrap justify-between gap-2">
+        <div className="flex flex-1 items-center justify-between gap-5">
+          <SessionInfo
+            session={state?.session}
+            clock={state?.extrapolatedClock}
+          />
+
+          <DelayInput setDebouncedDelay={setDelay} />
+
+          <ConnectionStatus connected={connected} defaultHidden={false} />
+
+          <HelpButton defaultHidden={false} />
+        </div>
+
+        <TrackInfo
+          lapCount={state?.lapCount}
+          track={state?.trackStatus}
+          connected={connected}
+        />
+      </div>
 
       <div className="overflow-x-auto">
         <WeatherInfo weather={state?.weather} />
