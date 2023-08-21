@@ -9,7 +9,7 @@ export default function Footer() {
       </p>
       <p>
         Please give me your{" "}
-        <TextLink website="https://slowly-improve.vercel.app">
+        <TextLink website="https://slowly-improve.vercel.app/f1-dash">
           Feedback
         </TextLink>
         .
