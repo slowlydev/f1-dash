@@ -18,9 +18,9 @@ export function RaceControlMessage({ msg }: Props) {
     >
       <time
         className="text-sm font-medium leading-none text-gray-500"
-        dateTime={utc(msg.utc).format("HH:mm:ss")}
+        dateTime={utc(msg.utc).local().format("HH:mm:ss")}
       >
-        {utc(msg.utc).format("HH:mm:ss")}
+        {utc(msg.utc).local().format("HH:mm:ss")}
       </time>
 
       <div className="flex gap-1">
