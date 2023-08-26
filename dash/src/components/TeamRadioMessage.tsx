@@ -67,9 +67,9 @@ export default function TeamRadioMessage({ teamRadio }: Props) {
     >
       <time
         className="text-sm font-medium leading-none text-gray-500"
-        dateTime={utc(teamRadio.utc).format("HH:mm:ss")}
+        dateTime={utc(teamRadio.utc).local().format("HH:mm:ss")}
       >
-        {utc(teamRadio.utc).format("HH:mm:ss")}
+        {utc(teamRadio.utc).local().format("HH:mm:ss")}
       </time>
 
       <div
