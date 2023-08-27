@@ -1,6 +1,6 @@
 import { type Server, serve } from "bun";
 
-import { type F1State, type SocketData } from "./formula1.type";
+import { type F1State } from "./formula1.type";
 import { updateState } from "./handler";
 import { translate } from "./translators";
 
@@ -12,8 +12,6 @@ console.log("starting...");
 
 let f1_ws: WebSocket | null;
 let state: F1State = {};
-
-let starter_adress: null | string = null;
 
 const server = serve({
 	fetch(req, server) {
@@ -30,8 +28,6 @@ const server = serve({
 
 			if (!f1_ws) {
 				console.log("F1: no socket found");
-
-				starter_adress = ws.remoteAddress;
 
 				await setupF1(server);
 			} else {
