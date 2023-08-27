@@ -1,12 +1,13 @@
 {
-  "scripts": {
-    "start": "bun run --hot ./src/main.ts"
-  },
-  "dependencies": {
-    "@types/lodash": "^4.14.195",
-    "lodash": "^4.17.21"
-  },
-  "devDependencies": {
-    "bun-types": "^0.6.9"
-  }
+	"scripts": {
+		"start": "bun run ./src/main.ts",
+		"start:dev": "bun run --hot ./src/main.ts"
+	},
+	"dependencies": {
+		"@types/lodash": "^4.14.195",
+		"lodash": "^4.17.21"
+	},
+	"devDependencies": {
+		"bun-types": "^0.6.9"
+	}
 }
