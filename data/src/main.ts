@@ -1,6 +1,6 @@
-import { serve } from "bun";
+import { type Server, serve } from "bun";
 
-import { F1State, SocketData } from "./formula1.type";
+import { type F1State, type SocketData } from "./formula1.type";
 import { updateState } from "./handler";
 import { translate } from "./translators";
 
@@ -10,9 +10,12 @@ const F1_BASE_URL = process.env.F1_BASE_URL ?? DEFAULT_F1_BASE_URL;
 
 console.log("starting...");
 
-let f1_ws_global: WebSocket | null;
+let f1_ws: WebSocket | null;
+let state: F1State = {};
 
-serve({
+let starter_adress: null | string = null;
+
+const server = serve({
 	fetch(req, server) {
 		if (req.url.includes("/api/ping")) return new Response(null, { status: 200 });
 		if (server.upgrade(req)) return;
@@ -21,56 +24,94 @@ serve({
 	port: process.env.PORT ?? 4000,
 	websocket: {
 		async open(ws) {
-			console.log("connected!");
+			console.log("WS: got connection");
+			console.log("WS: subscribing to state updates");
+			ws.subscribe("f1-socket");
 
-			const hub = encodeURIComponent(JSON.stringify([{ name: "Streaming" }]));
-			const { body, cookie } = await negotiate(hub);
+			if (!f1_ws) {
+				console.log("F1: no socket found");
 
-			const token = encodeURIComponent(body.ConnectionToken);
-			const url = `${F1_BASE_URL}/connect?clientProtocol=1.5&transport=webSockets&connectionToken=${token}&connectionData=${hub}`;
+				starter_adress = ws.remoteAddress;
 
-			console.log("connecting to f1!", F1_BASE_URL);
-
-			let state: F1State = {};
-
-			const f1_ws = new WebSocket(url, {
-				headers: {
-					"User-Agent": "BestHTTP",
-					"Accept-Encoding": "gzip,identity",
-					Cookie: cookie,
-				},
-			});
-
-			f1_ws.onopen = () => {
-				console.log("connected to f1!", F1_BASE_URL);
-				f1_ws.send(subscribeRequest());
-			};
-
-			f1_ws.onmessage = (rawData) => {
-				if (typeof rawData.data !== "string") return;
-				const data: SocketData = JSON.parse(rawData.data);
-
-				state = updateState(state, data);
+				await setupF1(server);
+			} else {
+				console.log("F1: socket found, sending current state");
 
 				ws.send(JSON.stringify(translate(state)));
-			};
+			}
 
-			f1_ws.onclose = () => {
-				console.log("got disconnect from f1!", F1_BASE_URL);
-			};
+			console.log("SERVER: current connections", server.pendingWebSockets);
+		},
+		message(_, message) {
+			console.log("WS: got message:", message);
+		},
+		close(ws) {
+			console.log("WS: got disconnect!");
+			console.log("WS: unsubscribe to state updates");
 
-			f1_ws_global = f1_ws;
-		},
-		message(ws, message) {
-			console.log(message);
-		},
-		close() {
-			f1_ws_global?.close();
-			console.log("disconnected from f1!", F1_BASE_URL);
-			console.log("got disconnect!");
+			ws.unsubscribe("f1-socket");
 		},
 	},
 });
+
+const setupF1 = async (wss: Server) => {
+	if (f1_ws) return;
+
+	console.log("F1: setting up socket");
+
+	const hub = encodeURIComponent(JSON.stringify([{ name: "Streaming" }]));
+	const { body, cookie } = await negotiate(hub);
+
+	const token = encodeURIComponent(body.ConnectionToken);
+	const url = `${F1_BASE_URL}/connect?clientProtocol=1.5&transport=webSockets&connectionToken=${token}&connectionData=${hub}`;
+
+	console.log("F1: connecting!");
+
+	f1_ws = new WebSocket(url, {
+		headers: {
+			"User-Agent": "BestHTTP",
+			"Accept-Encoding": "gzip,identity",
+			Cookie: cookie,
+		},
+	});
+
+	f1_ws.onmessage = (rawData) => {
+		if (typeof rawData.data !== "string") return;
+		const data = JSON.parse(rawData.data);
+
+		state = updateState(state, data);
+
+		wss.publish("f1-socket", JSON.stringify(translate(state)));
+	};
+
+	f1_ws.onopen = () => f1_ws?.send(subscribeRequest());
+
+	f1_ws.onerror = () => {
+		console.log("F1: got error");
+		console.log("F1: closing socket");
+		f1_ws?.close();
+	};
+
+	f1_ws.onclose = () => {
+		console.log("F1: got close");
+		console.log("F1: killing socket");
+		f1_ws = null;
+
+		retrySetup(wss);
+	};
+
+	if (!f1_ws || f1_ws.readyState === 3) {
+		console.log("F1: failed to setup socket");
+		retrySetup(wss);
+	}
+};
+
+const retrySetup = (wss: Server) => {
+	setTimeout(async () => {
+		console.log("F1: retrying to setup");
+		await setupF1(wss);
+	}, 1000);
+};
 
 const negotiate = async (hub: string) => {
 	const url = `${F1_NEGOTIATE_URL}/negotiate?connectionData=${hub}&clientProtocol=1.5`;
@@ -85,7 +126,7 @@ const negotiate = async (hub: string) => {
 };
 
 const subscribeRequest = (): string => {
-	console.log("sent subscribe request");
+	console.log("F1: sent subscribe request");
 	return JSON.stringify({
 		H: "Streaming",
 		M: "Subscribe",
