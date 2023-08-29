@@ -2,7 +2,9 @@ type TAllKeys<T> = T extends any ? keyof T : never;
 
 type TIndexValue<T, K extends PropertyKey, D = never> = T extends any ? (K extends keyof T ? T[K] : D) : never;
 
-type TPartialKeys<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>> extends infer O ? { [P in keyof O]: O[P] } : never;
+type TPartialKeys<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>> extends infer O
+	? { [P in keyof O]: O[P] }
+	: never;
 
 type TFunction = (...a: any[]) => any;
 
@@ -46,7 +48,9 @@ const merge = <T extends IObject[]>(...objects: T): TMerged<T[number]> =>
 			}
 
 			if (Array.isArray(result[key]) && Array.isArray(current[key])) {
-				result[key] = merge.options.mergeArrays ? Array.from(new Set((result[key] as unknown[]).concat(current[key]))) : current[key];
+				result[key] = merge.options.mergeArrays
+					? Array.from(new Set((result[key] as unknown[]).concat(current[key])))
+					: current[key];
 			} else if (isObject(result[key]) && isObject(current[key])) {
 				result[key] = merge(result[key] as IObject, current[key] as IObject);
 			} else {

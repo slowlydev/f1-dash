@@ -164,7 +164,7 @@ export const translatePositions = (e: F1Position, drivers: F1DriverList, td: F1T
 					};
 				})
 				.filter((v) => v !== null) as DriverPosition[],
-		})
+		}),
 	);
 };
 
@@ -173,7 +173,7 @@ export const translateDrivers = (
 	td: F1TimingData,
 	ts: F1TimingStats,
 	cd: F1CarData | undefined,
-	tad: F1TimingAppData
+	tad: F1TimingAppData,
 ): Driver[] => {
 	return Object.entries(dl)
 		.map(([nr, driver]): Driver | null => {
@@ -222,7 +222,10 @@ export const translateDrivers = (
 				laps: tdDriver.NumberOfLaps,
 
 				gapToLeader:
-					tdDriver.GapToLeader ?? (tdDriver.Stats ? tdDriver.Stats[statsNumber].TimeDiffToFastest : undefined) ?? tdDriver.TimeDiffToFastest ?? "",
+					tdDriver.GapToLeader ??
+					(tdDriver.Stats ? tdDriver.Stats[statsNumber].TimeDiffToFastest : undefined) ??
+					tdDriver.TimeDiffToFastest ??
+					"",
 				gapToFront:
 					tdDriver.IntervalToPositionAhead?.Value ??
 					(tdDriver.Stats ? tdDriver.Stats[statsNumber].TimeDifftoPositionAhead : undefined) ??
@@ -244,7 +247,7 @@ export const translateDrivers = (
 							pb: false,
 						},
 						segments: e.Segments.map((e2) => e2.Status),
-					})
+					}),
 				),
 
 				stints: appTiming.Stints
@@ -253,7 +256,7 @@ export const translateDrivers = (
 								compound: (e.Compound ?? "hard").toLowerCase() as Stint["compound"],
 								laps: e.TotalLaps ?? 0,
 								new: e.New === "true",
-							})
+							}),
 					  )
 					: [],
 
@@ -272,7 +275,9 @@ export const translateDrivers = (
 
 				drs: {
 					on: [10, 12, 14].includes(car ? car[45] : 0),
-					possible: tdDriver.IntervalToPositionAhead ? parseFloat(tdDriver.IntervalToPositionAhead.Value.substring(1)) < 1 : false, // TODO check if valid
+					possible: tdDriver.IntervalToPositionAhead
+						? parseFloat(tdDriver.IntervalToPositionAhead.Value.substring(1)) < 1
+						: false, // TODO check if valid
 				},
 
 				metrics: {
@@ -309,7 +314,13 @@ export const translate = (state: F1State): State => {
 			state.TimingData &&
 			state.TimingStats &&
 			state.TimingAppData && {
-				drivers: translateDrivers(state.DriverList, state.TimingData, state.TimingStats, state.CarData, state.TimingAppData),
+				drivers: translateDrivers(
+					state.DriverList,
+					state.TimingData,
+					state.TimingStats,
+					state.CarData,
+					state.TimingAppData,
+				),
 			}),
 	};
 };
