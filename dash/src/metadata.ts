@@ -66,6 +66,12 @@ export const metadata: Metadata = {
   colorScheme: "dark",
   themeColor: "#18181B",
 
+  appleWebApp: {
+    capable: true,
+    title: "f1-dash",
+    statusBarStyle: "black-translucent",
+  },
+
   formatDetection: {
     email: false,
     address: false,
