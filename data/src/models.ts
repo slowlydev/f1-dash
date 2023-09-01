@@ -26,6 +26,7 @@ export type LapCount = {
 };
 
 export type RaceControlMessage = {
+	trackTime: string;
 	utc: string;
 	lap: number;
 	message: string;
@@ -170,7 +171,7 @@ export type DriverPosition = {
 
 	teamColor: string;
 
-	status: string;
+	status: Driver["status"];
 
 	x: number;
 	y: number;

@@ -133,9 +133,7 @@ export default function Page() {
           </div>
         </div>
 
-        <div
-          className={"max-h-screen xl:mt-2 3xl:ml-2 3xl:w-1/2 3xl:flex-grow"}
-        >
+        <div className={"xl:mt-2 3xl:ml-2 3xl:w-1/2 3xl:flex-grow"}>
           <Map
             circuitKey={state?.session?.circuitKey}
             positionBatches={state?.positionBatches}

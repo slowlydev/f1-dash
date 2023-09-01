@@ -1,4 +1,4 @@
-import { type Server, serve } from "bun";
+import { type Server, serve, sleep } from "bun";
 
 import { type F1State } from "./formula1.type";
 import { updateState } from "./handler";
@@ -12,6 +12,7 @@ console.log("starting...");
 
 let f1_ws: WebSocket | null;
 let state: F1State = {};
+let active: boolean = false;
 
 const server = serve({
 	fetch(req, server) {
@@ -22,8 +23,12 @@ const server = serve({
 	port: process.env.PORT ?? 4000,
 	websocket: {
 		async open(ws) {
-			console.log("WS: got connection");
-			console.log("WS: subscribing to state updates");
+			if (!active) {
+				state = {};
+			}
+
+			active = true;
+
 			ws.subscribe("f1-socket");
 
 			if (!f1_ws) {
@@ -43,9 +48,17 @@ const server = serve({
 		},
 		close(ws) {
 			console.log("WS: got disconnect!");
-			console.log("WS: unsubscribe to state updates");
 
 			ws.unsubscribe("f1-socket");
+
+			if (server.pendingWebSockets < 2) {
+				console.log("no connections left, killing web socket");
+
+				if (f1_ws && active) {
+					active = false;
+					f1_ws.close();
+				}
+			}
 		},
 	},
 });
@@ -102,11 +115,12 @@ const setupF1 = async (wss: Server) => {
 	}
 };
 
-const retrySetup = (wss: Server) => {
-	setTimeout(async () => {
-		console.log("F1: retrying to setup");
-		await setupF1(wss);
-	}, 1000);
+const retrySetup = async (wss: Server) => {
+	if (!active) return;
+	console.log("F1: retrying to setup in 1s");
+
+	await sleep(1000);
+	setupF1(wss);
 };
 
 const negotiate = async (hub: string) => {
