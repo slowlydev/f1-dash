@@ -1,4 +1,4 @@
-import { type Server, serve } from "bun";
+import { type Server, serve, sleep } from "bun";
 
 import { type F1State } from "./formula1.type";
 import { updateState } from "./handler";
@@ -115,10 +115,12 @@ const setupF1 = async (wss: Server) => {
 	}
 };
 
-const retrySetup = (wss: Server) => {
+const retrySetup = async (wss: Server) => {
 	if (!active) return;
 	console.log("F1: retrying to setup in 1s");
-	setTimeout(() => setupF1(wss), 1000);
+
+	await sleep(1000);
+	setupF1(wss);
 };
 
 const negotiate = async (hub: string) => {
