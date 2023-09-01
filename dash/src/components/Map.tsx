@@ -91,7 +91,8 @@ export default function Map({ circuitKey, positionBatches }: Props) {
   return (
     <svg
       viewBox={`${minX} ${minY} ${widthX} ${widthY}`}
-      className="h-full w-full"
+      className="h-full w-full xl:max-h-screen"
+      xmlns="http://www.w3.org/2000/svg"
     >
       <path
         className="stroke-slate-700"
@@ -136,19 +137,24 @@ export default function Map({ circuitKey, positionBatches }: Props) {
                 pos.status === "RETIRED" ||
                 pos.status === "STOPPED";
 
+              const transform = [
+                `translateX(${rotatedPos.x + 150}px)`,
+                `translateY(${rotatedPos.y - 120}px)`,
+              ].join(" ");
+
               return (
                 <g
                   key={`map.driver.${pos.driverNr}`}
                   id={`map.driver.${pos.driverNr}`}
-                  className={clsx({ "opacity-70": out })}
+                  className={clsx({ "opacity-30": out })}
+                  fill={`#${pos.teamColor}`}
                 >
                   <circle
                     id={`map.driver.${pos.driverNr}.circle`}
                     cx={rotatedPos.x}
                     cy={rotatedPos.y}
                     r={120}
-                    fill={`#${pos.teamColor}`}
-                    style={{ transition: "1s linear" }}
+                    style={{ transition: "all 1s linear" }}
                   />
                   <text
                     id={`map.driver.${pos.driverNr}.text`}
@@ -156,12 +162,10 @@ export default function Map({ circuitKey, positionBatches }: Props) {
                     y={0}
                     fontWeight="bold"
                     fontSize={120 * 3}
-                    fill={`#${pos.teamColor}`}
                     style={{
-                      transition: "1s linear",
-                      translate: `${rotatedPos.x + 150}px ${
-                        rotatedPos.y - 120
-                      }px`,
+                      transition: "all 1s linear",
+                      transform,
+                      WebkitTransform: transform,
                     }}
                   >
                     {pos.short}
@@ -174,3 +178,7 @@ export default function Map({ circuitKey, positionBatches }: Props) {
     </svg>
   );
 }
+
+// translate: `${rotatedPos.x + 150}px ${
+//   rotatedPos.y - 120
+// }px`,
