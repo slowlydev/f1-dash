@@ -171,7 +171,7 @@ export type DriverPosition = {
 
 	teamColor: string;
 
-	status: string;
+	status: Driver["status"];
 
 	x: number;
 	y: number;
