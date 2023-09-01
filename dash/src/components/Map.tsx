@@ -178,7 +178,3 @@ export default function Map({ circuitKey, positionBatches }: Props) {
     </svg>
   );
 }
-
-// translate: `${rotatedPos.x + 150}px ${
-//   rotatedPos.y - 120
-// }px`,
