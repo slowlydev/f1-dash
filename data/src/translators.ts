@@ -31,6 +31,7 @@ import {
 	TrackStatus,
 	Weather,
 } from "./models";
+import { toTrackTime } from "./toTrackTime";
 
 export const translateExtrapolatedClock = (e: F1ExtrapolatedClock): ExtrapolatedClock => {
 	return {
@@ -97,8 +98,9 @@ export const translateWeather = (e: F1WeatherData): Weather => {
 	};
 };
 
-export const translateRaceControlMessages = (e: F1RaceControlMessages): RaceControlMessage[] => {
+export const translateRaceControlMessages = (e: F1RaceControlMessages, si: F1SessionInfo): RaceControlMessage[] => {
 	return e.Messages.map((e2) => ({
+		trackTime: toTrackTime(e2.Utc, si.GmtOffset),
 		utc: e2.Utc,
 		lap: e2.Lap,
 		message: e2.Message,
@@ -299,7 +301,10 @@ export const translate = (state: F1State): State => {
 		...(state.WeatherData && { weather: translateWeather(state.WeatherData) }),
 		...(state.SessionInfo && state.TimingData && { session: translateSession(state.SessionInfo, state.TimingData) }),
 
-		...(state.RaceControlMessages && { raceControlMessages: translateRaceControlMessages(state.RaceControlMessages) }),
+		...(state.RaceControlMessages &&
+			state.SessionInfo && {
+				raceControlMessages: translateRaceControlMessages(state.RaceControlMessages, state.SessionInfo),
+			}),
 
 		...(state.TeamRadio &&
 			state.DriverList &&
@@ -309,7 +314,7 @@ export const translate = (state: F1State): State => {
 			state.DriverList &&
 			state.TimingData && { positionBatches: translatePositions(state.Position, state.DriverList, state.TimingData) }),
 
-		// TODO make work without other cats
+		// TODO maybe make work without other categories
 		...(state.DriverList &&
 			state.TimingData &&
 			state.TimingStats &&
