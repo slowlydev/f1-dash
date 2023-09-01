@@ -17,8 +17,6 @@ export const toTrackTime = (utc: string, offset: string) => {
 
 	const [hours, minutes, seconds]: (number | undefined)[] = offset.split(":").map((unit) => parseInt(unit));
 
-	console.log({ hours, minutes, seconds });
-
 	date.setUTCHours(date.getUTCHours() + hours);
 	date.setUTCMinutes(date.getUTCMinutes() + minutes);
 	date.setUTCSeconds(date.getUTCSeconds() + seconds);

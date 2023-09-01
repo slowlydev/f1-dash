@@ -147,6 +147,9 @@ export const translatePositions = (e: F1Position, drivers: F1DriverList, td: F1T
 
 					if (!driver) return null;
 
+					// e2.Status seems basically useless
+					// thats why i am using the timing driver status
+
 					return {
 						driverNr: nr,
 						position: tdDriver.Position,
@@ -159,7 +162,20 @@ export const translatePositions = (e: F1Position, drivers: F1DriverList, td: F1T
 
 						teamColor: driver.TeamColour,
 
-						status: e2.Status,
+						status: tdDriver.KnockedOut
+							? "OUT"
+							: !!tdDriver.Cutoff
+							? "CUTOFF"
+							: tdDriver.Retired
+							? "RETIRED"
+							: tdDriver.Stopped
+							? "STOPPED"
+							: tdDriver.InPit
+							? "PIT"
+							: tdDriver.PitOut
+							? "PIT OUT"
+							: null,
+
 						x: e2.X,
 						y: e2.Y,
 						z: e2.Z,
