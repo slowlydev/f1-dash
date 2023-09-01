@@ -5,11 +5,11 @@
 		"format": "bun prettier -w --config .prettierrc ./src/**"
 	},
 	"dependencies": {
-		"@types/lodash": "4.14.195",
+		"@types/lodash": "4.14.197",
 		"lodash": "4.17.21"
 	},
 	"devDependencies": {
-		"bun-types": "0.6.9",
+		"bun-types": "0.8.1",
 		"prettier": "3.0.3"
 	}
 }
