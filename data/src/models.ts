@@ -26,6 +26,7 @@ export type LapCount = {
 };
 
 export type RaceControlMessage = {
+	trackTime: string;
 	utc: string;
 	lap: number;
 	message: string;
