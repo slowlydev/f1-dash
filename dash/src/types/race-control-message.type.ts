@@ -1,4 +1,5 @@
 export type RaceControlMessageType = {
+  trackTime: string;
   utc: string;
   lap: number;
   message: string;
