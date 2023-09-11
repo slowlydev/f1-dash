@@ -1,12 +1,8 @@
-import { type Server, serve, sleep } from "bun";
-
-import { type F1State } from "./formula1.type";
+import { Server, serve, sleep } from "bun";
+import { config } from "../lib/config";
+import { F1State } from "./formula1.type";
 import { updateState } from "./handler";
 import { translate } from "./translators";
-
-const F1_NEGOTIATE_URL = "https://livetiming.formula1.com/signalr";
-const DEFAULT_F1_BASE_URL = "wss://livetiming.formula1.com/signalr";
-const F1_BASE_URL = process.env.F1_BASE_URL ?? DEFAULT_F1_BASE_URL;
 
 console.log("starting...");
 
@@ -20,7 +16,7 @@ const server = serve({
 		if (server.upgrade(req)) return;
 		return new Response("Upgrade failed :(", { status: 500 });
 	},
-	port: process.env.PORT ?? 4000,
+	port: config.port,
 	websocket: {
 		async open(ws) {
 			if (!active) {
@@ -72,7 +68,7 @@ const setupF1 = async (wss: Server) => {
 	const { body, cookie } = await negotiate(hub);
 
 	const token = encodeURIComponent(body.ConnectionToken);
-	const url = `${F1_BASE_URL}/connect?clientProtocol=1.5&transport=webSockets&connectionToken=${token}&connectionData=${hub}`;
+	const url = `${config.f1BaseUrl}/connect?clientProtocol=1.5&transport=webSockets&connectionToken=${token}&connectionData=${hub}`;
 
 	console.log("F1: connecting!");
 
@@ -124,7 +120,7 @@ const retrySetup = async (wss: Server) => {
 };
 
 const negotiate = async (hub: string) => {
-	const url = `${F1_NEGOTIATE_URL}/negotiate?connectionData=${hub}&clientProtocol=1.5`;
+	const url = `${config.f1NegotiateUrl}/negotiate?connectionData=${hub}&clientProtocol=1.5`;
 	const res = await fetch(url);
 
 	const body: NegotiateResult = await res.json();
@@ -165,4 +161,4 @@ const subscribeRequest = (): string => {
 	});
 };
 
-console.log("listening on port:", process.env.PORT ?? 4000);
+console.log("listening on port:", config.port);

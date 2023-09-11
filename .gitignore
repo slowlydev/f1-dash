@@ -1,3 +1,9 @@
+# os
+.DS_Store
+
+# creds
 .env
+
+# compiled
 target/
 *data.*
