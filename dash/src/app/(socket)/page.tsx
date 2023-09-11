@@ -3,21 +3,20 @@
 import { useEffect, useRef, useState } from "react";
 import clsx from "clsx";
 
-import Map from "../components/Map";
-import TrackInfo from "../components/TrackInfo";
-import WeatherInfo from "../components/WeatherInfo";
-import LeaderBoard from "../components/LeaderBoard";
-import RaceControl from "../components/RaceControl";
-import TeamRadios from "../components/TeamRadios";
+import Map from "../../components/Map";
+import WeatherInfo from "../../components/WeatherInfo";
+import LeaderBoard from "../../components/LeaderBoard";
+import RaceControl from "../../components/RaceControl";
+import TeamRadios from "../../components/TeamRadios";
 
-import { State } from "../types/state.type";
+import { State } from "../../types/state.type";
 
-import { env } from "../env.mjs";
-import Footer from "../components/Footer";
-import DelayInput from "../components/DelayInput";
-import SessionInfo from "../components/SessionInfo";
-import ConnectionStatus from "../components/ConnectionStatus";
-import HelpButton from "../components/HelpButton";
+import { env } from "../../env.mjs";
+import Footer from "../../components/Footer";
+import SessionInfo from "../../components/SessionInfo";
+import Navbar from "../../components/Navbar";
+import TrackInfo from "../../components/TrackInfo";
+import TrackStatus from "../../components/TrackStatus";
 
 type Timeout = NodeJS.Timeout;
 
@@ -59,25 +58,16 @@ export default function Page() {
 
   return (
     <div className="w-full">
-      <div className="flex flex-wrap justify-between gap-2">
-        <div className="flex flex-1 items-center justify-between gap-5">
-          <SessionInfo
-            session={state?.session}
-            clock={state?.extrapolatedClock}
-          />
-
-          <DelayInput setDebouncedDelay={setDelay} />
-
-          <ConnectionStatus connected={connected} defaultHidden={false} />
-
-          <HelpButton defaultHidden={false} />
-        </div>
-
-        <TrackInfo
-          lapCount={state?.lapCount}
-          track={state?.trackStatus}
-          connected={connected}
+      <div className="flex flex-row gap-2">
+        <SessionInfo
+          session={state?.session}
+          clock={state?.extrapolatedClock}
         />
+
+        <div className="flex items-center gap-2">
+          <Navbar />
+          <TrackStatus track={state?.trackStatus} />
+        </div>
       </div>
 
       <div className="overflow-x-auto">
