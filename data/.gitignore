@@ -1,1 +1,8 @@
+# os
+.DS_Store
+
+# deps
 /node_modules
+
+# creds
+.env
