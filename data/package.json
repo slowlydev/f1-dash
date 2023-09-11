@@ -1,6 +1,6 @@
 {
 	"scripts": {
-		"fmt": "bun prettier -w --config .prettierrc {lib,src}",
+		"format": "bun prettier -w --config .prettierrc {lib,src}",
 		"start": "bun run ./src/main.ts",
 		"start:dev": "bun run --hot ./src/main.ts"
 	},
