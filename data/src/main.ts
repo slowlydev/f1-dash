@@ -16,7 +16,7 @@ const server = serve({
 		if (server.upgrade(req)) return;
 		return new Response("Upgrade failed :(", { status: 500 });
 	},
-	port: process.env.PORT ?? 4000,
+	port: config.port,
 	websocket: {
 		async open(ws) {
 			if (!active) {
@@ -161,4 +161,4 @@ const subscribeRequest = (): string => {
 	});
 };
 
-console.log("listening on port:", process.env.PORT ?? 4000);
+console.log("listening on port:", config.port);
