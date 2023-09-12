@@ -3,6 +3,7 @@ import { config } from "../lib/config";
 import { F1State } from "./formula1.type";
 import { updateState } from "./handler";
 import { translate } from "./translators";
+import { getArchive, translateArchive } from "./getArchive";
 
 console.log("starting...");
 
@@ -11,9 +12,26 @@ let state: F1State = {};
 let active: boolean = false;
 
 const server = serve({
-	fetch(req, server) {
+	async fetch(req, server) {
 		if (req.url.includes("/api/ping")) return new Response(null, { status: 200 });
+
+		if (req.url.endsWith("/api/archive")) {
+			const currentYear = new Date().getFullYear();
+			const archive = await getArchive(currentYear);
+			
+			return new Response(
+				JSON.stringify(translateArchive(archive)),
+				{ 
+					status: 200, 
+					headers: {
+						"Content-Type": "application/json"
+					}
+				}
+			);
+		}
+
 		if (server.upgrade(req)) return;
+
 		return new Response("Upgrade failed :(", { status: 500 });
 	},
 	port: config.port,
