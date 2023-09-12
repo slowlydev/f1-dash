@@ -6,6 +6,7 @@ import {
   type SetStateAction,
   createContext,
   useState,
+  useContext,
 } from "react";
 
 import { State } from "../types/state.type";
@@ -35,4 +36,12 @@ export function SocketProvider({ children }: { children: ReactNode }) {
       {children}
     </SocketContext.Provider>
   );
+}
+
+export function useSocket() {
+  const context = useContext(SocketContext);
+  if (context === undefined) {
+    throw new Error("useSocket must be used within a SocketProvider");
+  }
+  return context;
 }
