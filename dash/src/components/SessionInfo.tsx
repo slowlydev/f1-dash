@@ -1,10 +1,11 @@
 "use client";
 
 import { utc, duration } from "moment";
-import Image from "next/image";
 
 import { ExtrapolatedClock } from "../types/extrapolated-clock.type";
 import { SessionInfo } from "../types/session.type";
+
+import Flag from "./Flag";
 
 type Props = {
   session: SessionInfo | undefined;
@@ -46,25 +47,3 @@ export default function SessionInfo({ session, clock }: Props) {
     </div>
   );
 }
-
-type FlagProps = {
-  countryCode: string | undefined;
-};
-
-const Flag = ({ countryCode }: FlagProps) => {
-  return (
-    <div className="flex h-12 w-16  content-center justify-center">
-      {countryCode ? (
-        <Image
-          src={`/country-flags/${countryCode.toLowerCase()}.svg`}
-          alt={countryCode}
-          width={70}
-          height={35}
-          className="relative h-full w-full overflow-hidden rounded-lg"
-        />
-      ) : (
-        <div className="relative h-full w-full animate-pulse overflow-hidden rounded-lg bg-gray-700" />
-      )}
-    </div>
-  );
-};
