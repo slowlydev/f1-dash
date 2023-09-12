@@ -9,10 +9,6 @@ import RaceControl from "../../components/RaceControl";
 import TeamRadios from "../../components/TeamRadios";
 
 import Footer from "../../components/Footer";
-import SessionInfo from "../../components/SessionInfo";
-import Navbar from "../../components/Navbar";
-import TrackInfo from "../../components/TrackInfo";
-import TrackStatus from "../../components/TrackStatus";
 
 import { useSocket } from "../../context/SocketContext";
 
