@@ -1,3 +1,5 @@
+import { DriverType } from "./driver.type";
+
 export type DriverPositionBatch = {
   utc: string;
   positions: DriverPosition[];
@@ -15,7 +17,7 @@ export type DriverPosition = {
 
   teamColor: string;
 
-  status: string;
+  status: DriverType["status"];
 
   x: number;
   y: number;

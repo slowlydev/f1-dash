@@ -1,13 +1,15 @@
 {
 	"scripts": {
+		"format": "bun prettier -w --config .prettierrc {lib,src}",
 		"start": "bun run ./src/main.ts",
 		"start:dev": "bun run --hot ./src/main.ts"
 	},
 	"dependencies": {
-		"@types/lodash": "^4.14.195",
-		"lodash": "^4.17.21"
+		"@types/lodash": "4.14.197",
+		"lodash": "4.17.21"
 	},
 	"devDependencies": {
-		"bun-types": "^0.6.9"
+		"bun-types": "1.0.1",
+		"prettier": "3.0.3"
 	}
 }
