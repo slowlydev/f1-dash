@@ -32,7 +32,7 @@ const SubLayout = ({ children }: Props) => {
     timeouts.map(clearTimeout);
     setTimeouts([]);
 
-    const socket = new WebSocket(`${env.NEXT_PUBLIC_SERVER_URL}`);
+    const socket = new WebSocket(`${env.NEXT_PUBLIC_SOCKET_SERVER_URL}`);
 
     socket.onclose = () => setConnected(false);
     socket.onopen = () => setConnected(true);
