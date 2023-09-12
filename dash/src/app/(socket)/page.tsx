@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import clsx from "clsx";
 
 import Map from "../../components/Map";
@@ -9,67 +8,19 @@ import LeaderBoard from "../../components/LeaderBoard";
 import RaceControl from "../../components/RaceControl";
 import TeamRadios from "../../components/TeamRadios";
 
-import { State } from "../../types/state.type";
-
-import { env } from "../../env.mjs";
 import Footer from "../../components/Footer";
 import SessionInfo from "../../components/SessionInfo";
 import Navbar from "../../components/Navbar";
 import TrackInfo from "../../components/TrackInfo";
 import TrackStatus from "../../components/TrackStatus";
 
-type Timeout = NodeJS.Timeout;
+import { useSocket } from "../../context/SocketContext";
 
 export default function Page() {
-  const [state, setState] = useState<null | State>(null);
-  const [connected, setConnected] = useState(false);
-
-  const [delay, setDelay] = useState<number>(0);
-  const [timeouts, setTimeouts] = useState<Timeout[]>([]);
-
-  const ws = useRef<WebSocket | null>();
-
-  useEffect(() => {
-    timeouts.map(clearTimeout);
-    setTimeouts([]);
-
-    const socket = new WebSocket(`${env.NEXT_PUBLIC_SERVER_URL}`);
-
-    socket.onclose = () => setConnected(false);
-    socket.onopen = () => setConnected(true);
-
-    socket.onmessage = (event) => {
-      const data: State = JSON.parse(event.data);
-
-      if (Object.keys(data).length === 0) return;
-
-      if (delay > 0) {
-        const newTimeout = setTimeout(() => setState(data), delay * 1000);
-        setTimeouts((otherTimeouts) => [...otherTimeouts, newTimeout]);
-      } else {
-        setState(data);
-      }
-    };
-
-    ws.current = socket;
-
-    return () => socket.close();
-  }, [delay]);
+  const { state } = useSocket();
 
   return (
-    <div className="w-full">
-      <div className="flex flex-row gap-2">
-        <SessionInfo
-          session={state?.session}
-          clock={state?.extrapolatedClock}
-        />
-
-        <div className="flex items-center gap-2">
-          <Navbar />
-          <TrackStatus track={state?.trackStatus} />
-        </div>
-      </div>
-
+    <div>
       <div className="overflow-x-auto">
         <WeatherInfo weather={state?.weather} />
       </div>
