@@ -11,7 +11,7 @@ export const validateConfig = (env: Env): Config => {
 		});
 		const config = schema.parse({
 			port: env.PORT,
-			f1BaseUrl: env.DATABASE_PATH,
+			f1BaseUrl: env.F1_BASE_URL,
 			f1NegotiateUrl: env.F1_NEGOTIATE_URL,
 		});
 
