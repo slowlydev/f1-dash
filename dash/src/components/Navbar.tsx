@@ -14,8 +14,8 @@ export default function Navbar() {
         <NavItem name="Dashboard" active={pathname === "/"} />
       </Link>
 
-      <Link href="/schedule" className="h-full">
-        <NavItem name="Schedule" active={pathname === "/schedule"} />
+      <Link href="/archive" className="h-full">
+        <NavItem name="Archive" active={pathname === "/archive"} />
       </Link>
 
       {/* <NavItem name="H2H View" active={false} /> */}
