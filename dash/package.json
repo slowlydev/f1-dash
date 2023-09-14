@@ -32,5 +32,6 @@
     "prettier-plugin-tailwindcss": "0.2.6",
     "tailwindcss": "3.3.0",
     "typescript": "5.0.2"
-  }
+  },
+  "packageManager": "yarn@3.6.3"
 }
