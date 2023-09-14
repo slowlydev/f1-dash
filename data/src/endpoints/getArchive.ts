@@ -1,5 +1,5 @@
-import { F1Archive } from "./archive.f1.type";
-import { Archive } from "./archive.type";
+import { F1Archive } from "../f1-types/archive.f1.type";
+import { Archive } from "../types/archive.type";
 
 export const getArchive = async (year: number): Promise<F1Archive> => {
 	const req = await fetch(`https://livetiming.formula1.com/static/${year}/Index.json`, {
@@ -7,14 +7,14 @@ export const getArchive = async (year: number): Promise<F1Archive> => {
 		headers: {
 			"User-Agent": "F1-Data-Server",
 			"Content-Type": "application/json",
-		}
+		},
 	});
-	
+
 	const text = await req.text();
 	const json: F1Archive = JSON.parse(text.trim()); // TODO trim() is a bun workaround, remove when fixed
 
 	return json;
-}
+};
 
 export const translateArchive = (archive: F1Archive): Archive => {
 	return {
@@ -46,5 +46,5 @@ export const translateArchive = (archive: F1Archive): Archive => {
 				path: session.Path,
 			})),
 		})),
-	}
-}
+	};
+};

@@ -1,9 +1,10 @@
 import { Server, serve, sleep } from "bun";
 import { config } from "../lib/config";
-import { F1State } from "./formula1.type";
+import { F1State } from "./f1-types/formula1.type";
 import { updateState } from "./handler";
 import { translate } from "./translators";
-import { getArchive, translateArchive } from "./getArchive";
+import { getArchive, translateArchive } from "./endpoints/getArchive";
+import { getAPIKey, getEventTracker, translateNextMeeting } from "./endpoints/getEventTracker";
 
 console.log("starting...");
 
@@ -18,16 +19,25 @@ const server = serve({
 		if (req.url.endsWith("/api/archive")) {
 			const currentYear = new Date().getFullYear();
 			const archive = await getArchive(currentYear);
-			
-			return new Response(
-				JSON.stringify(translateArchive(archive)),
-				{ 
-					status: 200, 
-					headers: {
-						"Content-Type": "application/json"
-					}
-				}
-			);
+
+			return new Response(JSON.stringify(translateArchive(archive)), {
+				status: 200,
+				headers: {
+					"Content-Type": "application/json",
+				},
+			});
+		}
+
+		if (req.url.endsWith("/api/next-meeting")) {
+			const apiKey = getAPIKey();
+			const eventTracker = await getEventTracker(apiKey);
+
+			return new Response(JSON.stringify(translateNextMeeting(eventTracker)), {
+				status: 200,
+				headers: {
+					"Content-Type": "application/json",
+				},
+			});
 		}
 
 		if (server.upgrade(req)) return;

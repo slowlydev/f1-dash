@@ -1,7 +1,7 @@
 import { inflateSync } from "bun";
 import { merge } from "lodash";
 
-import { F1CarData, ParsedRecap, F1Position, SocketData, F1State } from "./formula1.type";
+import { F1CarData, ParsedRecap, F1Position, SocketData, F1State } from "./f1-types/formula1.type";
 
 const parseCompressed = <T>(data: string): T => {
 	return JSON.parse(new TextDecoder().decode(inflateSync(Buffer.from(data, "base64"))));

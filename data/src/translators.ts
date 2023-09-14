@@ -14,7 +14,7 @@ import {
 	F1TimingStats,
 	F1TrackStatus,
 	F1WeatherData,
-} from "./formula1.type";
+} from "./f1-types/formula1.type";
 import {
 	Driver,
 	DriverPosition,
@@ -30,7 +30,7 @@ import {
 	TeamRadio,
 	TrackStatus,
 	Weather,
-} from "./models";
+} from "./types/models";
 import { toTrackTime } from "./toTrackTime";
 
 export const translateExtrapolatedClock = (e: F1ExtrapolatedClock): ExtrapolatedClock => {
