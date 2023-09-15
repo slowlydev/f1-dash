@@ -61,6 +61,7 @@ const server = serve({
 
 const setupF1 = async (wss: Server) => {
 	if (f1_ws) return;
+	state = {};
 
 	console.log("F1: setting up socket");
 
