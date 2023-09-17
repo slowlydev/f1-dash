@@ -1,7 +1,7 @@
-import { utc } from "moment";
-
+import clsx from "clsx";
 import { Meeting } from "../types/archive.type";
 import Flag from "./Flag";
+import MeetingArchiveSession from "./MeetingArchiveSession";
 
 type Props = {
   meeting: Meeting;
@@ -9,20 +9,28 @@ type Props = {
 
 export default function MeetingArchiveCard({ meeting }: Props) {
   return (
-    <div className="flex flex-col gap-2 rounded-lg bg-gray-500 bg-opacity-20 p-2 backdrop-blur-lg">
-      <div className="flex gap-2">
+    <div className="flex flex-col gap-4 py-4">
+      <div className="flex items-center gap-4">
         <Flag countryCode={meeting.country.code} />
-        <p className="truncate text-sm font-medium text-gray-500">
-          {meeting.name}
-        </p>
+        <div>
+          <p className="truncate text-2xl font-medium">{meeting.name}</p>
+          <p className="text-gray-500">{meeting.location}</p>
+        </div>
       </div>
 
-      <div className="flex flex-col gap-2">
+      <div
+        className={clsx(
+          "grid grid-cols-2 gap-2",
+          "sm:grid-cols-3",
+          "md:grid-cols-4",
+          "lg:grid-cols-5"
+        )}
+      >
         {meeting.sessions.map((session) => (
-          <div className="flex gap-2">
-            <p>{session.name}</p>
-            <p>{utc(session.startDate).local().format("LL")}</p>
-          </div>
+          <MeetingArchiveSession
+            key={`${session.number}.${session.type}`}
+            session={session}
+          />
         ))}
       </div>
     </div>
