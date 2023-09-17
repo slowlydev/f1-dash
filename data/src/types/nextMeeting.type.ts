@@ -11,6 +11,6 @@ export type NextMeetingSession = {
 	short: string;
 	state: string;
 	gmtOffset: string;
-	endTime: string;
-	startTime: string;
+	endDate: string;
+	startDate: string;
 };

@@ -1,5 +1,5 @@
 import { F1Archive } from "../f1-types/archive.f1.type";
-import { Archive } from "../types/archive.type";
+import { Archive, ArchiveSession } from "../types/archive.type";
 
 export const getArchive = async (year: number): Promise<F1Archive> => {
 	const req = await fetch(`https://livetiming.formula1.com/static/${year}/Index.json`, {
@@ -37,7 +37,7 @@ export const translateArchive = (archive: F1Archive): Archive => {
 			},
 			sessions: meeting.Sessions.map((session) => ({
 				key: session.Key,
-				type: session.Type,
+				type: sessionTypeTranslation(session.Type),
 				number: session.Number,
 				name: session.Name,
 				startDate: session.StartDate,
@@ -47,4 +47,8 @@ export const translateArchive = (archive: F1Archive): Archive => {
 			})),
 		})),
 	};
+};
+
+const sessionTypeTranslation = (type: string): ArchiveSession["type"] => {
+	return type.toLowerCase() as ArchiveSession["type"];
 };

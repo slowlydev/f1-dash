@@ -12,7 +12,7 @@ export type Meeting = {
   officialName: string;
   country: Country;
   circuit: Circuit;
-  sessions: Session[];
+  sessions: ArchiveSession[];
 };
 
 type Circuit = {
@@ -26,9 +26,9 @@ type Country = {
   name: string;
 };
 
-type Session = {
+export type ArchiveSession = {
   key: number;
-  type: string;
+  type: "practice" | "qualifying" | "race";
   number?: number;
   name: string;
   startDate: string;
