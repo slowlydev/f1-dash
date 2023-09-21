@@ -138,8 +138,8 @@ export default function Map({ circuitKey, positionBatches }: Props) {
                 pos.status === "STOPPED";
 
               const transform = [
-                `translateX(${rotatedPos.x + 150}px)`,
-                `translateY(${rotatedPos.y - 120}px)`,
+                `translateX(${rotatedPos.x}px)`,
+                `translateY(${rotatedPos.y}px)`,
               ].join(" ");
 
               return (
@@ -148,24 +148,15 @@ export default function Map({ circuitKey, positionBatches }: Props) {
                   id={`map.driver.${pos.driverNr}`}
                   className={clsx({ "opacity-30": out })}
                   fill={`#${pos.teamColor}`}
+                  style={{ transition: "all 1s linear", transform }}
                 >
-                  <circle
-                    id={`map.driver.${pos.driverNr}.circle`}
-                    cx={rotatedPos.x}
-                    cy={rotatedPos.y}
-                    r={120}
-                    style={{ transition: "all 1s linear" }}
-                  />
+                  <circle id={`map.driver.${pos.driverNr}.circle`} r={120} />
                   <text
                     id={`map.driver.${pos.driverNr}.text`}
-                    x={0}
-                    y={0}
                     fontWeight="bold"
                     fontSize={120 * 3}
                     style={{
-                      transition: "all 1s linear",
-                      transform,
-                      WebkitTransform: transform,
+                      transform: "translateX(150px) translateY(-120px)",
                     }}
                   >
                     {pos.short}
