@@ -12,7 +12,8 @@ export default function MeetingArchiveSession({ session }: Props) {
       <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gray-600">
         <p className="text-xl leading-none">{sessionEmoji(session.type)}</p>
       </div>
-      <div className="flex flex-col">
+
+      <div className="flex flex-col gap-1">
         <p className="leading-none">{session.name}</p>
         <p className="text-sm leading-none text-gray-400">
           {utc(session.startDate).local().format("LL")}
