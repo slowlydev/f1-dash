@@ -14,11 +14,14 @@ export default function Navbar() {
         <NavItem name="Dashboard" active={pathname === "/"} />
       </Link>
 
+      <Link href="/head-to-head" className="h-full">
+        <NavItem name="H2H View" active={pathname === "/head-to-head"} />
+      </Link>
+
       <Link href="/archive" className="h-full">
         <NavItem name="Archive" active={pathname === "/archive"} />
       </Link>
 
-      {/* <NavItem name="H2H View" active={false} /> */}
       {/* <NavItem name="Team View" active={false} /> */}
       {/* <NavItem name="Graph View" active={false} /> */}
       {/* <NavItem name="Settings" active={false} /> */}
