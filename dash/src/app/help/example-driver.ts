@@ -1,6 +1,6 @@
 import { DriverType } from "../../types/driver.type";
 
-const exampleDriver: DriverType = {
+export const exampleDriver: DriverType = {
   nr: "63",
   broadcastName: "G RUSSELL",
   fullName: "George RUSSELL",
