@@ -8,6 +8,8 @@ import { exampleDriver } from "../help/example-driver";
 
 import mapFeature from "../../../public/map-feature-home.png";
 import tagLogo from "../../../public/tag-logo.png";
+import arrow from "../../../public/icons/arrow-up.svg";
+import githubLogo from "../../../public/icons/github.svg";
 
 import softTireIcon from "../../../public/tires/soft.svg";
 import mediumTireIcon from "../../../public/tires/medium.svg";
@@ -22,6 +24,7 @@ import UpNextMeeting from "../../components/UpNext";
 import DriverInfo from "../../components/DriverInfo";
 
 import { NextMeeting } from "../../types/nextMeeting.type";
+import Button from "../../components/Button";
 
 const getNextMeeting = async (): Promise<NextMeeting> => {
   const req = await fetch(`${env.NEXT_PUBLIC_SERVER_URL}/api/next-meeting`);
@@ -43,13 +46,26 @@ export default async function Page() {
         <Link href="/archive">Archive</Link>
       </div>
 
-      <div className="flex h-[50vh] w-full flex-col items-center justify-center">
+      <div className="flex h-[60vh] w-full flex-col items-center justify-center">
         <Image src={tagLogo} alt="f1-dash" className="w-[180px]" />
         <h1 className="text-center text-6xl font-bold text-white">
           Real-time Formula 1 telemetry and timing
         </h1>
 
-        {/* github */}
+        <div className="mt-10 flex flex-col items-center gap-10">
+          <div className="flex items-center gap-2">
+            <Image src={githubLogo} alt="github icon" className="h-8 w-8" />
+            <p className="opacity-50">We're open-source</p>
+          </div>
+
+          {/* button to dashboard */}
+
+          <div>
+            <Link href="/">
+              <Button>Dashboard</Button>
+            </Link>
+          </div>
+        </div>
       </div>
 
       <div className="mb-4">
@@ -122,8 +138,10 @@ export default async function Page() {
 
       <UpNextMeeting nextMeeting={nextMeeting} />
 
-      {/* TODO add arrow to right */}
-      <Link href="/archive">Checkout the archive</Link>
+      <div className="flex items-center gap-1">
+        <Link href="/archive">Checkout the archive for more races</Link>
+        <Image src={arrow} alt="arrow right" className="h-4 w-4 rotate-90" />
+      </div>
 
       <div>
         <h2 className="mb-4 text-3xl font-bold"></h2>
