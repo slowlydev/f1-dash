@@ -7,19 +7,27 @@ import { SessionInfo } from "../types/session.type";
 
 import Flag from "./Flag";
 
+import { useSocket } from "../context/SocketContext";
+
 type Props = {
   session: SessionInfo | undefined;
   clock: ExtrapolatedClock | undefined;
 };
 
 export default function SessionInfo({ session, clock }: Props) {
+  const { delay } = useSocket();
+
   const timeRemaining =
     !!clock && !!clock.remaining
       ? clock.extrapolating
         ? utc(
-            duration(clock.remaining)
-              .subtract(utc().diff(utc(clock.utc)))
-              .asMilliseconds()
+            Math.max(
+              duration(clock.remaining)
+                .subtract(utc().diff(utc(clock.utc)))
+                .asMilliseconds() +
+                delay / 1000,
+              0
+            )
           ).format("HH:mm:ss")
         : clock.remaining
       : undefined;
