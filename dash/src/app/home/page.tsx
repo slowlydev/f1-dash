@@ -36,7 +36,7 @@ export default async function Page() {
   const nextMeeting = await getNextMeeting();
 
   const featureClass =
-    "col-span-6 flex flex-col gap-2 rounded-lg bg-gray-500 bg-opacity-20 p-4";
+    "flex flex-col gap-2 rounded-lg bg-gray-500 bg-opacity-20 p-4";
 
   return (
     <div className="container mx-auto px-4">
@@ -58,8 +58,6 @@ export default async function Page() {
             <p className="opacity-50">We're open-source</p>
           </div>
 
-          {/* button to dashboard */}
-
           <div>
             <Link href="/">
               <Button>Dashboard</Button>
@@ -69,9 +67,10 @@ export default async function Page() {
       </div>
 
       <div className="mb-4">
+        <p className="text-xl font-semibold text-gray-500">What's our</p>
         <h2 className="mb-4 text-3xl font-bold">Core Features</h2>
 
-        <div className="grid grid-cols-12 gap-2">
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
           <div className={featureClass}>
             <p className="text-lg leading-none">Tires & Pitstops</p>
             <p className="leading-none text-gray-400">
