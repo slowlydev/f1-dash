@@ -1,4 +1,4 @@
 export type LapCount = {
-  current: number;
-  total: number;
+	current: number;
+	total: number;
 };
