@@ -71,6 +71,10 @@ pub fn subscribe_request() -> String {
             "LapCount",
             "TimingData",
             "TeamRadio",
+            "TimingDataF1",
+            "LapSeries",
+            "PitLaneTimeCollection",
+            "TlaRcm"
         ]],
         "I": 1,
     });
