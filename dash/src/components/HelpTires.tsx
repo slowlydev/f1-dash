@@ -1,10 +1,10 @@
 import Image from "next/image";
 
-import softTireIcon from "@/public/tires/soft.svg";
-import mediumTireIcon from "@/public/tires/medium.svg";
-import hardTireIcon from "@/public/tires/hard.svg";
-import intermediateTireIcon from "@/public/tires/intermediate.svg";
-import wetTireIcon from "@/public/tires/wet.svg";
+import softTireIcon from "public/tires/soft.svg";
+import mediumTireIcon from "public/tires/medium.svg";
+import hardTireIcon from "public/tires/hard.svg";
+import intermediateTireIcon from "public/tires/intermediate.svg";
+import wetTireIcon from "public/tires/wet.svg";
 
 export default function HelpTires() {
 	return (

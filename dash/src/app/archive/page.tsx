@@ -2,6 +2,7 @@ import { env } from "@/env.mjs";
 
 import MeetingArchiveCard from "@/components/MeetingArchiveCard";
 import UpNextMeeting from "@/components/UpNext";
+import Navbar from "@/components/Navbar";
 
 import type { Archive } from "@/types/archive.type";
 import type { NextMeeting } from "@/types/nextMeeting.type";
@@ -24,7 +25,7 @@ export default async function ArchivePage() {
 
 	return (
 		<div className="container mx-auto mt-10 px-4">
-			{/* TODO add back button or navbar */}
+			<Navbar />
 
 			<UpNextMeeting nextMeeting={nextMeeting} />
 

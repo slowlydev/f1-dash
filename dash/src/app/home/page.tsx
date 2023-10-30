@@ -6,26 +6,26 @@ import Image from "next/image";
 import { env } from "@/env.mjs";
 import { exampleDriver } from "../help/example-driver";
 
-import mapFeature from "@/../public/map-feature-home.png";
-import tagLogo from "@/../public/tag-logo.png";
-import arrow from "@/../public/icons/arrow-up.svg";
-import githubLogo from "@/../public/icons/github.svg";
+import mapFeature from "public/map-feature-home.png";
+import tagLogo from "public/tag-logo.png";
+import arrow from "public/icons/arrow-up.svg";
+import githubLogo from "public/icons/github.svg";
 
-import softTireIcon from "@/../public/tires/soft.svg";
-import mediumTireIcon from "@/../public/tires/medium.svg";
-import hardTireIcon from "@/../public/tires/hard.svg";
-import intermediateTireIcon from "@/../public/tires/intermediate.svg";
-import wetTireIcon from "@/../public/tires/wet.svg";
+import softTireIcon from "public/tires/soft.svg";
+import mediumTireIcon from "public/tires/medium.svg";
+import hardTireIcon from "public/tires/hard.svg";
+import intermediateTireIcon from "public/tires/intermediate.svg";
+import wetTireIcon from "public/tires/wet.svg";
 
-import Footer from "@/components/Footer";
 import DriverMiniSectors from "@/components/DriverMiniSectors";
 import DriverTire from "@/components/DriverTire";
-import UpNextMeeting from "@/components/UpNext";
 import DriverInfo from "@/components/DriverInfo";
-
-import { NextMeeting } from "@/types/nextMeeting.type";
+import UpNextMeeting from "@/components/UpNext";
 import Button from "@/components/Button";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+
+import { NextMeeting } from "@/types/nextMeeting.type";
 
 const getNextMeeting = async (): Promise<NextMeeting> => {
 	const req = await fetch(`${env.NEXT_PUBLIC_SERVER_URL}/api/next-meeting`);

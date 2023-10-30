@@ -5,7 +5,7 @@ import { Menu, Transition } from "@headlessui/react";
 import clsx from "clsx";
 import Image from "next/image";
 
-import chevronDownIcon from "@/public/icons/chevron-down.svg";
+import chevronDownIcon from "public/icons/chevron-down.svg";
 
 type Props<T> = {
 	label: string;

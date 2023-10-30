@@ -1,27 +1,20 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 
-import arrowIcon from "@/../public/icons/arrow-up.svg";
+import helpDriverImage from "public/help-driver.png";
 
-import helpDriverImage from "@/../public/help-driver.png";
-
-import HelpDRS from "@/components/HelpDRS";
 import HelpColors from "@/components/HelpColors";
 import HelpTires from "@/components/HelpTires";
-import Footer from "@/components/Footer";
 import HelpDelay from "@/components/HelpDelay";
+import HelpDRS from "@/components/HelpDRS";
+import Footer from "@/components/Footer";
+import Navbar from "@/components/Navbar";
 
 export default function Page() {
 	return (
 		<div className="container m-auto sm:pt-10">
-			<Link href="/">
-				<div className="mb-2 flex items-center gap-1">
-					<Image src={arrowIcon} alt="arrow left" className="h-6 w-6 -rotate-90 opacity-50" />
-					<p className="text-md text-gray-500">Back</p>
-				</div>
-			</Link>
+			<Navbar />
 
 			<h1 className="mb-2 text-3xl font-extrabold">Help</h1>
 

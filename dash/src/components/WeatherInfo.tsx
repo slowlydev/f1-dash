@@ -2,7 +2,7 @@ import Image from "next/image";
 import { getWindDirection } from "../lib/getWindDirection";
 import { Weather } from "../types/weather.type";
 
-import arrowIcon from "@/public/icons/arrow-up.svg";
+import arrowIcon from "public/icons/arrow-up.svg";
 
 type Props = {
 	weather: Weather | undefined;
