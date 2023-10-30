@@ -56,9 +56,6 @@ export const metadata: Metadata = {
 	publisher: "Slowlydev",
 	authors: [{ name: "Slowlydev", url: "https://slowlydev.vercel.app" }],
 
-	colorScheme: "dark",
-	themeColor: "#18181B",
-
 	appleWebApp: {
 		capable: true,
 		title: "f1-dash",
