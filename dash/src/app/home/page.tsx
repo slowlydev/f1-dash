@@ -25,6 +25,7 @@ import DriverInfo from "../../components/DriverInfo";
 
 import { NextMeeting } from "../../types/nextMeeting.type";
 import Button from "../../components/Button";
+import Navbar from "../../components/Navbar";
 
 const getNextMeeting = async (): Promise<NextMeeting> => {
   const req = await fetch(`${env.NEXT_PUBLIC_SERVER_URL}/api/next-meeting`);
@@ -40,18 +41,13 @@ export default async function Page() {
 
   return (
     <div className="container mx-auto px-4">
-      <div className="flex gap-4">
-        <Link href="/home">Home</Link>
-        <Link href="/">Dashboard</Link>
-        <Link href="/archive">Archive</Link>
-      </div>
+      <Navbar />
 
       <div className="flex h-[60vh] w-full flex-col items-center justify-center">
         <Image src={tagLogo} alt="f1-dash" className="w-[180px]" />
         <h1 className="text-center text-6xl font-bold text-white">
           Real-time Formula 1 telemetry and timing
         </h1>
-
         <div className="mt-10 flex flex-col items-center gap-10">
           <div className="flex items-center gap-2">
             <Image src={githubLogo} alt="github icon" className="h-8 w-8" />
@@ -70,7 +66,7 @@ export default async function Page() {
         <p className="text-xl font-semibold text-gray-500">What's our</p>
         <h2 className="mb-4 text-3xl font-bold">Core Features</h2>
 
-        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 xl:grid-cols-4">
           <div className={featureClass}>
             <p className="text-lg leading-none">Tires & Pitstops</p>
             <p className="leading-none text-gray-400">
