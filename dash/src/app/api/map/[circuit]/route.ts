@@ -17,7 +17,7 @@ export async function GET(request: NextRequest, context: Context) {
   try {
     const mapRequest = await fetch(
       `https://api.multiviewer.app/api/v1/circuits/${circuit}/${year}`,
-      { next: { revalidate: 10 } }
+      { next: { revalidate: 20 } }
     );
 
     const map: MapType = await mapRequest.json();
