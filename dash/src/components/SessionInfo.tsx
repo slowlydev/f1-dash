@@ -1,10 +1,13 @@
 "use client";
 
 import { utc, duration } from "moment";
-import Image from "next/image";
 
 import { ExtrapolatedClock } from "../types/extrapolated-clock.type";
 import { SessionInfo } from "../types/session.type";
+
+import Flag from "./Flag";
+
+import { useSocket } from "../context/SocketContext";
 
 type Props = {
   session: SessionInfo | undefined;
@@ -12,13 +15,19 @@ type Props = {
 };
 
 export default function SessionInfo({ session, clock }: Props) {
+  const { delay } = useSocket();
+
   const timeRemaining =
     !!clock && !!clock.remaining
       ? clock.extrapolating
         ? utc(
-            duration(clock.remaining)
-              .subtract(utc().diff(utc(clock.utc)))
-              .asMilliseconds()
+            Math.max(
+              duration(clock.remaining)
+                .subtract(utc().diff(utc(clock.utc)))
+                .asMilliseconds() +
+                delay / 1000,
+              0
+            )
           ).format("HH:mm:ss")
         : clock.remaining
       : undefined;
@@ -46,25 +55,3 @@ export default function SessionInfo({ session, clock }: Props) {
     </div>
   );
 }
-
-type FlagProps = {
-  countryCode: string | undefined;
-};
-
-const Flag = ({ countryCode }: FlagProps) => {
-  return (
-    <div className="flex h-12 w-16  content-center justify-center">
-      {countryCode ? (
-        <Image
-          src={`/country-flags/${countryCode.toLowerCase()}.svg`}
-          alt={countryCode}
-          width={70}
-          height={35}
-          className="relative h-full w-full overflow-hidden rounded-lg"
-        />
-      ) : (
-        <div className="relative h-full w-full animate-pulse overflow-hidden rounded-lg bg-gray-700" />
-      )}
-    </div>
-  );
-};

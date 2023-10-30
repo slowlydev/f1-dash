@@ -46,7 +46,7 @@ export default function DataWeatherInfo({ weather }: Props) {
 
       <div>
         <dt className={label}>Wind Speed</dt>
-        <LazyData data={weather?.wind_speed} unit=" km/h" />
+        <LazyData data={weather?.wind_speed} unit=" m/s" />
       </div>
 
       <div>

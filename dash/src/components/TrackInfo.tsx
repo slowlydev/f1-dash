@@ -6,29 +6,22 @@ import { getTrackStatusMessage } from "../lib/getTrackStatusMessage";
 
 import { LapCount } from "../types/lap-count.type";
 import { TrackStatus } from "../types/track-status.type";
-import ConnectionStatus from "./ConnectionStatus";
-import HelpButton from "./HelpButton";
 
 type Props = {
   track: TrackStatus | undefined;
   lapCount: LapCount | undefined;
-  connected: boolean;
 };
 
-export default function TrackInfo({ track, lapCount, connected }: Props) {
+export default function TrackInfo({ track, lapCount }: Props) {
   const currentTrackStatus = getTrackStatusMessage(track?.status);
 
   return (
     <div
       className={clsx(
-        "flex w-full flex-row-reverse items-center justify-between gap-4 sm:w-auto sm:flex-row",
+        "itenms-ceter flex w-full flex-row-reverse justify-between gap-4 sm:w-auto sm:flex-row",
         { "!flex-row": !!!lapCount }
       )}
     >
-      <ConnectionStatus connected={connected} defaultHidden={true} />
-
-      <HelpButton defaultHidden={true} />
-
       {!!lapCount && (
         <p className="whitespace-nowrap text-3xl font-extrabold">
           {lapCount?.current} / {lapCount?.total}
