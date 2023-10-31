@@ -1,62 +1,69 @@
-# f1-dash
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="./dash/public/tag-logo.png" width="200">
+    <img alt="f1-dash" src="./dash/public/tag-logo.png" width="200">
+  </picture>
+</p>
+
+<h1 align="center">Real-time Formula 1 telemetry and timing</h1>
+
+## f1-dash
 
 A real-time F1 dashboard that shows the leader board, tires, gaps, laps, mini sectors and much more
 
-## dash (frontend)
+## project structure
 
-displays the data served from the backend
+This project is mono-repo style. Which means it includes the frontend aswell as the backend and some extra tools for developing and testing.
+I will go over every single of of them and explain them below.
 
-`yarn` install dependencies  
-`yarn dev` start in dev mode  
-`yarn build` build app  
-`yarn start` start builded app
+The main two parts used in production are:
 
-## data (backend)
+- `dash` (frontend)  
+  displays the data served from the backend. Also know as the thing you see when you visit [f1-dash](https://f1-dash.vercel.app).
 
-on connection start grabbing data from f1, reformats it and sends it to the dashboard
+- `data` (backend)  
+  Is the backend that grabs the data from f1 and sorts and formats it in a for me useable state.
+  Its currently written with bun and I am planning to rewrite it in rust sometime.
 
-`bun i` install dependencies  
-`bun start` start in backend
+Other tools used during development or testing are:
 
-## data-saver (backend)
+- `data-saver`  
+  Connects to the f1 socket and porints out the messages it recives.
+  Its written in rust. I usually use it to pipe the output into a txt file which the `data-simulator` then can use.
+  Write to txt like this: `cargo run > some-name.data.txt`
 
-connects to f1 and writes the received raw data into a txt for the simulator to read and use (used for testing)
+- `data-simulator`  
+  Reads a txt from the `data-saver` and simulates the f1 websocket. The websocket gets started on port 8000.
+  Start it like this `cargo run some-name.data.txt`
 
-`cargo run` install dependencies & start program  
-`cargo build` install dependencies & build program
+## setup
 
-## data-simulator (backend)
+Because we have multiple components u need to install follwuing things
 
-reads a txt and simulates the f1 websocket (used for testing)
+- node
+- yarn
+- bun
+- rsutup (cargo)
 
-`cargo run` install dependencies & start program  
-`cargo build` install dependencies & build program
+to start the whole thing do this
 
-## planned data flow
+```bash
+# note u will need 3 terminals u can't abort one command
 
+cd dash/
+yarn # install deps
+yarn dev # start frontend in dev mode
+
+cd data/
+bun i # install deps
+bun start # start backend
+
+cd data-simulator/
+cargo run some-name.data.txt # will install, compile and start
+
+# note: the txt needs to be created before hand during a race to do that do this:
+
+cd data-saver/
+cargo run > some-name.data.txt # will install, compile and start
+# its supid simple but it works
 ```
-f1 > data > dash
-```
-
-## servers
-
-Dashboard Frontend:
-http://localhost:3000/
-
-Data Backend:
-http://localhost:4000/
-
-Data Simulator:
-http://localhost:8000/
-
-## important api stuff
-
-https://api.formula1.com/v1/event-tracker  
-https://github.com/marcokreeft87/formulaone-card  
-https://www.reddit.com/r/formula1/comments/b4t3q7/where_does_f1tfeednet_get_their_data/
-
-## some of the best sources
-
-https://livetiming.formula1.com/static/2019/Index.json  
-https://livetiming.formula1.com/static/SessionInfo.json  
-https://livetiming.formula1.com/static/StreamingStatus.json
