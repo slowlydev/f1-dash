@@ -8,14 +8,10 @@ import HelpColors from "@/components/HelpColors";
 import HelpTires from "@/components/HelpTires";
 import HelpDelay from "@/components/HelpDelay";
 import HelpDRS from "@/components/HelpDRS";
-import Footer from "@/components/Footer";
-import Navbar from "@/components/Navbar";
 
 export default function Page() {
 	return (
-		<div className="container m-auto sm:pt-10">
-			<Navbar />
-
+		<div className="mt-4">
 			<h1 className="mb-2 text-3xl font-extrabold">Help</h1>
 
 			<p>
@@ -34,8 +30,6 @@ export default function Page() {
 				<HelpTires />
 				<HelpDelay />
 			</div>
-
-			<Footer />
 		</div>
 	);
 }

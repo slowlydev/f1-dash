@@ -22,10 +22,9 @@ import DriverTire from "@/components/DriverTire";
 import DriverInfo from "@/components/DriverInfo";
 import UpNextMeeting from "@/components/UpNext";
 import Button from "@/components/Button";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 
 import { NextMeeting } from "@/types/nextMeeting.type";
+import HomeRoadmapItem from "../../../components/HomeRoadmapItem";
 
 const getNextMeeting = async (): Promise<NextMeeting> => {
 	const req = await fetch(`${env.NEXT_PUBLIC_SERVER_URL}/api/next-meeting`);
@@ -39,9 +38,7 @@ export default async function Page() {
 	const featureClass = "flex flex-col gap-2 rounded-lg bg-gray-500 bg-opacity-20 p-4";
 
 	return (
-		<div className="container mx-auto px-4">
-			<Navbar />
-
+		<div>
 			<div className="flex h-[60vh] w-full flex-col items-center justify-center">
 				<Image src={tagLogo} alt="f1-dash" className="w-[180px]" />
 				<h1 className="text-center text-6xl font-bold text-white">Real-time Formula 1 telemetry and timing</h1>
@@ -59,7 +56,7 @@ export default async function Page() {
 				</div>
 			</div>
 
-			<div className="mb-4">
+			<div className="mb-8">
 				<p className="text-xl font-semibold text-gray-500">What's our</p>
 				<h2 className="mb-4 text-3xl font-bold">Core Features</h2>
 
@@ -115,18 +112,33 @@ export default async function Page() {
 				</div>
 			</div>
 
-			<UpNextMeeting nextMeeting={nextMeeting} />
+			<div className="mb-8 flex flex-col items-center">
+				<UpNextMeeting nextMeeting={nextMeeting} />
 
-			<div className="flex items-center gap-1">
-				<Link href="/archive">Checkout the archive for more races</Link>
-				<Image src={arrow} alt="arrow right" className="h-4 w-4 rotate-90" />
+				<div className="flex cursor-pointer items-center gap-1 opacity-50">
+					<Link href="/archive">Checkout the archive for past sessions</Link>
+					<Image src={arrow} alt="arrow right" className="h-4 w-4 rotate-90" />
+				</div>
 			</div>
 
-			<div>
-				<h2 className="mb-4 text-3xl font-bold"></h2>
-			</div>
+			<div className="mb-16">
+				<p className="text-xl font-semibold text-gray-500">What's our</p>
+				<h2 className="mb-4 text-3xl font-bold">Roadmap</h2>
 
-			<Footer />
+				<div className="flex flex-wrap gap-2">
+					<HomeRoadmapItem>Head-to-Head Page where u can compare 2 Drivers in detail</HomeRoadmapItem>
+
+					<HomeRoadmapItem>Tracklimt violation tracker</HomeRoadmapItem>
+
+					<HomeRoadmapItem>Improve top most UI on dashboard page</HomeRoadmapItem>
+
+					<HomeRoadmapItem>Qualifing Mode, shows the ending laps of drivers during a quali session</HomeRoadmapItem>
+
+					<HomeRoadmapItem>PitStop tracking (TBD)</HomeRoadmapItem>
+
+					<HomeRoadmapItem>Replay of old Sessions from Archive Page</HomeRoadmapItem>
+				</div>
+			</div>
 		</div>
 	);
 }
