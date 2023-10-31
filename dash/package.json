@@ -1,37 +1,36 @@
 {
-  "name": "f1-dash",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "build": "next build",
-    "dev": "next dev",
-    "lint": "next lint",
-    "start": "next start",
-    "prettier": "prettier --write src"
-  },
-  "dependencies": {
-    "@headlessui/react": "1.7.17",
-    "chart.js": "4.4.0",
-    "clsx": "2.0.0",
-    "framer-motion": "10.16.4",
-    "moment": "2.29.4",
-    "next": "14.0.1",
-    "react": "18.2.0",
-    "react-chartjs-2": "5.2.0",
-    "react-dom": "18.2.0",
-    "zod": "3.22.4"
-  },
-  "devDependencies": {
-    "@types/node": "18.15.5",
-    "@types/prettier": "3.0.0",
-    "@types/react": "18.2.33",
-    "@types/react-dom": "18.2.14",
-    "autoprefixer": "10.4.14",
-    "postcss": "8.4.31",
-    "prettier": "3.0.3",
-    "prettier-plugin-tailwindcss": "0.5.6",
-    "tailwindcss": "3.3.5",
-    "typescript": "5.2.2"
-  },
-  "packageManager": "yarn@3.6.3"
+	"name": "f1-dash",
+	"version": "0.1.0",
+	"private": true,
+	"scripts": {
+		"build": "next build",
+		"dev": "next dev",
+		"lint": "next lint",
+		"start": "next start",
+		"prettier": "prettier --write src"
+	},
+	"dependencies": {
+		"@headlessui/react": "1.7.17",
+		"chart.js": "4.4.0",
+		"clsx": "2.0.0",
+		"framer-motion": "10.16.4",
+		"moment": "2.29.4",
+		"next": "14.0.1",
+		"react": "18.2.0",
+		"react-chartjs-2": "5.2.0",
+		"react-dom": "18.2.0",
+		"zod": "3.22.4"
+	},
+	"devDependencies": {
+		"@types/node": "18.15.5",
+		"@types/react": "18.2.33",
+		"@types/react-dom": "18.2.14",
+		"autoprefixer": "10.4.14",
+		"postcss": "8.4.31",
+		"prettier": "3.0.3",
+		"prettier-plugin-tailwindcss": "0.5.6",
+		"tailwindcss": "3.3.5",
+		"typescript": "5.2.2"
+	},
+	"packageManager": "yarn@3.6.3"
 }

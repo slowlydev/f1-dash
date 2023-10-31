@@ -37,12 +37,10 @@ const getNextMeeting = async (): Promise<NextMeeting> => {
 export default async function Page() {
 	const nextMeeting = await getNextMeeting();
 
-	const featureClass = "flex flex-col gap-2 rounded-lg bg-gray-500 bg-opacity-20 p-4";
-
 	return (
 		<div>
 			<div className="flex h-[60vh] w-full flex-col items-center justify-center">
-				<Image src={tagLogo} alt="f1-dash" className="w-[180px]" />
+				<Image src={tagLogo} priority alt="f1-dash" className="w-[180px]" />
 				<h1 className="text-center text-6xl font-bold text-white">Real-time Formula 1 telemetry and timing</h1>
 				<div className="mt-10 flex flex-col items-center gap-10">
 					<div className="flex items-center gap-2">
