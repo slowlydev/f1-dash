@@ -21,13 +21,10 @@ export default function SessionInfo({ session, clock }: Props) {
 		!!clock && !!clock.remaining
 			? clock.extrapolating
 				? utc(
-						Math.max(
-							duration(clock.remaining)
-								.subtract(utc().diff(utc(clock.utc)))
-								.asMilliseconds() +
-								delay / 1000,
-							0,
-						),
+						duration(clock.remaining)
+							.subtract(utc().diff(utc(clock.utc)))
+							.asMilliseconds() +
+							delay * 1000,
 				  ).format("HH:mm:ss")
 				: clock.remaining
 			: undefined;
