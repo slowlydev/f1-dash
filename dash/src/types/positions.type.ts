@@ -1,25 +1,25 @@
 import { DriverType } from "./driver.type";
 
 export type DriverPositionBatch = {
-  utc: string;
-  positions: DriverPosition[];
+	utc: string;
+	positions: DriverPosition[];
 };
 
 export type DriverPosition = {
-  driverNr: string;
-  position: string;
+	driverNr: string;
+	position: string;
 
-  broadcastName: string;
-  fullName: string;
-  firstName: string;
-  lastName: string;
-  short: string;
+	broadcastName: string;
+	fullName: string;
+	firstName: string;
+	lastName: string;
+	short: string;
 
-  teamColor: string;
+	teamColor: string;
 
-  status: DriverType["status"];
+	status: DriverType["status"];
 
-  x: number;
-  y: number;
-  z: number;
+	x: number;
+	y: number;
+	z: number;
 };

@@ -10,16 +10,16 @@ import { TrackStatus } from "./track-status.type";
 import { Weather } from "./weather.type";
 
 export type State = {
-  extrapolatedClock?: ExtrapolatedClock;
-  sessionData?: SessionData;
-  trackStatus?: TrackStatus;
-  lapCount?: LapCount;
-  weather?: Weather;
+	extrapolatedClock?: ExtrapolatedClock;
+	sessionData?: SessionData;
+	trackStatus?: TrackStatus;
+	lapCount?: LapCount;
+	weather?: Weather;
 
-  raceControlMessages?: RaceControlMessageType[];
-  teamRadios?: TeamRadioType[];
-  drivers?: DriverType[];
+	raceControlMessages?: RaceControlMessageType[];
+	teamRadios?: TeamRadioType[];
+	drivers?: DriverType[];
 
-  session?: SessionInfo;
-  positionBatches?: DriverPositionBatch[];
+	session?: SessionInfo;
+	positionBatches?: DriverPositionBatch[];
 };

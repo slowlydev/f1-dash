@@ -1,44 +1,44 @@
 export type MapType = {
-  corners: Corner[];
-  marshalLights: Corner[];
-  marshalSectors: Corner[];
-  candidateLap: CandidateLap;
-  circuitKey: number;
-  circuitName: string;
-  countryIocCode: string;
-  countryKey: number;
-  countryName: string;
-  location: string;
-  meetingKey: string;
-  meetingName: string;
-  meetingOfficialName: string;
-  raceDate: string;
-  rotation: number;
-  round: number;
-  trackPositionTime: number[];
-  x: number[];
-  y: number[];
-  year: number;
+	corners: Corner[];
+	marshalLights: Corner[];
+	marshalSectors: Corner[];
+	candidateLap: CandidateLap;
+	circuitKey: number;
+	circuitName: string;
+	countryIocCode: string;
+	countryKey: number;
+	countryName: string;
+	location: string;
+	meetingKey: string;
+	meetingName: string;
+	meetingOfficialName: string;
+	raceDate: string;
+	rotation: number;
+	round: number;
+	trackPositionTime: number[];
+	x: number[];
+	y: number[];
+	year: number;
 };
 
 type CandidateLap = {
-  driverNumber: string;
-  lapNumber: number;
-  lapStartDate: string;
-  lapStartSessionTime: number;
-  lapTime: number;
-  session: string;
-  sessionStartTime: number;
+	driverNumber: string;
+	lapNumber: number;
+	lapStartDate: string;
+	lapStartSessionTime: number;
+	lapTime: number;
+	session: string;
+	sessionStartTime: number;
 };
 
 type Corner = {
-  angle: number;
-  length: number;
-  number: number;
-  trackPosition: TrackPosition;
+	angle: number;
+	length: number;
+	number: number;
+	trackPosition: TrackPosition;
 };
 
 type TrackPosition = {
-  x: number;
-  y: number;
+	x: number;
+	y: number;
 };
