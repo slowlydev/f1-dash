@@ -2,97 +2,81 @@ import { Metadata } from "next";
 
 const title = "f1-dash | Formula 1 live timing";
 const description =
-  "Experience live telemetry and timing data from Formula 1 races. Get insights into leaderboards, tire choices, gaps, lap times, sector times, team radios, and more.";
+	"Experience live telemetry and timing data from Formula 1 races. Get insights into leaderboards, tire choices, gaps, lap times, sector times, team radios, and more.";
 
 const url = "https://f1-dash.vercel.app";
 
 export const metadata: Metadata = {
-  generator: "Next.js",
+	generator: "Next.js",
 
-  applicationName: title,
+	applicationName: title,
 
-  title,
-  description,
+	title,
+	description,
 
-  openGraph: {
-    title,
-    description,
-    url,
-    type: "website",
-    siteName: "F1 Realtime Dashboard",
-    images: [
-      {
-        alt: "Realtime Formula 1 Dashboard",
-        url: `${url}/og-image.png`,
-        width: 1200,
-        height: 630,
-      },
-    ],
-  },
+	openGraph: {
+		title,
+		description,
+		url,
+		type: "website",
+		siteName: "F1 Realtime Dashboard",
+		images: [
+			{
+				alt: "Realtime Formula 1 Dashboard",
+				url: `${url}/og-image.png`,
+				width: 1200,
+				height: 630,
+			},
+		],
+	},
 
-  twitter: {
-    site: "@f1_dash",
-    title,
-    description,
-    creator: "@Slowlydev",
-    card: "summary_large_image",
-    images: [
-      {
-        url: `${url}/twitter-image.png`,
-        alt: "Realtime Formula 1 Dashboard",
-        width: 1200,
-        height: 630,
-      },
-    ],
-  },
+	twitter: {
+		site: "@f1_dash",
+		title,
+		description,
+		creator: "@Slowlydev",
+		card: "summary_large_image",
+		images: [
+			{
+				url: `${url}/twitter-image.png`,
+				alt: "Realtime Formula 1 Dashboard",
+				width: 1200,
+				height: 630,
+			},
+		],
+	},
 
-  category: "Sports & Recreation",
+	category: "Sports & Recreation",
 
-  referrer: "strict-origin-when-cross-origin",
+	referrer: "strict-origin-when-cross-origin",
 
-  keywords: [
-    "Formula 1",
-    "F1",
-    "dashboard",
-    "realtime telemetry",
-    "timing",
-    "live updates",
-  ],
+	keywords: ["Formula 1", "F1", "dashboard", "realtime telemetry", "timing", "live updates"],
 
-  creator: "Slowlydev",
-  publisher: "Slowlydev",
-  authors: [{ name: "Slowlydev", url: "https://slowlydev.vercel.app" }],
+	creator: "Slowlydev",
+	publisher: "Slowlydev",
+	authors: [{ name: "Slowlydev", url: "https://slowlydev.vercel.app" }],
 
-  colorScheme: "dark",
-  themeColor: "#18181B",
+	appleWebApp: {
+		capable: true,
+		title: "f1-dash",
+		statusBarStyle: "black-translucent",
+	},
 
-  appleWebApp: {
-    capable: true,
-    title: "f1-dash",
-    statusBarStyle: "black-translucent",
-  },
+	formatDetection: {
+		email: false,
+		address: false,
+		telephone: false,
+	},
 
-  formatDetection: {
-    email: false,
-    address: false,
-    telephone: false,
-  },
+	assets: [`${url}/fonts`, `${url}/tires`, `${url}/icons`, `${url}/flags`, `${url}/country-flags`],
 
-  assets: [
-    `${url}/fonts`,
-    `${url}/tires`,
-    `${url}/icons`,
-    `${url}/flags`,
-    `${url}/country-flags`,
-  ],
+	metadataBase: new URL(url),
 
-  metadataBase: new URL(url),
+	alternates: {
+		canonical: url,
+	},
 
-  alternates: {
-    canonical: url,
-  },
-
-  verification: {
-    google: "hKv0h7XtWgQ-pVNVKpwwb2wcCC2f0tBQ1X1IcDX50hg",
-  },
+	verification: {
+		google: "hKv0h7XtWgQ-pVNVKpwwb2wcCC2f0tBQ1X1IcDX50hg",
+	},
 };

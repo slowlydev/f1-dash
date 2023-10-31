@@ -1,67 +1,67 @@
 export type DriverType = {
-  nr: string;
+	nr: string;
 
-  broadcastName: string;
-  fullName: string;
-  firstName: string;
-  lastName: string;
-  short: string;
-  country: string;
+	broadcastName: string;
+	fullName: string;
+	firstName: string;
+	lastName: string;
+	short: string;
+	country: string;
 
-  line: number;
-  position: string;
-  positionChange: number;
+	line: number;
+	position: string;
+	positionChange: number;
 
-  teamName: string;
-  teamColor: string;
+	teamName: string;
+	teamColor: string;
 
-  status: "OUT" | "RETIRED" | "STOPPED" | "PIT" | "PIT OUT" | "CUTOFF" | null;
-  cutoff: boolean;
+	status: "OUT" | "RETIRED" | "STOPPED" | "PIT" | "PIT OUT" | "CUTOFF" | null;
+	cutoff: boolean;
 
-  gapToLeader: string;
-  gapToFront: string;
-  catchingFront: boolean;
+	gapToLeader: string;
+	gapToFront: string;
+	catchingFront: boolean;
 
-  sectors: Sector[];
-  stints: Stint[];
+	sectors: Sector[];
+	stints: Stint[];
 
-  drs: Drs;
-  laps: number;
-  lapTimes: LapTimes;
+	drs: Drs;
+	laps: number;
+	lapTimes: LapTimes;
 
-  metrics: Metrics;
+	metrics: Metrics;
 };
 
 export type TimeStats = {
-  value: string;
-  fastest: boolean;
-  pb: boolean;
+	value: string;
+	fastest: boolean;
+	pb: boolean;
 };
 
 export type Sector = {
-  current: TimeStats;
-  last: TimeStats;
-  segments: number[];
+	current: TimeStats;
+	last: TimeStats;
+	segments: number[];
 };
 
 export type LapTimes = {
-  last: TimeStats;
-  best: TimeStats;
+	last: TimeStats;
+	best: TimeStats;
 };
 
 export type Stint = {
-  compound: "soft" | "medium" | "hard" | "intermediate" | "wet";
-  laps: number;
-  new: boolean;
+	compound: "soft" | "medium" | "hard" | "intermediate" | "wet";
+	laps: number;
+	new: boolean;
 };
 
 export type Drs = {
-  on: boolean;
-  possible: boolean;
+	on: boolean;
+	possible: boolean;
 };
 
 export type Metrics = {
-  gear: number;
-  rpm: number;
-  speed: number;
+	gear: number;
+	rpm: number;
+	speed: number;
 };

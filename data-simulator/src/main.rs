@@ -8,6 +8,8 @@ use std::{
     time::Duration,
 };
 
+use rand::seq::SliceRandom;
+
 use futures_channel::mpsc::{unbounded, UnboundedSender};
 use futures_util::{SinkExt, StreamExt};
 
@@ -20,6 +22,22 @@ use tokio_tungstenite::tungstenite::protocol::Message;
 
 type Tx = UnboundedSender<Message>;
 type PeerMap = Arc<Mutex<HashMap<SocketAddr, Tx>>>;
+
+fn random_duration() -> Duration {
+    let mut durations = vec![
+        Duration::from_millis(10),
+        Duration::from_millis(50),
+        Duration::from_millis(30),
+        Duration::from_millis(167),
+        Duration::from_millis(200),
+        Duration::from_millis(277),
+    ];
+
+    let mut rng = rand::thread_rng();
+
+    durations.shuffle(&mut rng);
+    durations.get(0).unwrap().to_owned()
+}
 
 async fn handle_connection(peer_map: PeerMap, raw_stream: TcpStream, addr: SocketAddr) {
     println!("Incoming TCP connection from: {}", addr);
@@ -45,7 +63,7 @@ async fn handle_connection(peer_map: PeerMap, raw_stream: TcpStream, addr: Socke
 
     // Send each line of the file as a new message
     for line in reader.lines() {
-        sleep(Duration::from_millis(50)).await;
+        sleep(random_duration()).await;
         let message = Message::Text(line.unwrap().to_string());
         outgoing.send(message).await.expect("Failed to send line");
     }

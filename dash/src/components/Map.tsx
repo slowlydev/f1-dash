@@ -11,8 +11,8 @@ import { sortPos } from "../lib/sortPos";
 // https://github.com/tdjsnelling/monaco
 
 type Props = {
-  circuitKey: SessionInfo["circuitKey"] | undefined;
-  positionBatches: DriverPositionBatch[] | undefined;
+	circuitKey: SessionInfo["circuitKey"] | undefined;
+	positionBatches: DriverPositionBatch[] | undefined;
 };
 
 const space = 1000;
@@ -20,152 +20,132 @@ const space = 1000;
 const rad = (deg: number) => deg * (Math.PI / 180);
 
 const rotate = (x: number, y: number, a: number, px: number, py: number) => {
-  const c = Math.cos(rad(a));
-  const s = Math.sin(rad(a));
+	const c = Math.cos(rad(a));
+	const s = Math.sin(rad(a));
 
-  x -= px;
-  y -= py;
+	x -= px;
+	y -= py;
 
-  const newX = x * c - y * s;
-  const newY = y * c + x * s;
+	const newX = x * c - y * s;
+	const newY = y * c + x * s;
 
-  return { y: newX + px, x: newY + py };
+	return { y: newX + px, x: newY + py };
 };
 
 const rotationFIX = 90;
 
 export default function Map({ circuitKey, positionBatches }: Props) {
-  const [points, setPoints] = useState<null | { x: number; y: number }[]>(null);
-  const [rotation, setRotation] = useState<number>(0);
-  const [ogPoints, setOgPoints] = useState<null | { x: number; y: number }[]>(
-    null
-  );
+	const [points, setPoints] = useState<null | { x: number; y: number }[]>(null);
+	const [rotation, setRotation] = useState<number>(0);
+	const [ogPoints, setOgPoints] = useState<null | { x: number; y: number }[]>(null);
 
-  const [[minX, minY, widthX, widthY], setBounds] = useState<(null | number)[]>(
-    [null, null, null, null]
-  );
+	const [[minX, minY, widthX, widthY], setBounds] = useState<(null | number)[]>([null, null, null, null]);
 
-  const positions = positionBatches
-    ? positionBatches.sort((a, b) => utc(b.utc).diff(utc(a.utc)))[0].positions
-    : null;
+	const positions = positionBatches ? positionBatches.sort((a, b) => utc(b.utc).diff(utc(a.utc)))[0].positions : null;
 
-  useEffect(() => {
-    (async () => {
-      if (!circuitKey) return;
-      const mapReq = await fetch(`/api/map/${circuitKey}`);
-      const mapJson: MapType = await mapReq.json();
+	useEffect(() => {
+		(async () => {
+			if (!circuitKey) return;
+			const mapReq = await fetch(`/api/map/${circuitKey}`);
+			const mapJson: MapType = await mapReq.json();
 
-      const centerX = (Math.max(...mapJson.x) - Math.min(...mapJson.x)) / 2;
-      const centerY = (Math.max(...mapJson.y) - Math.min(...mapJson.y)) / 2;
+			const centerX = (Math.max(...mapJson.x) - Math.min(...mapJson.x)) / 2;
+			const centerY = (Math.max(...mapJson.y) - Math.min(...mapJson.y)) / 2;
 
-      const fixedRotation = mapJson.rotation + rotationFIX;
+			const fixedRotation = mapJson.rotation + rotationFIX;
 
-      const rotatedPoints = mapJson.x.map((x, index) =>
-        rotate(x, mapJson.y[index], fixedRotation, centerX, centerY)
-      );
+			const rotatedPoints = mapJson.x.map((x, index) => rotate(x, mapJson.y[index], fixedRotation, centerX, centerY));
 
-      const pointsX = rotatedPoints.map((item) => item.x);
-      const pointsY = rotatedPoints.map((item) => item.y);
+			const pointsX = rotatedPoints.map((item) => item.x);
+			const pointsY = rotatedPoints.map((item) => item.y);
 
-      const cMinX = Math.min(...pointsX) - space;
-      const cMinY = Math.min(...pointsY) - space;
-      const cWidthX = Math.max(...pointsX) - cMinX + space * 2;
-      const cWidthY = Math.max(...pointsY) - cMinY + space * 2;
+			const cMinX = Math.min(...pointsX) - space;
+			const cMinY = Math.min(...pointsY) - space;
+			const cWidthX = Math.max(...pointsX) - cMinX + space * 2;
+			const cWidthY = Math.max(...pointsY) - cMinY + space * 2;
 
-      setBounds([cMinX, cMinY, cWidthX, cWidthY]);
-      setPoints(rotatedPoints);
-      setRotation(fixedRotation);
-      setOgPoints(
-        mapJson.x.map((xItem, index) => ({ x: xItem, y: mapJson.y[index] }))
-      );
-    })();
-  }, [circuitKey]);
+			setBounds([cMinX, cMinY, cWidthX, cWidthY]);
+			setPoints(rotatedPoints);
+			setRotation(fixedRotation);
+			setOgPoints(mapJson.x.map((xItem, index) => ({ x: xItem, y: mapJson.y[index] })));
+		})();
+	}, [circuitKey]);
 
-  if (!points || !minX || !minY || !widthX || !widthY)
-    return (
-      <div className="flex h-full w-full items-center justify-center">
-        <div className="h-5/6 w-5/6 animate-pulse rounded-lg bg-gray-700" />
-      </div>
-    );
+	if (!points || !minX || !minY || !widthX || !widthY)
+		return (
+			<div className="flex h-full w-full items-center justify-center">
+				<div className="h-5/6 w-5/6 animate-pulse rounded-lg bg-gray-700" />
+			</div>
+		);
 
-  return (
-    <svg
-      viewBox={`${minX} ${minY} ${widthX} ${widthY}`}
-      className="h-full w-full xl:max-h-screen"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        className="stroke-slate-700"
-        strokeWidth={300}
-        strokeLinejoin="round"
-        fill="transparent"
-        d={`M${points[0].x},${points[0].y} ${points
-          .map((point) => `L${point.x},${point.y}`)
-          .join(" ")}`}
-      />
+	return (
+		<svg
+			viewBox={`${minX} ${minY} ${widthX} ${widthY}`}
+			className="h-full w-full xl:max-h-screen"
+			xmlns="http://www.w3.org/2000/svg"
+		>
+			<path
+				className="stroke-slate-700"
+				strokeWidth={300}
+				strokeLinejoin="round"
+				fill="transparent"
+				d={`M${points[0].x},${points[0].y} ${points.map((point) => `L${point.x},${point.y}`).join(" ")}`}
+			/>
 
-      <path
-        stroke="white"
-        strokeWidth={60}
-        strokeLinejoin="round"
-        fill="transparent"
-        d={`M${points[0].x},${points[0].y} ${points
-          .map((point) => `L${point.x},${point.y}`)
-          .join(" ")}`}
-      />
+			<path
+				stroke="white"
+				strokeWidth={60}
+				strokeLinejoin="round"
+				fill="transparent"
+				d={`M${points[0].x},${points[0].y} ${points.map((point) => `L${point.x},${point.y}`).join(" ")}`}
+			/>
 
-      {ogPoints && positions && (
-        <>
-          {positions
-            .sort(sortPos)
-            .reverse()
-            .map((pos) => {
-              // TODO move to backend
-              const xS = ogPoints.map((item) => item.x);
-              const yS = ogPoints.map((item) => item.y);
+			{ogPoints && positions && (
+				<>
+					{positions
+						.sort(sortPos)
+						.reverse()
+						.map((pos) => {
+							// TODO move to backend
+							const xS = ogPoints.map((item) => item.x);
+							const yS = ogPoints.map((item) => item.y);
 
-              const rotatedPos = rotate(
-                pos.x,
-                pos.y,
-                rotation,
-                (Math.max(...xS) - Math.min(...xS)) / 2,
-                (Math.max(...yS) - Math.min(...yS)) / 2
-              );
+							const rotatedPos = rotate(
+								pos.x,
+								pos.y,
+								rotation,
+								(Math.max(...xS) - Math.min(...xS)) / 2,
+								(Math.max(...yS) - Math.min(...yS)) / 2,
+							);
 
-              const out =
-                pos.status === "OUT" ||
-                pos.status === "RETIRED" ||
-                pos.status === "STOPPED";
+							const out = pos.status === "OUT" || pos.status === "RETIRED" || pos.status === "STOPPED";
 
-              const transform = [
-                `translateX(${rotatedPos.x}px)`,
-                `translateY(${rotatedPos.y}px)`,
-              ].join(" ");
+							const transform = [`translateX(${rotatedPos.x}px)`, `translateY(${rotatedPos.y}px)`].join(" ");
 
-              return (
-                <g
-                  key={`map.driver.${pos.driverNr}`}
-                  id={`map.driver.${pos.driverNr}`}
-                  className={clsx({ "opacity-30": out })}
-                  fill={`#${pos.teamColor}`}
-                  style={{ transition: "all 1s linear", transform }}
-                >
-                  <circle id={`map.driver.${pos.driverNr}.circle`} r={120} />
-                  <text
-                    id={`map.driver.${pos.driverNr}.text`}
-                    fontWeight="bold"
-                    fontSize={120 * 3}
-                    style={{
-                      transform: "translateX(150px) translateY(-120px)",
-                    }}
-                  >
-                    {pos.short}
-                  </text>
-                </g>
-              );
-            })}
-        </>
-      )}
-    </svg>
-  );
+							return (
+								<g
+									key={`map.driver.${pos.driverNr}`}
+									id={`map.driver.${pos.driverNr}`}
+									className={clsx({ "opacity-30": out })}
+									fill={`#${pos.teamColor}`}
+									style={{ transition: "all 1s linear", transform }}
+								>
+									<circle id={`map.driver.${pos.driverNr}.circle`} r={120} />
+									<text
+										id={`map.driver.${pos.driverNr}.text`}
+										fontWeight="bold"
+										fontSize={120 * 3}
+										style={{
+											transform: "translateX(150px) translateY(-120px)",
+										}}
+									>
+										{pos.short}
+									</text>
+								</g>
+							);
+						})}
+				</>
+			)}
+		</svg>
+	);
 }
