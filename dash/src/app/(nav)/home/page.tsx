@@ -39,7 +39,7 @@ export default async function Page() {
 
 	return (
 		<div>
-			<div className="flex h-[60vh] w-full flex-col items-center justify-center">
+			<div className="flex min-h-[60vh] w-full flex-col items-center justify-center">
 				<Image src={tagLogo} priority alt="f1-dash" className="w-[180px]" />
 				<h1 className="text-center text-6xl font-bold text-white">Real-time Formula 1 telemetry and timing</h1>
 				<div className="mt-10 flex flex-col items-center gap-10">
