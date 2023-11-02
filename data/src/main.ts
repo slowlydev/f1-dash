@@ -149,6 +149,23 @@ const retrySetup = async (wss: Server) => {
 };
 
 const negotiate = async (hub: string) => {
+	if (!!config.testing)
+		return {
+			body: {
+				Url: "string",
+				ConnectionToken: "string",
+				ConnectionId: "string",
+				KeepAliveTimeout: 0,
+				DisconnectTimeout: 0,
+				ConnectionTimeout: 0,
+				TryWebSockets: true,
+				ProtocolVersion: "string",
+				TransportConnectTimeout: 1,
+				LongPollDelay: 1,
+			},
+			cookie: "",
+		};
+
 	const url = `${config.f1NegotiateUrl}/negotiate?connectionData=${hub}&clientProtocol=1.5`;
 	const res = await fetch(url);
 

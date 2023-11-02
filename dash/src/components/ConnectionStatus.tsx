@@ -1,18 +1,9 @@
 import clsx from "clsx";
 
 type Props = {
-  connected: boolean;
-  defaultHidden: boolean;
+	connected: boolean;
 };
 
-export default function ConnectionStatus({ connected, defaultHidden }: Props) {
-  return (
-    <div
-      className={clsx(
-        defaultHidden ? "hidden sm:block" : "block sm:hidden",
-        "h-4 w-4 rounded-full",
-        connected ? "bg-emerald-500" : "bg-red-500"
-      )}
-    />
-  );
+export default function ConnectionStatus({ connected }: Props) {
+	return <div className={clsx("h-4 w-4 rounded-full", connected ? "bg-emerald-500" : "bg-red-500")} />;
 }

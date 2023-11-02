@@ -1,14 +1,14 @@
 export type TeamRadioType = {
-  driverNr: string;
+	driverNr: string;
 
-  broadcastName: string;
-  fullName: string;
-  firstName: string;
-  lastName: string;
-  short: string;
+	broadcastName: string;
+	fullName: string;
+	firstName: string;
+	lastName: string;
+	short: string;
 
-  teamColor: string;
+	teamColor: string;
 
-  utc: string;
-  audioUrl: string;
+	utc: string;
+	audioUrl: string;
 };
