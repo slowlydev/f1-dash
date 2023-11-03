@@ -88,6 +88,7 @@ export type TrackStatus = {
 // F1TimingAppData
 export type Driver = {
 	nr: string;
+	image: string;
 
 	broadcastName: string;
 	fullName: string;

@@ -1,5 +1,6 @@
 export type DriverType = {
 	nr: string;
+	image: string;
 
 	broadcastName: string;
 	fullName: string;

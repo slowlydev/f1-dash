@@ -206,6 +206,7 @@ export const translateDrivers = (
 
 			return {
 				nr,
+				image: driver.HeadshotUrl,
 
 				broadcastName: driver.BroadcastName,
 				fullName: driver.FullName,
