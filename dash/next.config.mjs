@@ -6,6 +6,15 @@ await import("./src/env.mjs");
 
 /** @type {import("next").NextConfig} */
 const config = {
-  reactStrictMode: false,
+	reactStrictMode: false,
+	images: {
+		remotePatterns: [
+			{
+				protocol: "https",
+				hostname: "www.formula1.com",
+				port: "",
+			},
+		],
+	},
 };
 export default config;
