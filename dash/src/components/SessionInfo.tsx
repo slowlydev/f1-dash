@@ -23,8 +23,7 @@ export default function SessionInfo({ session, clock }: Props) {
 				? utc(
 						duration(clock.remaining)
 							.subtract(utc().diff(utc(clock.utc)))
-							.asMilliseconds() +
-							delay * 1000,
+							.asMilliseconds() + (delay ? delay * 1000 : 0),
 				  ).format("HH:mm:ss")
 				: clock.remaining
 			: undefined;
