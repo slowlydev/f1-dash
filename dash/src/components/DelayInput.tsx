@@ -9,7 +9,7 @@ export default function DelayInput({ setDebouncedDelay, maxDelay }: Props) {
 	const [delay, setDelay] = useState("");
 
 	const updateDebounced = () => {
-		const nextDelay = parseInt(delay ?? "0");
+		const nextDelay = delay ? parseInt(delay) : 0;
 		if (nextDelay < 0) return;
 		setDebouncedDelay(nextDelay);
 	};
