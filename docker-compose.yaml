@@ -1,11 +1,11 @@
 version: "3"
 
 services:
-  f1-dash-scylladb:
-    image: scylladb/scylla
-    container_name: f1-dash-scylladb
+  f1-dash:
+    build: ./dash/
     ports:
-      - 9042:9042
-  # f1-dash-data-importer:
-  # f1-dash-data-provider:
-  # f1-dash:
+      - 3000:3000
+  f1-data:
+    build: ./data/
+    ports:
+      - 4000:4000
