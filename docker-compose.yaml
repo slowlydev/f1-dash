@@ -5,7 +5,7 @@ services:
     build: ./dash/
     ports:
       - 3000:3000
-  f1-data:
+  f1-dash-data:
     build: ./data/
     ports:
       - 4000:4000
