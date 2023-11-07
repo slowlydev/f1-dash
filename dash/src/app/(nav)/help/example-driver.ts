@@ -66,8 +66,8 @@ export const exampleDriver: DriverType = {
 			new: false,
 		},
 		{
-			compound: "soft",
-			laps: 3,
+			compound: "medium",
+			laps: 4,
 			new: false,
 		},
 	],

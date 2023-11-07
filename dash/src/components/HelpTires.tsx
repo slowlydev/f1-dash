@@ -5,6 +5,8 @@ import mediumTireIcon from "public/tires/medium.svg";
 import hardTireIcon from "public/tires/hard.svg";
 import intermediateTireIcon from "public/tires/intermediate.svg";
 import wetTireIcon from "public/tires/wet.svg";
+import DriverTire from "./DriverTire";
+import { exampleDriver } from "@/app/(nav)/help/example-driver";
 
 export default function HelpTires() {
 	return (
@@ -37,6 +39,18 @@ export default function HelpTires() {
 				<div className="flex items-center gap-2">
 					<Image src={wetTireIcon} alt="wets" className="h-10 w-10" />
 					<p>Wets (for heavy rain)</p>
+				</div>
+				<div className="flex items-center gap-2 pt-4">
+					<DriverTire stints={exampleDriver.stints} />
+					<p>* (previously used tire)</p>
+				</div>
+				<div className="flex items-center gap-2">
+					<DriverTire stints={[{ compound: "soft", laps: 2, new: true }]} />
+					<p>Stint (Count of pit-stops)</p>
+				</div>
+				<div className="flex items-center gap-2">
+					<DriverTire stints={[{ compound: "hard", laps: 0, new: true }]} />
+					<p>Laps (current laps done on this tire)</p>
 				</div>
 			</div>
 		</div>
