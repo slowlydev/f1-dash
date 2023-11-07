@@ -46,7 +46,7 @@ export default function HelpTires() {
 				</div>
 				<div className="flex items-center gap-2">
 					<DriverTire stints={[{ compound: "soft", laps: 2, new: true }]} />
-					<p>Stint (Count of pit-stops)</p>
+					<p>Stint (count of pit-stops)</p>
 				</div>
 				<div className="flex items-center gap-2">
 					<DriverTire stints={[{ compound: "hard", laps: 0, new: true }]} />
