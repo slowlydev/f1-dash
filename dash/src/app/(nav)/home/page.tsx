@@ -29,7 +29,7 @@ import HomeFeatureCard from "../../../components/HomeFeatureCard";
 import DriverDRS from "../../../components/DriverDRS";
 
 const getNextMeeting = async (): Promise<NextMeeting> => {
-	const req = await fetch(`${env.NEXT_PUBLIC_SERVER_URL}/api/next-meeting`);
+	const req = await fetch(`${env.NEXT_PUBLIC_SERVER_URL}/api/next-meeting`, { next: { revalidate: 30 } });
 	const res: NextMeeting = await req.json();
 	return res;
 };
