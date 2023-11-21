@@ -3,7 +3,7 @@ import { config } from "../lib/config";
 import { F1State } from "./f1-types/formula1.type";
 import { updateState } from "./handler";
 import { translate } from "./translators";
-import { getArchive, translateArchive } from "./endpoints/getArchive";
+import { fetchArchive, getArchive, translateArchive } from "./endpoints/getArchive";
 import { getAPIKey, getEventTracker, translateNextMeeting } from "./endpoints/getEventTracker";
 
 console.log("starting...");
@@ -20,7 +20,9 @@ const server = serve({
 			const currentYear = new Date().getFullYear();
 			const archive = await getArchive(currentYear);
 
-			return new Response(JSON.stringify(translateArchive(archive)), {
+			const withDrivers = await fetchArchive(translateArchive(archive));
+
+			return new Response(JSON.stringify(withDrivers), {
 				status: 200,
 				headers: {
 					"Content-Type": "application/json",

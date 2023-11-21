@@ -35,4 +35,23 @@ export type ArchiveSession = {
 	endDate: string;
 	gmtOffset: string;
 	path: string;
+	topThree: TopThreeDriver[];
+};
+
+export type TopThreeDriver = {
+	nr: string;
+
+	broadcastName: string;
+	fullName: string;
+	short: string;
+
+	teamName: string;
+	teamColor: string;
+
+	position: string;
+
+	gapToLeader: string;
+	gapToFront: string;
+
+	lap: number;
 };
