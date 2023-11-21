@@ -14,6 +14,10 @@ export default function Footer() {
 			<p>
 				Contribute on <TextLink website="https://github.com/Slowlydev/f1-dash">Github</TextLink>.
 			</p>
+
+			<p>
+				<TextLink website="https://www.buymeacoffee.com/PYVcSe4">Buy me a coffee</TextLink> to support me.
+			</p>
 		</footer>
 	);
 }
