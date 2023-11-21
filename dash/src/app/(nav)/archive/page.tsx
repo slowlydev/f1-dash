@@ -29,6 +29,10 @@ export default async function ArchivePage() {
 			<div>
 				<h2 className="text-2xl font-semibold">Archive</h2>
 
+				<div className="mt-2 w-fit rounded-lg bg-yellow-900 p-2">
+					<p>The replay functionality is not implemented. This Page is currenly just for viewing the podium.</p>
+				</div>
+
 				{/* TODO: implement sorting and year change some time */}
 
 				<div className="grid grid-cols-1 divide-y divide-gray-500">
