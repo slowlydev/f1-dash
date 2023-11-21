@@ -143,9 +143,10 @@ export const translatePositions = (e: F1Position, drivers: F1DriverList, td: F1T
 			positions: Object.entries(e.Entries)
 				.map(([nr, e2]): DriverPosition | null => {
 					const driver = drivers[nr] ?? null;
-					const tdDriver = td.Lines[nr];
+					const tdDriver = td.Lines[nr] ?? null;
 
 					if (!driver) return null;
+					if (!tdDriver) return null;
 
 					// e2.Status seems basically useless
 					// thats why i am using the timing driver status

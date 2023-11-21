@@ -3,7 +3,7 @@ export type Archive = {
 	meetings: Meeting[];
 };
 
-type Meeting = {
+export type Meeting = {
 	key: number;
 	code: string;
 	name: string;
@@ -34,5 +34,24 @@ export type ArchiveSession = {
 	startDate: string;
 	endDate: string;
 	gmtOffset: string;
-	path: string;
+	path?: string;
+	topThree: TopThreeDriver[];
+};
+
+export type TopThreeDriver = {
+	nr: string;
+
+	broadcastName: string;
+	fullName: string;
+	short: string;
+
+	teamName: string;
+	teamColor: string;
+
+	position: string;
+
+	gapToLeader: string;
+	gapToFront: string;
+
+	lap: number;
 };
