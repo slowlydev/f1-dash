@@ -1,5 +1,6 @@
-import { F1Archive } from "../f1-types/archive.f1.type";
-import { Archive, ArchiveSession } from "../types/archive.type";
+import { F1Archive, F1Meeting } from "../f1-types/archive.f1.type";
+import { Archive, ArchiveSession, Meeting } from "../types/archive.type";
+import { getTopThree, translateTopThree } from "./getTopThree";
 
 export const getArchive = async (year: number): Promise<F1Archive> => {
 	const req = await fetch(`https://livetiming.formula1.com/static/${year}/Index.json`, {
@@ -14,6 +15,38 @@ export const getArchive = async (year: number): Promise<F1Archive> => {
 	const json: F1Archive = JSON.parse(text.trim()); // TODO trim() is a bun workaround, remove when fixed
 
 	return json;
+};
+
+const fetchMeeting = async (meeting: Meeting): Promise<Meeting> => {
+	const promises = meeting.sessions.map(async (session) => {
+		if (!session.path) return session;
+
+		const topThree = translateTopThree(await getTopThree(session.path));
+
+		return {
+			...session,
+			topThree,
+		};
+	});
+
+	const sessions = await Promise.all(promises);
+
+	return {
+		...meeting,
+		sessions,
+	};
+};
+
+export const fetchArchive = async (archive: Archive): Promise<Archive> => {
+	const promises = archive.meetings.map((meeting) => fetchMeeting(meeting));
+	const meetings = await Promise.all(promises);
+
+	console.log("meetings");
+
+	return {
+		...archive,
+		meetings,
+	};
 };
 
 export const translateArchive = (archive: F1Archive): Archive => {
@@ -44,6 +77,7 @@ export const translateArchive = (archive: F1Archive): Archive => {
 				endDate: session.EndDate,
 				gmtOffset: session.GmtOffset,
 				path: session.Path,
+				topThree: [],
 			})),
 		})),
 	};
