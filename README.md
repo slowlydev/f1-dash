@@ -71,4 +71,4 @@ cargo run > some-name.data.txt # will install, compile and start
 ## contributing
 
 I really appreaciate it if you want to contribute to this project. I can reccomend the Github issues marked as "Good First Issue" to get started.
-If you want to support me and make me focus more on this project support me here by [buying me a coffee](https://www.buymeacoffee.com/PYVcSe4).
+If you want to support me and make me focus more on this project support me here by [buying me a coffee](https://www.buymeacoffee.com/slowlydev).
