@@ -9,7 +9,7 @@ export default function Navbar() {
 	const pathname = usePathname();
 
 	return (
-		<div className="flex h-8 w-min flex-row items-center gap-2 truncate rounded-md bg-zinc-800">
+		<div className="flex flex-row items-center gap-2 truncate">
 			<Link href="/home" className="h-full">
 				<NavItem name="Home" active={pathname === "/home"} />
 			</Link>
@@ -27,11 +27,6 @@ export default function Navbar() {
 			<Link href="/" className="h-full">
 				<NavItem name="Dashboard" active={pathname === "/"} />
 			</Link>
-
-			{/* <NavItem name="H2H View" active={false} /> */}
-			{/* <NavItem name="Team View" active={false} /> */}
-			{/* <NavItem name="Graph View" active={false} /> */}
-			{/* <NavItem name="Settings" active={false} /> */}
 		</div>
 	);
 }

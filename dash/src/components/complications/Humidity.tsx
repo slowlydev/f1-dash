@@ -10,7 +10,7 @@ type Props = {
 
 export default function HumidityComplication({ value }: Props) {
 	return (
-		<div className="flex h-[55px] w-[55px] items-center justify-center rounded-[100px] bg-black">
+		<div className="flex h-[55px] w-[55px] items-center justify-center rounded-full bg-black">
 			<Gauge value={value} max={100} gradient="humidity" />
 
 			<div className="mt-2 flex flex-col items-center gap-0.5">

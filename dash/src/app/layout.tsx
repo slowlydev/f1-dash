@@ -15,7 +15,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 	const disableTracking = !!env.NEXT_PUBLIC_DISABLE_TRACKING;
 
 	return (
-		<html lang="en" className={`${inter.variable} bg-zinc-900 p-3 font-sans text-white`}>
+		<html lang="en" className={`${inter.variable} bg-zinc-950 font-sans text-white`}>
 			<head />
 
 			{!disableTracking && (
