@@ -46,7 +46,7 @@ export default function Gauge({ value, max, gradient }: Props) {
 				strokeLinecap="round"
 			/>
 
-			<circle cx={dot.x} cy={dot.y} z="10" r="3" fill="none" stroke="black" strokeWidth="3" />
+			<circle cx={dot.x} cy={dot.y} z="10" r="3.5" fill="none" stroke="black" strokeWidth="3" />
 		</svg>
 	);
 }
