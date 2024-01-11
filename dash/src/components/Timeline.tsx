@@ -120,9 +120,9 @@ export default function Timeline() {
 						style={{ x: scrubberX }}
 						onDrag={() => {
 							if (!scrubberRef.current) return;
-							let scrubberBounds = scrubberRef.current.getBoundingClientRect();
-							let middleOfScrubber = scrubberBounds.x + scrubberBounds.width / 2;
-							let newProgress = getProgressFromX({
+							const scrubberBounds = scrubberRef.current.getBoundingClientRect();
+							const middleOfScrubber = scrubberBounds.x + scrubberBounds.width / 2;
+							const newProgress = getProgressFromX({
 								containerRef: fullBarRef,
 								x: middleOfScrubber,
 							});
@@ -146,9 +146,9 @@ export default function Timeline() {
 								// TODO add background blur so you can always see the time
 								<motion.p
 									className="absolute text-sm font-medium tabular-nums tracking-wide"
-									initial={{ y: 0, opacity: 0 }}
+									initial={{ y: 12, opacity: 0 }}
 									animate={{ y: 20, opacity: 1 }}
-									exit={{ y: [20, 0], opacity: 0 }}
+									exit={{ y: [20, 12], opacity: 0 }}
 								>
 									{timecode}
 								</motion.p>
