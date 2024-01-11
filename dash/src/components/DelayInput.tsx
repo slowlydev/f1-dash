@@ -1,3 +1,5 @@
+"use client";
+
 import { FormEvent, useState } from "react";
 
 type Props = {
@@ -19,7 +21,7 @@ export default function DelayInput({ setDebouncedDelay }: Props) {
 	};
 
 	return (
-		<form className="flex gap-2.5 rounded-lg bg-zinc-800 p-2" onSubmit={handleSubmit}>
+		<form className="flex rounded-lg bg-zinc-800 p-2" onSubmit={handleSubmit}>
 			<input
 				value={delay}
 				onChange={(e) => setDelay(e.target.value)}
