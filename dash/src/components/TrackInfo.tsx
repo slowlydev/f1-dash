@@ -16,7 +16,7 @@ export default function TrackInfo({ track, lapCount }: Props) {
 	const currentTrackStatus = getTrackStatusMessage(track?.status);
 
 	return (
-		<div className="flex w-full flex-row items-center gap-4">
+		<div className="flex w-fit flex-row items-center gap-4">
 			{!!lapCount && (
 				<p className="whitespace-nowrap text-3xl font-extrabold">
 					{lapCount?.current} / {lapCount?.total}
