@@ -15,6 +15,7 @@ mod log;
 mod merge;
 mod parser;
 mod server;
+mod transfomer;
 
 #[tokio::main(flavor = "multi_thread", worker_threads = 10)]
 async fn main() {
@@ -85,7 +86,7 @@ async fn main() {
 
             while let Ok(msg) = realtime_rx.recv() {
                 if let Some(msg) = msg {
-                    let text = serde_json::to_string(&msg).unwrap();
+                    let text = serde_json::to_string(&transfomer::pascal_to_camel(msg)).unwrap();
                     let _ = outgoing.send(Message::Text(text)).await;
                 }
             }
