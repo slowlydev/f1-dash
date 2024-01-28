@@ -11,8 +11,6 @@ use futures::stream::SplitSink;
 use tokio::net::TcpStream;
 use tokio_tungstenite::WebSocketStream;
 
-use crate::history::transfomer;
-
 type SenderSink = SplitSink<WebSocketStream<TcpStream>, Message>;
 
 pub struct Connection {
@@ -49,18 +47,25 @@ pub async fn init(mut rx: UnboundedReceiver<BroadcastEvents>) {
                 connections.insert(conn.id, conn);
             }
             BroadcastEvents::Quit(id) => {
-                connections.remove(&id);
+                let conn = connections.remove(&id);
+
+                if let Some(conn) = conn {
+                    if conn.delay > 0 {
+                        debug!("cleanup history delay: {}", conn.delay);
+                    }
+                }
+
                 debug!("connection lost: {}", id);
             }
             BroadcastEvents::OutRealtime(state) => {
-                let data = serde_json::to_string(&transfomer::pascal_to_camel(state)).unwrap();
+                let data = serde_json::to_string(&state).unwrap();
 
                 for (_, conn) in connections.iter_mut().filter(|(_, conn)| conn.delay == 0) {
                     let _ = conn.sender.send(Message::Text(data.clone())).await;
                 }
             }
             BroadcastEvents::OutDelayed(delay, state) => {
-                let data = serde_json::to_string(&transfomer::pascal_to_camel(state)).unwrap();
+                let data = serde_json::to_string(&state).unwrap();
 
                 for (_, conn) in connections
                     .iter_mut()
