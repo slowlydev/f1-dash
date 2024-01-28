@@ -21,13 +21,13 @@ import {
 	DriverPositionBatch,
 	ExtrapolatedClock,
 	LapCount,
-	RaceControlMessage,
+	RaceControlMessageType,
 	Sector,
 	SessionData,
 	SessionInfo,
 	State,
 	Stint,
-	TeamRadio,
+	TeamRadioType,
 	TrackStatus,
 	Weather,
 } from "../types/state.type";
@@ -102,7 +102,7 @@ export const translateWeather = (e: BackendWeatherData): Weather => {
 export const translateRaceControlMessages = (
 	e: BackendRaceControlMessages,
 	si: BackendSessionInfo,
-): RaceControlMessage[] => {
+): RaceControlMessageType[] => {
 	return e.Messages.map((e2) => ({
 		trackTime: toTrackTime(e2.Utc, si.GmtOffset),
 		utc: e2.Utc,
@@ -121,8 +121,8 @@ export const translateTeamRadios = (
 	e: BackendTeamRadio,
 	drivers: BackendDriverList,
 	sessionInfo: BackendSessionInfo,
-): TeamRadio[] => {
-	return e.Captures.map((capture): TeamRadio | null => {
+): TeamRadioType[] => {
+	return e.Captures.map((capture): TeamRadioType | null => {
 		const driver = drivers[capture.RacingNumber] ?? null;
 
 		if (!driver) return null;
@@ -141,7 +141,7 @@ export const translateTeamRadios = (
 			utc: capture.Utc,
 			audioUrl: `https://livetiming.formula1.com/static/${sessionInfo.Path}${capture.Path}`,
 		};
-	}).filter((v) => v !== null) as TeamRadio[];
+	}).filter((v) => v !== null) as TeamRadioType[];
 };
 
 export const translatePositions = (
