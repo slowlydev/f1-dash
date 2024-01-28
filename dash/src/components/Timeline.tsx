@@ -2,7 +2,7 @@
 
 import { motion, useMotionValue, useDragControls, AnimatePresence } from "framer-motion";
 
-import { useState, useRef, useEffect, MutableRefObject } from "react";
+import { useState, useRef, useEffect, MutableRefObject, Dispatch, SetStateAction } from "react";
 
 function getProgressFromX({ x, containerRef }: { x: number; containerRef: MutableRefObject<any> }) {
 	let bounds = containerRef.current.getBoundingClientRect();
@@ -42,23 +42,29 @@ function useInterval(callback: () => void, delay: number | null) {
 	return intervalRef;
 }
 
-export default function Timeline() {
-	const [currentTime, setCurrentTime] = useState(50);
-	const playing = false;
-	const DURATION = 100;
+type Props = {
+	setTime: Dispatch<SetStateAction<number>>;
+	time: number;
+
+	duration: number;
+	playing: boolean;
+};
+
+export default function Timeline({ playing, duration, time, setTime }: Props) {
+	const DURATION = duration;
 
 	let [dragging, setDragging] = useState(false);
 	let constraintsRef = useRef<HTMLDivElement | null>(null);
 	let fullBarRef = useRef<null | HTMLDivElement>(null);
 	let scrubberRef = useRef<null | HTMLButtonElement>(null);
 	let scrubberX = useMotionValue(0);
-	let currentTimePrecise = useMotionValue(currentTime);
+	let currentTimePrecise = useMotionValue(time);
 	// let progressPrecise = useTransform(currentTimePrecise, (v) => (v / DURATION) * 100);
 	// let progressPreciseWidth = useMotionTemplate`${progressPrecise}%`;
 	let dragControls = useDragControls();
 
-	let mins = Math.floor(currentTime / 60);
-	let secs = `${currentTime % 60}`.padStart(2, "0");
+	let mins = Math.floor(time / 60);
+	let secs = `${time % 60}`.padStart(2, "0");
 	let timecode = `${mins}:${secs}`;
 	// let minsRemaining = Math.floor((DURATION - currentTime) / 60);
 	// let secsRemaining = `${(DURATION - currentTime) % 60}`.padStart(2, "0");
@@ -67,8 +73,8 @@ export default function Timeline() {
 
 	useInterval(
 		() => {
-			if (currentTime < DURATION) {
-				setCurrentTime((t) => t + 1);
+			if (time < DURATION) {
+				setTime((t) => t + 1);
 			}
 		},
 		playing ? 1000 : null,
@@ -76,7 +82,7 @@ export default function Timeline() {
 
 	useInterval(
 		() => {
-			if (currentTime < DURATION) {
+			if (time < DURATION) {
 				currentTimePrecise.set(currentTimePrecise.get() + 0.01);
 				let newX = getXFromProgress({
 					containerRef: fullBarRef,
@@ -98,7 +104,7 @@ export default function Timeline() {
 						x: event.clientX,
 					});
 					dragControls.start(event, { snapToCursor: true });
-					setCurrentTime(Math.floor(newProgress * DURATION));
+					setTime(Math.floor(newProgress * DURATION));
 					currentTimePrecise.set(newProgress * DURATION);
 				}}
 			>
@@ -126,7 +132,7 @@ export default function Timeline() {
 								containerRef: fullBarRef,
 								x: middleOfScrubber,
 							});
-							setCurrentTime(Math.floor(newProgress * DURATION));
+							setTime(Math.floor(newProgress * DURATION));
 							currentTimePrecise.set(newProgress * DURATION);
 						}}
 						onDragStart={() => setDragging(true)}
