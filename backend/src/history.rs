@@ -2,7 +2,10 @@ use chrono::{DateTime, Utc};
 use serde_json::Value;
 use std::collections::HashMap;
 
-use crate::{merge, parser};
+pub mod merge;
+pub mod transfomer;
+
+use crate::parser;
 
 #[derive(Debug)]
 pub struct History {
@@ -187,22 +190,22 @@ fn inject_history(state: &mut serde_json::Map<String, Value>, updates: Vec<&pars
     let history = value_history_computation(weather_updates, timing_updates);
 
     state.insert(
-        "WeatherData.history".to_owned(),
+        "WeatherDataHistory".to_owned(),
         serde_json::to_value(history.0).unwrap(),
     );
 
     state.insert(
-        "TimingData.Gap.history".to_owned(),
+        "TimingDataGapHistory".to_owned(),
         serde_json::to_value(history.1).unwrap(),
     );
 
     state.insert(
-        "TimingData.Laptime.history".to_owned(),
+        "TimingDataLaptimeHistory".to_owned(),
         serde_json::to_value(history.2).unwrap(),
     );
 
     state.insert(
-        "TimingData.Sectortime.history".to_owned(),
+        "TimingDataSectortimehistory".to_owned(),
         serde_json::to_value(history.3).unwrap(),
     );
 }
