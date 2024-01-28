@@ -1,19 +1,77 @@
-use anyhow::Ok;
-use tokio::net::TcpListener;
-use tracing::debug;
+use futures::{stream::SplitSink, StreamExt};
+use serde::{Deserialize, Serialize};
 
-pub struct Server {
-    pub listener: TcpListener,
+use std::net::SocketAddr;
+use tokio::{net::TcpStream, sync::mpsc::UnboundedSender};
+
+use tokio_tungstenite::{tungstenite::Message, WebSocketStream};
+use tracing::{debug, info};
+
+use crate::{
+    broadcasting::{self, BroadcastEvents},
+    server,
+};
+
+type SenderSink = SplitSink<WebSocketStream<TcpStream>, Message>;
+
+pub struct Connection {
+    pub id: u32,
+    pub delay: i64,
+    pub sender: SenderSink,
 }
 
-impl Server {
-    pub async fn new() -> Result<Server, anyhow::Error> {
-        let addr = "127.0.0.1:4000".to_string();
-
-        debug!("creating new server on: {}", addr);
-
-        let listener: TcpListener = TcpListener::bind(&addr).await.unwrap();
-        let server = Server { listener };
-        Ok(server)
+impl Connection {
+    pub fn new(id: u32, sender: SenderSink) -> Connection {
+        Connection {
+            id,
+            sender,
+            delay: 0,
+        }
     }
+}
+
+pub async fn listen(
+    stream: WebSocketStream<TcpStream>,
+    addr: SocketAddr,
+    id: u32,
+    broadcast_sender: UnboundedSender<BroadcastEvents>,
+) {
+    let (sender, mut reciver) = stream.split();
+    let conn = broadcasting::Connection::new(id, addr, sender);
+    let _ = broadcast_sender.send(BroadcastEvents::Join(conn));
+
+    while let Some(Ok(msg)) = reciver.next().await {
+        match msg {
+            Message::Text(msg) => {
+                let Ok(message) = serde_json::from_str::<server::DelayMessage>(&msg) else {
+                    return;
+                };
+
+                debug!("valid message, value: {}", message.delay);
+
+                if message.delay > 0 {
+                    info!("requesting delay");
+                    // request delay
+                    // let _ = delay_req_tx.send(message.delay);
+                } else {
+                    info!("resetting delay");
+                    //
+                };
+            }
+            Message::Close(_) => {
+                debug!("got close frame, aborting");
+                break;
+            }
+            _ => {}
+        }
+    }
+
+    broadcast_sender.send(BroadcastEvents::Quit(id)).unwrap();
+
+    debug!("we are gonna disconnect, hopefully");
+}
+
+#[derive(Serialize, Deserialize)]
+pub struct DelayMessage {
+    pub delay: i64,
 }
