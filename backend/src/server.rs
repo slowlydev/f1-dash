@@ -1,4 +1,4 @@
-use futures::{stream::SplitSink, StreamExt};
+use futures::StreamExt;
 use serde::{Deserialize, Serialize};
 
 use std::net::SocketAddr;
@@ -11,24 +11,6 @@ use crate::{
     broadcasting::{self, BroadcastEvents},
     server,
 };
-
-type SenderSink = SplitSink<WebSocketStream<TcpStream>, Message>;
-
-pub struct Connection {
-    pub id: u32,
-    pub delay: i64,
-    pub sender: SenderSink,
-}
-
-impl Connection {
-    pub fn new(id: u32, sender: SenderSink) -> Connection {
-        Connection {
-            id,
-            sender,
-            delay: 0,
-        }
-    }
-}
 
 pub async fn listen(
     stream: WebSocketStream<TcpStream>,
