@@ -1,12 +1,12 @@
 import { AnimatePresence } from "framer-motion";
 import { utc } from "moment";
-
-import { sortUtc } from "../lib/sortUtc";
-
-import { RaceControlMessageType } from "../types/race-control-message.type";
-
-import { RaceControlMessage } from "./RaceControlMessage";
 import clsx from "clsx";
+
+import { sortUtc } from "@/lib/sortUtc";
+
+import { RaceControlMessage } from "@/components/RaceControlMessage";
+
+import { RaceControlMessageType } from "@/types/state.type";
 
 type Props = {
 	messages: RaceControlMessageType[] | undefined;

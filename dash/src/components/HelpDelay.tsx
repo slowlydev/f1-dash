@@ -7,7 +7,7 @@ export default function HelpDelay() {
 
 			<p>U might have noticed this random Input box with a 0 in it.</p>
 
-			<DelayInput setDebouncedDelay={() => {}} maxDelay={20} />
+			<DelayInput setDebouncedDelay={() => {}} />
 
 			<p>
 				This is used to delay the realtime stream of data. <br />

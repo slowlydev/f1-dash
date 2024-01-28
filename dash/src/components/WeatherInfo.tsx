@@ -1,4 +1,4 @@
-import { Weather } from "../types/weather.type";
+import { Weather } from "@/types/state.type";
 
 import TemperatureComplication from "./complications/Temperature";
 import HumidityComplication from "./complications/Humidity";

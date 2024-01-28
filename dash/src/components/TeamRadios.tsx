@@ -3,7 +3,7 @@ import { utc } from "moment";
 
 import { sortUtc } from "../lib/sortUtc";
 
-import { TeamRadioType } from "../types/team-radio.type";
+import { TeamRadioType } from "@/types/state.type";
 
 import TeamRadioMessage from "./TeamRadioMessage";
 import clsx from "clsx";

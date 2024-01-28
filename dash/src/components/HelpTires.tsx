@@ -6,6 +6,7 @@ import hardTireIcon from "public/tires/hard.svg";
 import intermediateTireIcon from "public/tires/intermediate.svg";
 import wetTireIcon from "public/tires/wet.svg";
 import DriverTire from "./DriverTire";
+
 import { exampleDriver } from "@/app/(nav)/help/example-driver";
 
 export default function HelpTires() {

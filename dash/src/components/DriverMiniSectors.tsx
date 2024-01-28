@@ -1,9 +1,9 @@
 import React from "react";
 import clsx from "clsx";
 
-import { DriverType } from "../types/driver.type";
+import { DriverType } from "@/types/state.type";
 
-import { getTimeColor } from "../lib/getTimeColor";
+import { getTimeColor } from "@/lib/getTimeColor";
 
 type Props = {
 	sectors: DriverType["sectors"];

@@ -6,7 +6,7 @@ import DriverTag from "./DriverTag";
 import PlayControls from "./PlayControls";
 import AudioProgress from "./AudioProgress";
 
-import { TeamRadioType } from "../types/team-radio.type";
+import { TeamRadioType } from "@/types/state.type";
 
 type Props = {
 	teamRadio: TeamRadioType;

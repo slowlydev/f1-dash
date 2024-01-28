@@ -4,8 +4,7 @@ import clsx from "clsx";
 
 import { getTrackStatusMessage } from "@/lib/getTrackStatusMessage";
 
-import { LapCount } from "@/types/lap-count.type";
-import { TrackStatus } from "@/types/track-status.type";
+import { LapCount, TrackStatus } from "@/types/state.type";
 
 type Props = {
 	track: TrackStatus | undefined;

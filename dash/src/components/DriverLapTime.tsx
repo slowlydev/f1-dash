@@ -1,7 +1,8 @@
 import clsx from "clsx";
 import React from "react";
-import { getTimeColor } from "../lib/getTimeColor";
-import { TimeStats } from "../types/driver.type";
+
+import { getTimeColor } from "@/lib/getTimeColor";
+import { TimeStats } from "@/types/state.type";
 
 type Props = {
 	last: TimeStats;

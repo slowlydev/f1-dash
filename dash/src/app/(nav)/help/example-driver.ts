@@ -1,4 +1,4 @@
-import { DriverType } from "@/types/driver.type";
+import { DriverType } from "@/types/state.type";
 
 export const exampleDriver: DriverType = {
 	nr: "63",
@@ -13,7 +13,7 @@ export const exampleDriver: DriverType = {
 	teamName: "Mercedes",
 	teamColor: "6CD3BF",
 	status: null,
-	cutoff: false,
+	danger: false,
 	laps: 10,
 	gapToFront: "",
 	gapToLeader: "",

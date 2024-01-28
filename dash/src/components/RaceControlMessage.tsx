@@ -3,7 +3,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { utc } from "moment";
 
-import { RaceControlMessageType } from "../types/race-control-message.type";
+import { RaceControlMessageType } from "@/types/state.type";
 
 type Props = {
 	msg: RaceControlMessageType;

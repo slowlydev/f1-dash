@@ -22,6 +22,10 @@ export default function Page() {
 			</div>
 
 			<LeaderBoard drivers={state?.drivers} />
+
+			<pre>{state?.raceControlMessages?.length}</pre>
+			<pre>{state?.weather?.pressure}</pre>
+			<pre>{state?.lapCount?.current}</pre>
 		</div>
 	);
 }

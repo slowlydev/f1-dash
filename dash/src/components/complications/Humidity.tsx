@@ -2,7 +2,7 @@ import Image from "next/image";
 
 import Gauge from "./Gauge";
 
-import humidityIcon from "../../../public/icons/humidity.svg";
+import humidityIcon from "public/icons/humidity.svg";
 
 type Props = {
 	value: number;
@@ -17,7 +17,7 @@ export default function HumidityComplication({ value }: Props) {
 				<p className="flex h-[22px] shrink-0 text-xl font-medium not-italic leading-[normal] text-[color:var(--Base-Text,#F2F2F2)]">
 					{value}
 				</p>
-				<Image src={humidityIcon} alt="humidity icon" className="h-[11px]" />
+				<Image src={humidityIcon} alt="humidity icon" className="h-[11px] w-auto" />
 			</div>
 		</div>
 	);

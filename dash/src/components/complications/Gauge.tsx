@@ -1,4 +1,4 @@
-import { clamping, describeArc, polarToCartesian } from "../../lib/circle";
+import { clamping, describeArc, polarToCartesian } from "@/lib/circle";
 
 type Props = {
 	value: number;

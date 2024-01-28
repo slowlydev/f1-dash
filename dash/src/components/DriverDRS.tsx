@@ -1,5 +1,6 @@
 import clsx from "clsx";
-import { DriverType } from "../types/driver.type";
+
+import { DriverType } from "@/types/state.type";
 
 type Props = {
 	on: boolean;

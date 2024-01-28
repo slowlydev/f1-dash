@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 
-import { Stint } from "../types/driver.type";
+import { Stint } from "@/types/state.type";
 
 type Props = {
 	stints: Stint[];

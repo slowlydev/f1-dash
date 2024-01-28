@@ -1,4 +1,4 @@
-import { getWindDirection } from "../../lib/getWindDirection";
+import { getWindDirection } from "@/lib/getWindDirection";
 
 type Props = {
 	speed: number;

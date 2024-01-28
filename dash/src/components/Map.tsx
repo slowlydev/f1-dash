@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { DriverPositionBatch } from "../types/positions.type";
-import { SessionInfo } from "../types/session.type";
-import { MapType } from "../types/map.type";
 import { utc } from "moment";
 import clsx from "clsx";
 
-import { sortPos } from "../lib/sortPos";
+import { DriverPositionBatch, SessionInfo } from "@/types/state.type";
+import { MapType } from "@/types/map.type";
+
+import { sortPos } from "@/lib/sortPos";
 
 // This is basically fearlessly copied from
 // https://github.com/tdjsnelling/monaco

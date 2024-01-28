@@ -6,8 +6,7 @@ import Flag from "@/components/Flag";
 
 import { useSocket } from "@/context/SocketContext";
 
-import { ExtrapolatedClock } from "@/types/extrapolated-clock.type";
-import { SessionInfo } from "@/types/session.type";
+import { ExtrapolatedClock, SessionInfo } from "@/types/state.type";
 
 type Props = {
 	session: SessionInfo | undefined;

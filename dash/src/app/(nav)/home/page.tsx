@@ -3,12 +3,10 @@
 import Link from "next/link";
 import Image from "next/image";
 
-import { env } from "@/env.mjs";
 import { exampleDriver } from "../help/example-driver";
 
 import mapFeature from "public/map-feature-home.png";
 import tagLogo from "public/tag-logo.png";
-import arrow from "public/icons/arrow-up.svg";
 import githubLogo from "public/icons/github.svg";
 
 import softTireIcon from "public/tires/soft.svg";
@@ -18,25 +16,14 @@ import intermediateTireIcon from "public/tires/intermediate.svg";
 import wetTireIcon from "public/tires/wet.svg";
 
 import DriverMiniSectors from "@/components/DriverMiniSectors";
+import HomeRoadmapItem from "@/components/HomeRoadmapItem";
+import HomeFeatureCard from "@/components/HomeFeatureCard";
 import DriverTire from "@/components/DriverTire";
 import DriverInfo from "@/components/DriverInfo";
-import UpNextMeeting from "@/components/UpNext";
+import DriverDRS from "@/components/DriverDRS";
 import Button from "@/components/Button";
 
-import { NextMeeting } from "@/types/nextMeeting.type";
-import HomeRoadmapItem from "../../../components/HomeRoadmapItem";
-import HomeFeatureCard from "../../../components/HomeFeatureCard";
-import DriverDRS from "../../../components/DriverDRS";
-
-const getNextMeeting = async (): Promise<NextMeeting> => {
-	const req = await fetch(`${env.NEXT_PUBLIC_SERVER_URL}/api/next-meeting`, { next: { revalidate: 30 } });
-	const res: NextMeeting = await req.json();
-	return res;
-};
-
 export default async function Page() {
-	const nextMeeting = await getNextMeeting();
-
 	return (
 		<div>
 			<div className="flex min-h-[60vh] w-full flex-col items-center justify-center">
@@ -104,14 +91,14 @@ export default async function Page() {
 				</div>
 			</div>
 
-			<div className="mb-8 flex flex-col items-center">
+			{/* <div className="mb-8 flex flex-col items-center">
 				<UpNextMeeting nextMeeting={nextMeeting} />
 
 				<div className="flex cursor-pointer items-center gap-1 opacity-50">
 					<Link href="/archive">Checkout the archive for past sessions</Link>
 					<Image src={arrow} alt="arrow right" className="h-4 w-4 rotate-90" />
 				</div>
-			</div>
+			</div> */}
 
 			<div className="mb-16">
 				<p className="text-xl font-semibold text-gray-500">What's our</p>

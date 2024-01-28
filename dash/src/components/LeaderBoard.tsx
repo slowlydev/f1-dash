@@ -1,10 +1,10 @@
 import { AnimatePresence } from "framer-motion";
 import clsx from "clsx";
 
-import { DriverType } from "@/types/driver.type";
+import { DriverType } from "@/types/state.type";
+import { sortPos } from "@/lib/sortPos";
 
-import Driver from "./Driver";
-import { sortPos } from "../lib/sortPos";
+import Driver from "@/components/Driver";
 
 type Props = {
 	drivers: DriverType[] | undefined;
