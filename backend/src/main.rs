@@ -12,7 +12,7 @@ use history::History;
 use tokio::sync::mpsc;
 use tokio::{net::TcpListener, sync::mpsc::UnboundedSender};
 use tokio_tungstenite::tungstenite::Message;
-use tracing::{debug, error};
+use tracing::{debug, error, info};
 
 mod broadcasting;
 mod client;
@@ -57,12 +57,10 @@ async fn main() {
         match tokio_tungstenite::accept_async(stream).await {
             Err(e) => error!("Websocket connection error : {}", e),
             Ok(stream) => {
-                debug!("new connection: {}", addr);
+                info!("new connection: {}", addr);
 
                 id += 1;
                 tokio::spawn(server::listen(stream, addr, id, broadcast_sender_s.clone()));
-
-                debug!("closing connection: {}", addr);
             }
         }
     }
@@ -71,13 +69,16 @@ async fn main() {
 fn delay_stream(history: Arc<Mutex<History>>, broadcast_sender: UnboundedSender<BroadcastEvents>) {
     loop {
         let mut history = history.lock().unwrap();
-        let updates = history.get_all_delayed();
-        mem::drop(history);
 
-        for (delay, state) in updates {
-            debug!("client sending deleayed message");
-            let _ = broadcast_sender.send(BroadcastEvents::OutDelayed(delay, state));
+        if history.delay_states.len() > 0 {
+            let updates = history.get_all_delayed();
+
+            for (delay, state) in updates {
+                debug!("client sending deleayed message");
+                let _ = broadcast_sender.send(BroadcastEvents::OutDelayed(delay, state));
+            }
         }
+        mem::drop(history);
 
         thread::sleep(Duration::from_millis(100));
     }
@@ -99,6 +100,8 @@ async fn init_client(
 
         if let Message::Text(message) = msg {
             let mut parsed = parser::parse_message(message);
+
+            debug!("new update: {:?}", parsed);
 
             let mut history = history.lock().unwrap();
 
