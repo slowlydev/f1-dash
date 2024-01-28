@@ -57,6 +57,7 @@ const SubLayout = ({ children }: Props) => {
 
 	const [playing, setPlaying] = useState<boolean>(false);
 	const [mode, setMode] = useState<string>("simple");
+	const [time, setTime] = useState<number>(0);
 
 	return (
 		<div className="w-full">
@@ -64,7 +65,7 @@ const SubLayout = ({ children }: Props) => {
 				<Navbar />
 
 				<div className="flex items-center justify-center gap-2">
-					<Timeline />
+					<Timeline setTime={setTime} time={time} playing={playing} duration={10} />
 					<StreamStatus live={true} />
 				</div>
 
