@@ -8,9 +8,10 @@ import { State } from "@/types/state.type";
 
 import Navbar from "@/components/Navbar";
 import DelayInput from "@/components/DelayInput";
-import SessionInfo from "@/components/SessionInfo";
-import TrackInfo from "@/components/TrackInfo";
-import ConnectionStatus from "@/components/ConnectionStatus";
+import Timeline from "@/components/Timeline";
+import StreamStatus from "@/components/StreamStatus";
+import PlayControls from "@/components/PlayControls";
+import SegmentedControls from "@/components/SegmentedControls";
 
 type BufferFrame = {
 	timestamp: number;
@@ -31,7 +32,7 @@ export default function SocketLayout({ children }: Props) {
 }
 
 const SubLayout = ({ children }: Props) => {
-	const { state, setState, setConnected, delay, setDelay, connected } = useSocket();
+	const { setState, setConnected, delay, setDelay } = useSocket();
 
 	const MAX_STATE_TRACKER = 1000; // 500
 	const [buffer, setBuffer] = useState<BufferFrame[]>([]);
@@ -90,38 +91,39 @@ const SubLayout = ({ children }: Props) => {
 		return () => clearTimeout(refresherLoop);
 	}, [refresher]);
 
-	const maxDelay = buffer.length > 0 ? Math.floor((Date.now() - buffer[0].timestamp) / 1000) : 0;
+	// const maxDelay = buffer.length > 0 ? Math.floor((Date.now() - buffer[0].timestamp) / 1000) : 0;
+
+	const [playing, setPlaying] = useState<boolean>(false);
+	const [mode, setMode] = useState<string>("simple");
 
 	return (
 		<div className="w-full">
-			<div className="mb-2 flex flex-wrap items-center gap-2">
+			<div className="grid grid-cols-3 items-center border-b border-zinc-800 bg-black p-2">
 				<Navbar />
 
-				<div className="flex items-center gap-2">
-					<DelayInput setDebouncedDelay={setDelay} maxDelay={maxDelay} />
+				<div className="flex items-center justify-center gap-2">
+					<Timeline />
+					<StreamStatus live={true} />
+				</div>
 
-					<ConnectionStatus connected={connected} />
+				<div className="flex flex-row-reverse items-center gap-1">
+					<SegmentedControls
+						options={[
+							{ label: "Simple", value: "simple" },
+							{ label: "Advanced", value: "advanced" },
+							{ label: "Expert", value: "expert" },
+							{ label: "Custom", value: "custom" },
+						]}
+						selected={mode}
+						onSelect={setMode}
+					/>
+					{/* TODO implement setting of user prefered delay */}
+					<DelayInput setDebouncedDelay={setDelay} />
+					<PlayControls playing={playing} onClick={() => setPlaying((old) => !old)} />
 				</div>
 			</div>
 
-			<div className="flex flex-row flex-wrap gap-2">
-				<SessionInfo session={state?.session} clock={state?.extrapolatedClock} />
-
-				<TrackInfo track={state?.trackStatus} lapCount={state?.lapCount} />
-			</div>
-
-			<div className="h-max w-full">
-				{delay > maxDelay && (
-					<div className="absolute z-10 h-full w-full">
-						<div className="flex h-full w-full flex-col items-center justify-center backdrop-blur-lg">
-							<p className="text-3xl font-medium">Syncing, wait for {delay - maxDelay}s</p>
-							<p>Or make your delay smaller</p>
-						</div>
-					</div>
-				)}
-
-				{children}
-			</div>
+			<div className="h-max w-full">{children}</div>
 		</div>
 	);
 };

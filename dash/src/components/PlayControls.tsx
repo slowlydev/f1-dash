@@ -1,11 +1,11 @@
-import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 
 type Props = {
 	playing: boolean;
 	onClick: () => void;
 };
 
-export default function AudioControls({ playing, onClick }: Props) {
+export default function PlayControls({ playing, onClick }: Props) {
 	const variants = {
 		initial: { opacity: 0, scale: 0.5 },
 		animate: { opacity: 1, scale: 1 },
@@ -20,19 +20,15 @@ export default function AudioControls({ playing, onClick }: Props) {
 						initial={variants.initial}
 						animate={variants.animate}
 						exit={variants.exit}
-						width="24"
-						height="24"
-						viewBox="0 0 24 24"
+						width="13"
+						height="16"
+						viewBox="0 0 13 16"
 						fill="none"
 						xmlns="http://www.w3.org/2000/svg"
 					>
 						<motion.path
-							d="M5 3L19 12L5 21V3Z"
+							d="M12 6.26795C13.3333 7.03775 13.3333 8.96225 12 9.73205L3 14.9282C1.66667 15.698 0 14.7358 0 13.1962L0 2.80385C0 1.26425 1.66667 0.301996 3 1.0718L12 6.26795Z"
 							fill="white"
-							stroke="white"
-							strokeWidth="2"
-							strokeLinecap="round"
-							strokeLinejoin="round"
 						/>
 					</motion.svg>
 				)}
@@ -42,28 +38,14 @@ export default function AudioControls({ playing, onClick }: Props) {
 						initial={variants.initial}
 						animate={variants.animate}
 						exit={variants.exit}
-						width="24"
-						height="24"
-						viewBox="0 0 24 24"
+						width="10"
+						height="14"
+						viewBox="0 0 10 14"
 						fill="none"
 						xmlns="http://www.w3.org/2000/svg"
 					>
-						<motion.path
-							d="M10 4H6V20H10V4Z"
-							fill="white"
-							stroke="white"
-							strokeWidth="2"
-							strokeLinecap="round"
-							strokeLinejoin="round"
-						/>
-						<motion.path
-							d="M18 4H14V20H18V4Z"
-							fill="white"
-							stroke="white"
-							strokeWidth="2"
-							strokeLinecap="round"
-							strokeLinejoin="round"
-						/>
+						<motion.rect x="7" width="3" height="14" rx="1.5" fill="white" />
+						<motion.rect width="3" height="14" rx="1.5" fill="white" />
 					</motion.svg>
 				)}
 			</div>

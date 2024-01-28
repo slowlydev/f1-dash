@@ -13,6 +13,7 @@
 		"@headlessui/react": "1.7.17",
 		"chart.js": "4.4.0",
 		"clsx": "2.0.0",
+		"d3-shape": "3.2.0",
 		"framer-motion": "10.16.4",
 		"moment": "2.29.4",
 		"next": "14.0.1",

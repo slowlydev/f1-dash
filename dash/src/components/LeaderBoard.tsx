@@ -12,7 +12,7 @@ type Props = {
 
 export default function LeaderBoard({ drivers }: Props) {
 	return (
-		<div className="mt-2 flex w-fit flex-col divide-y divide-gray-500">
+		<div className="flex w-fit flex-col divide-y divide-zinc-800">
 			{!drivers && new Array(20).fill("").map((_, index) => <SkeletonDriver key={`driver.loading.${index}`} />)}
 
 			{drivers && (

@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { utc } from "moment";
 
 import DriverTag from "./DriverTag";
-import AudioControls from "./AudioControls";
+import PlayControls from "./PlayControls";
 import AudioProgress from "./AudioProgress";
 
 import { TeamRadioType } from "../types/team-radio.type";
@@ -79,7 +79,7 @@ export default function TeamRadioMessage({ teamRadio }: Props) {
 				</div>
 
 				<div className="flex items-center gap-4">
-					<AudioControls playing={playing} onClick={togglePlayback} />
+					<PlayControls playing={playing} onClick={togglePlayback} />
 					<AudioProgress duration={duration} progress={progress} />
 
 					<audio

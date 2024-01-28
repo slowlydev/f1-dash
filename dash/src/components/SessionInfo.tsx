@@ -2,12 +2,12 @@
 
 import { utc, duration } from "moment";
 
-import { ExtrapolatedClock } from "../types/extrapolated-clock.type";
-import { SessionInfo } from "../types/session.type";
+import Flag from "@/components/Flag";
 
-import Flag from "./Flag";
+import { useSocket } from "@/context/SocketContext";
 
-import { useSocket } from "../context/SocketContext";
+import { ExtrapolatedClock } from "@/types/extrapolated-clock.type";
+import { SessionInfo } from "@/types/session.type";
 
 type Props = {
 	session: SessionInfo | undefined;
@@ -29,23 +29,23 @@ export default function SessionInfo({ session, clock }: Props) {
 			: undefined;
 
 	return (
-		<div className="flex flex-auto items-center gap-3">
+		<div className="flex items-center gap-2">
 			<Flag countryCode={session?.countryCode} />
 
-			<div className="flex flex-grow flex-col justify-center">
+			<div className="flex flex-col justify-center">
 				{session ? (
-					<h1 className="truncate text-sm font-medium text-gray-500">
+					<h1 className="truncate text-sm font-medium leading-none text-white">
 						{session.name}: {session.typeName ?? "unknown"}
 						{!!session.number ? ` Q${session.number}` : ""}
 					</h1>
 				) : (
-					<div className="h-4 w-2/3 animate-pulse rounded-md bg-gray-700" />
+					<div className="h-4 w-[130px] animate-pulse rounded-md bg-gray-700" />
 				)}
 
 				{timeRemaining !== undefined ? (
-					<p className="text-2xl font-extrabold">{timeRemaining}</p>
+					<p className="text-2xl font-extrabold leading-none">{timeRemaining}</p>
 				) : (
-					<div className="mt-1 h-6 w-2/5 animate-pulse rounded-md bg-gray-700 font-semibold" />
+					<div className="mt-1 h-6 w-[100px] animate-pulse rounded-md bg-gray-700 font-semibold" />
 				)}
 			</div>
 		</div>
