@@ -2,19 +2,19 @@ use std::mem;
 
 use chrono::{DateTime, NaiveDateTime, Utc};
 use serde::Serialize;
-use serde_json::Value;
+use serde_json::{Map, Value};
 
 // pub mod deserializer;
 pub mod models;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum ParsedMessage {
     Updates(Vec<Update>),
     Replay(Value),
     Empty,
 }
 
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Debug, Clone)]
 pub struct Update {
     pub catagory: String,
     pub state: Value,
@@ -25,9 +25,14 @@ impl From<&mut models::Message> for Update {
     fn from(message: &mut models::Message) -> Update {
         let timestamp = chrono_date(&message.a.2).unwrap();
 
+        let catagory = mem::take(&mut message.a.0);
+
+        let mut state_map = Map::new();
+        state_map.insert(catagory.clone(), mem::take(&mut message.a.1));
+
         Update {
-            catagory: mem::take(&mut message.a.0),
-            state: mem::take(&mut message.a.1),
+            catagory,
+            state: Value::Object(state_map),
             timestamp,
         }
     }

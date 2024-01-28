@@ -1,9 +1,9 @@
 use chrono::{DateTime, Utc};
 use serde_json::Value;
 use std::collections::HashMap;
+use tracing::debug;
 
 pub mod merge;
-pub mod transfomer;
 
 use crate::parser;
 
@@ -32,6 +32,8 @@ impl History {
         });
 
         self.initial = Some(state);
+
+        debug!("initial state set ",);
     }
 
     pub fn add_updates(&mut self, updates: &mut Vec<parser::Update>) {
@@ -42,18 +44,27 @@ impl History {
             return;
         };
 
-        self.updates.append(updates);
+        debug!("adding updates {}", updates.len());
 
         if let Some(ref mut realtime) = self.realtime {
-            for update in updates {
+            debug!("realtime is available");
+
+            for update in updates.clone() {
+                debug!("appling update to realtime: {}", update.state);
+
                 // realtime.timestamp = Some(update.timestamp);
                 realtime.timestamp = Some(Utc::now());
                 merge::merge(&mut realtime.state, &update.state);
             }
         }
+
+        self.updates.append(updates);
+
+        debug!("realtime after update {:?}", self.realtime);
     }
 
     pub fn get_all_delayed(&mut self) -> HashMap<i64, Value> {
+        debug!("getting all delayed states");
         let mut map = HashMap::new();
 
         for (k, _) in self.delay_states.clone() {
@@ -158,6 +169,8 @@ impl History {
     }
 
     pub fn get_realtime(&self) -> Option<Value> {
+        debug!("getting realtime state");
+
         if let Some(realtime) = &self.realtime {
             let mut history = realtime.state.clone();
 
