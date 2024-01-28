@@ -1,5 +1,9 @@
 use tracing::{info, warn};
 
+pub fn init() {
+    tracing_subscriber::fmt().with_max_level(get_level()).init();
+}
+
 pub fn get_level() -> tracing::Level {
     let level = std::env::var("LOG_LEVEL");
 
