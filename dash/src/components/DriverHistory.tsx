@@ -10,6 +10,10 @@ type Props = {
 	driver: DriverType;
 };
 
+const maxLength = (values: number[], max: number): number[] => {
+	return values.slice(-max);
+};
+
 export default function DriverHistory({ driver }: Props) {
 	return (
 		<>
@@ -33,15 +37,15 @@ export default function DriverHistory({ driver }: Props) {
 					</div>
 
 					<div>
-						<Graph values={driver.gapHistory} lines={13} />
+						<Graph values={maxLength(driver.gapHistory, 13)} lines={13} />
 					</div>
 					<div>
-						<Graph values={driver.laptimeHistory} lines={13} />
+						<Graph values={maxLength(driver.laptimeHistory, 13)} lines={13} />
 					</div>
 
 					{driver.sectorHisotry.map((sector, i) => (
 						<div key={`driver.${driver.nr}.sector.hsitory.${i}`}>
-							<Graph values={sector} lines={13} />
+							<Graph values={maxLength(sector, 13)} lines={13} />
 						</div>
 					))}
 				</motion.div>
