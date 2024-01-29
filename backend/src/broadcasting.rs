@@ -58,20 +58,20 @@ pub async fn init(mut rx: UnboundedReceiver<BroadcastEvents>) {
                 debug!("connection lost: {}", id);
             }
             BroadcastEvents::OutRealtime(state) => {
-                let data = serde_json::to_string(&state).unwrap();
+                let data = serde_json::to_vec(&state).unwrap();
 
                 for (_, conn) in connections.iter_mut().filter(|(_, conn)| conn.delay == 0) {
-                    let _ = conn.sender.send(Message::Text(data.clone())).await;
+                    let _ = conn.sender.send(Message::Binary(data.clone())).await;
                 }
             }
             BroadcastEvents::OutDelayed(delay, state) => {
-                let data = serde_json::to_string(&state).unwrap();
+                let data = serde_json::to_vec(&state).unwrap();
 
                 for (_, conn) in connections
                     .iter_mut()
                     .filter(|(_, conn)| conn.delay == delay)
                 {
-                    let _ = conn.sender.send(Message::Text(data.clone())).await;
+                    let _ = conn.sender.send(Message::Binary(data.clone())).await;
                 }
             }
         }

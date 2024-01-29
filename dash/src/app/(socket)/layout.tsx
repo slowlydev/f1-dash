@@ -40,16 +40,20 @@ const SubLayout = ({ children }: Props) => {
 	useEffect(() => {
 		const socket = new WebSocket(`${env.NEXT_PUBLIC_SOCKET_SERVER_URL}`);
 
+		socket.binaryType = "arraybuffer";
+
 		socket.onclose = () => setConnected(false);
 		socket.onopen = () => setConnected(true);
 
 		socket.onmessage = (event) => {
-			const state: BackendState = JSON.parse(event.data);
+			let uint8Array = new Uint8Array(event.data);
+			let text = new TextDecoder().decode(uint8Array);
+
+			const state: BackendState = JSON.parse(text);
 
 			if (Object.keys(state).length === 0) return;
 
 			setState(transfrom(state));
-			// console.log("updating...", state.);
 		};
 
 		return () => socket.close();
