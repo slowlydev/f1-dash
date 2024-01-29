@@ -1,6 +1,6 @@
 use chrono::{DateTime, Utc};
 use serde_json::Value;
-use std::collections::HashMap;
+use std::{collections::HashMap, string};
 use tracing::debug;
 
 pub mod merge;
@@ -218,7 +218,7 @@ fn inject_history(state: &mut serde_json::Map<String, Value>, updates: Vec<&pars
     );
 
     state.insert(
-        "TimingDataSectortimehistory".to_owned(),
+        "TimingDataSectortimeHistory".to_owned(),
         serde_json::to_value(history.3).unwrap(),
     );
 }
@@ -235,45 +235,72 @@ fn value_history_computation(
     weather_updates: Vec<&Value>,
     timing_updates: Vec<&Value>,
 ) -> (Value, Value, Value, Value) {
-    let mut weather: HashMap<String, Vec<Value>> = HashMap::new();
-    let mut gaps: HashMap<String, Vec<Value>> = HashMap::new();
-    let mut laptimes: HashMap<String, Vec<Value>> = HashMap::new();
-    let mut sectortimes: HashMap<String, HashMap<String, Vec<Value>>> = HashMap::new();
+    let mut weather: HashMap<String, Vec<string::String>> = HashMap::new();
+    let mut gaps: HashMap<String, Vec<string::String>> = HashMap::new();
+    let mut laptimes: HashMap<String, Vec<string::String>> = HashMap::new();
+    let mut sectortimes: HashMap<String, HashMap<String, Vec<string::String>>> = HashMap::new();
 
     for update in &weather_updates {
-        if let Value::Object(obj) = update {
+        if let Some(Value::Object(obj)) = update.pointer("/WeatherData") {
             for (k, v) in obj {
-                insert_hashmap_vec(&mut weather, k, v.clone());
+                if let Value::String(v) = v {
+                    if !v.is_empty() {
+                        insert_hashmap_vec(&mut weather, k, v.clone());
+                    }
+                }
             }
         }
     }
 
     for update in &timing_updates {
-        if let Some(Value::Object(lines)) = update.pointer("/Lines") {
+        if let Some(Value::Object(lines)) = update.pointer("/TimingData/Lines") {
             for (rn, v) in lines {
                 // gaps
-                if let Some(gap) = v.pointer("/IntervalToPositionAhead/Value") {
-                    insert_hashmap_vec(&mut gaps, rn, gap.clone());
+                if let Some(Value::String(gap)) = v.pointer("/IntervalToPositionAhead/Value") {
+                    if !gap.is_empty() {
+                        insert_hashmap_vec(&mut gaps, rn, gap.clone());
+                    }
                 }
 
                 // laptimes
-                if let Some(laptime) = v.pointer("/LastLapTime") {
-                    insert_hashmap_vec(&mut laptimes, rn, laptime.clone());
+                if let Some(Value::String(laptime)) = v.pointer("/LastLapTime/Value") {
+                    if !laptime.is_empty() {
+                        insert_hashmap_vec(&mut laptimes, rn, laptime.clone());
+                    }
                 }
 
                 // sectortimes
                 if let Some(Value::Object(sectors)) = v.pointer("/Sectors") {
                     if let Some(existing_key) = sectortimes.get_mut(rn) {
-                        for (sector_nr, v) in sectors {
-                            insert_hashmap_vec(existing_key, sector_nr, v.clone());
+                        for (sector_nr, sector) in sectors {
+                            if let Some(Value::String(sector_value)) = sector.pointer("/Value") {
+                                if !sector_value.is_empty() {
+                                    insert_hashmap_vec(
+                                        existing_key,
+                                        sector_nr,
+                                        sector_value.clone(),
+                                    );
+                                }
+                            }
                         }
                     } else {
-                        let mut driver: HashMap<String, Vec<Value>> = HashMap::new();
+                        let mut driver: HashMap<String, Vec<string::String>> = HashMap::new();
 
-                        for (sector_nr, v) in sectors {
-                            insert_hashmap_vec(&mut driver, sector_nr, v.clone());
+                        for (sector_nr, sector) in sectors {
+                            if let Some(Value::String(sector_value)) = sector.pointer("/Value") {
+                                if !sector_value.is_empty() {
+                                    insert_hashmap_vec(
+                                        &mut driver,
+                                        sector_nr,
+                                        sector_value.clone(),
+                                    );
+                                }
+                            }
                         }
-                        sectortimes.insert(rn.to_owned(), driver);
+
+                        if !driver.is_empty() {
+                            sectortimes.insert(rn.to_owned(), driver);
+                        }
                     }
                 }
             }
