@@ -21,8 +21,37 @@ export type BackendRecap = {
 	TimingData?: BackendTimingData;
 	TeamRadio?: BackendTeamRadio;
 
+	WeatherDataHistory?: BackendWeatherDataHistory;
+	TimingDataGapHistory?: BackendTimingDataGapHistory;
+	TimingDataLaptimeHistory?: BackendTimingDataLaptimeHistory;
+	TimingDataSectortimeHistory?: BackendTimingDataSectortimeHistory;
+
 	"CarData.z"?: string;
 	"Position.z"?: string;
+};
+
+export type BackendWeatherDataHistory = {
+	AirTemp?: string[];
+	Humidity?: string[];
+	Pressure?: string[];
+	Rainfall?: string[];
+	TrackTemp?: string[];
+	WindDirection?: string[];
+	WindSpeed?: string[];
+};
+
+export type BackendTimingDataGapHistory = {
+	[key: string]: string[];
+};
+
+export type BackendTimingDataLaptimeHistory = {
+	[key: string]: string[];
+};
+
+export type BackendTimingDataSectortimeHistory = {
+	[key: string]: {
+		[key: string]: string[];
+	};
 };
 
 export type BackendHeartbeat = {

@@ -14,6 +14,10 @@ import {
 	BackendTimingStats,
 	BackendTrackStatus,
 	BackendWeatherData,
+	BackendWeatherDataHistory,
+	BackendTimingDataGapHistory,
+	BackendTimingDataLaptimeHistory,
+	BackendTimingDataSectortimeHistory,
 } from "../types/backend-state.type";
 import {
 	DriverType,
@@ -30,6 +34,7 @@ import {
 	TeamRadioType,
 	TrackStatus,
 	Weather,
+	HistoryWeather,
 } from "../types/state.type";
 
 import { toTrackTime } from "./toTrackTime";
@@ -178,16 +183,16 @@ export const translatePositions = (
 						status: tdDriver.KnockedOut
 							? "OUT"
 							: !!tdDriver.Cutoff
-							? "CUTOFF"
-							: tdDriver.Retired
-							? "RETIRED"
-							: tdDriver.Stopped
-							? "STOPPED"
-							: tdDriver.InPit
-							? "PIT"
-							: tdDriver.PitOut
-							? "PIT OUT"
-							: null,
+								? "CUTOFF"
+								: tdDriver.Retired
+									? "RETIRED"
+									: tdDriver.Stopped
+										? "STOPPED"
+										: tdDriver.InPit
+											? "PIT"
+											: tdDriver.PitOut
+												? "PIT OUT"
+												: null,
 
 						x: e2.X,
 						y: e2.Y,
@@ -205,6 +210,10 @@ export const translateDrivers = (
 	ts: BackendTimingStats,
 	cd: BackendCarData | undefined,
 	tad: BackendTimingAppData,
+
+	stH: BackendTimingDataSectortimeHistory | undefined,
+	ltH: BackendTimingDataLaptimeHistory | undefined,
+	gH: BackendTimingDataGapHistory | undefined,
 ): DriverType[] => {
 	return Object.entries(dl)
 		.map(([nr, driver]): DriverType | null => {
@@ -212,6 +221,10 @@ export const translateDrivers = (
 			const car = cd ? cd.Entries[cd.Entries.length - 1]?.Cars[nr]?.Channels : null;
 			const timingStats = ts.Lines?.[nr] ?? null;
 			const appTiming = tad.Lines?.[nr] ?? null;
+
+			const sectorHistory = stH ? stH[nr] : undefined;
+			const laptimeHistory = ltH ? ltH[nr] : undefined;
+			const gapHistory = gH ? gH[nr] : undefined;
 
 			const statsNumber = td.SessionPart ? td.SessionPart - 1 : 0;
 
@@ -237,16 +250,16 @@ export const translateDrivers = (
 				status: tdDriver.KnockedOut
 					? "OUT"
 					: !!tdDriver.Cutoff
-					? "CUTOFF"
-					: tdDriver.Retired
-					? "RETIRED"
-					: tdDriver.Stopped
-					? "STOPPED"
-					: tdDriver.InPit
-					? "PIT"
-					: tdDriver.PitOut
-					? "PIT OUT"
-					: null,
+						? "CUTOFF"
+						: tdDriver.Retired
+							? "RETIRED"
+							: tdDriver.Stopped
+								? "STOPPED"
+								: tdDriver.InPit
+									? "PIT"
+									: tdDriver.PitOut
+										? "PIT OUT"
+										: null,
 
 				danger: !!tdDriver.Cutoff,
 
@@ -288,7 +301,7 @@ export const translateDrivers = (
 								laps: e.TotalLaps ?? 0,
 								new: e.New === "true",
 							}),
-					  )
+						)
 					: [],
 
 				lapTimes: {
@@ -316,9 +329,28 @@ export const translateDrivers = (
 					rpm: car ? car["0"] : 0,
 					speed: car ? car["2"] : 0,
 				},
+
+				sectorHisotry: !sectorHistory
+					? []
+					: Object.keys(sectorHistory).map((k) => sectorHistory[k].map((v) => parseFloat(v))),
+
+				laptimeHistory: !laptimeHistory ? [] : laptimeHistory.map((v) => parseFloat(v)),
+				gapHistory: !gapHistory ? [] : gapHistory.map((v) => parseFloat(v)),
 			};
 		})
 		.filter((v) => v !== null) as DriverType[];
+};
+
+const translateHistoryWeather = (wH: BackendWeatherDataHistory): HistoryWeather => {
+	return {
+		wind_direction: wH.WindDirection ? wH.WindDirection.map((v) => parseInt(v)) : [],
+		humidity: wH.Humidity ? wH.Humidity.map((v) => parseFloat(v)) : [],
+		pressure: wH.Pressure ? wH.Pressure.map((v) => parseFloat(v)) : [],
+		rainfall: wH.Rainfall ? wH.Rainfall.map((v) => parseFloat(v)) : [],
+		wind_speed: wH.WindSpeed ? wH.WindSpeed.map((v) => parseFloat(v)) : [],
+		air_temp: wH.AirTemp ? wH.AirTemp.map((v) => parseFloat(v)) : [],
+		track_temp: wH.TrackTemp ? wH.TrackTemp.map((v) => parseFloat(v)) : [],
+	};
 };
 
 export const transfrom = (state: BackendState): State => {
@@ -354,7 +386,14 @@ export const transfrom = (state: BackendState): State => {
 					state.TimingStats,
 					state.CarData,
 					state.TimingAppData,
+					state.TimingDataSectortimeHistory,
+					state.TimingDataLaptimeHistory,
+					state.TimingDataGapHistory,
 				),
 			}),
+
+		...(state.WeatherDataHistory && {
+			weatherHistory: translateHistoryWeather(state.WeatherDataHistory),
+		}),
 	};
 };

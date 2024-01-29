@@ -4,6 +4,7 @@ export type State = {
 	trackStatus?: TrackStatus;
 	lapCount?: LapCount;
 	weather?: Weather;
+	weatherHistory?: HistoryWeather;
 
 	raceControlMessages?: RaceControlMessageType[];
 	teamRadios?: TeamRadioType[];
@@ -78,6 +79,16 @@ export type Weather = {
 	track_temp: number;
 };
 
+export type HistoryWeather = {
+	humidity: number[];
+	pressure: number[];
+	rainfall: number[];
+	wind_direction: number[];
+	wind_speed: number[];
+	air_temp: number[];
+	track_temp: number[];
+};
+
 export type TrackStatus = {
 	status: number;
 	statusMessage: string;
@@ -118,6 +129,10 @@ export type DriverType = {
 	lapTimes: LapTimes;
 
 	metrics: Metrics;
+
+	sectorHisotry: number[][];
+	laptimeHistory: number[];
+	gapHistory: number[];
 };
 
 export type TimeStats = {
