@@ -1,11 +1,8 @@
-use reqwest::{header::HeaderMap, Result as ReqwestResult};
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 use tokio::net::TcpStream;
 use tokio_tungstenite::{
-    connect_async,
-    tungstenite::{client::IntoClientRequest, Error as TungsteniteError},
-    MaybeTlsStream, WebSocketStream,
+    connect_async, tungstenite::client::IntoClientRequest, MaybeTlsStream, WebSocketStream,
 };
 
 use crate::utils;
