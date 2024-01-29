@@ -14,7 +14,7 @@ type Props = {
 
 export default function TeamRadioMessage({ teamRadio }: Props) {
 	const audioRef = useRef<HTMLAudioElement | null>(null);
-	const intervalRef = useRef<NodeJS.Timer | null>(null);
+	const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
 	const [playing, setPlaying] = useState<boolean>(false);
 	const [duration, setDuration] = useState<number>(0);
