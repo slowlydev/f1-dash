@@ -28,20 +28,20 @@ export default function Graph({ lines = 19, values }: Props) {
 					.map((_, i) => (
 						<>
 							{i % 6 ? (
-								<rect x={i * 6} width="1" height={height - 10} fill="#403F40" key={`short.${i}`} />
+								<rect x={i * 6} width="1" height={height - 10} className="fill-zinc-700" key={`short.${i}`} />
 							) : (
-								<rect x={i * 6} width="1" height={height} fill="#403F40" key={`long.${i}`} />
+								<rect x={i * 6} width="1" height={height} className="fill-zinc-700" key={`long.${i}`} />
 							)}
 						</>
 					))}
 
 				<g clip-path="url(#gradient-clip)">
 					<path
-						d={`M0 ${scaleValue(values[0])} ${values.map((v, i) => `L${i * 6} ${scaleValue(v)}`).join(" ")} L${width} ${height} L1 ${height}Z`}
+						d={`M0 ${scaleValue(values[0])} ${values.map((v, i) => `L${i * 6} ${scaleValue(v)}`).join(" ")} L${values.length * 6 + 1} ${scaleValue(values[values.length - 1])} L${width + 1} ${height} L0 ${height} Z`}
 						fill="url(#green-gradient)"
 					/>
 					<path
-						d={`M0 ${scaleValue(values[0])} ${values.map((v, i) => `L${i * 6} ${scaleValue(v)}`).join(" ")} L${width} ${height}`}
+						d={`M0 ${scaleValue(values[0])} ${values.map((v, i) => `L${i * 6} ${scaleValue(v)}`).join(" ")} L${values.length * 6 + 1} ${scaleValue(values[values.length - 1])} L${width + 1} ${height}`}
 						stroke="#34C85A"
 						strokeWidth="1.5"
 					/>
@@ -56,8 +56,8 @@ export default function Graph({ lines = 19, values }: Props) {
 						x2={width / 2}
 						y2={height}
 					>
-						<stop offset={0} stopColor="#34C85A" stopOpacity="0.5" />
-						<stop offset={1} stopColor="#34C85A" stopOpacity="0" />
+						<stop offset={0} stopColor="rgb(16, 185, 129)" stopOpacity="0.5" />
+						<stop offset={1} stopColor="rgb(16, 185, 129)" stopOpacity="0" />
 					</linearGradient>
 
 					<clipPath id="gradient-clip">
