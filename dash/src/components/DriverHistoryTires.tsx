@@ -32,6 +32,7 @@ export default function DriverHistoryTires({ stints }: Props) {
 				<>
 					<LoadingTire />
 					<LoadingTire />
+					<LoadingTire />
 				</>
 			)}
 		</div>
