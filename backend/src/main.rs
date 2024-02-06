@@ -9,7 +9,7 @@ use broadcasting::BroadcastEvents;
 use futures::StreamExt;
 
 use history::History;
-use tokio::sync::mpsc;
+use tokio::sync::mpsc::{self, UnboundedReceiver};
 use tokio::{net::TcpListener, sync::mpsc::UnboundedSender};
 use tokio_tungstenite::tungstenite::Message;
 use tracing::{debug, error, info};
@@ -21,7 +21,7 @@ mod log;
 mod parser;
 mod server;
 
-#[tokio::main(flavor = "multi_thread", worker_threads = 10)]
+#[tokio::main(flavor = "multi_thread", worker_threads = 15)]
 async fn main() {
     log::init();
 
@@ -34,11 +34,16 @@ async fn main() {
     let history = Arc::new(Mutex::new(History::new()));
 
     /*
+        handle removing and adding delays
+    */
+    let (delays_sender, delays_reciver) = mpsc::unbounded_channel::<DelayEvents>();
+    tokio::spawn(handle_delay(history.clone(), delays_reciver));
+
+    /*
         broadcasting, handles all outgoing messages.
     */
     let (broadcast_sender, broadcast_receiver) = mpsc::unbounded_channel::<BroadcastEvents>();
-    let broadcast_sender_s = broadcast_sender.clone();
-    tokio::spawn(broadcasting::init(broadcast_receiver));
+    tokio::spawn(broadcasting::init(broadcast_receiver, delays_sender));
 
     /*
         start f1 client connection, updates hisotry and sends realtime instantly
@@ -48,7 +53,8 @@ async fn main() {
     /*
         start delay handling, runs delay computation and sends events for delays
     */
-    thread::spawn(move || delay_stream(history.clone(), broadcast_sender.clone()));
+    let broadcast_sender_s = broadcast_sender.clone();
+    thread::spawn(move || delay_stream(history.clone(), broadcast_sender_s));
 
     // Count and Id connections
     let mut id: u32 = 0;
@@ -60,7 +66,30 @@ async fn main() {
                 info!("new connection: {}", addr);
 
                 id += 1;
-                tokio::spawn(server::listen(stream, addr, id, broadcast_sender_s.clone()));
+                tokio::spawn(server::listen(stream, addr, id, broadcast_sender.clone()));
+            }
+        }
+    }
+}
+
+enum DelayEvents {
+    Remove(i64),
+    Request(i64),
+}
+
+async fn handle_delay(
+    history: Arc<Mutex<History>>,
+    mut delays_reciver: UnboundedReceiver<DelayEvents>,
+) {
+    while let Some(event) = delays_reciver.recv().await {
+        let mut history = history.lock().unwrap();
+
+        match event {
+            DelayEvents::Remove(delay) => {
+                history.delay_states.remove(&delay);
+            }
+            DelayEvents::Request(delay) => {
+                let _ = history.get_delayed(&delay);
             }
         }
     }
@@ -70,17 +99,15 @@ fn delay_stream(history: Arc<Mutex<History>>, broadcast_sender: UnboundedSender<
     loop {
         let mut history = history.lock().unwrap();
 
-        if history.delay_states.len() > 0 {
-            let updates = history.get_all_delayed();
-
-            for (delay, state) in updates {
-                debug!("client sending deleayed message");
-                let _ = broadcast_sender.send(BroadcastEvents::OutDelayed(delay, state));
-            }
-        }
+        let updates = history.get_all_delayed();
         mem::drop(history);
 
-        thread::sleep(Duration::from_millis(100));
+        for (delay, state) in updates {
+            debug!("client sending deleayed message");
+            let _ = broadcast_sender.send(BroadcastEvents::OutDelayed(delay, state));
+        }
+
+        thread::sleep(Duration::from_millis(10));
     }
 }
 
@@ -100,8 +127,6 @@ async fn init_client(
 
         if let Message::Text(message) = msg {
             let mut parsed = parser::parse_message(message);
-
-            debug!("new update: {:?}", parsed);
 
             let mut history = history.lock().unwrap();
 

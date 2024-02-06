@@ -33,11 +33,10 @@ pub async fn listen(
 
                 if message.delay > 0 {
                     info!("requesting delay");
-                    // request delay
-                    // let _ = delay_req_tx.send(message.delay);
+                    let _ = broadcast_sender.send(BroadcastEvents::SetDelay(id, message.delay));
                 } else {
                     info!("resetting delay");
-                    //
+                    let _ = broadcast_sender.send(BroadcastEvents::SetDelay(id, 0));
                 };
             }
             Message::Close(_) => {

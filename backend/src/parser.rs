@@ -23,7 +23,8 @@ pub struct Update {
 
 impl From<&mut models::Message> for Update {
     fn from(message: &mut models::Message) -> Update {
-        let timestamp = chrono_date(&message.a.2).unwrap();
+        // let timestamp = chrono_date(&message.a.2).unwrap();
+        let timestamp = chrono::Utc::now();
 
         let catagory = mem::take(&mut message.a.0);
 

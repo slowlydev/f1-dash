@@ -1,6 +1,6 @@
 use futures::SinkExt;
 use serde_json::Value;
-use tokio::sync::mpsc::UnboundedReceiver;
+use tokio::sync::mpsc::{UnboundedReceiver, UnboundedSender};
 use tokio_tungstenite::tungstenite::Message;
 use tracing::debug;
 
@@ -10,6 +10,8 @@ use futures::stream::SplitSink;
 
 use tokio::net::TcpStream;
 use tokio_tungstenite::WebSocketStream;
+
+use crate::DelayEvents;
 
 type SenderSink = SplitSink<WebSocketStream<TcpStream>, Message>;
 
@@ -34,11 +36,15 @@ impl Connection {
 pub enum BroadcastEvents {
     Join(Connection),
     Quit(u32),
+    SetDelay(u32, i64),
     OutRealtime(Value),
     OutDelayed(i64, Value),
 }
 
-pub async fn init(mut rx: UnboundedReceiver<BroadcastEvents>) {
+pub async fn init(
+    mut rx: UnboundedReceiver<BroadcastEvents>,
+    tx_delay_events: UnboundedSender<DelayEvents>,
+) {
     let mut connections: HashMap<u32, Connection> = HashMap::new();
 
     while let Some(event) = rx.recv().await {
@@ -52,26 +58,37 @@ pub async fn init(mut rx: UnboundedReceiver<BroadcastEvents>) {
                 if let Some(conn) = conn {
                     if conn.delay > 0 {
                         debug!("cleanup history delay: {}", conn.delay);
+                        let _ = tx_delay_events.send(DelayEvents::Remove(conn.delay));
                     }
                 }
 
                 debug!("connection lost: {}", id);
             }
+            BroadcastEvents::SetDelay(id, delay) => {
+                if let Some(conn) = connections.get_mut(&id) {
+                    conn.delay = delay;
+                    let _ = tx_delay_events.send(DelayEvents::Request(conn.delay));
+                };
+            }
             BroadcastEvents::OutRealtime(state) => {
-                let data = serde_json::to_vec(&state).unwrap();
+                let data = serde_json::to_string(&state).unwrap();
 
                 for (_, conn) in connections.iter_mut().filter(|(_, conn)| conn.delay == 0) {
-                    let _ = conn.sender.send(Message::Binary(data.clone())).await;
+                    let _ = conn.sender.send(Message::Text(data.clone())).await;
                 }
             }
             BroadcastEvents::OutDelayed(delay, state) => {
-                let data = serde_json::to_vec(&state).unwrap();
+                let data = serde_json::to_string(&state).unwrap();
 
                 for (_, conn) in connections
                     .iter_mut()
                     .filter(|(_, conn)| conn.delay == delay)
                 {
-                    let _ = conn.sender.send(Message::Binary(data.clone())).await;
+                    debug!(
+                        "sending delay {} to connection with id: {} and delay: {}",
+                        delay, conn.id, conn.delay
+                    );
+                    let _ = conn.sender.send(Message::Text(data.clone())).await;
                 }
             }
         }
