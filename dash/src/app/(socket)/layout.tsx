@@ -28,26 +28,24 @@ export default function SocketLayout({ children }: Props) {
 }
 
 const SubLayout = ({ children }: Props) => {
-	const { setState, setConnected, delay, setDelay } = useSocket();
+	const { setState, setConnected, ws } = useSocket();
 
 	useEffect(() => {
 		const socket = new WebSocket(`${env.NEXT_PUBLIC_SOCKET_SERVER_URL}`);
-
-		socket.binaryType = "arraybuffer";
 
 		socket.onclose = () => setConnected(false);
 		socket.onopen = () => setConnected(true);
 
 		socket.onmessage = (event) => {
-			let uint8Array = new Uint8Array(event.data);
-			let text = new TextDecoder().decode(uint8Array);
-
-			const state: BackendState = JSON.parse(text);
+			if (typeof event.data != "string") return;
+			const state: BackendState = JSON.parse(event.data);
 
 			if (Object.keys(state).length === 0) return;
 
 			setState(transfrom(state));
 		};
+
+		ws.current = socket;
 
 		return () => socket.close();
 	}, []);
@@ -55,6 +53,17 @@ const SubLayout = ({ children }: Props) => {
 	const [playing, setPlaying] = useState<boolean>(false);
 	const [mode, setMode] = useState<string>("simple");
 	const [time, setTime] = useState<number>(0);
+
+	const setDelay = (delay: number) => {
+		const socket = ws.current;
+		if (!socket) return;
+
+		socket.send(
+			JSON.stringify({
+				delay,
+			}),
+		);
+	};
 
 	return (
 		<div className="w-full">
