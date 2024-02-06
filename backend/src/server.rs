@@ -18,11 +18,11 @@ pub async fn listen(
     id: u32,
     broadcast_sender: UnboundedSender<BroadcastEvents>,
 ) {
-    let (sender, mut reciver) = stream.split();
+    let (sender, mut receiver) = stream.split();
     let conn = broadcasting::Connection::new(id, addr, sender);
     let _ = broadcast_sender.send(BroadcastEvents::Join(conn));
 
-    while let Some(Ok(msg)) = reciver.next().await {
+    while let Some(Ok(msg)) = receiver.next().await {
         match msg {
             Message::Text(msg) => {
                 let Ok(message) = serde_json::from_str::<server::DelayMessage>(&msg) else {

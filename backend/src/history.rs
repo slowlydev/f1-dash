@@ -25,7 +25,7 @@ impl History {
         }
     }
 
-    pub fn set_intitial(&mut self, state: Value) {
+    pub fn set_initial(&mut self, state: Value) {
         self.realtime = Some(Realtime {
             timestamp: None,
             state: state.clone(),
@@ -94,7 +94,7 @@ impl History {
 
                     merge::merge(&mut delay_state.state, &update.state);
 
-                    // inject updated history things into exsisting
+                    // inject updated history things into existing
                 }
 
                 let current = self.updates.get(latest_update_index).unwrap();
@@ -118,7 +118,7 @@ impl History {
         };
 
         if let Some(initial_state) = &self.initial {
-            debug!("no exisitng state found, setting up from intitial");
+            debug!("no existing state found, setting up from initial");
 
             let mut base = initial_state.clone();
 
@@ -200,17 +200,19 @@ impl History {
 }
 
 fn inject_history(state: &mut serde_json::Map<String, Value>, updates: Vec<&parser::Update>) {
-    let weather_updates: Vec<&Value> = updates
-        .iter()
-        .filter(|up| up.catagory == "WeatherData")
-        .map(|up| &up.state)
-        .collect();
+    let weather_updates: Vec<&Value> =
+        updates
+            .iter()
+            .filter(|up| up.category == "WeatherData")
+            .map(|up| &up.state)
+            .collect();
 
-    let timing_updates: Vec<&Value> = updates
-        .iter()
-        .filter(|up| up.catagory == "TimingData")
-        .map(|up| &up.state)
-        .collect();
+    let timing_updates: Vec<&Value> =
+        updates
+            .iter()
+            .filter(|up| up.category == "TimingData")
+            .map(|up| &up.state)
+            .collect();
 
     let history = value_history_computation(weather_updates, timing_updates);
 

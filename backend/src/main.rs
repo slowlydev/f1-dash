@@ -36,8 +36,8 @@ async fn main() {
     /*
         handle removing and adding delays
     */
-    let (delays_sender, delays_reciver) = mpsc::unbounded_channel::<DelayEvents>();
-    tokio::spawn(handle_delay(history.clone(), delays_reciver));
+    let (delays_sender, delays_receiver) = mpsc::unbounded_channel::<DelayEvents>();
+    tokio::spawn(handle_delay(history.clone(), delays_receiver));
 
     /*
         broadcasting, handles all outgoing messages.
@@ -46,7 +46,7 @@ async fn main() {
     tokio::spawn(broadcasting::init(broadcast_receiver, delays_sender));
 
     /*
-        start f1 client connection, updates hisotry and sends realtime instantly
+        start f1 client connection, updates history and sends realtime instantly
     */
     tokio::spawn(init_client(history.clone(), broadcast_sender.clone()));
 
@@ -79,9 +79,9 @@ enum DelayEvents {
 
 async fn handle_delay(
     history: Arc<Mutex<History>>,
-    mut delays_reciver: UnboundedReceiver<DelayEvents>,
+    mut delays_receiver: UnboundedReceiver<DelayEvents>,
 ) {
-    while let Some(event) = delays_reciver.recv().await {
+    while let Some(event) = delays_receiver.recv().await {
         let mut history = history.lock().unwrap();
 
         match event {
@@ -103,7 +103,7 @@ fn delay_stream(history: Arc<Mutex<History>>, broadcast_sender: UnboundedSender<
         mem::drop(history);
 
         for (delay, state) in updates {
-            debug!("client sending deleayed message");
+            debug!("client sending delayed message");
             let _ = broadcast_sender.send(BroadcastEvents::OutDelayed(delay, state));
         }
 
@@ -132,7 +132,7 @@ async fn init_client(
 
             match parsed {
                 parser::ParsedMessage::Empty => (),
-                parser::ParsedMessage::Replay(state) => history.set_intitial(state),
+                parser::ParsedMessage::Replay(state) => history.set_initial(state),
                 parser::ParsedMessage::Updates(ref mut updates) => history.add_updates(updates),
             };
 

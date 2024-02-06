@@ -16,7 +16,7 @@ pub enum ParsedMessage {
 
 #[derive(Serialize, Debug, Clone)]
 pub struct Update {
-    pub catagory: String,
+    pub category: String,
     pub state: Value,
     pub timestamp: chrono::DateTime<Utc>,
 }
@@ -26,13 +26,13 @@ impl From<&mut models::Message> for Update {
         // let timestamp = chrono_date(&message.a.2).unwrap();
         let timestamp = chrono::Utc::now();
 
-        let catagory = mem::take(&mut message.a.0);
+        let category = mem::take(&mut message.a.0);
 
         let mut state_map = Map::new();
-        state_map.insert(catagory.clone(), mem::take(&mut message.a.1));
+        state_map.insert(category.clone(), mem::take(&mut message.a.1));
 
         Update {
-            catagory,
+            category,
             state: Value::Object(state_map),
             timestamp,
         }
@@ -51,7 +51,7 @@ pub fn parse_message(message: String) -> ParsedMessage {
         let mut updates: Vec<Update> = messages.iter_mut().map(|msg| Update::from(msg)).collect();
 
         // TimingDataF1 is a dupe of TimingData
-        updates.retain(|update| update.catagory != "TimingDataF1");
+        updates.retain(|update| update.category != "TimingDataF1");
 
         return ParsedMessage::Updates(updates);
     };

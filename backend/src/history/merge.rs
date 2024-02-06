@@ -171,7 +171,7 @@ mod tests {
     fn merge_object_additional() {
         let mut base = json!({
             "state": "old",
-            "other": "ingore me",
+            "other": "ignore me",
         });
         let update = json!({
             "state": "new"
@@ -183,7 +183,7 @@ mod tests {
             base,
             json!({
                 "state": "new",
-                "other": "ingore me",
+                "other": "ignore me",
             })
         )
     }
