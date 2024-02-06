@@ -5,7 +5,7 @@ use tracing::debug;
 
 pub mod merge;
 
-use crate::parser;
+use crate::parser::{self, Update};
 
 #[derive(Debug)]
 pub struct History {
@@ -50,7 +50,7 @@ impl History {
             debug!("realtime is available");
 
             for update in updates.clone() {
-                debug!("appling update to realtime: {}", update.state);
+                debug!("appling update to realtime");
 
                 // realtime.timestamp = Some(update.timestamp);
                 realtime.timestamp = Some(Utc::now());
@@ -59,8 +59,6 @@ impl History {
         }
 
         self.updates.append(updates);
-
-        debug!("realtime after update {:?}", self.realtime);
     }
 
     pub fn get_all_delayed(&mut self) -> HashMap<i64, Value> {
@@ -77,14 +75,14 @@ impl History {
     }
 
     pub fn get_delayed(&mut self, delay: &i64) -> Option<Value> {
-        if let Some(existing) = self.delay_states.get_mut(&delay) {
-            let delayed_timestamp = chrono::Utc::now().timestamp() - delay;
+        if let Some(delay_state) = self.delay_states.get_mut(&delay) {
+            let delayed_timestamp = chrono::Utc::now().timestamp().clone() - delay;
 
-            if existing.next_timestamp.timestamp() >= delayed_timestamp {
+            if delay_state.next_timestamp.timestamp() <= delayed_timestamp {
                 let mut latest_update_index: usize = 0;
 
                 for (pos, update) in self.updates.iter().enumerate() {
-                    if update.timestamp.timestamp() > existing.current_timestamp.timestamp() {
+                    if update.timestamp.timestamp() < delay_state.current_timestamp.timestamp() {
                         continue;
                     };
 
@@ -94,7 +92,7 @@ impl History {
 
                     latest_update_index = pos;
 
-                    merge::merge(&mut existing.state, &update.state);
+                    merge::merge(&mut delay_state.state, &update.state);
 
                     // inject updated history things into exsisting
                 }
@@ -102,11 +100,11 @@ impl History {
                 let current = self.updates.get(latest_update_index).unwrap();
                 let next = self.updates.get(latest_update_index + 1).unwrap();
 
-                existing.current_timestamp = current.timestamp;
-                existing.next_timestamp = next.timestamp;
+                delay_state.current_timestamp = current.timestamp;
+                delay_state.next_timestamp = next.timestamp;
             }
 
-            if let Value::Object(ref mut state) = existing.state {
+            if let Value::Object(ref mut state) = delay_state.state {
                 inject_history(
                     state,
                     self.updates
@@ -116,23 +114,29 @@ impl History {
                 );
             }
 
-            return Some(existing.state.clone());
+            return Some(delay_state.state.clone());
         };
 
         if let Some(initial_state) = &self.initial {
+            debug!("no exisitng state found, setting up from intitial");
+
             let mut base = initial_state.clone();
 
-            let delayed_timestamp = chrono::Utc::now().timestamp() - delay;
+            let delayed_timestamp = chrono::Utc::now().timestamp().clone() - delay;
 
             let mut latest_update_index: usize = 0;
 
             for (pos, update) in self.updates.iter().enumerate() {
-                if update.timestamp.timestamp() <= delayed_timestamp {
-                    continue;
-                };
+                let update_timestamp = update.timestamp.timestamp();
 
-                if update.timestamp.timestamp() > delayed_timestamp {
-                    continue;
+                debug!(
+                    "time: {} update: {}, pos at: {}",
+                    delayed_timestamp, update_timestamp, pos
+                );
+
+                if update_timestamp > delayed_timestamp {
+                    debug!("breaking... at: {}", pos);
+                    break;
                 };
 
                 latest_update_index = pos;
@@ -140,8 +144,18 @@ impl History {
                 merge::merge(&mut base, &update.state);
             }
 
-            let current = self.updates.get(latest_update_index).unwrap();
-            let next = self.updates.get(latest_update_index + 1).unwrap();
+            debug!("len: {}", self.updates.len());
+            debug!("latest_update_index: {}", latest_update_index);
+            debug!("next_update_index: {}", latest_update_index + 1);
+
+            let current = self
+                .updates
+                .get(latest_update_index)
+                .expect("current could not be found with index");
+            let next = self
+                .updates
+                .get(latest_update_index + 1)
+                .expect("next update could not be found");
 
             let mut async_state = AsyncState {
                 state: base,
@@ -186,19 +200,17 @@ impl History {
 }
 
 fn inject_history(state: &mut serde_json::Map<String, Value>, updates: Vec<&parser::Update>) {
-    let weather_updates: Vec<&Value> =
-        updates
-            .iter()
-            .filter(|up| up.catagory == "WeatherData")
-            .map(|up| &up.state)
-            .collect();
+    let weather_updates: Vec<&Value> = updates
+        .iter()
+        .filter(|up| up.catagory == "WeatherData")
+        .map(|up| &up.state)
+        .collect();
 
-    let timing_updates: Vec<&Value> =
-        updates
-            .iter()
-            .filter(|up| up.catagory == "TimingData")
-            .map(|up| &up.state)
-            .collect();
+    let timing_updates: Vec<&Value> = updates
+        .iter()
+        .filter(|up| up.catagory == "TimingData")
+        .map(|up| &up.state)
+        .collect();
 
     let history = value_history_computation(weather_updates, timing_updates);
 
