@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 
 export default function Footer() {
 	return (
-		<footer className="mt-4 flex flex-wrap gap-2 text-sm font-medium text-gray-200">
+		<footer className="flex flex-wrap gap-2 p-4 text-sm font-medium text-gray-200">
 			<p>
 				Made with ♥ by <TextLink website="https://slowlydev.vercel.app">Slowlydev</TextLink>.
 			</p>
