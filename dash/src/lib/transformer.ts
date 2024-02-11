@@ -36,6 +36,7 @@ import {
 	Weather,
 	HistoryWeather,
 } from "../types/state.type";
+import { parseLapTime } from "./parseLapTime";
 
 import { toTrackTime } from "./toTrackTime";
 
@@ -208,9 +209,9 @@ export const translateDrivers = (
 	dl: BackendDriverList,
 	td: BackendTimingData,
 	ts: BackendTimingStats,
-	cd: BackendCarData | undefined,
 	tad: BackendTimingAppData,
 
+	cd: BackendCarData | undefined,
 	stH: BackendTimingDataSectortimeHistory | undefined,
 	ltH: BackendTimingDataLaptimeHistory | undefined,
 	gH: BackendTimingDataGapHistory | undefined,
@@ -229,6 +230,10 @@ export const translateDrivers = (
 			const statsNumber = td.SessionPart ? td.SessionPart - 1 : 0;
 
 			if (!tdDriver || !timingStats || !appTiming) return null;
+
+			const sectorHisotry = !sectorHistory
+				? []
+				: Object.keys(sectorHistory).map((k) => (sectorHistory[k] ? sectorHistory[k].map((v) => parseFloat(v)) : []));
 
 			return {
 				nr,
@@ -330,11 +335,9 @@ export const translateDrivers = (
 					speed: car ? car["2"] : 0,
 				},
 
-				sectorHisotry: !sectorHistory
-					? []
-					: Object.keys(sectorHistory).map((k) => sectorHistory[k].map((v) => parseFloat(v))),
+				sectorHisotry,
 
-				laptimeHistory: !laptimeHistory ? [] : laptimeHistory.map((v) => parseFloat(v)),
+				laptimeHistory: !laptimeHistory ? [] : laptimeHistory.map((v) => (v.startsWith("LAP") ? 0 : parseLapTime(v))),
 				gapHistory: !gapHistory ? [] : gapHistory.map((v) => parseFloat(v)),
 			};
 		})
@@ -384,8 +387,8 @@ export const transfrom = (state: BackendState): State => {
 					state.DriverList,
 					state.TimingData,
 					state.TimingStats,
-					state.CarData,
 					state.TimingAppData,
+					state.CarData,
 					state.TimingDataSectortimeHistory,
 					state.TimingDataLaptimeHistory,
 					state.TimingDataGapHistory,
