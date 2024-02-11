@@ -1,6 +1,15 @@
 "use client";
 
-import { type Dispatch, type ReactNode, type SetStateAction, createContext, useState, useContext } from "react";
+import {
+	type Dispatch,
+	type ReactNode,
+	type SetStateAction,
+	createContext,
+	useState,
+	useContext,
+	useRef,
+	MutableRefObject,
+} from "react";
 
 import { State } from "../types/state.type";
 
@@ -13,6 +22,8 @@ type Values = {
 
 	connected: boolean;
 	setConnected: Dispatch<SetStateAction<Values["connected"]>>;
+
+	ws: MutableRefObject<WebSocket | null>;
 };
 
 const SocketContext = createContext<Values | undefined>(undefined);
@@ -22,8 +33,10 @@ export function SocketProvider({ children }: { children: ReactNode }) {
 	const [connected, setConnected] = useState(false);
 	const [delay, setDelay] = useState<number>(0);
 
+	const ws = useRef<WebSocket | null>(null);
+
 	return (
-		<SocketContext.Provider value={{ state, setState, connected, setConnected, delay, setDelay }}>
+		<SocketContext.Provider value={{ state, setState, connected, setConnected, delay, setDelay, ws }}>
 			{children}
 		</SocketContext.Provider>
 	);
