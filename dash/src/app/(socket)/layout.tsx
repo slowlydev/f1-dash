@@ -9,10 +9,6 @@ import { BackendState } from "@/types/backend-state.type";
 import { transfrom } from "@/lib/transformer";
 
 import Navbar from "@/components/Navbar";
-import DelayInput from "@/components/DelayInput";
-import Timeline from "@/components/Timeline";
-import StreamStatus from "@/components/StreamStatus";
-import PlayControls from "@/components/PlayControls";
 import SegmentedControls from "@/components/SegmentedControls";
 
 type Props = {
@@ -50,20 +46,7 @@ const SubLayout = ({ children }: Props) => {
 		return () => socket.close();
 	}, []);
 
-	const [playing, setPlaying] = useState<boolean>(false);
 	const [mode, setMode] = useState<string>("simple");
-	const [time, setTime] = useState<number>(0);
-
-	const setDelay = (delay: number) => {
-		const socket = ws.current;
-		if (!socket) return;
-
-		socket.send(
-			JSON.stringify({
-				delay,
-			}),
-		);
-	};
 
 	return (
 		<div className="w-full">
@@ -71,8 +54,8 @@ const SubLayout = ({ children }: Props) => {
 				<Navbar />
 
 				<div className="flex items-center justify-center gap-2">
-					<Timeline setTime={setTime} time={time} playing={playing} duration={10} />
-					<StreamStatus live={true} />
+					{/* <Timeline setTime={setTime} time={time} playing={playing} duration={10} /> */}
+					{/* <StreamStatus live={true} /> */}
 				</div>
 
 				<div className="flex flex-row-reverse items-center gap-1">
@@ -87,8 +70,8 @@ const SubLayout = ({ children }: Props) => {
 						onSelect={setMode}
 					/>
 					{/* TODO implement setting of user prefered delay */}
-					<DelayInput setDebouncedDelay={setDelay} />
-					<PlayControls playing={playing} onClick={() => setPlaying((old) => !old)} />
+					{/* <DelayInput setDebouncedDelay={setDelay} /> */}
+					{/* <PlayControls playing={playing} onClick={() => setPlaying((old) => !old)} /> */}
 				</div>
 			</div>
 
