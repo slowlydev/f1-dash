@@ -1,16 +1,12 @@
 use futures::StreamExt;
-use serde::{Deserialize, Serialize};
 
 use std::net::SocketAddr;
 use tokio::{net::TcpStream, sync::mpsc::UnboundedSender};
 
 use tokio_tungstenite::{tungstenite::Message, WebSocketStream};
-use tracing::{debug, info};
+use tracing::debug;
 
-use crate::{
-    broadcasting::{self, BroadcastEvents},
-    server,
-};
+use crate::broadcasting::{self, BroadcastEvents};
 
 pub async fn listen(
     stream: WebSocketStream<TcpStream>,
@@ -24,21 +20,6 @@ pub async fn listen(
 
     while let Some(Ok(msg)) = receiver.next().await {
         match msg {
-            Message::Text(msg) => {
-                let Ok(message) = serde_json::from_str::<server::DelayMessage>(&msg) else {
-                    return;
-                };
-
-                debug!("valid message, value: {}", message.delay);
-
-                if message.delay > 0 {
-                    info!("requesting delay");
-                    let _ = broadcast_sender.send(BroadcastEvents::SetDelay(id, message.delay));
-                } else {
-                    info!("resetting delay");
-                    let _ = broadcast_sender.send(BroadcastEvents::SetDelay(id, 0));
-                };
-            }
             Message::Close(_) => {
                 debug!("got close frame, aborting");
                 break;
@@ -50,9 +31,4 @@ pub async fn listen(
     broadcast_sender.send(BroadcastEvents::Quit(id)).unwrap();
 
     debug!("we are gonna disconnect, hopefully");
-}
-
-#[derive(Serialize, Deserialize)]
-pub struct DelayMessage {
-    pub delay: i64,
 }
