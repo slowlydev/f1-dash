@@ -25,6 +25,7 @@ export default function Driver({ driver, position }: Props) {
 
 	return (
 		<motion.div
+			layout
 			onClick={() => setOpen((old) => !old)}
 			className={clsx("cursor-pointer select-none px-2", {
 				"opacity-50": driver.status === "OUT" || driver.status === "RETIRED" || driver.status === "STOPPED",
