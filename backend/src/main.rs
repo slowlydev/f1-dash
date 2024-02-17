@@ -1,23 +1,18 @@
-use std::{
-    mem,
-    sync::{Arc, Mutex},
-};
+use client_manager::ClientManagerEvent;
 
-use broadcasting::BroadcastEvents;
-use futures::StreamExt;
-
-use history::History;
+use tokio::net::TcpListener;
 use tokio::sync::mpsc::{self};
-use tokio::{net::TcpListener, sync::mpsc::UnboundedSender};
 use tokio_tungstenite::tungstenite::Message;
 use tracing::{error, info};
 
-mod broadcasting;
 mod client;
+mod client_manager;
+mod db;
 mod history;
 mod log;
 mod parser;
 mod server;
+mod server_manager;
 
 #[tokio::main(flavor = "multi_thread", worker_threads = 15)]
 async fn main() {
@@ -29,20 +24,25 @@ async fn main() {
         .await
         .expect("Listening to TCP failed");
 
-    let history = Arc::new(Mutex::new(History::new()));
+    let (client_tx, client_rx) = mpsc::unbounded_channel::<Message>();
 
     /*
-        broadcasting, handles all outgoing messages.
+        manage f1 client connection, restarts on close, closes on no clients
     */
-    let (broadcast_sender, broadcast_receiver) = mpsc::unbounded_channel::<BroadcastEvents>();
-    tokio::spawn(broadcasting::init(broadcast_receiver));
+    let (manager_tx, manager_rx) = mpsc::unbounded_channel::<ClientManagerEvent>();
+    tokio::spawn(client_manager::init(
+        manager_rx,
+        manager_tx.clone(),
+        client_tx.clone(),
+    ));
 
-    /*
-        start f1 client connection, updates history and sends realtime instantly
-    */
-    tokio::spawn(init_client(history.clone(), broadcast_sender.clone()));
+    // /*
+    //     broadcasting, handles all outgoing messages.
+    // */
+    // let (broadcast_sender, broadcast_receiver) = mpsc::unbounded_channel::<BroadcastEvents>();
+    // tokio::spawn(server_manager::init(broadcast_receiver));
 
-    // Count and Id connections
+    // // Count and Id connections
     let mut id: u32 = 0;
 
     while let Ok((stream, addr)) = listener.accept().await {
@@ -52,42 +52,22 @@ async fn main() {
                 info!("new connection: {}", addr);
 
                 id += 1;
-                tokio::spawn(server::listen(stream, addr, id, broadcast_sender.clone()));
+                // tokio::spawn(server::listen(stream, addr, id, broadcast_sender.clone()));
             }
         }
     }
 }
 
-async fn init_client(
-    history: Arc<Mutex<History>>,
-    broadcast_sender: UnboundedSender<BroadcastEvents>,
-) {
-    let client_result = client::Client::new().await;
+// let mut parsed = parser::parse_message(message);
 
-    let Ok(mut client) = client_result else {
-        error!("Failed to setup websocket client");
-        return;
-    };
+//             let mut history = history.lock().unwrap();
 
-    while let Some(msg) = client.socket.next().await {
-        let msg = msg.unwrap();
+//             match parsed {
+//                 parser::ParsedMessage::Empty => (),
+//                 parser::ParsedMessage::Replay(state) => history.set_initial(state),
+//                 parser::ParsedMessage::Updates(ref mut updates) => history.add_updates(updates),
+//             };
 
-        if let Message::Text(message) = msg {
-            let mut parsed = parser::parse_message(message);
-
-            let mut history = history.lock().unwrap();
-
-            match parsed {
-                parser::ParsedMessage::Empty => (),
-                parser::ParsedMessage::Replay(state) => history.set_initial(state),
-                parser::ParsedMessage::Updates(ref mut updates) => history.add_updates(updates),
-            };
-
-            if let Some(realtime) = history.get_realtime() {
-                let _ = broadcast_sender.send(BroadcastEvents::OutRealtime(realtime));
-            }
-
-            mem::drop(history);
-        }
-    }
-}
+//             if let Some(realtime) = history.get_realtime() {
+//                 let _ = broadcast_sender.send(BroadcastEvents::OutRealtime(realtime));
+//             }
