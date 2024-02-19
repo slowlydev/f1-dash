@@ -4,7 +4,6 @@ use chrono::{DateTime, NaiveDateTime, Utc};
 use serde::Serialize;
 use serde_json::{Map, Value};
 
-// pub mod deserializer;
 pub mod models;
 
 #[derive(Debug, Clone)]
@@ -26,20 +25,15 @@ impl From<&mut models::Message> for Update {
         // let timestamp = chrono_date(&message.a.2).unwrap();
         let timestamp = chrono::Utc::now();
 
-        let category = mem::take(&mut message.a.0);
-
-        let mut state_map = Map::new();
-        state_map.insert(category.clone(), mem::take(&mut message.a.1));
-
         Update {
-            category,
-            state: Value::Object(state_map),
+            category: mem::take(&mut message.a.0),
+            state: mem::take(&mut message.a.1),
             timestamp,
         }
     }
 }
 
-pub fn parse_message(message: String) -> ParsedMessage {
+pub fn message(message: String) -> ParsedMessage {
     let socket_message: models::SocketMessage =
         serde_json::from_str::<models::SocketMessage>(&message).unwrap();
 
@@ -58,7 +52,6 @@ pub fn parse_message(message: String) -> ParsedMessage {
 
     if let Some(Value::Object(mut replay)) = socket_message.r {
         // TimingDataF1 is a dupe of TimingData
-
         replay.retain(|k, _| k != "TimingDataF1");
 
         return ParsedMessage::Replay(serde_json::to_value(replay).unwrap());
