@@ -2,28 +2,28 @@ use sqlx::PgPool;
 
 use super::tables;
 
-pub async fn insert_session_status(pool: &PgPool, session_status: tables::SessionStatus) {
+pub async fn session_status(pool: PgPool, session_status: tables::SessionStatus) {
     let _ = sqlx::query!(
         r#"insert into session_status (utc, track_status, session_status) values ($1, $2, $3)"#,
         session_status.utc,
         session_status.track_status,
         session_status.session_status
     )
-    .execute(pool)
+    .execute(&pool)
     .await;
 }
 
-pub async fn insert_lap_count(pool: &PgPool, lap_count: tables::LapCount) {
+pub async fn lap_count(pool: PgPool, lap_count: tables::LapCount) {
     let _ = sqlx::query!(
         r#"insert into lap_count (current, total) values ($1, $2)"#,
         lap_count.current,
         lap_count.total,
     )
-    .execute(pool)
+    .execute(&pool)
     .await;
 }
 
-pub async fn insert_weather(pool: &PgPool, weather: tables::Weather) {
+pub async fn weather(pool: PgPool, weather: tables::Weather) {
     let _ = sqlx::query!(
         r#"insert into weather (humidity, pressure, rainfall, wind_direction, wind_speed, air_temp, track_temp)
         values ($1, $2, $3, $4, $5, $6, $7)"#,
@@ -35,11 +35,22 @@ pub async fn insert_weather(pool: &PgPool, weather: tables::Weather) {
         weather.air_temp,
         weather.track_temp
     )
-    .execute(pool)
+    .execute(&pool)
     .await;
 }
 
-pub async fn insert_race_control_messages(pool: &PgPool, rc_msgs: tables::RaceControlMessages) {
+pub async fn extrapolated_clock(pool: PgPool, extrapolated_clock: tables::ExtrapolatedClock) {
+    let _ = sqlx::query!(
+        r#"insert into extrapolated_clock (extrapolating, remaining, utc) values ($1, $2, $3)"#,
+        extrapolated_clock.extrapolating,
+        extrapolated_clock.remaining,
+        extrapolated_clock.utc,
+    )
+    .execute(&pool)
+    .await;
+}
+
+pub async fn race_control_messages(pool: PgPool, rc_msgs: tables::RaceControlMessages) {
     let _ = sqlx::query!(
         r#"insert into race_control_messages (utc, lap, message, category, flag, scope, sector, drs_enabled)
         values ($1, $2, $3, $4, $5, $6, $7, $8)"#,
@@ -52,22 +63,22 @@ pub async fn insert_race_control_messages(pool: &PgPool, rc_msgs: tables::RaceCo
         rc_msgs.sector,
         rc_msgs.drs_enabled
     )
-    .execute(pool)
+    .execute(&pool)
     .await;
 }
 
-pub async fn insert_team_radio(pool: &PgPool, team_radio: tables::TeamRadio) {
+pub async fn team_radio(pool: PgPool, team_radio: tables::TeamRadio) {
     let _ = sqlx::query!(
         r#"insert into team_radio (utc, driver_nr, url) values ($1, $2, $3)"#,
         team_radio.utc,
         team_radio.driver_nr,
         team_radio.url
     )
-    .execute(pool)
+    .execute(&pool)
     .await;
 }
 
-pub async fn insert_general_timing(pool: &PgPool, general_timing: tables::GeneralTiming) {
+pub async fn general_timing(pool: PgPool, general_timing: tables::GeneralTiming) {
     let _ = sqlx::query!(
         r#"insert into general_timing (no_entries, session_part, cut_off_time, cut_off_percentage) values ($1, $2, $3, $4)"#,
         general_timing.no_entries.as_deref(),
@@ -75,11 +86,11 @@ pub async fn insert_general_timing(pool: &PgPool, general_timing: tables::Genera
         general_timing.cut_off_time,
         general_timing.cut_off_percentage
     )
-    .execute(pool)
+    .execute(&pool)
     .await;
 }
 
-pub async fn insert_driver(pool: &PgPool, driver: tables::Driver) {
+pub async fn driver(pool: PgPool, driver: tables::Driver) {
     let _ = sqlx::query!(
         r#"insert into driver
         (driver_nr, full_name, first_name, last_name, short, country, line, team_name, team_color)
@@ -94,11 +105,11 @@ pub async fn insert_driver(pool: &PgPool, driver: tables::Driver) {
         driver.team_name,
         driver.team_color
     )
-    .execute(pool)
+    .execute(&pool)
     .await;
 }
 
-pub async fn insert_driver_timing(pool: &PgPool, driver_timing: tables::DriverTiming) {
+pub async fn driver_timing(pool: PgPool, driver_timing: tables::DriverTiming) {
     let _ = sqlx::query!(
         r#"insert into driver_timing
         (driver_nr, line, position, show_position, gap_to_leader, gap_to_ahead, catching_ahead, lap_time, lap_time_fastest, lap_time_pb, number_of_laps, number_of_pit_stops, status, retired, in_pit, pit_out, knocked_out, stopped)
@@ -122,11 +133,11 @@ pub async fn insert_driver_timing(pool: &PgPool, driver_timing: tables::DriverTi
         driver_timing.knocked_out,
         driver_timing.stopped
     )
-    .execute(pool)
+    .execute(&pool)
     .await;
 }
 
-pub async fn insert_driver_sector(pool: &PgPool, driver_sector: tables::DriverSector) {
+pub async fn driver_sector(pool: PgPool, driver_sector: tables::DriverSector) {
     let _ = sqlx::query!(
         r#"insert into driver_sector (driver_nr, number, time, previous_time, status, stopped, overall_fastest, personal_fastest)
         values ($1, $2, $3, $4, $5, $6, $7, $8)"#,
@@ -139,12 +150,12 @@ pub async fn insert_driver_sector(pool: &PgPool, driver_sector: tables::DriverSe
         driver_sector.overall_fastest,
         driver_sector.personal_fastest,
     )
-    .execute(pool)
+    .execute(&pool)
     .await;
 }
 
-pub async fn insert_driver_sector_segment(
-    pool: &PgPool,
+pub async fn driver_sector_segment(
+    pool: PgPool,
     driver_sector_segment: tables::DriverSectorSegment,
 ) {
     let _ = sqlx::query!(
@@ -155,11 +166,30 @@ pub async fn insert_driver_sector_segment(
         driver_sector_segment.number,
         driver_sector_segment.status,
     )
-    .execute(pool)
+    .execute(&pool)
     .await;
 }
 
-pub async fn insert_driver_speeds(pool: &PgPool, driver_speeds: tables::DriverSpeeds) {
+pub async fn driver_stint(pool: PgPool, driver_stint: tables::DriverStint) {
+    let _ = sqlx::query!(
+        r#"insert into driver_stints (driver_nr, stint_nr, lap_flags, compound, new, tires_not_changed, total_laps, start_laps, lap_time, lap_number)
+        values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)"#,
+        driver_stint.driver_nr,
+        driver_stint.stint_nr,
+        driver_stint.lap_flags,
+        driver_stint.compound,
+        driver_stint.new,
+        driver_stint.tires_not_changed,
+        driver_stint.total_laps,
+        driver_stint.start_laps,
+        driver_stint.lap_time,
+        driver_stint.lap_number
+    )
+    .execute(&pool)
+    .await;
+}
+
+pub async fn driver_speeds(pool: PgPool, driver_speeds: tables::DriverSpeeds) {
     let _ = sqlx::query!(
         r#"insert into driver_speeds (driver_nr, station, value, status, overall_fastest, personal_fastest)
         values ($1, $2, $3, $4, $5, $6)"#,
@@ -170,11 +200,11 @@ pub async fn insert_driver_speeds(pool: &PgPool, driver_speeds: tables::DriverSp
         driver_speeds.overall_fastest,
         driver_speeds.personal_fastest,
     )
-    .execute(pool)
+    .execute(&pool)
     .await;
 }
 
-pub async fn insert_driver_stats(pool: &PgPool, driver_stats: tables::DriverStats) {
+pub async fn driver_stats(pool: PgPool, driver_stats: tables::DriverStats) {
     let _ = sqlx::query!(
         r#"insert into driver_stats (driver_nr, pb_lap_time, pb_lap_time_pos)
         values ($1, $2, $3)"#,
@@ -182,14 +212,11 @@ pub async fn insert_driver_stats(pool: &PgPool, driver_stats: tables::DriverStat
         driver_stats.pb_lap_time,
         driver_stats.pb_lap_time_pos
     )
-    .execute(pool)
+    .execute(&pool)
     .await;
 }
 
-pub async fn insert_driver_sector_stats(
-    pool: &PgPool,
-    driver_sector_stats: tables::DriverSectorStats,
-) {
+pub async fn driver_sector_stats(pool: PgPool, driver_sector_stats: tables::DriverSectorStats) {
     let _ = sqlx::query!(
         r#"insert into driver_sector_stats (driver_nr, number, value, position)
         values ($1, $2, $3, $4)"#,
@@ -198,11 +225,11 @@ pub async fn insert_driver_sector_stats(
         driver_sector_stats.value,
         driver_sector_stats.position
     )
-    .execute(pool)
+    .execute(&pool)
     .await;
 }
 
-pub async fn insert_driver_position(pool: &PgPool, driver_position: tables::DriverPosition) {
+pub async fn driver_position(pool: PgPool, driver_position: tables::DriverPosition) {
     let _ = sqlx::query!(
         r#"insert into driver_position (driver_nr, timestamp, status, x, y, z)
         values ($1, $2, $3, $4, $5, $6)"#,
@@ -213,11 +240,11 @@ pub async fn insert_driver_position(pool: &PgPool, driver_position: tables::Driv
         driver_position.y,
         driver_position.z,
     )
-    .execute(pool)
+    .execute(&pool)
     .await;
 }
 
-pub async fn insert_driver_car_data(pool: &PgPool, driver_cat_data: tables::DriverCarData) {
+pub async fn driver_car_data(pool: PgPool, driver_cat_data: tables::DriverCarData) {
     let _ = sqlx::query!(
         r#"insert into driver_car_data (driver_nr, timestamp, rpm, speed, gear, throttle, breaks, drs)
         values ($1, $2, $3, $4, $5, $6, $7, $8)"#,
@@ -230,6 +257,6 @@ pub async fn insert_driver_car_data(pool: &PgPool, driver_cat_data: tables::Driv
         driver_cat_data.breaks,
         driver_cat_data.drs
     )
-    .execute(pool)
+    .execute(&pool)
     .await;
 }
