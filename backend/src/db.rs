@@ -1,13 +1,17 @@
-pub mod service;
+use sqlx::PgPool;
+
+pub mod insert;
 pub mod tables;
 
-pub async fn init() -> anyhow::Result<()> {
-    let conn_url = std::env::var("DATABASE_URL")?;
-    let pool = sqlx::PgPool::connect(&conn_url).await?;
+pub async fn init() -> anyhow::Result<PgPool> {
+    let database_url = std::env::var("DATABASE_URL")?;
 
-    sqlx::migrate!().run(&pool).await?;
+    let db = sqlx::postgres::PgPoolOptions::new()
+        .max_connections(20)
+        .connect(&database_url)
+        .await?;
 
-    // here we do stuff yet what
+    sqlx::migrate!().run(&db).await?;
 
-    Ok(())
+    Ok(db)
 }
