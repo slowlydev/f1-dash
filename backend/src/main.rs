@@ -1,73 +1,66 @@
-use client_manager::ClientManagerEvent;
+use client::manager::ClientManagerEvent;
 
-use tokio::net::TcpListener;
+use client::parser::ParsedMessage;
+use serde_json::Value;
 use tokio::sync::mpsc::{self};
-use tokio_tungstenite::tungstenite::Message;
-use tracing::{error, info};
 
+mod broadcast;
+pub mod data {
+    // pub mod odctrl;
+    pub mod rdctrl;
+}
 mod client;
-mod client_manager;
 mod db;
-mod history;
 mod log;
-mod parser;
 mod server;
-mod server_manager;
 
-#[tokio::main(flavor = "multi_thread", worker_threads = 15)]
+#[tokio::main(flavor = "multi_thread")]
 async fn main() {
     log::init();
 
-    let addr = "127.0.0.1:4000".to_string();
-
-    let listener: TcpListener = TcpListener::bind(&addr)
-        .await
-        .expect("Listening to TCP failed");
-
-    let (client_tx, client_rx) = mpsc::unbounded_channel::<Message>();
+    let db = db::init().await.expect("db setup failed");
 
     /*
-        manage f1 client connection, restarts on close, closes on no clients
+        manage f1 client connection,
+        restarts on close,
+        closes on no clients
     */
     let (manager_tx, manager_rx) = mpsc::unbounded_channel::<ClientManagerEvent>();
-    tokio::spawn(client_manager::init(
+    let (client_tx, client_rx) = mpsc::unbounded_channel::<ParsedMessage>();
+    tokio::spawn(client::manager::init(
         manager_rx,
         manager_tx.clone(),
-        client_tx.clone(),
+        client_tx,
     ));
 
-    // /*
-    //     broadcasting, handles all outgoing messages.
-    // */
-    // let (broadcast_sender, broadcast_receiver) = mpsc::unbounded_channel::<BroadcastEvents>();
-    // tokio::spawn(server_manager::init(broadcast_receiver));
+    /*
+        handles all outgoing messages.
+    */
+    let (broadcast_tx, broadcast_rx) = mpsc::unbounded_channel::<broadcast::Event>();
+    tokio::spawn(broadcast::init(broadcast_rx, manager_tx));
 
-    // // Count and Id connections
-    let mut id: u32 = 0;
+    /*
+        send initial to odctrl,
+        split R,
+        transform updates,
+        handle DB inserts,
+    */
+    let (initial_tx, initial_rx) = mpsc::unbounded_channel::<Value>();
+    tokio::spawn(data::rdctrl::init(
+        db.clone(),
+        client_rx,
+        broadcast_tx.clone(),
+        initial_tx,
+    ));
 
-    while let Ok((stream, addr)) = listener.accept().await {
-        match tokio_tungstenite::accept_async(stream).await {
-            Err(e) => error!("Websocket connection error : {}", e),
-            Ok(stream) => {
-                info!("new connection: {}", addr);
+    // TODO odctrl
 
-                id += 1;
-                // tokio::spawn(server::listen(stream, addr, id, broadcast_sender.clone()));
-            }
-        }
-    }
+    /*
+        start ws server,
+        listen to messages,
+        send messages
+    */
+    server::listen(broadcast_tx.clone()).await;
+
+    db.close().await;
 }
-
-// let mut parsed = parser::parse_message(message);
-
-//             let mut history = history.lock().unwrap();
-
-//             match parsed {
-//                 parser::ParsedMessage::Empty => (),
-//                 parser::ParsedMessage::Replay(state) => history.set_initial(state),
-//                 parser::ParsedMessage::Updates(ref mut updates) => history.add_updates(updates),
-//             };
-
-//             if let Some(realtime) = history.get_realtime() {
-//                 let _ = broadcast_sender.send(BroadcastEvents::OutRealtime(realtime));
-//             }
