@@ -8,9 +8,12 @@ use tokio_tungstenite::{
     tungstenite::{client::IntoClientRequest, http::Request, Message},
     MaybeTlsStream, WebSocketStream,
 };
-use tracing::debug;
+use tracing::{debug, info};
 
 const F1_BASE_URL: &str = "livetiming.formula1.com/signalr";
+
+pub mod manager;
+pub mod parser;
 
 #[derive(Serialize, Deserialize)]
 #[serde(rename_all = "PascalCase")]
@@ -40,11 +43,11 @@ impl Client {
         let (socket, _) = connect_async(req).await?;
 
         let mut client = Client { socket };
-        client.subscribe().await;
+        client.subscribe().await?;
         Ok(client)
     }
 
-    async fn subscribe(&mut self) {
+    async fn subscribe(&mut self) -> anyhow::Result<()> {
         debug!("subscribing to socket");
 
         let request: Value = json!({
@@ -72,8 +75,9 @@ impl Client {
             "I": 1,
         });
 
-        // TODO: do error handling
-        let _ = self.socket.send(Message::Text(request.to_string())).await;
+        self.socket.send(Message::Text(request.to_string())).await?;
+
+        Ok(())
     }
 }
 
@@ -120,7 +124,7 @@ fn encode_uri_component(s: &str) -> String {
 fn create_url(token: &str) -> String {
     if let Some(env_url) = std::env::var_os("WS_URL") {
         if let Ok(env_url) = env_url.into_string() {
-            debug!("Using env for F1 URL {env_url}");
+            info!("Using env for F1 URL {env_url}");
             return env_url;
         };
     };
