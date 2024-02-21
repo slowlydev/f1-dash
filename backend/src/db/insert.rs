@@ -112,14 +112,16 @@ pub async fn driver(pool: PgPool, driver: tables::Driver) {
 pub async fn driver_timing(pool: PgPool, driver_timing: tables::DriverTiming) {
     let _ = sqlx::query!(
         r#"insert into driver_timing
-        (driver_nr, line, position, show_position, gap_to_leader, gap_to_ahead, catching_ahead, lap_time, lap_time_fastest, lap_time_pb, number_of_laps, number_of_pit_stops, status, retired, in_pit, pit_out, knocked_out, stopped)
-        values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)"#,
+        (driver_nr, line, position, show_position, gap_to_leader, gap_to_ahead, gap_to_leader_laps, gap_to_ahead_laps, catching_ahead, lap_time, lap_time_fastest, lap_time_pb, number_of_laps, number_of_pit_stops, status, retired, in_pit, pit_out, knocked_out, stopped)
+        values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20)"#,
         driver_timing.driver_nr,
         driver_timing.line,
         driver_timing.position,
         driver_timing.show_position,
         driver_timing.gap_to_leader,
         driver_timing.gap_to_ahead,
+        driver_timing.gap_to_leader_laps,
+        driver_timing.gap_to_ahead_laps,
         driver_timing.catching_ahead,
         driver_timing.lap_time,
         driver_timing.lap_time_fastest,
@@ -206,9 +208,10 @@ pub async fn driver_speeds(pool: PgPool, driver_speeds: tables::DriverSpeeds) {
 
 pub async fn driver_stats(pool: PgPool, driver_stats: tables::DriverStats) {
     let _ = sqlx::query!(
-        r#"insert into driver_stats (driver_nr, pb_lap_time, pb_lap_time_pos)
-        values ($1, $2, $3)"#,
+        r#"insert into driver_stats (driver_nr, lap, pb_lap_time, pb_lap_time_pos)
+        values ($1, $2, $3, $4)"#,
         driver_stats.driver_nr,
+        driver_stats.lap,
         driver_stats.pb_lap_time,
         driver_stats.pb_lap_time_pos
     )

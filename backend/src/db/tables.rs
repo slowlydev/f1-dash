@@ -30,13 +30,13 @@ impl LapCount {
 #[derive(Serialize, Debug, Clone)]
 #[serde(rename_all(serialize = "camelCase"))]
 pub struct Weather {
-    pub humidity: Option<String>,       // float
-    pub pressure: Option<String>,       // float
-    pub rainfall: Option<String>,       // bool / int
-    pub wind_direction: Option<String>, // int
-    pub wind_speed: Option<String>,     // float
-    pub air_temp: Option<String>,       // float
-    pub track_temp: Option<String>,     // float
+    pub humidity: Option<f64>,
+    pub pressure: Option<f64>,
+    pub rainfall: Option<bool>,
+    pub wind_direction: Option<i64>,
+    pub wind_speed: Option<f64>,
+    pub air_temp: Option<f64>,
+    pub track_temp: Option<f64>,
 }
 
 impl Weather {
@@ -100,14 +100,29 @@ impl GeneralTiming {
 #[serde(rename_all(serialize = "camelCase"))]
 pub struct Driver {
     pub driver_nr: String,
-    pub full_name: String,
-    pub first_name: String,
-    pub last_name: String,
-    pub short: String,
-    pub country: String,
-    pub line: String,
-    pub team_name: String,
-    pub team_color: String,
+    pub full_name: Option<String>,
+    pub first_name: Option<String>,
+    pub last_name: Option<String>,
+    pub short: Option<String>,
+    pub country: Option<String>,
+    pub line: Option<i64>,
+    pub team_name: Option<String>,
+    pub team_color: Option<String>,
+    pub picture: Option<String>,
+}
+
+impl Driver {
+    pub fn is_empty(&self) -> bool {
+        self.full_name.is_none()
+            && self.first_name.is_none()
+            && self.last_name.is_none()
+            && self.short.is_none()
+            && self.country.is_none()
+            && self.line.is_none()
+            && self.team_name.is_none()
+            && self.team_color.is_none()
+            && self.picture.is_none()
+    }
 }
 
 #[derive(Serialize, Debug, Clone)]
@@ -117,10 +132,12 @@ pub struct DriverTiming {
     pub line: Option<String>,
     pub position: Option<String>,
     pub show_position: Option<bool>,
-    pub gap_to_leader: Option<String>,
-    pub gap_to_ahead: Option<String>,
+    pub gap_to_leader: Option<i64>,      // 0 when gap is 1LAP
+    pub gap_to_ahead: Option<i64>,       // 0 when gap is 1LAP
+    pub gap_to_leader_laps: Option<i64>, // when gap is 1LAP, this gets set
+    pub gap_to_ahead_laps: Option<i64>,  // when gap is 1LAP, this gets set
     pub catching_ahead: Option<bool>,
-    pub lap_time: Option<String>,
+    pub lap_time: Option<i64>,
     pub lap_time_fastest: Option<bool>,
     pub lap_time_pb: Option<bool>,
     // TODO leaving this for now because fastest was not in TimingData
@@ -164,8 +181,8 @@ impl DriverTiming {
 pub struct DriverSector {
     pub driver_nr: String,
     pub number: i64,
-    pub time: Option<String>,
-    pub previous_time: Option<String>,
+    pub time: Option<i64>,
+    pub previous_time: Option<i64>,
     pub status: Option<i64>,
     pub stopped: Option<bool>,
     pub overall_fastest: Option<bool>,
@@ -209,7 +226,7 @@ pub struct DriverStint {
     pub tires_not_changed: Option<bool>, // its 0 or 1
     pub total_laps: Option<i64>,
     pub start_laps: Option<i64>,
-    pub lap_time: Option<String>,
+    pub lap_time: Option<i64>,
     pub lap_number: Option<i64>,
 }
 
@@ -231,7 +248,7 @@ impl DriverStint {
 pub struct DriverSpeeds {
     pub driver_nr: String,
     pub station: String,
-    pub value: Option<String>,
+    pub value: Option<i64>,
     pub status: Option<i64>,
     pub overall_fastest: Option<bool>,
     pub personal_fastest: Option<bool>,
@@ -250,8 +267,15 @@ impl DriverSpeeds {
 #[serde(rename_all(serialize = "camelCase"))]
 pub struct DriverStats {
     pub driver_nr: String,
-    pub pb_lap_time: Option<String>,
+    pub lap: Option<i64>,
+    pub pb_lap_time: Option<i64>,
     pub pb_lap_time_pos: Option<i64>,
+}
+
+impl DriverStats {
+    pub fn is_empty(&self) -> bool {
+        self.lap.is_none() && self.pb_lap_time.is_none() && self.pb_lap_time_pos.is_none()
+    }
 }
 
 #[derive(Serialize, Debug, Clone)]
@@ -259,8 +283,14 @@ pub struct DriverStats {
 pub struct DriverSectorStats {
     pub driver_nr: String,
     pub number: i64,
-    pub value: Option<String>,
+    pub value: Option<i64>,
     pub position: Option<i64>,
+}
+
+impl DriverSectorStats {
+    pub fn is_empty(&self) -> bool {
+        self.value.is_none() && self.position.is_none()
+    }
 }
 
 #[derive(Serialize, Debug, Clone)]

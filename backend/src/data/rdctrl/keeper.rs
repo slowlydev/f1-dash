@@ -59,5 +59,28 @@ async fn handle_updates(pool: PgPool, update: TableUpdate) {
                 tokio::spawn(db::insert::driver_stint(pool.clone(), driver_stint));
             }
         }
+        TableUpdate::Driver(drivers) => {
+            for driver in drivers {
+                tokio::spawn(db::insert::driver(pool.clone(), driver));
+            }
+        }
+        TableUpdate::DriverStats(driver_stats) => {
+            for driver_stat in driver_stats {
+                tokio::spawn(db::insert::driver_stats(pool.clone(), driver_stat));
+            }
+        }
+        TableUpdate::DriverSectorStats(driver_sector_stats) => {
+            for driver_sector_stat in driver_sector_stats {
+                tokio::spawn(db::insert::driver_sector_stats(
+                    pool.clone(),
+                    driver_sector_stat,
+                ));
+            }
+        }
+        TableUpdate::DriverSpeeds(driver_speeds) => {
+            for driver_speed in driver_speeds {
+                tokio::spawn(db::insert::driver_speeds(pool.clone(), driver_speed));
+            }
+        }
     }
 }

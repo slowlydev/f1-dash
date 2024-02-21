@@ -1,35 +1,53 @@
 -- Add migration script here
 CREATE TABLE IF NOT EXISTS session_status(
-    id serial PRIMARY KEY,
+    id serial,
     utc text,
     track_status text,
     session_status text,
     created_at timestamptz NOT NULL DEFAULT now()
 );
 
+SELECT
+    create_hypertable('session_status', by_range('created_at'));
+
+SELECT
+    add_retention_policy('session_status', INTERVAL '4 hours');
+
 CREATE TABLE IF NOT EXISTS lap_count(
-    id serial PRIMARY KEY,
-    current text,
-    total text,
+    id serial,
+    current int8,
+    total int8,
     created_at timestamptz NOT NULL DEFAULT now()
 );
+
+SELECT
+    create_hypertable('lap_count', by_range('created_at'));
+
+SELECT
+    add_retention_policy('lap_count', INTERVAL '4 hours');
 
 CREATE TABLE IF NOT EXISTS weather(
-    id serial PRIMARY KEY,
-    humidity text,
-    pressure text,
-    rainfall text,
-    wind_direction text,
-    wind_speed text,
-    air_temp text,
-    track_temp text,
+    id serial,
+    humidity float8,
+    pressure float8,
+    rainfall bool,
+    wind_direction int8,
+    wind_speed float8,
+    air_temp float8,
+    track_temp float8,
     created_at timestamptz NOT NULL DEFAULT now()
 );
 
+SELECT
+    create_hypertable('weather', by_range('created_at'));
+
+SELECT
+    add_retention_policy('weather', INTERVAL '4 hours');
+
 CREATE TABLE IF NOT EXISTS race_control_messages(
-    id serial PRIMARY KEY,
+    id serial,
     utc text,
-    lap text,
+    lap int8,
     message text,
     category text,
     flag text,
@@ -39,47 +57,74 @@ CREATE TABLE IF NOT EXISTS race_control_messages(
     created_at timestamptz NOT NULL DEFAULT now()
 );
 
+SELECT
+    create_hypertable('race_control_messages', by_range('created_at'));
+
+SELECT
+    add_retention_policy('race_control_messages', INTERVAL '4 hours');
+
 CREATE TABLE IF NOT EXISTS team_radio(
-    id serial PRIMARY KEY,
+    id serial,
     utc text,
     driver_nr text,
     url text,
     created_at timestamptz NOT NULL DEFAULT now()
 );
 
+SELECT
+    create_hypertable('team_radio', by_range('created_at'));
+
+SELECT
+    add_retention_policy('team_radio', INTERVAL '4 hours');
+
 CREATE TABLE IF NOT EXISTS general_timing(
-    id serial PRIMARY KEY,
-    no_entries text[],
+    id serial,
+    no_entries int8[],
     session_part smallint,
     cut_off_time text,
     cut_off_percentage text,
     created_at timestamptz NOT NULL DEFAULT now()
 );
 
+SELECT
+    create_hypertable('general_timing', by_range('created_at'));
+
+SELECT
+    add_retention_policy('general_timing', INTERVAL '4 hours');
+
 CREATE TABLE IF NOT EXISTS driver(
-    id serial PRIMARY KEY,
-    driver_nr text,
+    id serial,
+    driver_nr text NOT NULL,
     full_name text,
     first_name text,
     last_name text,
     short text,
     country text,
-    line text,
+    line int8,
     team_name text,
     team_color text,
+    picture text,
     created_at timestamptz NOT NULL DEFAULT now()
 );
 
+SELECT
+    create_hypertable('driver', by_range('created_at'));
+
+SELECT
+    add_retention_policy('driver', INTERVAL '4 hours');
+
 CREATE TABLE IF NOT EXISTS driver_timing(
-    id serial PRIMARY KEY,
-    driver_nr text,
+    id serial,
+    driver_nr text NOT NULL,
     line text,
     position text,
     show_position bool,
-    gap_to_leader text,
-    gap_to_ahead text,
+    gap_to_leader int8,
+    gap_to_ahead int8,
+    gap_to_leader_laps int8,
+    gap_to_ahead_laps int8,
     catching_ahead bool,
-    lap_time text,
+    lap_time int8,
     lap_time_fastest bool,
     lap_time_pb bool,
     number_of_laps int8,
@@ -93,12 +138,18 @@ CREATE TABLE IF NOT EXISTS driver_timing(
     created_at timestamptz NOT NULL DEFAULT now()
 );
 
+SELECT
+    create_hypertable('driver_timing', by_range('created_at'));
+
+SELECT
+    add_retention_policy('driver_timing', INTERVAL '4 hours');
+
 CREATE TABLE IF NOT EXISTS driver_sector(
-    id serial PRIMARY KEY,
-    driver_nr text,
-    number int8,
-    time text,
-    previous_time text,
+    id serial,
+    driver_nr text NOT NULL,
+    number int8 NOT NULL,
+    time int8,
+    previous_time int8,
     status int8,
     stopped bool,
     overall_fastest bool,
@@ -106,56 +157,114 @@ CREATE TABLE IF NOT EXISTS driver_sector(
     created_at timestamptz NOT NULL DEFAULT now()
 );
 
+SELECT
+    create_hypertable('driver_sector', by_range('created_at'));
+
+SELECT
+    add_retention_policy('driver_sector', INTERVAL '4 hours');
+
 CREATE TABLE IF NOT EXISTS driver_sector_segment(
-    id serial PRIMARY KEY,
-    driver_nr text,
-    sector_number int8,
-    number int8,
+    id serial,
+    driver_nr text NOT NULL,
+    sector_number int8 NOT NULL,
+    number int8 NOT NULL,
     status int8,
     created_at timestamptz NOT NULL DEFAULT now()
 );
 
+SELECT
+    create_hypertable('driver_sector_segment', by_range('created_at'));
+
+SELECT
+    add_retention_policy('driver_sector_segment', INTERVAL '4 hours');
+
+CREATE TABLE IF NOT EXISTS driver_stints(
+    id serial,
+    driver_nr text NOT NULL,
+    stint_nr int8 NOT NULL,
+    lap_flags int8,
+    compound text,
+    new bool,
+    tires_not_changed bool,
+    total_laps int8,
+    start_laps int8,
+    lap_time int8,
+    lap_number int8,
+    created_at timestamptz NOT NULL DEFAULT now()
+);
+
+SELECT
+    create_hypertable('driver_stints', by_range('created_at'));
+
+SELECT
+    add_retention_policy('driver_stints', INTERVAL '4 hours');
+
 CREATE TABLE IF NOT EXISTS driver_speeds(
-    id serial PRIMARY KEY,
-    driver_nr text,
-    station text,
-    value text,
+    id serial,
+    driver_nr text NOT NULL,
+    station text NOT NULL,
+    value int8,
     status int8,
     overall_fastest bool,
     personal_fastest bool,
     created_at timestamptz NOT NULL DEFAULT now()
 );
 
+SELECT
+    create_hypertable('driver_speeds', by_range('created_at'));
+
+SELECT
+    add_retention_policy('driver_speeds', INTERVAL '4 hours');
+
 CREATE TABLE IF NOT EXISTS driver_stats(
-    id serial PRIMARY KEY,
-    driver_nr text,
-    pb_lap_time text,
+    id serial,
+    driver_nr text NOT NULL,
+    lap int8,
+    pb_lap_time int8,
     pb_lap_time_pos int8,
     created_at timestamptz NOT NULL DEFAULT now()
 );
 
+SELECT
+    create_hypertable('driver_stats', by_range('created_at'));
+
+SELECT
+    add_retention_policy('driver_stats', INTERVAL '4 hours');
+
 CREATE TABLE IF NOT EXISTS driver_sector_stats(
-    id serial PRIMARY KEY,
-    driver_nr text,
-    number int8,
-    value text,
+    id serial,
+    driver_nr text NOT NULL,
+    number int8 NOT NULL,
+    value int8,
     position int8,
     created_at timestamptz NOT NULL DEFAULT now()
 );
 
+SELECT
+    create_hypertable('driver_sector_stats', by_range('created_at'));
+
+SELECT
+    add_retention_policy('driver_sector_stats', INTERVAL '4 hours');
+
 CREATE TABLE IF NOT EXISTS driver_position(
-    id serial PRIMARY KEY,
-    driver_nr text,
-    timestamp text,
-    status text,
-    x float8,
-    y float8,
-    z float8,
+    id serial,
+    driver_nr text NOT NULL,
+    timestamp text NOT NULL,
+    status text NOT NULL,
+    x float8 NOT NULL,
+    y float8 NOT NULL,
+    z float8 NOT NULL,
     created_at timestamptz NOT NULL DEFAULT now()
 );
 
+SELECT
+    create_hypertable('driver_position', by_range('created_at'));
+
+SELECT
+    add_retention_policy('driver_position', INTERVAL '4 hours');
+
 CREATE TABLE IF NOT EXISTS driver_car_data(
-    id serial PRIMARY KEY,
+    id serial,
     driver_nr text,
     timestamp text,
     rpm float8,
@@ -166,4 +275,24 @@ CREATE TABLE IF NOT EXISTS driver_car_data(
     drs bool,
     created_at timestamptz NOT NULL DEFAULT now()
 );
+
+SELECT
+    create_hypertable('driver_car_data', by_range('created_at'));
+
+SELECT
+    add_retention_policy('driver_car_data', INTERVAL '4 hours');
+
+CREATE TABLE IF NOT EXISTS extrapolated_clock(
+    id serial,
+    extrapolating bool,
+    remaining text,
+    utc text,
+    created_at timestamptz NOT NULL DEFAULT now()
+);
+
+SELECT
+    create_hypertable('extrapolated_clock', by_range('created_at'));
+
+SELECT
+    add_retention_policy('extrapolated_clock', INTERVAL '4 hours');
 
