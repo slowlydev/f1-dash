@@ -13,9 +13,11 @@
  * @returns ISO-8601 string
  */
 export const toTrackTime = (utc: string, offset: string) => {
-	const date = new Date(`${utc}.000Z`);
+	const date = new Date(utc);
 
 	const [hours, minutes, seconds]: (number | undefined)[] = offset.split(":").map((unit) => parseInt(unit));
+
+	if (!hours || !minutes || !seconds) return date.toISOString(); 
 
 	date.setUTCHours(date.getUTCHours() + hours);
 	date.setUTCMinutes(date.getUTCMinutes() + minutes);
