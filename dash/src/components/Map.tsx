@@ -126,9 +126,8 @@ export default function Map({ circuitKey, positionBatches }: Props) {
 								<g
 									key={`map.driver.${pos.driverNr}`}
 									id={`map.driver.${pos.driverNr}`}
-									className={clsx({ "opacity-30": out })}
-									fill={`#${pos.teamColor}`}
-									style={{ transition: "all 1s linear", transform }}
+									className={clsx("fill-zinc-700", { "opacity-30": out })}
+									style={{ transition: "all 1s linear", transform, ...(pos.teamColor && ({ fill: `#${pos.teamColor}` })) }}
 								>
 									<circle id={`map.driver.${pos.driverNr}.circle`} r={120} />
 									<text
