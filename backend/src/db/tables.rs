@@ -2,15 +2,63 @@ use serde::Serialize;
 
 #[derive(Serialize, Debug, Clone)]
 #[serde(rename_all(serialize = "camelCase"))]
-pub struct SessionStatus {
-    pub utc: Option<String>,
+pub struct SessionInfo {
+    // SessionInfo
+    pub key: Option<i64>,
+    pub kind: Option<String>, // in the f1 api its type
+    pub name: Option<String>,
+    pub start_date: Option<String>,
+    pub end_date: Option<String>,
+    pub gmt_offset: Option<String>,
+    pub path: Option<String>,
+    pub number: Option<i64>,
+
+    // TrackStatus
     pub track_status: Option<String>,
-    pub session_status: Option<String>,
+    pub track_message: Option<String>,
 }
 
-impl SessionStatus {
+impl SessionInfo {
     pub fn is_empty(&self) -> bool {
-        self.utc.is_none() && self.track_status.is_none() && self.session_status.is_none()
+        self.key.is_none()
+            && self.kind.is_none()
+            && self.name.is_none()
+            && self.start_date.is_none()
+            && self.end_date.is_none()
+            && self.gmt_offset.is_none()
+            && self.path.is_none()
+            && self.number.is_none()
+            && self.track_status.is_none()
+            && self.track_message.is_none()
+    }
+}
+
+#[derive(Serialize, Debug, Clone)]
+#[serde(rename_all(serialize = "camelCase"))]
+pub struct Meeting {
+    // SessionInfo -> Meeting
+    pub key: Option<String>,
+    pub name: Option<String>,
+    pub official_name: Option<String>,
+    pub location: Option<String>,
+    pub country_key: Option<String>,
+    pub country_code: Option<String>,
+    pub country_name: Option<String>,
+    pub circuit_key: Option<i64>,
+    pub circuit_name: Option<String>,
+}
+
+impl Meeting {
+    pub fn is_empty(&self) -> bool {
+        self.key.is_none()
+            && self.name.is_none()
+            && self.official_name.is_none()
+            && self.location.is_none()
+            && self.country_key.is_none()
+            && self.country_code.is_none()
+            && self.country_name.is_none()
+            && self.circuit_key.is_none()
+            && self.circuit_name.is_none()
     }
 }
 

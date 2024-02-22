@@ -92,5 +92,11 @@ async fn handle_updates(pool: PgPool, update: TableUpdate) {
                 tokio::spawn(db::insert::driver_position(pool.clone(), driver_position));
             }
         }
+        TableUpdate::SessionInfo(session_info) => {
+            tokio::spawn(db::insert::session_info(pool.clone(), session_info));
+        }
+        TableUpdate::Meeting(meeting) => {
+            tokio::spawn(db::insert::meeting(pool.clone(), meeting));
+        }
     }
 }

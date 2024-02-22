@@ -2,12 +2,38 @@ use sqlx::PgPool;
 
 use super::tables;
 
-pub async fn session_status(pool: PgPool, session_status: tables::SessionStatus) {
+pub async fn session_info(pool: PgPool, session: tables::SessionInfo) {
     let _ = sqlx::query!(
-        r#"insert into session_status (utc, track_status, session_status) values ($1, $2, $3)"#,
-        session_status.utc,
-        session_status.track_status,
-        session_status.session_status
+        r#"insert into session_info (key, kind, name, start_date, end_date, gmt_offset, path, number, track_status, track_message) 
+        values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)"#,
+        session.key,
+        session.kind,
+        session.name,
+        session.start_date,
+        session.end_date,
+        session.gmt_offset,
+        session.path,
+        session.number,
+        session.track_status,
+        session.track_message,
+    )
+    .execute(&pool)
+    .await;
+}
+
+pub async fn meeting(pool: PgPool, meeting: tables::Meeting) {
+    let _ = sqlx::query!(
+        r#"insert into meeting (key, name, official_name, location, country_key, country_code, country_name, circuit_key, circuit_name) 
+        values ($1, $2, $3, $4, $5, $6, $7, $8, $9)"#,
+        meeting.key,
+        meeting.name,
+        meeting.official_name,
+        meeting.location,
+        meeting.country_key,
+        meeting.country_code,
+        meeting.country_name,
+        meeting.circuit_key,
+        meeting.circuit_name
     )
     .execute(&pool)
     .await;

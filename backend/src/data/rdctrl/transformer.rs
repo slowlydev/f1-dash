@@ -120,6 +120,8 @@ pub enum TableUpdate {
     DriverSpeeds(Vec<db::tables::DriverSpeeds>),
     DriverCarData(Vec<db::tables::DriverCarData>),
     DriverPosition(Vec<db::tables::DriverPosition>),
+    SessionInfo(db::tables::SessionInfo),
+    Meeting(db::tables::Meeting),
 }
 
 pub fn parse_updates(updates: Vec<Update>) -> Vec<TableUpdate> {
@@ -188,6 +190,23 @@ pub fn parse_updates(updates: Vec<Update>) -> Vec<TableUpdate> {
             "Position.z" => {
                 vec.push(TableUpdate::DriverPosition(parse_position(update.state)));
             }
+            "SessionInfo" => {
+                let session_info = parse_session_info(update.state.clone());
+                if !session_info.is_empty() {
+                    vec.push(TableUpdate::SessionInfo(session_info));
+                }
+
+                let meeting = parse_meeting(update.state);
+                if !meeting.is_empty() {
+                    vec.push(TableUpdate::Meeting(meeting));
+                }
+            }
+            "TrackStatus" => {
+                let session_info = parse_session_info(update.state);
+                if !session_info.is_empty() {
+                    vec.push(TableUpdate::SessionInfo(session_info));
+                }
+            }
             _ => {}
         }
     }
@@ -250,6 +269,23 @@ pub fn parse_initial(initial: Value) -> Vec<TableUpdate> {
                 "Position.z" => {
                     vec.push(TableUpdate::DriverPosition(parse_position(v)));
                 }
+                "SessionInfo" => {
+                    let session_info = parse_session_info(v.clone());
+                    if !session_info.is_empty() {
+                        vec.push(TableUpdate::SessionInfo(session_info));
+                    }
+
+                    let meeting = parse_meeting(v);
+                    if !meeting.is_empty() {
+                        vec.push(TableUpdate::Meeting(meeting));
+                    }
+                }
+                "TrackStatus" => {
+                    let session_info = parse_session_info(v);
+                    if !session_info.is_empty() {
+                        vec.push(TableUpdate::SessionInfo(session_info));
+                    }
+                }
                 _ => {}
             }
         }
@@ -259,6 +295,35 @@ pub fn parse_initial(initial: Value) -> Vec<TableUpdate> {
 }
 
 // ! - parsers bellow - !
+
+fn parse_session_info(value: Value) -> db::tables::SessionInfo {
+    db::tables::SessionInfo {
+        key: optional_pointer(&value, "/Key"),
+        kind: optional_pointer(&value, "/Type"),
+        name: optional_pointer(&value, "/Name"),
+        start_date: optional_pointer(&value, "/StartDate"),
+        end_date: optional_pointer(&value, "/EndDate"),
+        gmt_offset: optional_pointer(&value, "/GmtOffset"),
+        path: optional_pointer(&value, "/Path"),
+        number: optional_pointer(&value, "/Number"),
+        track_status: optional_pointer(&value, "/Status"), // TrackStatus
+        track_message: optional_pointer(&value, "/Message"), // TrackStatus
+    }
+}
+
+fn parse_meeting(value: Value) -> db::tables::Meeting {
+    db::tables::Meeting {
+        key: optional_pointer(&value, "/Meeting/Key"),
+        name: optional_pointer(&value, "/Meeting/Name"),
+        official_name: optional_pointer(&value, "/Meeting/OfficialName"),
+        location: optional_pointer(&value, "/Meeting/Location"),
+        country_key: optional_pointer(&value, "/Meeting/Country/Key"),
+        country_code: optional_pointer(&value, "/Meeting/Country/Code"),
+        country_name: optional_pointer(&value, "/Meeting/Country/Name"),
+        circuit_key: optional_pointer(&value, "/Meeting/Circuit/Key"),
+        circuit_name: optional_pointer(&value, "/Meeting/Circuit/ShortName"),
+    }
+}
 
 fn parse_weather(value: Value) -> db::tables::Weather {
     db::tables::Weather {

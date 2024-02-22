@@ -1,17 +1,43 @@
--- Add migration script here
-CREATE TABLE IF NOT EXISTS session_status(
+CREATE TABLE IF NOT EXISTS session_info(
     id serial,
-    utc text,
+    key int8,
+    kind text,
+    name text,
+    start_date text,
+    end_date text,
+    gmt_offset text,
+    path text,
+    number int8,
     track_status text,
-    session_status text,
+    track_message text,
     created_at timestamptz NOT NULL DEFAULT now()
 );
 
 SELECT
-    create_hypertable('session_status', by_range('created_at'));
+    create_hypertable('session_info', by_range('created_at'));
 
 SELECT
-    add_retention_policy('session_status', INTERVAL '4 hours');
+    add_retention_policy('session_info', INTERVAL '4 hours');
+
+CREATE TABLE IF NOT EXISTS meeting(
+    id serial,
+    key text,
+    name text,
+    official_name text,
+    location text,
+    country_key text,
+    country_code text,
+    country_name text,
+    circuit_key int8,
+    circuit_name text,
+    created_at timestamptz NOT NULL DEFAULT now()
+);
+
+SELECT
+    create_hypertable('meeting', by_range('created_at'));
+
+SELECT
+    add_retention_policy('meeting', INTERVAL '4 hours');
 
 CREATE TABLE IF NOT EXISTS lap_count(
     id serial,
