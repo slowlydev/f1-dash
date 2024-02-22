@@ -82,5 +82,15 @@ async fn handle_updates(pool: PgPool, update: TableUpdate) {
                 tokio::spawn(db::insert::driver_speeds(pool.clone(), driver_speed));
             }
         }
+        TableUpdate::DriverCarData(driver_cars) => {
+            for driver_car in driver_cars {
+                tokio::spawn(db::insert::driver_car_data(pool.clone(), driver_car));
+            }
+        }
+        TableUpdate::DriverPosition(driver_positions) => {
+            for driver_position in driver_positions {
+                tokio::spawn(db::insert::driver_position(pool.clone(), driver_position));
+            }
+        }
     }
 }

@@ -4,8 +4,8 @@ use serde::de::DeserializeOwned;
 use serde_json::Value;
 
 use crate::{
-    client::parser::Update,
-    db::{self},
+    client::parser::{self, Update},
+    db,
 };
 
 fn optional_pointer<T: DeserializeOwned>(value: &Value, pointer: &str) -> Option<T> {
@@ -118,6 +118,8 @@ pub enum TableUpdate {
     DriverStats(Vec<db::tables::DriverStats>),
     DriverSectorStats(Vec<db::tables::DriverSectorStats>),
     DriverSpeeds(Vec<db::tables::DriverSpeeds>),
+    DriverCarData(Vec<db::tables::DriverCarData>),
+    DriverPosition(Vec<db::tables::DriverPosition>),
 }
 
 pub fn parse_updates(updates: Vec<Update>) -> Vec<TableUpdate> {
@@ -180,6 +182,12 @@ pub fn parse_updates(updates: Vec<Update>) -> Vec<TableUpdate> {
                     update.state,
                 )));
             }
+            "CarData.z" => {
+                vec.push(TableUpdate::DriverCarData(parse_car_data(update.state)));
+            }
+            "Position.z" => {
+                vec.push(TableUpdate::DriverPosition(parse_position(update.state)));
+            }
             _ => {}
         }
     }
@@ -235,6 +243,12 @@ pub fn parse_initial(initial: Value) -> Vec<TableUpdate> {
                 "TimingStats" => {
                     vec.push(TableUpdate::DriverStats(parse_driver_stats(v.clone())));
                     vec.push(TableUpdate::DriverSectorStats(parse_driver_sector_stats(v)));
+                }
+                "CarData.z" => {
+                    vec.push(TableUpdate::DriverCarData(parse_car_data(v)));
+                }
+                "Position.z" => {
+                    vec.push(TableUpdate::DriverPosition(parse_position(v)));
                 }
                 _ => {}
             }
@@ -594,6 +608,89 @@ fn parse_driver_stint(value: Value) -> Vec<db::tables::DriverStint> {
 
                     if !driver_stint.is_empty() {
                         vec.push(driver_stint);
+                    }
+                }
+            }
+        }
+    }
+
+    vec
+}
+
+fn parse_car_data(string_value: Value) -> Vec<db::tables::DriverCarData> {
+    let value = parser::inflate::zlib::<Value, Value>(string_value);
+
+    let mut vec: Vec<db::tables::DriverCarData> = Vec::new();
+
+    if let Ok(value) = value {
+        let entries = value.pointer("/Entries");
+
+        if let Some(Value::Array(entries)) = entries {
+            for entry in entries {
+                let timestamp: Option<String> = optional_pointer(&entry, "/Utc");
+
+                if let Some(timestamp) = timestamp {
+                    let cars: Option<HashMap<String, Value>> = optional_pointer(&entry, "/Cars");
+
+                    if let Some(cars) = cars {
+                        for (driver_nr, v) in cars {
+                            let car_data = db::tables::DriverCarData {
+                                driver_nr,
+                                timestamp: timestamp.clone(),
+                                rpm: optional_pointer(&v, "/Channels/0"),
+                                speed: optional_pointer(&v, "/Channels/2"),
+                                gear: optional_pointer(&v, "/Channels/3"),
+                                throttle: optional_pointer(&v, "/Channels/4"),
+                                breaks: optional_pointer(&v, "/Channels/5"),
+                                drs: optional_pointer(&v, "/Channels/45"),
+                            };
+
+                            if !car_data.is_empty() {
+                                vec.push(car_data);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // car_data
+    }
+
+    vec
+}
+
+fn parse_position(string_value: Value) -> Vec<db::tables::DriverPosition> {
+    let value = parser::inflate::zlib::<Value, Value>(string_value);
+
+    let mut vec: Vec<db::tables::DriverPosition> = Vec::new();
+
+    if let Ok(value) = value {
+        let positions = value.pointer("/Position");
+
+        if let Some(Value::Array(positions)) = positions {
+            for position in positions {
+                let timestamp: Option<String> = optional_pointer(&position, "/Timestamp");
+
+                if let Some(timestamp) = timestamp {
+                    let entries: Option<HashMap<String, Value>> =
+                        optional_pointer(&position, "/Entries");
+
+                    if let Some(entries) = entries {
+                        for (driver_nr, v) in entries {
+                            let car_position = db::tables::DriverPosition {
+                                driver_nr,
+                                timestamp: timestamp.clone(),
+                                status: optional_pointer(&v, "/Status"),
+                                x: optional_pointer(&v, "/X"),
+                                y: optional_pointer(&v, "/Y"),
+                                z: optional_pointer(&v, "/Z"),
+                            };
+
+                            if !car_position.is_empty() {
+                                vec.push(car_position);
+                            }
+                        }
                     }
                 }
             }

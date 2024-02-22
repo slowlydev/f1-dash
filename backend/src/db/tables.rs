@@ -298,10 +298,16 @@ impl DriverSectorStats {
 pub struct DriverPosition {
     pub driver_nr: String,
     pub timestamp: String,
-    pub status: String,
-    pub x: f64,
-    pub y: f64,
-    pub z: f64,
+    pub status: Option<String>,
+    pub x: Option<f64>,
+    pub y: Option<f64>,
+    pub z: Option<f64>,
+}
+
+impl DriverPosition {
+    pub fn is_empty(&self) -> bool {
+        self.status.is_none() && self.x.is_none() && self.y.is_none() && self.z.is_none()
+    }
 }
 
 #[derive(Serialize, Debug, Clone)]
@@ -309,12 +315,23 @@ pub struct DriverPosition {
 pub struct DriverCarData {
     pub driver_nr: String,
     pub timestamp: String,
-    pub rpm: f64,
-    pub speed: f64,
-    pub gear: i64,
-    pub throttle: i64,
-    pub breaks: bool,
-    pub drs: bool,
+    pub rpm: Option<f64>,
+    pub speed: Option<f64>,
+    pub gear: Option<i64>,
+    pub throttle: Option<i64>,
+    pub breaks: Option<bool>,
+    pub drs: Option<bool>,
+}
+
+impl DriverCarData {
+    pub fn is_empty(&self) -> bool {
+        self.rpm.is_none()
+            && self.speed.is_none()
+            && self.gear.is_none()
+            && self.throttle.is_none()
+            && self.breaks.is_none()
+            && self.drs.is_none()
+    }
 }
 
 #[derive(Serialize, Debug, Clone)]

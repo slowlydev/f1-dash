@@ -1,9 +1,10 @@
 use std::mem;
 
-use chrono::{DateTime, NaiveDateTime, Utc};
+use chrono::Utc;
 use serde::Serialize;
-use serde_json::{Map, Value};
+use serde_json::Value;
 
+pub mod inflate;
 pub mod models;
 
 #[derive(Debug, Clone)]
@@ -60,13 +61,13 @@ pub fn message(message: String) -> ParsedMessage {
     ParsedMessage::Empty
 }
 
-const FORMAT1: &'static str = "%Y-%m-%dT%H:%M:%S%.3fZ";
-const FORMAT2: &'static str = "%Y-%m-%dT%H:%M:%S";
+// const FORMAT1: &'static str = "%Y-%m-%dT%H:%M:%S%.3fZ";
+// const FORMAT2: &'static str = "%Y-%m-%dT%H:%M:%S";
 
-pub fn chrono_date(s: &str) -> Option<DateTime<Utc>> {
-    let dt = NaiveDateTime::parse_from_str(&s, FORMAT1)
-        .or_else(|_| NaiveDateTime::parse_from_str(&s, FORMAT2))
-        .ok()?;
+// pub fn chrono_date(s: &str) -> Option<DateTime<Utc>> {
+//     let dt = NaiveDateTime::parse_from_str(&s, FORMAT1)
+//         .or_else(|_| NaiveDateTime::parse_from_str(&s, FORMAT2))
+//         .ok()?;
 
-    Some(DateTime::<Utc>::from_naive_utc_and_offset(dt, Utc))
-}
+//     Some(DateTime::<Utc>::from_naive_utc_and_offset(dt, Utc))
+// }
