@@ -1,8 +1,11 @@
+use serde::Serialize;
 use sqlx::PgPool;
 
 use super::tables;
 
 // per driver, lap time
+#[derive(Serialize, Debug, Clone)]
+#[serde(rename_all(serialize = "camelCase"))]
 pub struct DriverLapTimeHistory {
     pub driver_nr: String,
     pub lap_times: Option<Vec<i64>>,
@@ -27,6 +30,8 @@ pub async fn driver_lap_time(pool: PgPool) -> Option<Vec<DriverLapTimeHistory>> 
 
 // per driver, gap
 
+#[derive(Serialize, Debug, Clone)]
+#[serde(rename_all(serialize = "camelCase"))]
 pub struct DriverLeaderGapHistory {
     pub driver_nr: String,
     pub leader_gap_history: Option<Vec<i64>>,
@@ -49,6 +54,8 @@ pub async fn driver_leader_gap(pool: PgPool) -> Option<Vec<DriverLeaderGapHistor
     rows.ok()
 }
 
+#[derive(Serialize, Debug, Clone)]
+#[serde(rename_all(serialize = "camelCase"))]
 pub struct DriverAheadGapHistory {
     pub driver_nr: String,
     pub ahead_gap_history: Option<Vec<i64>>,
@@ -72,6 +79,8 @@ pub async fn driver_ahead_gap(pool: PgPool) -> Option<Vec<DriverAheadGapHistory>
 }
 
 // per driver, per sector, sector time
+#[derive(Serialize, Debug, Clone)]
+#[serde(rename_all(serialize = "camelCase"))]
 pub struct DriverSectorHistory {
     pub driver_nr: String,
     pub sector_nr: i64,
@@ -97,6 +106,8 @@ pub async fn driver_sector(pool: PgPool) -> Option<Vec<DriverSectorHistory>> {
 
 // weather, per property
 
+#[derive(Serialize, Debug, Clone)]
+#[serde(rename_all(serialize = "camelCase"))]
 pub struct WeatherHistory {
     pub humidity: Option<Vec<f64>>,
     pub pressure: Option<Vec<f64>>,
