@@ -15,8 +15,13 @@ export default function HelpColors() {
 				</div>
 
 				<div className="flex items-center gap-2">
-					<div className="h-8 w-8 rounded-md bg-indigo-500" />
+					<div className="h-8 w-8 rounded-md bg-violet-600" />
 					<p>Overall Best</p>
+				</div>
+
+				<div className="flex items-center gap-2">
+					<div className="h-8 w-8 rounded-md bg-blue-500" />
+					<p>Enter/Exit boxes</p>
 				</div>
 
 				<div className="flex items-center gap-2">
