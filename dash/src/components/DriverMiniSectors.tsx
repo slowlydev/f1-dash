@@ -42,7 +42,7 @@ function MiniSector({ status }: { status: number }) {
 			className={clsx("h-[10px] w-2 rounded-[0.2rem]", {
 				"bg-yellow-500": status === 2048 || status === 2052, // TODO unsure
 				"bg-emerald-500": status === 2049,
-				"bg-indigo-500": status === 2051,
+				"bg-purple-700": status === 2051,
 				"bg-blue-500": status === 2064,
 				"bg-gray-800": status === 0,
 			})}
