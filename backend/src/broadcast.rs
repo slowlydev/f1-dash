@@ -1,14 +1,10 @@
-use futures::SinkExt;
+use futures::{stream::SplitSink, SinkExt};
 use serde_json::Value;
+use std::{collections::HashMap, net::SocketAddr};
+use tokio::net::TcpStream;
 use tokio::sync::mpsc::{UnboundedReceiver, UnboundedSender};
 use tokio_tungstenite::{tungstenite::Message, WebSocketStream};
 use tracing::{debug, info};
-
-use std::{collections::HashMap, net::SocketAddr};
-
-use futures::stream::SplitSink;
-
-use tokio::net::TcpStream;
 
 use crate::client::manager::ClientManagerEvent;
 
@@ -39,8 +35,7 @@ pub enum Event {
     ReqRealtime,
     ReqInitial,
 
-    OutInitial(Value),
-    OutUpdate(Value),
+    OutRealtime(Value),
 
     OutReconstruct(),
     OutBuffer(),
@@ -74,7 +69,7 @@ pub async fn init(
                     let _ = manager_tx.send(ClientManagerEvent::Kill);
                 }
             }
-            Event::OutUpdate(state) => {
+            Event::OutRealtime(state) => {
                 let data = serde_json::to_string(&state).unwrap();
 
                 for (_, conn) in connections.iter_mut().filter(|(_, conn)| conn.realtime) {

@@ -53,7 +53,11 @@ async fn main() {
         initial_tx,
     ));
 
-    // TODO odctrl
+    /*
+        handles requests for older updates,
+        handles reconstruction of initial states for the frontend
+    */
+    // tokio::spawn(data::odctrl::init(initial_rx));
 
     /*
         start ws server,

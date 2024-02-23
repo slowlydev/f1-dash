@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use serde::de::DeserializeOwned;
+use serde::{de::DeserializeOwned, Serialize};
 use serde_json::Value;
 
 use crate::{
@@ -102,7 +102,7 @@ fn parse_laps(s: Option<String>) -> Option<i64> {
     None
 }
 
-#[derive(Debug, Clone)]
+#[derive(Serialize, Debug, Clone)]
 pub enum TableUpdate {
     Weather(db::tables::Weather),
     ExtrapolatedClock(db::tables::ExtrapolatedClock),
@@ -122,6 +122,31 @@ pub enum TableUpdate {
     DriverPosition(Vec<db::tables::DriverPosition>),
     SessionInfo(db::tables::SessionInfo),
     Meeting(db::tables::Meeting),
+}
+
+pub fn get_table_update_name(table_update: &TableUpdate) -> String {
+    let name = match table_update {
+        TableUpdate::Weather(_) => "weather",
+        TableUpdate::ExtrapolatedClock(_) => "extrapolatedClock",
+        TableUpdate::LapCount(_) => "lapCount",
+        TableUpdate::TeamRadio(_) => "teamRadio",
+        TableUpdate::RaceControlMessages(_) => "raceControlMessages",
+        TableUpdate::GeneralTiming(_) => "generalTiming",
+        TableUpdate::DriverTiming(_) => "driverTiming",
+        TableUpdate::DriverSector(_) => "driverSector",
+        TableUpdate::DriverSectorSegment(_) => "driverSectorSegment",
+        TableUpdate::DriverStint(_) => "driverStint",
+        TableUpdate::Driver(_) => "driver",
+        TableUpdate::DriverStats(_) => "driverStats",
+        TableUpdate::DriverSectorStats(_) => "driverSectorStats",
+        TableUpdate::DriverSpeeds(_) => "driverSpeeds",
+        TableUpdate::DriverCarData(_) => "driverCarData",
+        TableUpdate::DriverPosition(_) => "driverPosition",
+        TableUpdate::SessionInfo(_) => "sessionInfo",
+        TableUpdate::Meeting(_) => "meeting",
+    };
+
+    name.to_owned()
 }
 
 pub fn parse_updates(updates: Vec<Update>) -> Vec<TableUpdate> {
