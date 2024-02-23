@@ -22,7 +22,7 @@ export default function Driver({ driver, position }: Props) {
 		<motion.div
 			className={clsx("h-18 grid place-items-center items-center gap-1 py-1", {
 				"opacity-50": driver.status === "OUT" || driver.status === "RETIRED" || driver.status === "STOPPED",
-				"bg-indigo-800 bg-opacity-30": driver.lapTimes.best.fastest,
+				"bg-violet-800 bg-opacity-30": driver.lapTimes.best.fastest,
 				"bg-red-800 bg-opacity-30": false, // TODO use this for danger zone in quali
 			})}
 			style={{
