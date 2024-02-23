@@ -18,16 +18,24 @@ const server = serve({
 
 		if (req.url.endsWith("/api/archive")) {
 			const currentYear = new Date().getFullYear();
-			const archive = await getArchive(currentYear);
+			try {
+				const archive = await getArchive(currentYear);
+				const withDrivers = await fetchArchive(translateArchive(archive));
 
-			const withDrivers = await fetchArchive(translateArchive(archive));
-
-			return new Response(JSON.stringify(withDrivers), {
-				status: 200,
-				headers: {
-					"Content-Type": "application/json",
-				},
-			});
+				return new Response(JSON.stringify(withDrivers), {
+					status: 200,
+					headers: {
+						"Content-Type": "application/json",
+					},
+				});
+			} catch (_) {
+				return new Response(JSON.stringify({ year: currentYear, meetings: [] }), {
+					status: 200,
+					headers: {
+						"Content-Type": "application/json",
+					},
+				});
+			}
 		}
 
 		if (req.url.endsWith("/api/next-meeting")) {
