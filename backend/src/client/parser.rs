@@ -1,16 +1,15 @@
-use std::mem;
+use std::{collections::HashMap, mem};
 
 use chrono::Utc;
 use serde::Serialize;
 use serde_json::Value;
 
-pub mod inflate;
 pub mod models;
 
 #[derive(Debug, Clone)]
 pub enum ParsedMessage {
-    Updates(Vec<Update>),
-    Replay(Value),
+    Updates(HashMap<String, Update>),
+    Initial(HashMap<String, Value>),
     Empty,
 }
 
@@ -38,24 +37,29 @@ pub fn message(message: String) -> ParsedMessage {
     let socket_message: models::SocketMessage =
         serde_json::from_str::<models::SocketMessage>(&message).unwrap();
 
-    if let Some(mut messages) = socket_message.m {
+    if let Some(messages) = socket_message.m {
         if messages.len() < 1 {
             return ParsedMessage::Empty;
         };
 
-        let mut updates: Vec<Update> = messages.iter_mut().map(|msg| Update::from(msg)).collect();
+        let mut updates: HashMap<String, Update> = HashMap::new();
+
+        for mut message in messages {
+            let update = Update::from(&mut message);
+            updates.insert(update.category.clone(), update);
+        }
 
         // TimingDataF1 is a dupe of TimingData
-        updates.retain(|update| update.category != "TimingDataF1");
-
+        updates.retain(|k, _| k != "TimingDataF1");
         return ParsedMessage::Updates(updates);
     };
 
-    if let Some(Value::Object(mut replay)) = socket_message.r {
-        // TimingDataF1 is a dupe of TimingData
-        replay.retain(|k, _| k != "TimingDataF1");
-
-        return ParsedMessage::Replay(serde_json::to_value(replay).unwrap());
+    if let Some(initial) = socket_message.r {
+        if let Ok(mut initial) = serde_json::from_value::<HashMap<String, Value>>(initial) {
+            // TimingDataF1 is a dupe of TimingData
+            initial.retain(|k, _| k != "TimingDataF1");
+            return ParsedMessage::Initial(initial);
+        }
     }
 
     ParsedMessage::Empty

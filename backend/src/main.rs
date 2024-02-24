@@ -1,7 +1,3 @@
-use client::manager::ClientManagerEvent;
-
-use client::parser::ParsedMessage;
-use serde_json::Value;
 use tokio::sync::mpsc::{self};
 
 mod broadcast;
@@ -13,6 +9,10 @@ mod client;
 mod db;
 mod log;
 mod server;
+
+use broadcast::Event;
+use client::manager::ClientManagerEvent;
+use client::parser::ParsedMessage;
 
 #[tokio::main(flavor = "multi_thread")]
 async fn main() {
@@ -36,21 +36,19 @@ async fn main() {
     /*
         handles all outgoing messages.
     */
-    let (broadcast_tx, broadcast_rx) = mpsc::unbounded_channel::<broadcast::Event>();
+    let (broadcast_tx, broadcast_rx) = mpsc::unbounded_channel::<Event>();
     tokio::spawn(broadcast::init(broadcast_rx, manager_tx));
 
     /*
-        send initial to odctrl,
         split R,
         transform updates,
         handle DB inserts,
+        create history out of updates
     */
-    let (initial_tx, initial_rx) = mpsc::unbounded_channel::<Value>();
     tokio::spawn(data::rdctrl::init(
         db.clone(),
         client_rx,
         broadcast_tx.clone(),
-        initial_tx,
     ));
 
     /*

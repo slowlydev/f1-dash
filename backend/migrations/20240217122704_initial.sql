@@ -19,6 +19,19 @@ SELECT
 SELECT
     add_retention_policy('session_info', INTERVAL '4 hours');
 
+CREATE TABLE IF NOT EXISTS track_status(
+    id serial,
+    status text,
+    message text,
+    created_at timestamptz NOT NULL DEFAULT now()
+);
+
+SELECT
+    create_hypertable('track_status', by_range('created_at'));
+
+SELECT
+    add_retention_policy('track_status', INTERVAL '4 hours');
+
 CREATE TABLE IF NOT EXISTS meeting(
     id serial,
     key text,
@@ -321,4 +334,3 @@ SELECT
 
 SELECT
     add_retention_policy('extrapolated_clock', INTERVAL '4 hours');
-

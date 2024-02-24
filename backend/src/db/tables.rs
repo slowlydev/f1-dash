@@ -3,7 +3,6 @@ use serde::Serialize;
 #[derive(Serialize, Debug, Clone)]
 #[serde(rename_all(serialize = "camelCase"))]
 pub struct SessionInfo {
-    // SessionInfo
     pub key: Option<i64>,
     pub kind: Option<String>, // in the f1 api its type
     pub name: Option<String>,
@@ -12,10 +11,6 @@ pub struct SessionInfo {
     pub gmt_offset: Option<String>,
     pub path: Option<String>,
     pub number: Option<i64>,
-
-    // TrackStatus
-    pub track_status: Option<String>,
-    pub track_message: Option<String>,
 }
 
 impl SessionInfo {
@@ -28,8 +23,19 @@ impl SessionInfo {
             && self.gmt_offset.is_none()
             && self.path.is_none()
             && self.number.is_none()
-            && self.track_status.is_none()
-            && self.track_message.is_none()
+    }
+}
+
+#[derive(Serialize, Debug, Clone)]
+#[serde(rename_all(serialize = "camelCase"))]
+pub struct TrackStatus {
+    pub status: Option<String>,
+    pub message: Option<String>,
+}
+
+impl TrackStatus {
+    pub fn is_empty(&self) -> bool {
+        self.status.is_none() && self.message.is_none()
     }
 }
 

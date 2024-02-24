@@ -57,7 +57,6 @@ pub async fn init(
         match event {
             Event::Join(conn) => {
                 connections.insert(conn.id, conn);
-
                 let _ = manager_tx.send(ClientManagerEvent::Start);
             }
             Event::Quit(id) => {
