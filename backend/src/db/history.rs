@@ -1,14 +1,28 @@
+use std::collections::HashMap;
+
 use serde::Serialize;
 use sqlx::PgPool;
 
 #[derive(Serialize, Debug, Clone)]
-#[serde(untagged)]
-pub enum History {
-    LapTime(Vec<LapTimeHistory>),
-    LeaderGap(Vec<LeaderGapHistory>),
-    AheadGap(Vec<AheadGapHistory>),
-    Sectors(Vec<SectorHistory>),
-    Weather(WeatherHistory),
+#[serde(rename_all(serialize = "camelCase"))]
+pub struct History {
+    pub lap_time: HashMap<String, Vec<i64>>,
+    pub leader_gap: HashMap<String, Vec<i64>>,
+    pub ahead_gap: HashMap<String, Vec<i64>>,
+    pub sectors: HashMap<String, HashMap<i64, Vec<i64>>>,
+    pub weather: Option<WeatherHistory>,
+}
+
+impl History {
+    pub fn new() -> Self {
+        History {
+            lap_time: HashMap::new(),
+            leader_gap: HashMap::new(),
+            ahead_gap: HashMap::new(),
+            sectors: HashMap::new(),
+            weather: None,
+        }
+    }
 }
 
 // per driver, lap time
