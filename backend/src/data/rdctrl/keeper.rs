@@ -22,13 +22,33 @@ pub async fn keep(pool: PgPool, updates: Updates) {
         tokio::spawn(db::insert::lap_count(pool.clone(), lap_count));
     }
 
-    for team_radio in updates.team_radios {
-        tokio::spawn(db::insert::team_radio(pool.clone(), team_radio));
+    if let Some(session_info) = updates.session_info {
+        tokio::spawn(db::insert::session_info(pool.clone(), session_info));
+    }
+
+    if let Some(meeting) = updates.meeting {
+        tokio::spawn(db::insert::meeting(pool.clone(), meeting));
+    }
+
+    if let Some(track_status) = updates.track_status {
+        tokio::spawn(db::insert::track_status(pool.clone(), track_status));
     }
 
     if let Some(general_timing) = updates.general_timing {
         tokio::spawn(db::insert::general_timing(pool.clone(), general_timing));
     }
+
+    // communication
+
+    for rcm in updates.race_control_messages {
+        tokio::spawn(db::insert::race_control_messages(pool.clone(), rcm));
+    }
+
+    for team_radio in updates.team_radios {
+        tokio::spawn(db::insert::team_radio(pool.clone(), team_radio));
+    }
+
+    // timing
 
     for driver_timing in updates.driver_timings {
         tokio::spawn(db::insert::driver_timing(pool.clone(), driver_timing));
@@ -53,9 +73,13 @@ pub async fn keep(pool: PgPool, updates: Updates) {
         tokio::spawn(db::insert::driver_stint(pool.clone(), driver_stint));
     }
 
+    // general data
+
     for driver in updates.drivers {
         tokio::spawn(db::insert::driver(pool.clone(), driver));
     }
+
+    // stats
 
     for driver_stats in updates.driver_stats {
         tokio::spawn(db::insert::driver_stats(pool.clone(), driver_stats));
@@ -67,6 +91,8 @@ pub async fn keep(pool: PgPool, updates: Updates) {
             driver_sector_stats,
         ));
     }
+
+    // compresed data
 
     for car_data in updates.car_data {
         tokio::spawn(db::insert::driver_car_data(pool.clone(), car_data));

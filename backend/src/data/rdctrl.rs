@@ -31,7 +31,7 @@ pub async fn init(
                 // send to broadcast
                 let message = message::create_update_message(initial_updates);
                 if let Ok(message) = serde_json::to_value(message) {
-                    info!("sending initial state {}", message);
+                    info!("sending initial state");
                     let _ = broadcast_tx.send(broadcast::Event::OutRealtime(message));
                 }
             }

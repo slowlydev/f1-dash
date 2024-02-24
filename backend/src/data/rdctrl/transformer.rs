@@ -14,22 +14,27 @@ pub struct Updates {
     pub weather: Option<db::tables::Weather>,
     pub extrapolated_clock: Option<db::tables::ExtrapolatedClock>,
     pub lap_count: Option<db::tables::LapCount>,
+    pub session_info: Option<db::tables::SessionInfo>,
+    pub meeting: Option<db::tables::Meeting>,
+    pub track_status: Option<db::tables::TrackStatus>,
+    pub general_timing: Option<db::tables::GeneralTiming>,
+
     pub team_radios: Vec<db::tables::TeamRadio>,
     pub race_control_messages: Vec<db::tables::RaceControlMessages>,
-    pub general_timing: Option<db::tables::GeneralTiming>,
+
     pub driver_timings: Vec<db::tables::DriverTiming>,
     pub driver_sectors: Vec<db::tables::DriverSector>,
     pub driver_speeds: Vec<db::tables::DriverSpeeds>,
     pub driver_sector_segments: Vec<db::tables::DriverSectorSegment>,
     pub driver_stints: Vec<db::tables::DriverStint>,
+
     pub drivers: Vec<db::tables::Driver>,
+
     pub driver_stats: Vec<db::tables::DriverStats>,
     pub driver_sector_stats: Vec<db::tables::DriverSectorStats>,
+
     pub car_data: Vec<db::tables::DriverCarData>,
     pub positions: Vec<db::tables::DriverPosition>,
-    pub session_info: Option<db::tables::SessionInfo>,
-    pub meeting: Option<db::tables::Meeting>,
-    pub track_status: Option<db::tables::TrackStatus>,
 }
 
 impl Updates {
