@@ -595,18 +595,29 @@ pub fn parse_position(string_value: Value) -> Vec<db::tables::DriverPosition> {
 
                     if let Some(entries) = entries {
                         for (driver_nr, v) in entries {
+                            let Some(status) = optional_pointer::<String>(&v, "/Status") else {
+                                continue;
+                            };
+                            let Some(x) = optional_pointer::<f64>(&v, "/X") else {
+                                continue;
+                            };
+                            let Some(y) = optional_pointer::<f64>(&v, "/Y") else {
+                                continue;
+                            };
+                            let Some(z) = optional_pointer::<f64>(&v, "/Z") else {
+                                continue;
+                            };
+
                             let car_position = db::tables::DriverPosition {
                                 driver_nr,
                                 timestamp: timestamp.clone(),
-                                status: optional_pointer(&v, "/Status"),
-                                x: optional_pointer(&v, "/X"),
-                                y: optional_pointer(&v, "/Y"),
-                                z: optional_pointer(&v, "/Z"),
+                                status,
+                                x,
+                                y,
+                                z,
                             };
 
-                            if !car_position.is_empty() {
-                                vec.push(car_position);
-                            }
+                            vec.push(car_position);
                         }
                     }
                 }

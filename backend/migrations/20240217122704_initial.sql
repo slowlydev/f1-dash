@@ -8,8 +8,6 @@ CREATE TABLE IF NOT EXISTS session_info(
     gmt_offset text,
     path text,
     number int8,
-    track_status text,
-    track_message text,
     created_at timestamptz NOT NULL DEFAULT now()
 );
 
@@ -304,7 +302,7 @@ SELECT
 
 CREATE TABLE IF NOT EXISTS driver_car_data(
     id serial,
-    driver_nr text,
+    driver_nr text NOT NULL,
     timestamp text,
     rpm float8,
     speed float8,

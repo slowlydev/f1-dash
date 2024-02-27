@@ -13,11 +13,11 @@ use super::transformer;
 #[derive(Serialize, Debug, Clone)]
 #[serde(rename_all(serialize = "camelCase"))]
 pub struct UpdateMessage {
-    pub updates: transformer::Updates,
+    pub updates: transformer::State,
     pub history: db::history::History,
 }
 
-pub fn create_update_message(updates: transformer::Updates) -> UpdateMessage {
+pub fn create_update_message(updates: transformer::State) -> UpdateMessage {
     // TODO create history updates out of updates with needing the db
 
     let mut history: History = History::new();
@@ -64,7 +64,7 @@ pub fn create_update_message(updates: transformer::Updates) -> UpdateMessage {
     UpdateMessage { updates, history }
 }
 
-fn hash_map_save<T>(nr: &str, item: T, map: &mut HashMap<String, Vec<T>>) {
+pub fn hash_map_save<T>(nr: &str, item: T, map: &mut HashMap<String, Vec<T>>) {
     if let Some(vec) = map.get_mut(nr) {
         vec.push(item);
     } else {
@@ -72,7 +72,7 @@ fn hash_map_save<T>(nr: &str, item: T, map: &mut HashMap<String, Vec<T>>) {
     }
 }
 
-fn sector_hash_map_save<T>(
+pub fn sector_hash_map_save<T>(
     nr: &str,
     sector: &i64,
     item: T,

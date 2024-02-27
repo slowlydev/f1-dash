@@ -2,6 +2,7 @@ use sqlx::PgPool;
 
 pub mod history;
 pub mod insert;
+pub mod recon;
 pub mod tables;
 
 pub async fn init() -> anyhow::Result<PgPool> {

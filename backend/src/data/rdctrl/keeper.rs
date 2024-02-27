@@ -2,11 +2,11 @@ use sqlx::PgPool;
 
 use crate::db;
 
-use super::transformer::Updates;
+use super::transformer::State;
 
 // the keeper is here to store all transformed updates into the database ASAP
 
-pub async fn keep(pool: PgPool, updates: Updates) {
+pub async fn keep(pool: PgPool, updates: State) {
     if let Some(weather) = updates.weather {
         tokio::spawn(db::insert::weather(pool.clone(), weather));
     }

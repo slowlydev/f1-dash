@@ -10,7 +10,7 @@ pub mod parser;
 
 #[derive(Serialize, Debug, Clone)]
 #[serde(rename_all(serialize = "camelCase"))]
-pub struct Updates {
+pub struct State {
     pub weather: Option<db::tables::Weather>,
     pub extrapolated_clock: Option<db::tables::ExtrapolatedClock>,
     pub lap_count: Option<db::tables::LapCount>,
@@ -37,9 +37,9 @@ pub struct Updates {
     pub positions: Vec<db::tables::DriverPosition>,
 }
 
-impl Updates {
+impl State {
     pub fn new() -> Self {
-        Updates {
+        State {
             weather: None,
             extrapolated_clock: None,
             lap_count: None,
@@ -63,8 +63,8 @@ impl Updates {
     }
 }
 
-pub fn parse_updates(updates: HashMap<String, client::parser::Update>) -> Updates {
-    let mut parsed = Updates::new();
+pub fn parse_updates(updates: HashMap<String, client::parser::Update>) -> State {
+    let mut parsed = State::new();
 
     for (category, update) in updates {
         parse_generic(category, update.state, &mut parsed);
@@ -73,8 +73,8 @@ pub fn parse_updates(updates: HashMap<String, client::parser::Update>) -> Update
     parsed
 }
 
-pub fn parse_initial(initial: HashMap<String, Value>) -> Updates {
-    let mut parsed = Updates::new();
+pub fn parse_initial(initial: HashMap<String, Value>) -> State {
+    let mut parsed = State::new();
 
     for (category, value) in initial {
         parse_generic(category, value, &mut parsed);
@@ -83,7 +83,7 @@ pub fn parse_initial(initial: HashMap<String, Value>) -> Updates {
     parsed
 }
 
-fn parse_generic(category: String, v: Value, updates: &mut Updates) {
+fn parse_generic(category: String, v: Value, updates: &mut State) {
     match category.as_str() {
         "WeatherData" => {
             let weather = parser::parse_weather(v);

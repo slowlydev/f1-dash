@@ -2,7 +2,7 @@ use tokio::sync::mpsc::{self};
 
 mod broadcast;
 pub mod data {
-    // pub mod odctrl;
+    pub mod odctrl;
     pub mod rdctrl;
 }
 mod client;
@@ -13,6 +13,7 @@ mod server;
 use broadcast::Event;
 use client::manager::ClientManagerEvent;
 use client::parser::ParsedMessage;
+use data::odctrl::Request;
 
 #[tokio::main(flavor = "multi_thread")]
 async fn main() {
@@ -33,11 +34,18 @@ async fn main() {
         client_tx,
     ));
 
-    /*
-        handles all outgoing messages.
-    */
     let (broadcast_tx, broadcast_rx) = mpsc::unbounded_channel::<Event>();
-    tokio::spawn(broadcast::init(broadcast_rx, manager_tx));
+
+    /*
+        handles requests for older updates,
+        handles reconstruction of initial states for the frontend
+    */
+    let (odctrl_tx, odctrl_rx) = mpsc::unbounded_channel::<Request>();
+    tokio::spawn(data::odctrl::init(
+        db.clone(),
+        odctrl_rx,
+        broadcast_tx.clone(),
+    ));
 
     /*
         split R,
@@ -52,10 +60,10 @@ async fn main() {
     ));
 
     /*
-        handles requests for older updates,
-        handles reconstruction of initial states for the frontend
+        handles all outgoing messages.
+        requests older data from odctrl when requested
     */
-    // tokio::spawn(data::odctrl::init(initial_rx));
+    tokio::spawn(broadcast::init(broadcast_rx, manager_tx, odctrl_tx));
 
     /*
         start ws server,

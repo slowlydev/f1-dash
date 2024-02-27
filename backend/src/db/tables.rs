@@ -3,13 +3,21 @@ use serde::Serialize;
 #[derive(Serialize, Debug, Clone)]
 #[serde(rename_all(serialize = "camelCase"))]
 pub struct SessionInfo {
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub key: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub kind: Option<String>, // in the f1 api its type
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub start_date: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub end_date: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub gmt_offset: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub path: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub number: Option<i64>,
 }
 
@@ -29,7 +37,9 @@ impl SessionInfo {
 #[derive(Serialize, Debug, Clone)]
 #[serde(rename_all(serialize = "camelCase"))]
 pub struct TrackStatus {
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub status: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub message: Option<String>,
 }
 
@@ -43,14 +53,23 @@ impl TrackStatus {
 #[serde(rename_all(serialize = "camelCase"))]
 pub struct Meeting {
     // SessionInfo -> Meeting
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub key: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub official_name: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub location: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub country_key: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub country_code: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub country_name: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub circuit_key: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub circuit_name: Option<String>,
 }
 
@@ -71,7 +90,9 @@ impl Meeting {
 #[derive(Serialize, Debug, Clone)]
 #[serde(rename_all(serialize = "camelCase"))]
 pub struct LapCount {
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub current: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub total: Option<i64>,
 }
 
@@ -84,12 +105,19 @@ impl LapCount {
 #[derive(Serialize, Debug, Clone)]
 #[serde(rename_all(serialize = "camelCase"))]
 pub struct Weather {
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub humidity: Option<f64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub pressure: Option<f64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub rainfall: Option<bool>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub wind_direction: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub wind_speed: Option<f64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub air_temp: Option<f64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub track_temp: Option<f64>,
 }
 
@@ -108,13 +136,21 @@ impl Weather {
 #[derive(Serialize, Debug, Clone)]
 #[serde(rename_all(serialize = "camelCase"))]
 pub struct RaceControlMessages {
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub utc: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub lap: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub message: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub category: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub flag: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub scope: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub sector: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub drs_enabled: Option<String>,
 }
 
@@ -127,17 +163,24 @@ impl RaceControlMessages {
 #[derive(Serialize, Debug, Clone)]
 #[serde(rename_all(serialize = "camelCase"))]
 pub struct TeamRadio {
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub utc: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub driver_nr: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub url: Option<String>,
 }
 
 #[derive(Serialize, Debug, Clone)]
 #[serde(rename_all(serialize = "camelCase"))]
 pub struct GeneralTiming {
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub no_entries: Option<Vec<i64>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub session_part: Option<i16>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub cut_off_time: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub cut_off_percentage: Option<String>,
 }
 
@@ -154,14 +197,23 @@ impl GeneralTiming {
 #[serde(rename_all(serialize = "camelCase"))]
 pub struct Driver {
     pub driver_nr: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub full_name: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub first_name: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub last_name: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub short: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub country: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub line: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub team_name: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub team_color: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub picture: Option<String>,
 }
 
@@ -183,28 +235,43 @@ impl Driver {
 #[serde(rename_all(serialize = "camelCase"))]
 pub struct DriverTiming {
     pub driver_nr: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub line: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub position: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub show_position: Option<bool>,
-    pub gap_to_leader: Option<i64>,      // 0 when gap is 1LAP
-    pub gap_to_ahead: Option<i64>,       // 0 when gap is 1LAP
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub gap_to_leader: Option<i64>, // 0 when gap is 1LAP
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub gap_to_ahead: Option<i64>, // 0 when gap is 1LAP
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub gap_to_leader_laps: Option<i64>, // when gap is 1LAP, this gets set
-    pub gap_to_ahead_laps: Option<i64>,  // when gap is 1LAP, this gets set
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub gap_to_ahead_laps: Option<i64>, // when gap is 1LAP, this gets set
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub catching_ahead: Option<bool>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub lap_time: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub lap_time_fastest: Option<bool>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub lap_time_pb: Option<bool>,
-    // TODO leaving this for now because fastest was not in TimingData
-    // best_lap_time: String,
-    // best_lap_time_fastest: bool,
-    // best_lap_time_pb: bool,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub number_of_laps: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub number_of_pit_stops: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub status: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub retired: Option<bool>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub in_pit: Option<bool>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub pit_out: Option<bool>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub knocked_out: Option<bool>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub stopped: Option<bool>,
 }
 
@@ -235,11 +302,17 @@ impl DriverTiming {
 pub struct DriverSector {
     pub driver_nr: String,
     pub number: i64,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub time: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub previous_time: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub status: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub stopped: Option<bool>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub overall_fastest: Option<bool>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub personal_fastest: Option<bool>,
 }
 
@@ -260,6 +333,7 @@ pub struct DriverSectorSegment {
     pub driver_nr: String,
     pub sector_number: i64,
     pub number: i64,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub status: Option<i64>,
 }
 
@@ -274,13 +348,21 @@ impl DriverSectorSegment {
 pub struct DriverStint {
     pub driver_nr: String,
     pub stint_nr: i64,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub lap_flags: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub compound: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub new: Option<bool>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub tires_not_changed: Option<bool>, // its 0 or 1
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub total_laps: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub start_laps: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub lap_time: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub lap_number: Option<i64>,
 }
 
@@ -302,9 +384,13 @@ impl DriverStint {
 pub struct DriverSpeeds {
     pub driver_nr: String,
     pub station: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub value: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub status: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub overall_fastest: Option<bool>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub personal_fastest: Option<bool>,
 }
 
@@ -321,8 +407,11 @@ impl DriverSpeeds {
 #[serde(rename_all(serialize = "camelCase"))]
 pub struct DriverStats {
     pub driver_nr: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub lap: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub pb_lap_time: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub pb_lap_time_pos: Option<i64>,
 }
 
@@ -337,7 +426,9 @@ impl DriverStats {
 pub struct DriverSectorStats {
     pub driver_nr: String,
     pub number: i64,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub value: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub position: Option<i64>,
 }
 
@@ -352,16 +443,10 @@ impl DriverSectorStats {
 pub struct DriverPosition {
     pub driver_nr: String,
     pub timestamp: String,
-    pub status: Option<String>,
-    pub x: Option<f64>,
-    pub y: Option<f64>,
-    pub z: Option<f64>,
-}
-
-impl DriverPosition {
-    pub fn is_empty(&self) -> bool {
-        self.status.is_none() && self.x.is_none() && self.y.is_none() && self.z.is_none()
-    }
+    pub status: String,
+    pub x: f64,
+    pub y: f64,
+    pub z: f64,
 }
 
 #[derive(Serialize, Debug, Clone)]
@@ -369,11 +454,17 @@ impl DriverPosition {
 pub struct DriverCarData {
     pub driver_nr: String,
     pub timestamp: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub rpm: Option<f64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub speed: Option<f64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub gear: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub throttle: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub breaks: Option<bool>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub drs: Option<bool>,
 }
 
@@ -391,8 +482,11 @@ impl DriverCarData {
 #[derive(Serialize, Debug, Clone)]
 #[serde(rename_all(serialize = "camelCase"))]
 pub struct ExtrapolatedClock {
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub extrapolating: Option<bool>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub remaining: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub utc: Option<String>,
 }
 
