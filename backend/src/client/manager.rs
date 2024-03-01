@@ -7,7 +7,7 @@ use tokio::{
 };
 use tokio_tungstenite::tungstenite::Message;
 use tokio_util::sync::CancellationToken;
-use tracing::{debug, error};
+use tracing::{debug, error, info, warn};
 
 use crate::client;
 
@@ -23,6 +23,7 @@ pub async fn init(
     manager_tx: UnboundedSender<ClientManagerEvent>,
     client_tx: UnboundedSender<ParsedMessage>,
 ) {
+    info!("starting...");
     // we need to be started on backend start
     // we need to be able to start and kill a ws
     // we need to handle disconnects
@@ -40,12 +41,14 @@ pub async fn init(
                 }
             }
             ClientManagerEvent::Start => {
-                debug!("starting socket");
+                debug!("received start event");
 
                 if let Some(_) = client_token {
                     debug!("socket already exists");
                     continue;
                 }
+
+                info!("delegating start of f1 client");
 
                 let token = CancellationToken::new();
                 client_token = Some(token.clone());
@@ -56,7 +59,7 @@ pub async fn init(
                 tokio::spawn(async move {
                     tokio::select! {
                         _ = token.cancelled() => {}
-                        _ = client_loop(manager_tx, client_tx) => {}
+                        _ = client_loop(manager_tx, client_tx, token.clone()) => {}
                     }
                 });
             }
@@ -69,38 +72,47 @@ pub async fn init(
 async fn client_loop(
     manager_tx: UnboundedSender<ClientManagerEvent>,
     client_tx: UnboundedSender<ParsedMessage>,
+    token: CancellationToken,
 ) {
-    let mut client = client::Client::new().await;
+    Box::pin(async move {
+        info!("starting f1 client");
+        let mut client = client::Client::new().await;
 
-    match client {
-        Ok(ref mut client) => {
-            while let Some(msg) = client.socket.next().await {
-                match msg {
-                    Ok(msg) => match msg {
-                        Message::Text(text) => {
-                            let parsed = parser::message(text);
-                            let _ = client_tx.send(parsed);
-                        }
-                        Message::Close(_) => {
-                            debug!("got close, restarting");
+        match client {
+            Ok(ref mut client) => {
+                while let Some(msg) = client.socket.next().await {
+                    match msg {
+                        Ok(msg) => match msg {
+                            Message::Text(text) => {
+                                let parsed = parser::message(text);
+                                let _ = client_tx.send(parsed);
+                            }
+                            Message::Close(_) => {
+                                debug!("got close, restarting");
+                                break;
+                            }
+                            _ => {}
+                        },
+                        Err(_) => {
+                            debug!("error while getting message, restarting");
                             break;
                         }
-                        _ => {}
-                    },
-                    Err(_) => {
-                        debug!("error while getting message, restarting");
-                        break;
                     }
                 }
+
+                warn!("stopped receiving messages, restarting");
             }
-
-            debug!("stopped receiving messages, restarting");
+            Err(_) => {
+                warn!("failed to start, restarting");
+            }
         }
-        Err(_) => {
-            debug!("failed to start, restarting");
-        }
-    }
 
-    sleep(Duration::from_secs(2)).await;
-    let _ = manager_tx.send(ClientManagerEvent::Start);
+        sleep(Duration::from_secs(2)).await;
+
+        tokio::select! {
+            _ = token.cancelled() => {},
+            _ = client_loop(manager_tx, client_tx, token.clone()) => {}
+        }
+    })
+    .await;
 }
