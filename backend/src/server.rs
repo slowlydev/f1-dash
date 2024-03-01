@@ -6,7 +6,10 @@ use tokio::{
     sync::mpsc::UnboundedSender,
 };
 
-use tokio_tungstenite::{tungstenite::Message, WebSocketStream};
+use tokio_tungstenite::{
+    tungstenite::{extensions::DeflateConfig, protocol::WebSocketConfig, Message},
+    WebSocketStream,
+};
 use tracing::{debug, error, info};
 
 use crate::broadcast;
@@ -17,8 +20,13 @@ pub async fn listen(broadcast_tx: UnboundedSender<broadcast::Event>) {
 
     let mut id: u32 = 0;
 
+    let config = WebSocketConfig {
+        compression: Some(DeflateConfig::default()),
+        ..Default::default()
+    };
+
     while let Ok((stream, addr)) = listener.accept().await {
-        match tokio_tungstenite::accept_async(stream).await {
+        match tokio_tungstenite::accept_async_with_config(stream, Some(config)).await {
             Err(e) => error!("Websocket connection error : {}", e),
             Ok(stream) => {
                 id += 1;

@@ -1,11 +1,12 @@
 use sqlx::PgPool;
 use tokio::sync::mpsc::{UnboundedReceiver, UnboundedSender};
-use tracing::info;
 
-use crate::{broadcast, client};
+use crate::{
+    broadcast,
+    client::{self},
+};
 
 pub mod keeper;
-pub mod message;
 pub mod transformer;
 
 // realtime data control
@@ -23,30 +24,24 @@ pub async fn init(
             client::parser::ParsedMessage::Empty => (),
             client::parser::ParsedMessage::Initial(state) => {
                 // transform
-                let initial_updates = transformer::parse_initial(state);
+                let initial = transformer::transform_map(&mut state.clone());
 
                 // insert into db
-                tokio::spawn(keeper::keep(pool.clone(), initial_updates.clone()));
+                tokio::spawn(keeper::save_initial(pool.clone(), initial.clone()));
 
                 // send to broadcast
-                let message = message::create_update_message(initial_updates);
-                if let Ok(message) = serde_json::to_value(message) {
-                    info!("sending initial state");
-                    let _ = broadcast_tx.send(broadcast::Event::OutRealtime(message));
-                }
+                let _ = broadcast_tx.send(broadcast::Event::OutFirstInitial(initial));
             }
             client::parser::ParsedMessage::Updates(updates) => {
                 // transform
-                let updates = transformer::parse_updates(updates);
+                let mut updates = updates.clone();
+                transformer::transform_updates(&mut updates);
 
                 // insert into db
-                tokio::spawn(keeper::keep(pool.clone(), updates.clone()));
+                tokio::spawn(keeper::save_updates(pool.clone(), updates.clone()));
 
                 // send to broadcast
-                let message = message::create_update_message(updates);
-                if let Ok(message) = serde_json::to_value(message) {
-                    let _ = broadcast_tx.send(broadcast::Event::OutRealtime(message));
-                }
+                let _ = broadcast_tx.send(broadcast::Event::OutUpdate(updates));
             }
         };
     }
