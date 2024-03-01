@@ -24,6 +24,8 @@ pub async fn init(
     mut odctrl_rx: UnboundedReceiver<Request>,
     broadcast_tx: UnboundedSender<broadcast::Event>,
 ) {
+    info!("starting...");
+
     while let Some(request) = odctrl_rx.recv().await {
         match request {
             Request::Initial(id) => {

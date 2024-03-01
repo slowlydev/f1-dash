@@ -1,5 +1,6 @@
 use sqlx::PgPool;
 use tokio::sync::mpsc::{UnboundedReceiver, UnboundedSender};
+use tracing::info;
 
 use crate::{
     broadcast,
@@ -19,6 +20,8 @@ pub async fn init(
     mut client_rx: UnboundedReceiver<client::parser::ParsedMessage>,
     broadcast_tx: UnboundedSender<broadcast::Event>,
 ) {
+    info!("starting...");
+
     while let Some(message) = client_rx.recv().await {
         match message {
             client::parser::ParsedMessage::Empty => (),

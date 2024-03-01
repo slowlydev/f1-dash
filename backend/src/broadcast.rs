@@ -73,6 +73,8 @@ pub async fn init(
     manager_tx: UnboundedSender<ClientManagerEvent>,
     odctrl_tx: UnboundedSender<Request>,
 ) {
+    info!("starting...");
+
     let mut connections: HashMap<u32, Connection> = HashMap::new();
 
     while let Some(event) = rx.recv().await {

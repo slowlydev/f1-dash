@@ -30,7 +30,7 @@ pub async fn listen(broadcast_tx: UnboundedSender<broadcast::Event>) {
             Err(e) => error!("Websocket connection error : {}", e),
             Ok(stream) => {
                 id += 1;
-                info!("new connection: {} {}", addr, id);
+                debug!("new connection: {} {}", addr, id);
                 tokio::spawn(accept(stream, addr, id, broadcast_tx.clone()));
             }
         }
@@ -54,7 +54,7 @@ async fn accept(
                 break;
             }
             Message::Text(txt) => {
-                println!("{txt:?}");
+                info!("{txt:?}");
             }
             _ => {}
         }

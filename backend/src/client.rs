@@ -124,7 +124,7 @@ fn encode_uri_component(s: &str) -> String {
 fn create_url(token: &str) -> String {
     if let Some(env_url) = std::env::var_os("WS_URL") {
         if let Ok(env_url) = env_url.into_string() {
-            info!("Using env for F1 URL {env_url}");
+            info!("using env for F1 URL {env_url}");
             return env_url;
         };
     };

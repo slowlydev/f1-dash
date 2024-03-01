@@ -1,6 +1,7 @@
 use chrono::{DateTime, Utc};
 use serde_json::{Map, Value};
 use sqlx::PgPool;
+use tracing::debug;
 
 use crate::data::odctrl::merge;
 
@@ -38,6 +39,8 @@ pub async fn initial(pool: PgPool, timestamp: DateTime<Utc>) -> Result<Value, an
     .await?;
 
     let mut reconstructed_initial: Value = initial.state;
+
+    debug!("reconstructing initial out of {} updates", updates.len());
 
     // this loop might have to run up to 75k times (after a full GrandPrix)
     // let hope this doesn't take ages...
