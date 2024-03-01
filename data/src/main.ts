@@ -56,6 +56,7 @@ const server = serve({
 	},
 	port: config.port,
 	websocket: {
+		perMessageDeflate: true,
 		async open(ws) {
 			if (!active) {
 				state = {};
