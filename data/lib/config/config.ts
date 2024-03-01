@@ -1,20 +1,25 @@
 import { Env } from "bun";
-import { number, object, string } from "../validation";
+import { boolean, number, object, string } from "../validation";
 import { Config } from "./config.type";
+import { union } from "../validation/";
 
 export const validateConfig = (env: Env): Config => {
 	try {
 		const schema = object({
+			name: string().min(2).max(16).optional().default("f1-dash"),
 			port: number().optional().transform().min(0).max(65535).default(4000),
 			f1BaseUrl: string().optional().min(8).max(256).default("wss://livetiming.formula1.com/signalr"),
 			f1NegotiateUrl: string().optional().min(8).max(256).default("https://livetiming.formula1.com/signalr"),
-			testing: string().optional(),
+			testing: boolean().optional().default(false),
+			logLevel: union(["trace", "debug", "info", "warn", "error"]).optional().default("info"),
 		});
 		const config = schema.parse({
+			name: env.NAME,
 			port: env.PORT,
 			f1BaseUrl: env.F1_BASE_URL,
 			f1NegotiateUrl: env.F1_NEGOTIATE_URL,
 			testing: env.TESTING,
+			logLevel: env.LOG_LEVEL,
 		});
 
 		return config;
