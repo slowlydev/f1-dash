@@ -1,4 +1,5 @@
-import { F1Archive, F1Meeting } from "../f1-types/archive.f1.type";
+import { debug } from "../../lib/logger";
+import { F1Archive } from "../f1-types/archive.f1.type";
 import { Archive, ArchiveSession, Meeting } from "../types/archive.type";
 import { getTopThree, translateTopThree } from "./getTopThree";
 
@@ -41,7 +42,7 @@ export const fetchArchive = async (archive: Archive): Promise<Archive> => {
 	const promises = archive.meetings.map((meeting) => fetchMeeting(meeting));
 	const meetings = await Promise.all(promises);
 
-	console.log("meetings");
+	debug("sending meetings");
 
 	return {
 		...archive,

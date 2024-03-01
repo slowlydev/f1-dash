@@ -1,12 +1,13 @@
 import { Server, serve, sleep } from "bun";
 import { config } from "../lib/config";
+import { debug, error, info, warn } from "../lib/logger";
+import { fetchArchive, getArchive, translateArchive } from "./endpoints/getArchive";
+import { getAPIKey, getEventTracker, translateNextMeeting } from "./endpoints/getEventTracker";
 import { F1State } from "./f1-types/formula1.type";
 import { updateState } from "./handler";
 import { translate } from "./translators";
-import { fetchArchive, getArchive, translateArchive } from "./endpoints/getArchive";
-import { getAPIKey, getEventTracker, translateNextMeeting } from "./endpoints/getEventTracker";
 
-console.log("starting...");
+info("starting server...");
 
 let f1_ws: WebSocket | null;
 let state: F1State = {};
@@ -67,27 +68,27 @@ const server = serve({
 			ws.subscribe("f1-socket");
 
 			if (!f1_ws) {
-				console.log("F1: no socket found");
+				warn("no web socket found");
 
 				await setupF1(server);
 			} else {
-				console.log("F1: socket found, sending current state");
+				info("found web socket sending current state");
 
 				ws.send(JSON.stringify(translate(state)));
 			}
 
-			console.log("SERVER: current connections", server.pendingWebSockets);
+			info(`current web socket connections ${server.pendingWebSockets}`);
 		},
 		message(_, message) {
-			console.log("WS: got message:", message);
+			debug(`web socket received message ${message}`);
 		},
 		close(ws) {
-			console.log("WS: got disconnect!");
+			warn("web socket got disconnected");
 
 			ws.unsubscribe("f1-socket");
 
 			if (server.pendingWebSockets < 2) {
-				console.log("no connections left, killing web socket");
+				info("no connections left killing web socket");
 
 				if (f1_ws && active) {
 					active = false;
@@ -102,7 +103,7 @@ const setupF1 = async (wss: Server) => {
 	if (f1_ws) return;
 	state = {};
 
-	console.log("F1: setting up socket");
+	info("setting up web socket");
 
 	const hub = encodeURIComponent(JSON.stringify([{ name: "Streaming" }]));
 	const { body, cookie } = await negotiate(hub);
@@ -110,7 +111,7 @@ const setupF1 = async (wss: Server) => {
 	const token = encodeURIComponent(body.ConnectionToken);
 	const url = `${config.f1BaseUrl}/connect?clientProtocol=1.5&transport=webSockets&connectionToken=${token}&connectionData=${hub}`;
 
-	console.log("F1: connecting!");
+	debug("web socket is connecting");
 
 	f1_ws = new WebSocket(url, {
 		headers: {
@@ -131,29 +132,28 @@ const setupF1 = async (wss: Server) => {
 
 	f1_ws.onopen = () => f1_ws?.send(subscribeRequest());
 
-	f1_ws.onerror = () => {
-		console.log("F1: got error");
-		console.log("F1: closing socket");
+	f1_ws.onerror = (err) => {
+		error("web socket errored with", err);
+		info("closing web socket");
 		f1_ws?.close();
 	};
 
 	f1_ws.onclose = () => {
-		console.log("F1: got close");
-		console.log("F1: killing socket");
+		info("closing web socket");
 		f1_ws = null;
 
 		retrySetup(wss);
 	};
 
 	if (!f1_ws || f1_ws.readyState === 3) {
-		console.log("F1: failed to setup socket");
+		error("failed to setup web socket");
 		retrySetup(wss);
 	}
 };
 
 const retrySetup = async (wss: Server) => {
 	if (!active) return;
-	console.log("F1: retrying to setup in 1s");
+	debug("retrying web socket setup in 1s");
 
 	await sleep(1000);
 	setupF1(wss);
@@ -189,7 +189,7 @@ const negotiate = async (hub: string) => {
 };
 
 const subscribeRequest = (): string => {
-	console.log("F1: sent subscribe request");
+	info("sent subscribe request to f1");
 	return JSON.stringify({
 		H: "Streaming",
 		M: "Subscribe",
@@ -218,4 +218,4 @@ const subscribeRequest = (): string => {
 	});
 };
 
-console.log("listening on port:", config.port);
+info(`listening on port ${config.port}`);
