@@ -12,7 +12,7 @@ export default function Footer() {
 			</p>
 
 			<p>
-				Contribute on <TextLink website="https://github.com/Slowlydev/f1-dash">Github</TextLink>.
+				Contribute on <TextLink website="https://github.com/Slowlydev/f1-dash">GitHub</TextLink>.
 			</p>
 
 			<p>
