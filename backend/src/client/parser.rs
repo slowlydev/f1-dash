@@ -22,7 +22,6 @@ pub struct Update {
 
 impl From<&mut models::Message> for Update {
     fn from(message: &mut models::Message) -> Update {
-        // let timestamp = chrono_date(&message.a.2).unwrap();
         let timestamp = chrono::Utc::now();
 
         Update {
@@ -51,6 +50,11 @@ pub fn message(message: String) -> ParsedMessage {
 
         // TimingDataF1 is a dupe of TimingData
         updates.retain(|k, _| k != "TimingDataF1");
+
+        if updates.len() < 1 {
+            return ParsedMessage::Empty;
+        };
+
         return ParsedMessage::Updates(updates);
     };
 
@@ -58,20 +62,14 @@ pub fn message(message: String) -> ParsedMessage {
         if let Ok(mut initial) = serde_json::from_value::<HashMap<String, Value>>(initial) {
             // TimingDataF1 is a dupe of TimingData
             initial.retain(|k, _| k != "TimingDataF1");
+
+            if initial.len() < 1 {
+                return ParsedMessage::Empty;
+            };
+
             return ParsedMessage::Initial(initial);
         }
     }
 
     ParsedMessage::Empty
 }
-
-// const FORMAT1: &'static str = "%Y-%m-%dT%H:%M:%S%.3fZ";
-// const FORMAT2: &'static str = "%Y-%m-%dT%H:%M:%S";
-
-// pub fn chrono_date(s: &str) -> Option<DateTime<Utc>> {
-//     let dt = NaiveDateTime::parse_from_str(&s, FORMAT1)
-//         .or_else(|_| NaiveDateTime::parse_from_str(&s, FORMAT2))
-//         .ok()?;
-
-//     Some(DateTime::<Utc>::from_naive_utc_and_offset(dt, Utc))
-// }
