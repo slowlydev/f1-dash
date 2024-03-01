@@ -160,7 +160,7 @@ const retrySetup = async (wss: Server) => {
 };
 
 const negotiate = async (hub: string) => {
-	if (!!config.testing)
+	if (config.testing)
 		return {
 			body: {
 				Url: "string",

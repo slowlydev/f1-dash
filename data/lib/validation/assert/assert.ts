@@ -6,6 +6,10 @@ export const isNot = (value: unknown, type: Type): ValidationError => {
 	return new ValidationError(`${inspect(value)} is not of type ${type}`);
 };
 
+export const isNotRegex = (value: unknown, regex: RegExp): ValidationError => {
+	return new ValidationError(`${inspect(value)} does not match ${regex}`);
+};
+
 export const isNotUnion = <T>(value: unknown, values: T[]): ValidationError => {
 	return new ValidationError(`${inspect(value)} is not one of ${values.join(" | ")}`);
 };
@@ -39,8 +43,16 @@ export function isNumber(value: unknown, constraints: Constraints): asserts valu
 	if (constraints.max && value > constraints.max) throw isNotMax(value, constraints.max);
 }
 
+export function isBoolean(value: unknown): asserts value is boolean {
+	if (typeof value !== "boolean") throw isNot(value, "boolean");
+}
+
 export function isObject(value: unknown): asserts value is object {
 	if (!value) throw isNot(value, "object");
 	if (typeof value !== "object") throw isNot(value, "object");
 	if (Array.isArray(value)) throw isNot(value, "object");
+}
+
+export function isUnion<T>(value: unknown, values: T[]): asserts values is T[] {
+	if (!values.includes(value as T)) throw isNotUnion<T>(value, values);
 }
