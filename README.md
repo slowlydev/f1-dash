@@ -72,3 +72,7 @@ cargo run > some-name.data.txt # will install, compile and start
 
 I really appreaciate it if you want to contribute to this project. I can recommend the GitHub issues marked as "Good First Issue" to get started.
 If you want to support me and make me focus more on this project, support me here by [buying me a coffee](https://www.buymeacoffee.com/slowlydev).
+
+## notice
+
+This project/website is unofficial and is not associated in any way with the Formula 1 companies. F1, FORMULA ONE, FORMULA 1, FIA FORMULA ONE WORLD CHAMPIONSHIP, GRAND PRIX and related marks are trade marks of Formula One Licensing B.V
