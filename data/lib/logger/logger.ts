@@ -23,16 +23,12 @@ export const formatTimestamp = (timestamp: number): string => {
 	return `${hour}:${minute}:${second}`;
 };
 
-export const makeBase = (
-	timestamp: number,
-	context: string | null,
-	variant: Config["logLevel"] | "req" | "res",
-): string => {
+export const makeBase = (timestamp: number, variant: Config["logLevel"]): string => {
 	const name = `${bold}${blue}[${config.name}]${reset}`;
-	return `${name} (${context}) ${formatTimestamp(timestamp)} ${makeLevel(variant)}`;
+	return `${name} (${config.port.toString().split("")[3]}) ${formatTimestamp(timestamp)} ${makeLevel(variant)}`;
 };
 
-export const makeLevel = (logLevel: Config["logLevel"] | "req" | "res"): string => {
+export const makeLevel = (logLevel: Config["logLevel"]): string => {
 	switch (true) {
 		case logLevel === "req":
 			return `${bold}req${reset}:`;
@@ -66,34 +62,34 @@ export const mask = (uuid: string): string => {
 export const trace = (message: string, stack?: unknown): void => {
 	const logLevels: Config["logLevel"][] = ["trace"];
 	if (logLevels.includes(config.logLevel)) {
-		console.trace(`${makeBase(Date.now(), getContext(), "trace")} ${message}`, stack ?? "");
+		console.trace(`${makeBase(Date.now(), "trace")} ${message} (${getContext()})`, stack ?? "");
 	}
 };
 
 export const debug = (message: string): void => {
 	const logLevels: Config["logLevel"][] = ["trace", "debug"];
 	if (logLevels.includes(config.logLevel)) {
-		console.debug(`${makeBase(Date.now(), getContext(), "debug")} ${message}`);
+		console.debug(`${makeBase(Date.now(), "debug")} ${message} (${getContext()})`);
 	}
 };
 
 export const info = (message: string): void => {
 	const logLevels: Config["logLevel"][] = ["trace", "debug", "info"];
 	if (logLevels.includes(config.logLevel)) {
-		console.info(`${makeBase(Date.now(), getContext(), "info")} ${message}`);
+		console.info(`${makeBase(Date.now(), "info")} ${message} (${getContext()})`);
 	}
 };
 
 export const warn = (message: string): void => {
 	const logLevels: Config["logLevel"][] = ["trace", "debug", "info", "warn"];
 	if (logLevels.includes(config.logLevel)) {
-		console.warn(`${makeBase(Date.now(), getContext(), "warn")} ${message}`);
+		console.warn(`${makeBase(Date.now(), "warn")} ${message} (${getContext()})`);
 	}
 };
 
 export const error = (message: string, stack?: unknown): void => {
 	const logLevels: Config["logLevel"][] = ["trace", "debug", "info", "warn", "error"];
 	if (logLevels.includes(config.logLevel)) {
-		console.error(`${makeBase(Date.now(), getContext(), "error")} ${message}`, stack ?? "");
+		console.error(`${makeBase(Date.now(), "error")} ${message} (${getContext()})`, stack ?? "");
 	}
 };
