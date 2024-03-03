@@ -54,7 +54,7 @@ pub async fn init(
 
                 tokio::spawn(async move {
                     debug!("recreating delayed state from db");
-                    let initial = recon::initial(pool, timestamp).await;
+                    let initial = recon::delayed_initial(pool, timestamp).await;
 
                     match initial {
                         Ok(initial) => {

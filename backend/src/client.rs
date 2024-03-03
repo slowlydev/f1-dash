@@ -70,6 +70,7 @@ impl Client {
                 "SessionData",
                 "LapCount",
                 "TimingData",
+                "TeamRadio",
                 "PitLaneTimeCollection"
             ]],
             "I": 1,

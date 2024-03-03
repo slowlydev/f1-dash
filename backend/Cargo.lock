@@ -91,6 +91,7 @@ dependencies = [
  "chrono",
  "flate2",
  "futures",
+ "futures-util",
  "heck",
  "reqwest",
  "serde",

@@ -1,17 +1,17 @@
-use futures::stream::SplitSink;
 use futures::SinkExt;
 use serde_json::Value;
 use std::{collections::HashMap, net::SocketAddr};
-use tokio::net::TcpStream;
+
 use tokio::sync::mpsc::{UnboundedReceiver, UnboundedSender};
-use tokio_tungstenite::{tungstenite::Message, WebSocketStream};
+use tokio_tungstenite::tungstenite::Message;
 use tracing::{debug, info, warn};
 
 use crate::client::manager::ClientManagerEvent;
 use crate::data::odctrl::{self, Request};
 use crate::{client, messages};
 
-type SenderSink = SplitSink<WebSocketStream<TcpStream>, Message>;
+// type SenderSink = SplitSink<WebSocketStream<TcpStream>, Message>;
+type ConnectionTx = futures::channel::mpsc::UnboundedSender<Message>;
 
 #[derive(Debug)]
 pub struct Connection {
@@ -19,17 +19,17 @@ pub struct Connection {
     pub initial: bool,
     pub realtime: bool,
     pub addr: SocketAddr,
-    pub sender: SenderSink,
+    pub tx: ConnectionTx,
 }
 
 impl Connection {
-    pub fn new(id: u32, addr: SocketAddr, sender: SenderSink) -> Connection {
+    pub fn new(id: u32, addr: SocketAddr, tx: ConnectionTx) -> Connection {
         Connection {
             id,
             addr,
             initial: false,
             realtime: true,
-            sender,
+            tx,
         }
     }
 }
@@ -116,7 +116,7 @@ pub async fn init(
                                 continue;
                             }
 
-                            let _ = conn.sender.send(Message::Text(text.clone())).await;
+                            let _ = conn.tx.unbounded_send(Message::Text(text.clone()));
                         }
                     }
                     Err(_) => warn!("failed to serialize first initial to json"),
@@ -130,7 +130,7 @@ pub async fn init(
                     Ok(text) => {
                         if let Some(conn) = connections.get_mut(&id) {
                             conn.initial = true;
-                            let _ = conn.sender.send(Message::Text(text)).await;
+                            let _ = conn.tx.unbounded_send(Message::Text(text));
                         }
                     }
                     Err(_) => warn!("failed to serialize initial to json"),
@@ -147,7 +147,7 @@ pub async fn init(
                                 continue;
                             }
 
-                            let _ = conn.sender.send(Message::Text(text.clone())).await;
+                            let _ = conn.tx.unbounded_send(Message::Text(text.clone()));
                         }
                     }
                     Err(_) => warn!("failed to serialize update to json"),
@@ -161,7 +161,7 @@ pub async fn init(
                     Ok(text) => {
                         if let Some(conn) = connections.get_mut(&id) {
                             conn.realtime = false;
-                            let _ = conn.sender.send(Message::Text(text)).await;
+                            let _ = conn.tx.unbounded_send(Message::Text(text));
                         }
                     }
                     Err(_) => warn!("failed to serialize delayed initial to json"),
@@ -175,7 +175,7 @@ pub async fn init(
                     Ok(text) => {
                         if let Some(conn) = connections.get_mut(&id) {
                             conn.realtime = false;
-                            let _ = conn.sender.send(Message::Text(text)).await;
+                            let _ = conn.tx.unbounded_send(Message::Text(text));
                         }
                     }
                     Err(_) => warn!("failed to serialize delayed updates to json"),

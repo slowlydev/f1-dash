@@ -16,7 +16,7 @@ use client::manager::ClientManagerEvent;
 use client::parser::ParsedMessage;
 use data::odctrl::Request;
 
-#[tokio::main(flavor = "multi_thread")]
+#[tokio::main(flavor = "multi_thread", worker_threads = 20)]
 async fn main() {
     log::init();
 

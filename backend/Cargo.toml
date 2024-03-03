@@ -23,16 +23,20 @@ tokio-stream = { version = "0.1.14", features = ["sync"] }
 # Because of an non-responding PR of a depency of tokio-tungstenite
 # tokio-tungstenite, does not yet support permessage-deflate, this is why we are using git for now
 # tokio-tungstenite = { version = "0.21", features = ["native-tls"] }
-tokio-tungstenite = { git = "https://github.com/kazk/tokio-tungstenite.git", branch = "feature/permessage-deflate", features = ["native-tls", "deflate"]}
+tokio-tungstenite = { git = "https://github.com/kazk/tokio-tungstenite.git", branch = "feature/permessage-deflate", features = [
+  "native-tls",
+  "deflate",
+] }
 
 
 reqwest = { version = "0.11", features = ["native-tls"] }
 anyhow = "1.0.79"
 futures = "0.3"
+futures-util = "0.3"
 
 sqlx = { version = "0.7", features = [
   "postgres",
   "runtime-tokio",
   "tls-native-tls",
-  "chrono"
+  "chrono",
 ] }
