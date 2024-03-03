@@ -1,18 +1,25 @@
 export type State = {
+	heartbeat?: Heartbeat;
 	extrapolatedClock?: ExtrapolatedClock;
-	sessionData?: SessionData;
+	topThree?: TopThree;
+	timingStats?: TimingStats;
+	timingAppData?: TimingAppData;
+	weatherData?: WeatherData;
 	trackStatus?: TrackStatus;
+	driverList?: DriverList;
+	raceControlMessages?: RaceControlMessages;
+	sessionInfo?: SessionInfo;
+	sessionData?: SessionData;
 	lapCount?: LapCount;
-	weather?: Weather;
-	weatherHistory?: HistoryWeather;
+	timingData?: TimingData;
+	teamRadio?: TeamRadio;
 
-	raceControlMessages?: RaceControlMessageType[];
-	teamRadios?: TeamRadioType[];
-	drivers?: DriverType[];
+	carDataZ?: string;
+	positionZ?: string;
+};
 
-	session?: SessionInfo;
-
-	positionBatches?: DriverPositionBatch[];
+export type Heartbeat = {
+	utc: string;
 };
 
 export type ExtrapolatedClock = {
@@ -21,189 +28,302 @@ export type ExtrapolatedClock = {
 	extrapolating: boolean;
 };
 
-export type LapCount = {
-	current: number;
-	total: number;
+export type TopThree = {
+	withheld: boolean;
+	lines: TopThreeDriver[];
 };
 
-export type RaceControlMessageType = {
-	trackTime: string;
-	utc: string;
-	lap: number;
-	message: string;
-	category: string;
-
-	flag?: string;
-	scope?: string;
-	sector?: number;
-	drsEnabled?: boolean;
+export type TimingStats = {
+	withheld: boolean;
+	lines: {
+		[key: string]: TimingStatsDriver;
+	};
+	sessionType: string;
+	_kf: boolean;
 };
 
-export type SessionData = {
-	status: StatusUpdate[];
+export type TimingAppData = {
+	lines: {
+		[key: string]: TimingAppDataDriver;
+	};
 };
 
-export type StatusUpdate = {
-	utc: string;
-	trackStatus?: string;
-	sessionStatus?: string;
-};
-
-export type SessionInfo = {
-	name: string;
-	officialName: string;
-	location: string;
-
-	countryName: string;
-	countryCode: string;
-
-	circuitName: string;
-	circuitKey: number;
-
-	startDate: string;
-	endDate: string;
-	offset: string;
-
-	type: string;
-	typeName: string;
-	number?: number;
-};
-
-export type Weather = {
-	humidity: number;
-	pressure: number;
-	rainfall: number;
-	wind_direction: number;
-	wind_speed: number;
-	air_temp: number;
-	track_temp: number;
-};
-
-export type HistoryWeather = {
-	humidity: number[];
-	pressure: number[];
-	rainfall: number[];
-	wind_direction: number[];
-	wind_speed: number[];
-	air_temp: number[];
-	track_temp: number[];
-};
-
-export type TrackStatus = {
-	status: number;
-	statusMessage: string;
-};
-
-// F1DriverList
-// F1TimingData
-// F1TimingAppData
-export type DriverType = {
-	nr: string;
-
-	broadcastName: string;
-	fullName: string;
-	firstName: string;
-	lastName: string;
-	short: string;
-	country: string;
-
-	line: number;
-	position: string;
-	positionChange: number;
-
-	teamName: string;
-	teamColor: string;
-
-	status: "OUT" | "RETIRED" | "STOPPED" | "PIT" | "PIT OUT" | "CUTOFF" | null;
-	danger: boolean;
-
-	gapToLeader: string;
-	gapToFront: string;
-	catchingFront: boolean;
-
-	sectors: Sector[];
+export type TimingAppDataDriver = {
+	racingNumber: string;
 	stints: Stint[];
-
-	drs: Drs;
-	laps: number;
-	lapTimes: LapTimes;
-
-	metrics: Metrics;
-
-	sectorHisotry: number[][];
-	laptimeHistory: number[];
-	gapHistory: number[];
-};
-
-export type TimeStats = {
-	value: string;
-	fastest: boolean;
-	pb: boolean;
-};
-
-export type Sector = {
-	current: TimeStats;
-	last: TimeStats;
-	segments: number[];
-};
-
-export type LapTimes = {
-	last: TimeStats;
-	best: TimeStats;
+	line: number;
+	gridPos: string;
 };
 
 export type Stint = {
-	compound: "soft" | "medium" | "hard" | "intermediate" | "wet";
-	laps: number;
-	new: boolean;
+	totalLaps?: number;
+	compound?: "SOFT" | "MEDIUM" | "HARD" | "INTERMEDIATE" | "WET";
+	new?: string; // TRUE | FALSE
 };
 
-export type Drs = {
-	on: boolean;
-	possible: boolean;
+export type WeatherData = {
+	airTemp: string;
+	humidity: string;
+	pressure: string;
+	rainfall: string;
+	trackTemp: string;
+	windDirection: string;
+	windSpeed: string;
 };
 
-export type Metrics = {
-	gear: number;
-	rpm: number;
-	speed: number;
+export type TrackStatus = {
+	status: string;
+	message: string;
 };
 
-export type DriverPositionBatch = {
+export type DriverList = {
+	[key: string]: Driver;
+};
+
+export type Driver = {
+	racingNumber: string;
+	broadcastName: string;
+	fullName: string;
+	tla: string;
+	line: number;
+	teamName: string;
+	teamColour: string;
+	firstName: string;
+	lastName: string;
+	reference: string;
+	headshotUrl: string;
+	countryCode: string;
+};
+
+export type RaceControlMessages = {
+	messages: Message[];
+};
+
+export type Message = {
 	utc: string;
-	positions: DriverPosition[];
+	lap: number;
+	category: string;
+	message: string;
+	flag?: string;
+	scope?: string;
+	sector?: number;
+	status?: "ENABLED" | "DISABLED";
 };
 
-export type DriverPosition = {
-	driverNr: string;
+export type SessionInfo = {
+	meeting: Meeting;
+	archiveStatus: ArchiveStatus;
+	key: number;
+	type: string;
+	name: string;
+	startDate: string;
+	endDate: string;
+	gmtOffset: string;
+	path: string;
+	number?: number;
+};
+
+export type ArchiveStatus = {
+	status: string;
+};
+
+export type Meeting = {
+	key: number;
+	name: string;
+	officialName: string;
+	location: string;
+	country: Country;
+	circuit: Circuit;
+};
+
+export type Circuit = {
+	key: number;
+	shortName: string;
+};
+
+export type Country = {
+	key: number;
+	code: string;
+	name: string;
+};
+
+export type SessionData = {
+	series: Series[];
+	statusSeries: StatusSeries[];
+};
+
+export type StatusSeries = {
+	utc: string;
+	trackStatus: string;
+};
+
+export type Series = {
+	utc: string;
+	lap: number;
+};
+
+export type LapCount = {
+	currentLap: number;
+	totalLaps: number;
+};
+
+export type TimingData = {
+	noEntries?: number[];
+	sessionPart?: number;
+	cutOffTime?: string;
+	cutOffPercentage?: string;
+
+	lines: {
+		[key: string]: TimingDataDriver;
+	};
+	withheld: boolean;
+};
+
+export type TimingDataDriver = {
+	stats?: { timeDiffToFastest: string; timeDifftoPositionAhead: string }[];
+	timeDiffToFastest?: string;
+	timeDiffToPositionAhead?: string;
+	gapToLeader: string;
+	intervalToPositionAhead?: {
+		value: string;
+		catching: boolean;
+	};
+	line: number;
 	position: string;
-
-	broadcastName: string;
-	fullName: string;
-	firstName: string;
-	lastName: string;
-	short: string;
-
-	teamColor: string;
-
-	status: DriverType["status"];
-
-	x: number;
-	y: number;
-	z: number;
+	showPosition: boolean;
+	racingNumber: string;
+	retired: boolean;
+	inPit: boolean;
+	pitOut: boolean;
+	stopped: boolean;
+	status: number;
+	sectors: Sector[];
+	speeds: Speeds;
+	bestLapTime: PersonalBestLapTime;
+	lastLapTime: I1;
+	numberOfLaps: number; // TODO check
+	knockedOut?: boolean;
+	cutoff?: boolean;
 };
 
-export type TeamRadioType = {
-	driverNr: string;
+export type Sector = {
+	stopped: boolean;
+	value: string;
+	previousValue?: string;
+	status: number;
+	overallFastest: boolean;
+	personalFastest: boolean;
+	segments: {
+		status: number;
+	}[];
+};
 
+export type Speeds = {
+	i1: I1;
+	i2: I1;
+	fl: I1;
+	st: I1;
+};
+
+export type I1 = {
+	value: string;
+	status: number;
+	overallFastest: boolean;
+	personalFastest: boolean;
+};
+
+export type TimingStatsDriver = {
+	line: number;
+	racingNumber: string;
+	personalBestLapTime: PersonalBestLapTime;
+	bestSectors: PersonalBestLapTime[];
+	bestSpeeds: {
+		i1: PersonalBestLapTime;
+		i2: PersonalBestLapTime;
+		fl: PersonalBestLapTime;
+		st: PersonalBestLapTime;
+	};
+};
+
+export type PersonalBestLapTime = {
+	value: string;
+	position: number;
+};
+
+export type TopThreeDriver = {
+	position: string;
+	showPosition: boolean;
+	racingNumber: string;
+	tla: string;
 	broadcastName: string;
 	fullName: string;
-	firstName: string;
-	lastName: string;
-	short: string;
+	team: string;
+	teamColour: string;
+	lapTime: string;
+	lapState: number;
+	diffToAhead: string;
+	diffToLeader: string;
+	overallFastest: boolean;
+	personalFastest: boolean;
+};
 
-	teamColor: string;
+export type TeamRadio = {
+	captures: RadioCapture[];
+};
 
+export type RadioCapture = {
 	utc: string;
-	audioUrl: string;
+	racingNumber: string;
+	path: string;
+};
+
+// TODO handle those blow somehow
+
+export type Position = {
+	Position: PositionItem[];
+};
+
+export type PositionItem = {
+	Timestamp: string;
+	Entries: {
+		[key: string]: PositionCar;
+	};
+};
+
+export type PositionCar = {
+	Status: string;
+	X: number;
+	Y: number;
+	Z: number;
+};
+
+export type CarData = {
+	Entries: Entry[];
+};
+
+export type Entry = {
+	Utc: string;
+	Cars: {
+		[key: string]: {
+			Channels: CarDataChannels;
+		};
+	};
+};
+
+/**
+ * @namespace
+ * @property {number} 0 - RPM
+ * @property {number} 2 - Speed number km/h
+ * @property {number} 3 - gear number
+ * @property {number} 4 - Throttle int 0-100
+ * @property {number} 5 - Brake number boolean
+ * @property {number} 45 - DRS
+ */
+export type CarDataChannels = {
+	"0": number;
+	"2": number;
+	"3": number;
+	"4": number;
+	"5": number;
+	"45": number;
 };

@@ -1,12 +1,11 @@
 import clsx from "clsx";
-import React from "react";
 
 import { getTimeColor } from "@/lib/getTimeColor";
-import { TimeStats } from "@/types/state.type";
+import { TimingDataDriver } from "@/types/state.type";
 
 type Props = {
-	last: TimeStats;
-	best: TimeStats;
+	last: TimingDataDriver["lastLapTime"];
+	best: TimingDataDriver["bestLapTime"];
 };
 
 export default function DriverLapTime({ last, best }: Props) {
@@ -15,7 +14,7 @@ export default function DriverLapTime({ last, best }: Props) {
 			<p
 				className={clsx(
 					"text-sm font-medium leading-none text-gray-500",
-					getTimeColor(best.fastest, best.pb),
+					getTimeColor(best.position == 1, true),
 					!best.value ? "text-gray-500" : "",
 				)}
 			>
@@ -24,7 +23,7 @@ export default function DriverLapTime({ last, best }: Props) {
 			<p
 				className={clsx(
 					"text-lg font-semibold leading-none",
-					getTimeColor(last.fastest, last.pb),
+					getTimeColor(last.overallFastest, last.personalFastest),
 					!last.value ? "text-gray-500" : "",
 				)}
 			>

@@ -13,14 +13,18 @@ import DriverLapTime from "./DriverLapTime";
 import DriverInfo from "./DriverInfo";
 import DriverDetailed from "./DriverDetailed";
 
-import { DriverType } from "@/types/state.type";
+import { Driver as DriverType, TimingDataDriver, TimingAppDataDriver } from "@/types/state.type";
+import DriverPosChanage from "./DriverPosChange";
 
 type Props = {
 	driver: DriverType;
+	timingDriver: TimingDataDriver;
+	appTimingDriver: TimingAppDataDriver | undefined;
 	position: number;
+	sessionPart: number | undefined;
 };
 
-export default function Driver({ driver, position }: Props) {
+export default function Driver({ driver, timingDriver, appTimingDriver, position, sessionPart }: Props) {
 	const [open, setOpen] = useState<boolean>(false);
 
 	return (
@@ -28,9 +32,9 @@ export default function Driver({ driver, position }: Props) {
 			layout
 			onClick={() => setOpen((old) => !old)}
 			className={clsx("cursor-pointer select-none px-2", {
-				"opacity-50": driver.status === "OUT" || driver.status === "RETIRED" || driver.status === "STOPPED",
-				"bg-indigo-800 bg-opacity-30": driver.lapTimes.best.fastest,
-				"bg-red-800 bg-opacity-30": false, // TODO use this for danger zone in quali
+				"opacity-50": timingDriver.knockedOut || timingDriver.retired || timingDriver.stopped,
+				"bg-indigo-800 bg-opacity-30": timingDriver.bestLapTime.position == 1,
+				"bg-red-800 bg-opacity-30": sessionPart != undefined && inDangerZone(position, sessionPart),
 			})}
 		>
 			<div
@@ -40,16 +44,28 @@ export default function Driver({ driver, position }: Props) {
 					gridTemplateColumns: "6rem 4rem 5.5rem 4rem 5rem 5rem auto auto",
 				}}
 			>
-				<DriverTag className="!min-w-[5.5rem]" short={driver.short} teamColor={driver.teamColor} position={position} />
-				<DriverDRS on={driver.drs.on} possible={driver.drs.possible} driverStatus={driver.status} />
-				<DriverTire stints={driver.stints} />
-				<DriverInfo status={driver.status} laps={driver.laps} />
-				<DriverGap toFront={driver.gapToFront} toLeader={driver.gapToLeader} catching={driver.catchingFront} />
-				<DriverLapTime last={driver.lapTimes.last} best={driver.lapTimes.best} />
-				<DriverMiniSectors sectors={driver.sectors} driverDisplayName={driver.short} />
+				{/* <DriverPosChanage
+					positionChange={parseInt(appTimingDriver?.gridPos ?? "0") - parseInt(timingDriver.position)}
+				/> */}
+				<DriverTag className="!min-w-[5.5rem]" short={driver.tla} teamColor={driver.teamColour} position={position} />
+				<DriverDRS on={false} possible={false} inPit={timingDriver.inPit} pitOut={timingDriver.pitOut} />
+				<DriverTire stints={appTimingDriver?.stints} />
+				<DriverInfo timingDriver={timingDriver} />
+				<DriverGap timingDriver={timingDriver} sessionPart={sessionPart} />
+				<DriverLapTime last={timingDriver.lastLapTime} best={timingDriver.bestLapTime} />
+				<DriverMiniSectors sectors={timingDriver.sectors} tla={driver.tla} />
 			</div>
 
-			{open && <DriverDetailed driver={driver} />}
+			{open && <DriverDetailed history={undefined} appTimingDriver={appTimingDriver} />}
 		</motion.div>
 	);
 }
+
+const inDangerZone = (position: number, sessionPart: number) => {
+	if (sessionPart == 2) {
+		return position > 10;
+	} else if (sessionPart == 3) {
+		return position > 15;
+	}
+	return false;
+};

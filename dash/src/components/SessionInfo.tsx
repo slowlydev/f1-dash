@@ -6,10 +6,10 @@ import Flag from "@/components/Flag";
 
 import { useSocket } from "@/context/SocketContext";
 
-import { ExtrapolatedClock, SessionInfo } from "@/types/state.type";
+import { ExtrapolatedClock, SessionInfo as SessionInfoType } from "@/types/state.type";
 
 type Props = {
-	session: SessionInfo | undefined;
+	session: SessionInfoType | undefined;
 	clock: ExtrapolatedClock | undefined;
 };
 
@@ -23,18 +23,18 @@ export default function SessionInfo({ session, clock }: Props) {
 						duration(clock.remaining)
 							.subtract(utc().diff(utc(clock.utc)))
 							.asMilliseconds() + (delay ? delay * 1000 : 0),
-				  ).format("HH:mm:ss")
+					).format("HH:mm:ss")
 				: clock.remaining
 			: undefined;
 
 	return (
 		<div className="flex items-center gap-2">
-			<Flag countryCode={session?.countryCode} />
+			<Flag countryCode={session?.meeting.country.code} />
 
 			<div className="flex flex-col justify-center">
 				{session ? (
 					<h1 className="truncate text-sm font-medium leading-none text-white">
-						{session.name}: {session.typeName ?? "unknown"}
+						{session.meeting.name}: {session.type ?? "unknown"}
 						{!!session.number ? ` Q${session.number}` : ""}
 					</h1>
 				) : (

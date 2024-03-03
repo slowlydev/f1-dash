@@ -1,23 +1,37 @@
 import clsx from "clsx";
+import { TimingDataDriver } from "../types/state.type";
 
 type Props = {
-	toFront: string;
-	toLeader: string;
-	catching: boolean;
+	timingDriver: TimingDataDriver;
+	sessionPart: number | undefined;
 };
 
-export default function DriverGap({ toFront, toLeader, catching }: Props) {
+export default function DriverGap({ timingDriver, sessionPart }: Props) {
+	const gapToLeader =
+		timingDriver.gapToLeader ??
+		(timingDriver.stats ? timingDriver.stats[sessionPart ?? 0].timeDiffToFastest : undefined) ??
+		timingDriver.timeDiffToFastest ??
+		"";
+
+	const gapToFront =
+		timingDriver.intervalToPositionAhead?.value ??
+		(timingDriver.stats ? timingDriver.stats[sessionPart ?? 0].timeDifftoPositionAhead : undefined) ??
+		timingDriver.timeDiffToPositionAhead ??
+		"";
+
+	const catching = timingDriver.intervalToPositionAhead?.catching;
+
 	return (
 		<div className="place-self-start text-lg font-semibold">
 			<p
 				className={clsx("leading-none", {
 					"text-emerald-500": catching,
-					"text-gray-500": !toFront,
+					"text-gray-500": !gapToFront,
 				})}
 			>
-				{!!toFront ? toFront : "-- ---"}
+				{!!gapToFront ? gapToFront : "-- ---"}
 			</p>
-			<p className="text-sm font-medium leading-none text-gray-500">{!!toLeader ? toLeader : "-- ---"}</p>
+			<p className="text-sm font-medium leading-none text-gray-500">{!!gapToLeader ? gapToLeader : "-- ---"}</p>
 		</div>
 	);
 }

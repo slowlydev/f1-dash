@@ -1,15 +1,14 @@
 import clsx from "clsx";
 
-import { DriverType } from "@/types/state.type";
-
 type Props = {
 	on: boolean;
 	possible: boolean;
-	driverStatus: DriverType["status"];
+	inPit: boolean;
+	pitOut: boolean;
 };
 
-export default function DriverDRS({ on, possible, driverStatus }: Props) {
-	const pit = driverStatus === "PIT" || driverStatus === "PIT OUT";
+export default function DriverDRS({ on, possible, inPit, pitOut }: Props) {
+	const pit = inPit || pitOut;
 
 	return (
 		<span

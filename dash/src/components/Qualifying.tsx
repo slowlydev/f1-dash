@@ -1,35 +1,56 @@
 "use client";
 
 import { AnimatePresence } from "framer-motion";
+import clsx from "clsx";
+
+import { sortQuali } from "@/lib/sortQuali";
+import { objectEntries } from "@/lib/driverHelper";
+
+import { DriverList, TimingAppData, TimingData } from "@/types/state.type";
 
 import QualifyingDriver from "@/components/QualifyingDriver";
 
-import { DriverType } from "@/types/state.type";
-import { sortQuali } from "@/lib/sortQuali";
-import clsx from "clsx";
-
 type Props = {
-	drivers: DriverType[] | undefined;
+	drivers: DriverList | undefined;
+	driversTiming: TimingData | undefined;
+	appDriversTiming: TimingAppData | undefined;
 };
 
-export default function Qualifying({ drivers }: Props) {
-	const qualiDrivers = !drivers
-		? []
-		: drivers
-				.filter((d) => d.status != "PIT")
-				.filter((d) => d.sectors.map((s) => s.current.pb).includes(true))
-				.filter((d) => d.sectors[2].segments[0] != 0);
+export default function Qualifying({ drivers, driversTiming, appDriversTiming }: Props) {
+	const qualiDrivers =
+		!driversTiming?.lines || !drivers
+			? []
+			: objectEntries(driversTiming.lines)
+					.filter((d) => !d.pitOut || !d.inPit) // no pit
+					.filter((d) => d.sectors.every((sec) => !sec.segments.find((s) => s.status === 2064))) // no in or out lap
+					.filter((d) => d.sectors.map((s) => s.personalFastest).includes(true))
+					.filter((d) => d.sectors[2].segments[0].status != 0)
+					.splice(0, 3);
+
+	const currentBest = driversTiming
+		? objectEntries(driversTiming.lines).find((d) => parseInt(d.position) === 1)
+		: undefined;
 
 	return (
 		<div className="flex gap-4">
 			<AnimatePresence>
-				{qualiDrivers.sort(sortQuali).map((driver) => (
-					<QualifyingDriver key={`qualifying.driver.${driver.short}`} driver={driver} />
-				))}
+				{drivers &&
+					qualiDrivers
+						.sort(sortQuali)
+						.map((timingDriver) => (
+							<QualifyingDriver
+								key={`qualifying.driver.${timingDriver.racingNumber}`}
+								driver={drivers[timingDriver.racingNumber]}
+								timingDriver={timingDriver}
+								appTimingDriver={appDriversTiming?.lines[timingDriver.racingNumber]}
+								currentBestName={currentBest ? drivers[currentBest?.racingNumber].firstName : undefined}
+								currentBestTime={currentBest ? currentBest.bestLapTime.value : undefined}
+							/>
+						))}
 
 				{qualiDrivers.length < 1 && (
 					<>
-						{new Array(5).fill(null).map((_, i) => (
+						{new Array(3).fill(null).map((_, i) => (
 							<SkeletonQualifingDriver key={`skeleton.qualifying.driver.${i}`} />
 						))}
 					</>

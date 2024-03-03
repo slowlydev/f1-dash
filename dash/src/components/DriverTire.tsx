@@ -4,17 +4,19 @@ import Image from "next/image";
 import { Stint } from "@/types/state.type";
 
 type Props = {
-	stints: Stint[];
+	stints: Stint[] | undefined;
 };
 
 export default function DriverTire({ stints }: Props) {
 	const stops = stints ? stints.length - 1 : 0;
 	const currentStint = stints ? stints[stints.length - 1] : null;
-	const unknownCompound = !["soft", "medium", "hard", "intermediate", "wet"].includes(currentStint?.compound ?? "");
+	const unknownCompound = !["soft", "medium", "hard", "intermediate", "wet"].includes(
+		currentStint?.compound?.toLowerCase() ?? "",
+	);
 
 	return (
 		<div className="flex flex-row items-center gap-2 place-self-start">
-			{currentStint && !unknownCompound && (
+			{currentStint && !unknownCompound && currentStint.compound && (
 				<Image
 					src={`/tires/${currentStint.compound.toLowerCase()}.svg`}
 					width={32}
@@ -34,7 +36,7 @@ export default function DriverTire({ stints }: Props) {
 			{/* TODO move this to a tooltip */}
 			<div>
 				<p className="font-bold leading-none">
-					L {currentStint?.laps ?? 0}
+					L {currentStint?.totalLaps ?? 0}
 					{currentStint?.new ? "" : "*"}
 				</p>
 				<p className="text-sm font-medium leading-none text-gray-500">St {stops}</p>

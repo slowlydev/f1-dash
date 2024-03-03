@@ -1,25 +1,39 @@
 import { AnimatePresence } from "framer-motion";
 import clsx from "clsx";
 
-import { DriverType } from "@/types/state.type";
 import { sortPos } from "@/lib/sortPos";
+import { objectEntries } from "@/lib/driverHelper";
+
+import { DriverList, TimingAppData, TimingData } from "@/types/state.type";
 
 import Driver from "@/components/Driver";
 
 type Props = {
-	drivers: DriverType[] | undefined;
+	drivers: DriverList | undefined;
+	driversTiming: TimingData | undefined;
+	driversAppTiming: TimingAppData | undefined;
 };
 
-export default function LeaderBoard({ drivers }: Props) {
+export default function LeaderBoard({ drivers, driversTiming, driversAppTiming }: Props) {
 	return (
 		<div className="flex w-fit flex-col divide-y divide-zinc-800">
-			{!drivers && new Array(20).fill("").map((_, index) => <SkeletonDriver key={`driver.loading.${index}`} />)}
+			{(!drivers || !driversTiming) &&
+				new Array(20).fill("").map((_, index) => <SkeletonDriver key={`driver.loading.${index}`} />)}
 
-			{drivers && (
+			{drivers && driversTiming && (
 				<AnimatePresence>
-					{drivers.sort(sortPos).map((driver, index) => (
-						<Driver key={`leaderBoard.driver.${driver.short}`} driver={driver} position={index + 1} />
-					))}
+					{objectEntries(driversTiming.lines)
+						.sort(sortPos)
+						.map((timingDriver, index) => (
+							<Driver
+								key={`leaderBoard.driver.${timingDriver.racingNumber}`}
+								driver={drivers[timingDriver.racingNumber]}
+								timingDriver={timingDriver}
+								appTimingDriver={driversAppTiming?.lines[timingDriver.racingNumber]}
+								position={index + 1}
+								sessionPart={driversTiming.sessionPart}
+							/>
+						))}
 				</AnimatePresence>
 			)}
 		</div>

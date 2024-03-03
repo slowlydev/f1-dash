@@ -1,34 +1,33 @@
 import React from "react";
 import clsx from "clsx";
 
-import { DriverType } from "@/types/state.type";
-
 import { getTimeColor } from "@/lib/getTimeColor";
+import { TimingDataDriver } from "@/types/state.type";
 
 type Props = {
-	sectors: DriverType["sectors"];
-	driverDisplayName: string;
+	sectors: TimingDataDriver["sectors"];
+	tla: string;
 };
 
-export default function DriverMiniSectors({ sectors, driverDisplayName }: Props) {
+export default function DriverMiniSectors({ sectors = [], tla }: Props) {
 	return (
 		<div className="flex gap-2">
-			{sectors.map((sector, index) => (
-				<div key={`sector.${driverDisplayName}.${index}`} className="flex flex-col gap-[0.2rem]">
+			{sectors.map((sector, i) => (
+				<div key={`sector.${tla}.${i}`} className="flex flex-col gap-[0.2rem]">
 					<div className="flex h-[10px] flex-row gap-1">
-						{sector.segments.map((segmentStatus, index2) => (
-							<MiniSector status={segmentStatus} key={`sector.mini.${driverDisplayName}.${index2}`} />
+						{sector.segments.map((segment, j) => (
+							<MiniSector status={segment.status} key={`sector.mini.${tla}.${j}`} />
 						))}
 					</div>
 
 					<p
 						className={clsx(
 							"text-lg font-semibold leading-none",
-							getTimeColor(sector.current.fastest, sector.current.pb),
-							!sector.current.value ? "text-gray-500" : "",
+							getTimeColor(sector.overallFastest, sector.personalFastest),
+							!sector.value ? "text-gray-500" : "",
 						)}
 					>
-						{!!sector.current.value ? sector.current.value : !!sector.last.value ? sector.last.value : "-- ---"}
+						{!!sector.value ? sector.value : !!sector.previousValue ? sector.previousValue : "-- ---"}
 					</p>
 				</div>
 			))}

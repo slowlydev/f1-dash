@@ -436,12 +436,26 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/lodash@npm:^4.14.202":
+  version: 4.14.202
+  resolution: "@types/lodash@npm:4.14.202"
+  checksum: a91acf3564a568c6f199912f3eb2c76c99c5a0d7e219394294213b3f2d54f672619f0fde4da22b29dc5d4c31457cd799acc2e5cb6bd90f9af04a1578483b6ff7
+  languageName: node
+  linkType: hard
+
 "@types/node@npm:20.11.10":
   version: 20.11.10
   resolution: "@types/node@npm:20.11.10"
   dependencies:
     undici-types: ~5.26.4
   checksum: 58544f52c14d839cc5fca7a9f001303016aefa85fea684de9aa3c24a1340a55a03a6744fa20f601ca032a9f9d08b32c1ff074ccb75dcd57d61a1a65c50a949b1
+  languageName: node
+  linkType: hard
+
+"@types/pako@npm:^2.0.3":
+  version: 2.0.3
+  resolution: "@types/pako@npm:2.0.3"
+  checksum: 0746dd5d29eccf5b2e6cceb3ccb093851219e78bd2e2e20d25757e247987139e061e5d4ba37cb5295493f06e3c683c74f8876011cd8a3f3748a09244fbc841d9
   languageName: node
   linkType: hard
 
@@ -972,7 +986,9 @@ __metadata:
   resolution: "f1-dash@workspace:."
   dependencies:
     "@headlessui/react": 1.7.18
+    "@types/lodash": ^4.14.202
     "@types/node": 20.11.10
+    "@types/pako": ^2.0.3
     "@types/react": 18.2.48
     "@types/react-dom": 18.2.18
     autoprefixer: 10.4.17
@@ -980,6 +996,7 @@ __metadata:
     framer-motion: 11.0.3
     moment: 2.30.1
     next: 14.1.0
+    pako: ^2.1.0
     postcss: 8.4.33
     prettier: 3.2.4
     prettier-plugin-tailwindcss: 0.5.11
@@ -1824,6 +1841,13 @@ __metadata:
   dependencies:
     aggregate-error: ^3.0.0
   checksum: cb0ab21ec0f32ddffd31dfc250e3afa61e103ef43d957cc45497afe37513634589316de4eb88abdfd969fe6410c22c0b93ab24328833b8eb1ccc087fc0442a1c
+  languageName: node
+  linkType: hard
+
+"pako@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "pako@npm:2.1.0"
+  checksum: 71666548644c9a4d056bcaba849ca6fd7242c6cf1af0646d3346f3079a1c7f4a66ffec6f7369ee0dc88f61926c10d6ab05da3e1fca44b83551839e89edd75a3e
   languageName: node
   linkType: hard
 

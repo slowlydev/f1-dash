@@ -1,18 +1,19 @@
 import { useEffect, useState } from "react";
-import { utc } from "moment";
 import clsx from "clsx";
 
-import { DriverPositionBatch, SessionInfo } from "@/types/state.type";
+import { DriverList, Position } from "@/types/state.type";
 import { MapType } from "@/types/map.type";
 
-import { sortPos } from "@/lib/sortPos";
+import { utc } from "moment";
+import { objectEntries } from "@/lib/driverHelper";
 
 // This is basically fearlessly copied from
 // https://github.com/tdjsnelling/monaco
 
 type Props = {
-	circuitKey: SessionInfo["circuitKey"] | undefined;
-	positionBatches: DriverPositionBatch[] | undefined;
+	circuitKey: number | undefined;
+	drivers: DriverList | undefined;
+	positionBatches: Position | null;
 };
 
 const space = 1000;
@@ -34,14 +35,16 @@ const rotate = (x: number, y: number, a: number, px: number, py: number) => {
 
 const rotationFIX = 90;
 
-export default function Map({ circuitKey, positionBatches }: Props) {
+export default function Map({ circuitKey, drivers, positionBatches }: Props) {
 	const [points, setPoints] = useState<null | { x: number; y: number }[]>(null);
 	const [rotation, setRotation] = useState<number>(0);
 	const [ogPoints, setOgPoints] = useState<null | { x: number; y: number }[]>(null);
 
 	const [[minX, minY, widthX, widthY], setBounds] = useState<(null | number)[]>([null, null, null, null]);
 
-	const positions = positionBatches ? positionBatches.sort((a, b) => utc(b.utc).diff(utc(a.utc)))[0].positions : null;
+	const positions = positionBatches
+		? positionBatches.Position.sort((a, b) => utc(b.Timestamp).diff(utc(a.Timestamp)))[0].Entries
+		: null;
 
 	useEffect(() => {
 		(async () => {
@@ -100,46 +103,48 @@ export default function Map({ circuitKey, positionBatches }: Props) {
 				d={`M${points[0].x},${points[0].y} ${points.map((point) => `L${point.x},${point.y}`).join(" ")}`}
 			/>
 
-			{ogPoints && positions && (
+			{ogPoints && positions && drivers && (
 				<>
-					{positions
-						.sort(sortPos)
+					{objectEntries(drivers)
 						.reverse()
-						.map((pos) => {
+						.filter((driver) => !!positions[driver.racingNumber].X && !!positions[driver.racingNumber].Y)
+						.map((driver) => {
+							const pos = positions[driver.racingNumber];
+
 							// TODO move to backend
 							const xS = ogPoints.map((item) => item.x);
 							const yS = ogPoints.map((item) => item.y);
 
 							const rotatedPos = rotate(
-								pos.x,
-								pos.y,
+								pos.X,
+								pos.Y,
 								rotation,
 								(Math.max(...xS) - Math.min(...xS)) / 2,
 								(Math.max(...yS) - Math.min(...yS)) / 2,
 							);
 
-							const out = pos.status === "OUT" || pos.status === "RETIRED" || pos.status === "STOPPED";
+							const out = pos.Status === "OUT" || pos.Status === "RETIRED" || pos.Status === "STOPPED";
 
 							const transform = [`translateX(${rotatedPos.x}px)`, `translateY(${rotatedPos.y}px)`].join(" ");
 
 							return (
 								<g
-									key={`map.driver.${pos.driverNr}`}
-									id={`map.driver.${pos.driverNr}`}
+									key={`map.driver.${driver.racingNumber}`}
+									id={`map.driver.${driver.racingNumber}`}
 									className={clsx({ "opacity-30": out })}
-									fill={`#${pos.teamColor}`}
+									fill={`#${driver.teamColour}`}
 									style={{ transition: "all 1s linear", transform }}
 								>
-									<circle id={`map.driver.${pos.driverNr}.circle`} r={120} />
+									<circle id={`map.driver.${driver.racingNumber}.circle`} r={120} />
 									<text
-										id={`map.driver.${pos.driverNr}.text`}
+										id={`map.driver.${driver.racingNumber}.text`}
 										fontWeight="bold"
 										fontSize={120 * 3}
 										style={{
 											transform: "translateX(150px) translateY(-120px)",
 										}}
 									>
-										{pos.short}
+										{driver.tla}
 									</text>
 								</g>
 							);

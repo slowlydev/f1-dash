@@ -4,9 +4,10 @@ import { ReactNode, useEffect, useState } from "react";
 import { SocketProvider, useSocket } from "@/context/SocketContext";
 
 import { env } from "@/env.mjs";
-import { BackendState } from "@/types/backend-state.type";
 
-import { transfrom } from "@/lib/transformer";
+import { messageIsInitial, messageIsUpdate } from "@/lib/messageHelpers";
+
+import { type Message } from "@/types/message.type";
 
 import Navbar from "@/components/Navbar";
 import SegmentedControls from "@/components/SegmentedControls";
@@ -24,7 +25,7 @@ export default function SocketLayout({ children }: Props) {
 }
 
 const SubLayout = ({ children }: Props) => {
-	const { setState, setConnected, ws } = useSocket();
+	const { setConnected, updateState, ws, setInitial } = useSocket();
 
 	useEffect(() => {
 		const socket = new WebSocket(`${env.NEXT_PUBLIC_SOCKET_SERVER_URL}`);
@@ -34,11 +35,17 @@ const SubLayout = ({ children }: Props) => {
 
 		socket.onmessage = (event) => {
 			if (typeof event.data != "string") return;
-			const state: BackendState = JSON.parse(event.data);
+			const message: Message = JSON.parse(event.data);
 
-			if (Object.keys(state).length === 0) return;
+			if (Object.keys(message).length === 0) return;
 
-			setState(transfrom(state));
+			if (messageIsUpdate(message)) {
+				updateState(message);
+			}
+
+			if (messageIsInitial(message)) {
+				setInitial(message);
+			}
 		};
 
 		ws.current = socket;

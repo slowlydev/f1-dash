@@ -7,16 +7,29 @@ import Image from "next/image";
 import DriverTag from "./DriverTag";
 import DriverMiniSectors from "./DriverMiniSectors";
 
-import { DriverType } from "@/types/state.type";
+import { Driver as DriverType, TimingAppDataDriver, TimingDataDriver } from "@/types/state.type";
 
 type Props = {
 	driver: DriverType;
+	timingDriver: TimingDataDriver;
+	appTimingDriver: TimingAppDataDriver | undefined;
+
+	currentBestName: string | undefined;
+	currentBestTime: string | undefined;
 };
 
-export default function DriverQuali({ driver }: Props) {
-	const stints = driver.stints;
+export default function DriverQuali({
+	driver,
+	timingDriver,
+	appTimingDriver,
+	currentBestName,
+	currentBestTime,
+}: Props) {
+	const stints = appTimingDriver?.stints ?? [];
 	const currentStint = stints ? stints[stints.length - 1] : null;
 	const unknownCompound = !["soft", "medium", "hard", "intermediate", "wet"].includes(currentStint?.compound ?? "");
+
+	// const currentTime =
 
 	return (
 		<motion.div
@@ -27,9 +40,9 @@ export default function DriverQuali({ driver }: Props) {
 			initial={{ opacity: 0 }}
 		>
 			<div className="flex justify-between">
-				<DriverTag position={parseInt(driver.position)} teamColor={driver.teamColor} short={driver.short} />
+				<DriverTag position={parseInt(timingDriver.position)} teamColor={driver.teamColour} short={driver.tla} />
 				<div>
-					{currentStint && !unknownCompound && (
+					{currentStint && !unknownCompound && currentStint.compound && (
 						<Image
 							src={`/tires/${currentStint.compound.toLowerCase()}.svg`}
 							width={32}
@@ -52,12 +65,12 @@ export default function DriverQuali({ driver }: Props) {
 				<p className="text-3xl font-semibold">1231</p>
 
 				<div className="flex flex-col items-end">
-					<p className="text-xl leading-none text-gray-500">40.9</p>
-					<p className="text-sm font-medium leading-none text-gray-500">Hamilton</p>
+					<p className="text-xl leading-none text-gray-500">{currentBestTime}</p>
+					<p className="text-sm font-medium leading-none text-gray-500">{currentBestName}</p>
 				</div>
 			</div>
 
-			<DriverMiniSectors sectors={driver.sectors} driverDisplayName={`quali.${driver.short}`} />
+			<DriverMiniSectors sectors={timingDriver.sectors} tla={`quali.${driver.tla}`} />
 		</motion.div>
 	);
 }

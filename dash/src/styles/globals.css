@@ -1,3 +1,18 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.pulse-loading-spinner {
+	animation: pulse-loading 1.2s cubic-bezier(0.52, 0.6, 0.25, 0.99) infinite;
+}
+
+@keyframes pulse-loading {
+	0% {
+		r: 0;
+		opacity: 1;
+	}
+	100% {
+		r: 11px;
+		opacity: 0;
+	}
+}

@@ -1,24 +1,26 @@
 "use client";
 
 import { motion } from "framer-motion";
-
-import { DriverType } from "@/types/state.type";
-import Graph from "./Graph";
-import DriverHistoryTires from "./DriverHistoryTires";
 import clsx from "clsx";
 
+import DriverHistoryTires from "@/components/DriverHistoryTires";
+import Graph from "@/components/Graph";
+
+import { Driver as DriverType, TimingDataDriver, TimingAppDataDriver } from "@/types/state.type";
+
 type Props = {
-	driver: DriverType;
+	history: undefined;
+	appTimingDriver: TimingAppDataDriver | undefined;
 };
 
 const maxLength = (values: number[], max: number): number[] => {
 	return values.slice(-max);
 };
 
-export default function DriverDetailed({ driver }: Props) {
+export default function DriverDetailed({ history, appTimingDriver }: Props) {
 	return (
 		<>
-			{driver.gapHistory && driver.sectorHisotry && driver.laptimeHistory && (
+			{/* {driver.gapHistory && driver.sectorHisotry && driver.laptimeHistory && (
 				<motion.div
 					key="additonal"
 					className={clsx("grid place-items-center items-center gap-1 py-1")}
@@ -58,7 +60,7 @@ export default function DriverDetailed({ driver }: Props) {
 						</div>
 					</div>
 				</motion.div>
-			)}
+			)} */}
 		</>
 	);
 }

@@ -6,10 +6,10 @@ import { sortUtc } from "@/lib/sortUtc";
 
 import { RaceControlMessage } from "@/components/RaceControlMessage";
 
-import { RaceControlMessageType } from "@/types/state.type";
+import { RaceControlMessages } from "@/types/state.type";
 
 type Props = {
-	messages: RaceControlMessageType[] | undefined;
+	messages: RaceControlMessages | undefined;
 };
 
 export default function RaceControl({ messages }: Props) {
@@ -20,7 +20,7 @@ export default function RaceControl({ messages }: Props) {
 
 			{messages && (
 				<AnimatePresence>
-					{messages.sort(sortUtc).map((msg) => (
+					{messages.messages.sort(sortUtc).map((msg) => (
 						<RaceControlMessage key={`msg.${utc(msg.utc).unix()}.${msg.message.toLocaleLowerCase()}`} msg={msg} />
 					))}
 				</AnimatePresence>
