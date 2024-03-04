@@ -1,7 +1,6 @@
 import { serve, Serve, Server, version } from "bun";
 import { randomUUID } from "crypto";
 import pack from "../../../package.json";
-import { verifyJwt } from "../../auth/jwt";
 import { cacheOptions } from "../../cache/cache";
 import { config } from "../../config/config";
 import { crontab, tabs } from "../../cron/cron";
@@ -109,7 +108,7 @@ export const bootstrap = (): FluxifyServer => {
 					let param: Param | unknown = extractParam(targetRoute, endpoint);
 					let query: Query | unknown = Object.fromEntries(url.searchParams);
 					let body = await parseBody(request);
-					let jwt: unknown | null = null;
+					const jwt: unknown | null = null;
 					stop(request, "request");
 
 					if (targetRoute.schema) {
@@ -124,9 +123,6 @@ export const bootstrap = (): FluxifyServer => {
 								stop(request, "schema");
 								throw Unauthorized();
 							}
-							jwt = targetRoute.schema.jwt.parse(
-								verifyJwt(token ? token.split(" ")[1].trim() : cookie ? cookie.split("=")[1].trim() : ""),
-							);
 						}
 						if (targetRoute.schema.param) param = targetRoute.schema.param.parse(param);
 						if (targetRoute.schema.query) query = targetRoute.schema.query.parse(query);

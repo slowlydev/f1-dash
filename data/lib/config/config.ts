@@ -1,5 +1,4 @@
 import { Env } from "bun";
-import { randomBytes } from "crypto";
 import { readFileSync } from "fs";
 import { boolean } from "../validation/boolean/boolean";
 import { number } from "../validation/number/number";
@@ -24,9 +23,6 @@ export const validateConfig = (env: Env): Config => {
 			globalPrefix: string().optional().max(12).default(""),
 			defaultVersion: number().optional().transform().min(1).default(0),
 
-			jwtSecret: string().optional().default(randomBytes(32).toString("hex")),
-			jwtExpiry: number().optional().transform().min(0).default(1600),
-
 			cacheTtl: number().optional().transform().min(0).default(0),
 			cacheLimit: number().optional().transform().min(0).default(0),
 
@@ -48,8 +44,6 @@ export const validateConfig = (env: Env): Config => {
 			allowOrigin: env.ALLOW_ORIGIN,
 			globalPrefix: env.GLOBAL_PREFIX,
 			defaultVersion: env.DEFAULT_VERSION,
-			jwtSecret: env.JWT_SECRET,
-			jwtExpiry: env.JWT_EXPIRY,
 			cacheTtl: env.CACHE_TTL,
 			cacheLimit: env.CACHE_LIMIT,
 			throttleTtl: env.THROTTLE_TTL,
