@@ -1,6 +1,6 @@
 import { config } from "lib/config";
 import { emit, emitter, subscribe } from "lib/event";
-import { error, info } from "lib/logger";
+import { debug, error, info } from "lib/logger";
 import { updateState } from "./f1.handler";
 import { translate } from "./f1.translator";
 import { F1State } from "./f1.type";
@@ -8,10 +8,11 @@ import { F1State } from "./f1.type";
 const channel = "f1-data";
 let state: F1State = {};
 let socket: WebSocket | null = null;
+let connecting = false;
 
 type Negotiation = { token: string; cookie: string | null };
 const negotiate = async (): Promise<Negotiation | null> => {
-	info("negotiating...");
+	debug("negotiating...");
 	if (config.f1BaseUrl.includes("localhost")) return { token: "", cookie: null };
 	const params = new URLSearchParams({
 		clientProtocol: "1.5",
@@ -29,7 +30,7 @@ const negotiate = async (): Promise<Negotiation | null> => {
 
 const connect = (negotiation: Negotiation): Promise<WebSocket | null> => {
 	return new Promise((resolve) => {
-		info("connecting socket...");
+		debug("connecting socket...");
 		const params = new URLSearchParams({
 			clientProtocol: "1.5",
 			transport: "webSockets",
@@ -42,7 +43,7 @@ const connect = (negotiation: Negotiation): Promise<WebSocket | null> => {
 			headers: { "accept-encoding": "gzip,identity", cookie: negotiation.cookie ?? "" },
 		});
 		socket.onopen = () => {
-			info("sending subscribe request...");
+			debug("sending subscribe request...");
 			socket.send(
 				JSON.stringify({
 					H: "Streaming",
@@ -102,9 +103,11 @@ const setup = async (): Promise<void> => {
 };
 
 setInterval(async () => {
-	if (emitter.listenerCount(channel) > 0 && !socket) {
+	if (emitter.listenerCount(channel) > 0 && !socket && !connecting) {
 		info("we got connections opening web socket");
+		connecting = true;
 		await setup();
+		connecting = false;
 	} else if (emitter.listenerCount(channel) === 0 && socket) {
 		info("no connections left closing web socket");
 		socket.close();
