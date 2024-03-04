@@ -110,7 +110,7 @@ export const translateRaceControlMessages = (e: F1RaceControlMessages, si: F1Ses
 		...(e2.Scope && { scope: e2.Scope }),
 		...(e2.Sector && { sector: e2.Sector }),
 		...(e2.Status && { drsEnabled: e2.Status === "ENABLED" }),
-	}));
+	})).filter((msg) => !!msg);
 };
 
 export const translateTeamRadios = (e: F1TeamRadio, drivers: F1DriverList, sessionInfo: F1SessionInfo): TeamRadio[] => {
