@@ -1,8 +1,8 @@
-import { router } from 'lib/router';
-import { findNextMeeting } from './meeting.service';
+import { router } from "lib/router";
+import { findNextMeeting } from "./meeting.service";
 
-const app = router('next-meeting');
+const app = router("next-meeting");
 
-app.get('', null, () => {
+app.get("", null, () => {
 	return findNextMeeting();
 });

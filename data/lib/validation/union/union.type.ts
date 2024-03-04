@@ -1,4 +1,4 @@
-import { DefaultParser, ParseFunction, Parser, RecursiveParser, Type } from '../parser.type';
+import { DefaultParser, ParseFunction, Parser, RecursiveParser, Type } from "../parser.type";
 
 export type UnionParser<T> = RecursiveParser<
 	{

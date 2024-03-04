@@ -1,49 +1,49 @@
-import { ParseFunction } from '../../validation/parser.type';
+import { ParseFunction } from "../../validation/parser.type";
 
 export type Type =
-	| 'int'
-	| 'integer'
-	| 'tinyint'
-	| 'smallint'
-	| 'mediumint'
-	| 'bigint'
-	| 'int2'
-	| 'int8'
-	| 'character'
-	| 'varchar'
-	| 'text'
-	| 'blob'
-	| 'real'
-	| 'double'
-	| 'float'
-	| 'numeric'
-	| 'decimal'
-	| 'boolean'
-	| 'date'
-	| 'datetime';
+	| "int"
+	| "integer"
+	| "tinyint"
+	| "smallint"
+	| "mediumint"
+	| "bigint"
+	| "int2"
+	| "int8"
+	| "character"
+	| "varchar"
+	| "text"
+	| "blob"
+	| "real"
+	| "double"
+	| "float"
+	| "numeric"
+	| "decimal"
+	| "boolean"
+	| "date"
+	| "datetime";
 
-export type Action = 'no action' | 'restrict' | 'set null' | 'set default' | 'cascade' | 'abort';
+export type Action = "no action" | "restrict" | "set null" | "set default" | "cascade" | "abort";
 
-export type Return<T> = T extends 'character' | 'varchar' | 'text' | 'blob'
+export type Return<T> = T extends "character" | "varchar" | "text" | "blob"
 	? string
 	: T extends
-			| 'int'
-			| 'integer'
-			| 'tinyint'
-			| 'smallint'
-			| 'mediumint'
-			| 'bigint'
-			| 'int2'
-			| 'int8'
-			| 'real'
-			| 'double'
-			| 'float'
-			| 'numeric'
-			| 'decimal'
+			| "int"
+			| "integer"
+			| "tinyint"
+			| "smallint"
+			| "mediumint"
+			| "bigint"
+			| "int2"
+			| "int8"
+			| "real"
+			| "double"
+			| "float"
+			| "numeric"
+			| "decimal"
 	? number
-	: T extends 'boolean'
+	: T extends "boolean"
 	? boolean
-	: T extends 'date' | 'datetime'
+	: T extends "date" | "datetime"
 	? Date
 	: never;
 
@@ -72,19 +72,19 @@ export type Constraints = {
 };
 
 export type RecursiveParser<T, P, D, Called extends keyof T = never> = {
-	[K in keyof T as Exclude<K, Called>]: K extends 'parse'
+	[K in keyof T as Exclude<K, Called>]: K extends "parse"
 		? (argument: P extends null ? P : unknown) => P
-		: K extends 'constraints'
+		: K extends "constraints"
 		? Constraints
-		: K extends 'type'
+		: K extends "type"
 		? Type
-		: K extends 'length'
+		: K extends "length"
 		? (value: number) => RecursiveParser<T, D, D, Called | K>
-		: K extends 'delete'
+		: K extends "delete"
 		? (action: Action) => RecursiveParser<T, D, D, Called | K>
-		: K extends 'name'
+		: K extends "name"
 		? (name: string) => RecursiveParser<T, D, D, Called | K>
-		: () => RecursiveParser<T, K extends 'nullable' ? P | null : P, D, Called | K>;
+		: () => RecursiveParser<T, K extends "nullable" ? P | null : P, D, Called | K>;
 };
 
 export type ColumnParser<T> = RecursiveParser<

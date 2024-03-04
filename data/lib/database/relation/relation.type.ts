@@ -1,5 +1,5 @@
-import { ParseFunction } from '../../validation/parser.type';
-import { Constraints, Parser, RecursiveParser, Type } from '../column/column.type';
+import { ParseFunction } from "../../validation/parser.type";
+import { Constraints, Parser, RecursiveParser, Type } from "../column/column.type";
 
 export type RelationParser<T extends string | number> = RecursiveParser<
 	{

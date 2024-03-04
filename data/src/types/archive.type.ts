@@ -28,7 +28,7 @@ type Country = {
 
 export type ArchiveSession = {
 	key: number;
-	type: 'practice' | 'qualifying' | 'race';
+	type: "practice" | "qualifying" | "race";
 	number?: number;
 	name: string;
 	startDate: string;

@@ -1,12 +1,12 @@
-import { isObject } from '../assert/assert';
-import { ValidationError } from '../error';
-import { Parser, Type } from '../parser.type';
-import { ObjectParser } from './object.type';
+import { isObject } from "../assert/assert";
+import { ValidationError } from "../error";
+import { Parser, Type } from "../parser.type";
+import { ObjectParser } from "./object.type";
 
 export const keyIsNot = (name: string, type: Type[], value?: unknown): ValidationError => {
 	return new ValidationError(
-		`${name} is not of type ${type.length > 1 ? type.join(' | ') : type[0]} (${
-			value === null ? 'null' : Array.isArray(value) ? 'array' : typeof value
+		`${name} is not of type ${type.length > 1 ? type.join(" | ") : type[0]} (${
+			value === null ? "null" : Array.isArray(value) ? "array" : typeof value
 		} given)`,
 	);
 };
@@ -21,9 +21,9 @@ export const keyNotWanted = (name: string): ValidationError => {
 
 export const object = <T, S extends Record<string, Parser<T>>>(
 	schema: S,
-): ObjectParser<{ [K in keyof S]: ReturnType<S[K]['parse']> }> => {
+): ObjectParser<{ [K in keyof S]: ReturnType<S[K]["parse"]> }> => {
 	function validate(argument: unknown): asserts argument is {
-		[K in keyof S]: ReturnType<S[K]['parse']>;
+		[K in keyof S]: ReturnType<S[K]["parse"]>;
 	} {
 		isObject(argument);
 		for (const key of Object.keys(schema)) {
@@ -36,9 +36,9 @@ export const object = <T, S extends Record<string, Parser<T>>>(
 					);
 				}
 			} else {
-				if (argument[key as keyof typeof argument] === undefined && !schema[key].type.includes('undefined')) {
+				if (argument[key as keyof typeof argument] === undefined && !schema[key].type.includes("undefined")) {
 					throw keyIsMissing(key, schema[key].type[0]);
-				} else if (!schema[key].type.includes('undefined')) {
+				} else if (!schema[key].type.includes("undefined")) {
 					throw keyIsNot(key, schema[key].type, argument[key as keyof typeof argument]);
 				} else {
 					(argument as Record<string, unknown>)[key] = schema[key].parse(argument[key as keyof typeof argument]);
@@ -52,25 +52,25 @@ export const object = <T, S extends Record<string, Parser<T>>>(
 	}
 
 	const options = {
-		type: ['object'] as Type[],
+		type: ["object"] as Type[],
 		transform: () => {
-			options.type.push('transform');
+			options.type.push("transform");
 			return options;
 		},
 		optional: () => {
-			options.type.push('undefined');
+			options.type.push("undefined");
 			return options;
 		},
 		nullable: () => {
-			options.type.push('null');
+			options.type.push("null");
 			return options;
 		},
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		parse: (argument: unknown): any => {
-			if (options.type.includes('undefined') && argument === undefined) {
+			if (options.type.includes("undefined") && argument === undefined) {
 				return argument;
 			}
-			if (options.type.includes('null') && argument === null) {
+			if (options.type.includes("null") && argument === null) {
 				return argument;
 			}
 			validate(argument);

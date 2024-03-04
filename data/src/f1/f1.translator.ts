@@ -13,7 +13,7 @@ import {
 	TeamRadio,
 	TrackStatus,
 	Weather,
-} from '../types/models';
+} from "../types/models";
 import {
 	F1CarData,
 	F1DriverList,
@@ -30,8 +30,8 @@ import {
 	F1TimingStats,
 	F1TrackStatus,
 	F1WeatherData,
-} from './f1.type';
-import { toTrackTime } from './f1.util';
+} from "./f1.type";
+import { toTrackTime } from "./f1.util";
 
 export const translateExtrapolatedClock = (e: F1ExtrapolatedClock): ExtrapolatedClock => {
 	return {
@@ -109,7 +109,7 @@ export const translateRaceControlMessages = (e: F1RaceControlMessages, si: F1Ses
 		...(e2.Flag && { flag: e2.Flag }),
 		...(e2.Scope && { scope: e2.Scope }),
 		...(e2.Sector && { sector: e2.Sector }),
-		...(e2.Status && { drsEnabled: e2.Status === 'ENABLED' }),
+		...(e2.Status && { drsEnabled: e2.Status === "ENABLED" }),
 	}));
 };
 
@@ -164,17 +164,17 @@ export const translatePositions = (e: F1Position, drivers: F1DriverList, td: F1T
 						teamColor: driver.TeamColour,
 
 						status: tdDriver.KnockedOut
-							? 'OUT'
+							? "OUT"
 							: tdDriver.Cutoff
-							? 'CUTOFF'
+							? "CUTOFF"
 							: tdDriver.Retired
-							? 'RETIRED'
+							? "RETIRED"
 							: tdDriver.Stopped
-							? 'STOPPED'
+							? "STOPPED"
 							: tdDriver.InPit
-							? 'PIT'
+							? "PIT"
 							: tdDriver.PitOut
-							? 'PIT OUT'
+							? "PIT OUT"
 							: null,
 
 						x: e2.X,
@@ -223,17 +223,17 @@ export const translateDrivers = (
 				teamColor: driver.TeamColour,
 
 				status: tdDriver.KnockedOut
-					? 'OUT'
+					? "OUT"
 					: tdDriver.Cutoff
-					? 'CUTOFF'
+					? "CUTOFF"
 					: tdDriver.Retired
-					? 'RETIRED'
+					? "RETIRED"
 					: tdDriver.Stopped
-					? 'STOPPED'
+					? "STOPPED"
 					: tdDriver.InPit
-					? 'PIT'
+					? "PIT"
 					: tdDriver.PitOut
-					? 'PIT OUT'
+					? "PIT OUT"
 					: null,
 
 				danger: !!tdDriver.Cutoff,
@@ -244,12 +244,12 @@ export const translateDrivers = (
 					tdDriver.GapToLeader ??
 					(tdDriver.Stats ? tdDriver.Stats[statsNumber].TimeDiffToFastest : undefined) ??
 					tdDriver.TimeDiffToFastest ??
-					'',
+					"",
 				gapToFront:
 					tdDriver.IntervalToPositionAhead?.Value ??
 					(tdDriver.Stats ? tdDriver.Stats[statsNumber].TimeDifftoPositionAhead : undefined) ??
 					tdDriver.TimeDiffToPositionAhead ??
-					'',
+					"",
 
 				catchingFront: tdDriver.IntervalToPositionAhead?.Catching ?? false,
 
@@ -261,7 +261,7 @@ export const translateDrivers = (
 							pb: e.PersonalFastest,
 						},
 						last: {
-							value: e.PreviousValue ?? '',
+							value: e.PreviousValue ?? "",
 							fastest: false,
 							pb: false,
 						},
@@ -272,9 +272,9 @@ export const translateDrivers = (
 				stints: appTiming.Stints
 					? appTiming.Stints.map(
 							(e): Stint => ({
-								compound: (e.Compound ?? 'hard').toLowerCase() as Stint['compound'],
+								compound: (e.Compound ?? "hard").toLowerCase() as Stint["compound"],
 								laps: e.TotalLaps ?? 0,
-								new: e.New === 'true',
+								new: e.New === "true",
 							}),
 					  )
 					: [],
@@ -300,9 +300,9 @@ export const translateDrivers = (
 				},
 
 				metrics: {
-					gear: car ? car['3'] : 0,
-					rpm: car ? car['0'] : 0,
-					speed: car ? car['2'] : 0,
+					gear: car ? car["3"] : 0,
+					rpm: car ? car["0"] : 0,
+					speed: car ? car["2"] : 0,
 				},
 			};
 		})

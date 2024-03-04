@@ -103,7 +103,7 @@ export type Driver = {
 	teamName: string;
 	teamColor: string;
 
-	status: 'OUT' | 'RETIRED' | 'STOPPED' | 'PIT' | 'PIT OUT' | 'CUTOFF' | null;
+	status: "OUT" | "RETIRED" | "STOPPED" | "PIT" | "PIT OUT" | "CUTOFF" | null;
 	danger: boolean;
 
 	gapToLeader: string;
@@ -138,7 +138,7 @@ export type LapTimes = {
 };
 
 export type Stint = {
-	compound: 'soft' | 'medium' | 'hard' | 'intermediate' | 'wet';
+	compound: "soft" | "medium" | "hard" | "intermediate" | "wet";
 	laps: number;
 	new: boolean;
 };
@@ -171,7 +171,7 @@ export type DriverPosition = {
 
 	teamColor: string;
 
-	status: Driver['status'];
+	status: Driver["status"];
 
 	x: number;
 	y: number;

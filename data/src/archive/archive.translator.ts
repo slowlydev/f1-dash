@@ -1,6 +1,6 @@
-import { F1TopThree } from '../f1/f1.type';
-import { Archive, ArchiveSession, TopThreeDriver } from '../types/archive.type';
-import { F1Archive } from './archive.type';
+import { F1TopThree } from "../f1/f1.type";
+import { Archive, ArchiveSession, TopThreeDriver } from "../types/archive.type";
+import { F1Archive } from "./archive.type";
 
 export const translateArchive = (archive: F1Archive): Archive => {
 	return {
@@ -53,6 +53,6 @@ export const translateTopThree = (topThree: F1TopThree): TopThreeDriver[] => {
 	});
 };
 
-export const sessionTypeTranslation = (type: string): ArchiveSession['type'] => {
-	return type.toLowerCase() as ArchiveSession['type'];
+export const sessionTypeTranslation = (type: string): ArchiveSession["type"] => {
+	return type.toLowerCase() as ArchiveSession["type"];
 };

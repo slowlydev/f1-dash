@@ -1,11 +1,11 @@
-import { error, info } from '../../logger/logger';
-import { extractExports, filterFiles, searchFiles } from './helper';
+import { error, info } from "../../logger/logger";
+import { extractExports, filterFiles, searchFiles } from "./helper";
 
-const matchingFiles = filterFiles(searchFiles('./src', /\.seed\.ts$/), process.argv[2]);
+const matchingFiles = filterFiles(searchFiles("./src", /\.seed\.ts$/), process.argv[2]);
 const seeds = await extractExports(matchingFiles);
 
 if (seeds.length === 0) {
-	info('no seeds found for running');
+	info("no seeds found for running");
 } else {
 	info(`found ${seeds.length} seeds to run`);
 }

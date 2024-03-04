@@ -1,5 +1,5 @@
-import { F1EventTracker } from './event-tracker.type';
-import { NextMeeting, NextMeetingSession } from './meeting.type';
+import { F1EventTracker } from "./event-tracker.type";
+import { NextMeeting, NextMeetingSession } from "./meeting.type";
 
 export const translateNextMeeting = (eventTracker: F1EventTracker): NextMeeting => {
 	return {

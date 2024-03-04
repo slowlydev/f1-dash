@@ -1,5 +1,5 @@
-import { config } from '../config/config';
-import { FluxifyResponse, HandlerSchema, Path, Route, Schema } from './router.type';
+import { config } from "../config/config";
+import { FluxifyResponse, HandlerSchema, Path, Route, Schema } from "./router.type";
 
 export const routes: Route[] = [];
 
@@ -38,27 +38,27 @@ type Router = {
 
 export const fuseEndpoint = (endpoint: Path, prefix: string, version?: number, base?: Path): string => {
 	const fragments: string[] = [
-		typeof endpoint === 'object' && endpoint.prefix !== undefined
+		typeof endpoint === "object" && endpoint.prefix !== undefined
 			? endpoint.prefix
-			: typeof base === 'object' && base.prefix !== undefined
+			: typeof base === "object" && base.prefix !== undefined
 			? base.prefix
 			: prefix,
-		typeof endpoint === 'object' && endpoint.version
+		typeof endpoint === "object" && endpoint.version
 			? `v${endpoint.version}`
-			: typeof base === 'object' && base.version
+			: typeof base === "object" && base.version
 			? `v${base.version}`
 			: version
 			? `v${version}`
-			: '',
-		typeof base === 'object' ? base.path : base ?? '',
-		typeof endpoint === 'object' ? endpoint.path : endpoint,
+			: "",
+		typeof base === "object" ? base.path : base ?? "",
+		typeof endpoint === "object" ? endpoint.path : endpoint,
 	];
 	return (
 		fragments
 			.filter((frag) => frag.length)
-			.map((frag) => (frag.startsWith('/') ? frag : `/${frag}`))
-			.map((frag) => (frag.endsWith('/') ? frag.substring(0, frag.length - 1) : frag))
-			.join('') || '/'
+			.map((frag) => (frag.startsWith("/") ? frag : `/${frag}`))
+			.map((frag) => (frag.endsWith("/") ? frag.substring(0, frag.length - 1) : frag))
+			.join("") || "/"
 	);
 };
 
@@ -70,7 +70,7 @@ export const router = (base?: Path): Router => {
 			handler: ({ param, query, body, jwt }: HandlerSchema<P, Q, B, J>) => FluxifyResponse,
 		): void {
 			routes.push({
-				method: 'all',
+				method: "all",
 				schema,
 				endpoint: fuseEndpoint(endpoint, config.globalPrefix, config.defaultVersion, base),
 				handler,
@@ -83,7 +83,7 @@ export const router = (base?: Path): Router => {
 			handler: ({ param, query, body, jwt }: HandlerSchema<P, Q, B, J>) => FluxifyResponse,
 		): void {
 			routes.push({
-				method: 'get',
+				method: "get",
 				schema,
 				endpoint: fuseEndpoint(endpoint, config.globalPrefix, config.defaultVersion, base),
 				handler,
@@ -96,7 +96,7 @@ export const router = (base?: Path): Router => {
 			handler: ({ param, query, body, jwt }: HandlerSchema<P, Q, B, J>) => FluxifyResponse,
 		): void {
 			routes.push({
-				method: 'post',
+				method: "post",
 				schema,
 				endpoint: fuseEndpoint(endpoint, config.globalPrefix, config.defaultVersion, base),
 				handler,
@@ -109,7 +109,7 @@ export const router = (base?: Path): Router => {
 			handler: ({ param, query, body, jwt }: HandlerSchema<P, Q, B, J>) => FluxifyResponse,
 		): void {
 			routes.push({
-				method: 'put',
+				method: "put",
 				schema,
 				endpoint: fuseEndpoint(endpoint, config.globalPrefix, config.defaultVersion, base),
 				handler,
@@ -122,7 +122,7 @@ export const router = (base?: Path): Router => {
 			handler: ({ param, query, body, jwt }: HandlerSchema<P, Q, B, J>) => FluxifyResponse,
 		): void {
 			routes.push({
-				method: 'patch',
+				method: "patch",
 				schema,
 				endpoint: fuseEndpoint(endpoint, config.globalPrefix, config.defaultVersion, base),
 				handler,
@@ -135,7 +135,7 @@ export const router = (base?: Path): Router => {
 			handler: ({ param, query, body, jwt }: HandlerSchema<P, Q, B, J>) => FluxifyResponse,
 		): void {
 			routes.push({
-				method: 'delete',
+				method: "delete",
 				schema,
 				endpoint: fuseEndpoint(endpoint, config.globalPrefix, config.defaultVersion, base),
 				handler,

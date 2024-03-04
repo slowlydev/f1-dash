@@ -1,5 +1,5 @@
-import { Constraints, Return, Type } from '../column/column.type';
-import { ColumnParser } from './column.type';
+import { Constraints, Return, Type } from "../column/column.type";
+import { ColumnParser } from "./column.type";
 
 export const column = <T extends Type>(type: T): ColumnParser<Return<T>> => {
 	const options = {

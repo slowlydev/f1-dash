@@ -1,6 +1,6 @@
-import EventEmitter from 'events';
-import { defaultHeaders } from '../core/response/response';
-import { debug, info } from '../logger/logger';
+import EventEmitter from "events";
+import { defaultHeaders } from "../core/response/response";
+import { debug, info } from "../logger/logger";
 
 export const emitter = new EventEmitter();
 emitter.setMaxListeners(2048);
@@ -8,11 +8,11 @@ emitter.setMaxListeners(2048);
 export const subscribe = (req: Request, channel: string, data?: unknown): Response => {
 	return new Response(
 		new ReadableStream({
-			type: 'direct',
+			type: "direct",
 			pull(controller: ReadableStreamDirectController) {
-				let id = +(req.headers.get('last-event-id') ?? 1);
+				let id = +(req.headers.get("last-event-id") ?? 1);
 				const handler = async (dat: unknown): Promise<void> => {
-					await controller.write(`id:${id}\ndata:${dat !== undefined ? JSON.stringify(dat) : ''}\n\n`);
+					await controller.write(`id:${id}\ndata:${dat !== undefined ? JSON.stringify(dat) : ""}\n\n`);
 					await controller.flush();
 					id++;
 				};
@@ -28,7 +28,7 @@ export const subscribe = (req: Request, channel: string, data?: unknown): Respon
 		}),
 		{
 			status: 200,
-			headers: { ...defaultHeaders, 'content-type': 'text/event-stream;charset=utf-8' },
+			headers: { ...defaultHeaders, "content-type": "text/event-stream;charset=utf-8" },
 		},
 	);
 };

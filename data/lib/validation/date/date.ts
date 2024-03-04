@@ -1,30 +1,30 @@
-import { isDate } from '../assert/assert';
-import { DateParser } from './date.type';
+import { isDate } from "../assert/assert";
+import { DateParser } from "./date.type";
 
 export const date = (): DateParser => {
 	const options: DateParser = {
-		type: ['date'],
+		type: ["date"],
 		transform: () => {
-			options.type.push('transform');
+			options.type.push("transform");
 			return options;
 		},
 		optional: () => {
-			options.type.push('undefined');
+			options.type.push("undefined");
 			return options;
 		},
 		nullable: () => {
-			options.type.push('null');
+			options.type.push("null");
 			return options;
 		},
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		parse: (argument: unknown): any => {
-			if (options.type.includes('transform') && typeof argument === 'string') {
+			if (options.type.includes("transform") && typeof argument === "string") {
 				return new Date(argument);
 			}
-			if (options.type.includes('undefined') && argument === undefined) {
+			if (options.type.includes("undefined") && argument === undefined) {
 				return argument;
 			}
-			if (options.type.includes('null') && argument === null) {
+			if (options.type.includes("null") && argument === null) {
 				return argument;
 			}
 			isDate(argument);

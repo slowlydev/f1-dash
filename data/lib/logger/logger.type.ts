@@ -1,4 +1,4 @@
-import { Method } from '../router/router.type';
+import { Method } from "../router/router.type";
 
 export type LoggerRequest = { id: string; timestamp: number; ip: string; method: Method; endpoint: string };
 export type LoggerResponse = { id: string; timestamp: number; status: number; time: number; bytes: number };

@@ -10,4 +10,4 @@ export {
 	NotFound,
 	TooManyRequests,
 	Unauthorized,
-} from './exception';
+} from "./exception";

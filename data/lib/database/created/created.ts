@@ -1,8 +1,8 @@
-import { CreatedParser } from './created.type';
+import { CreatedParser } from "./created.type";
 
 export const created = (): CreatedParser => {
 	const options: CreatedParser = {
-		type: 'datetime',
+		type: "datetime",
 		constraints: {
 			name: undefined,
 			default: `(datetime('now'))`,

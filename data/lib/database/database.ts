@@ -1,13 +1,13 @@
-import { Database, SQLQueryBindings } from 'bun:sqlite';
-import { config } from '../config/config';
-import { debug } from '../logger/logger';
-import { IdEntity } from '../repository/repository.type';
+import { Database, SQLQueryBindings } from "bun:sqlite";
+import { config } from "../config/config";
+import { debug } from "../logger/logger";
+import { IdEntity } from "../repository/repository.type";
 
-const database = new Database(config.stage === 'test' ? ':memory:' : config.databasePath, {
-	readonly: config.stage === 'test' ? false : config.databaseMode === 'readonly',
-	readwrite: config.stage === 'test' ? true : config.databaseMode === 'readwrite',
+const database = new Database(config.stage === "test" ? ":memory:" : config.databasePath, {
+	readonly: config.stage === "test" ? false : config.databaseMode === "readonly",
+	readwrite: config.stage === "test" ? true : config.databaseMode === "readwrite",
 });
-database.run('pragma foreign_keys = on;');
+database.run("pragma foreign_keys = on;");
 
 export const runQuery = (query: string, params: SQLQueryBindings[] = []): void => {
 	const statement = database.prepare(`${query};`, params);

@@ -1,4 +1,4 @@
-import { ParseFunction, Parser, RecursiveParser, Type } from '../parser.type';
+import { ParseFunction, Parser, RecursiveParser, Type } from "../parser.type";
 
 export type ObjectParser<T> = RecursiveParser<
 	{

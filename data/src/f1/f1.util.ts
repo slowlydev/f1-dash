@@ -15,7 +15,7 @@
 export const toTrackTime = (utc: string, offset: string): string => {
 	const date = new Date(utc);
 
-	const [hours, minutes, seconds]: (number | undefined)[] = offset.split(':').map((unit) => parseInt(unit));
+	const [hours, minutes, seconds]: (number | undefined)[] = offset.split(":").map((unit) => parseInt(unit));
 
 	if (!hours || !minutes || !seconds) return date.toISOString();
 

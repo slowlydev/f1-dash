@@ -1,17 +1,17 @@
-import { isString } from '../assert/assert';
-import { StringParser } from './string.type';
+import { isString } from "../assert/assert";
+import { StringParser } from "./string.type";
 
 export const string = (): StringParser => {
 	const options: StringParser = {
-		type: ['string'],
+		type: ["string"],
 		base: undefined,
 		constraints: { regex: undefined, min: undefined, max: undefined },
 		optional: () => {
-			options.type.push('undefined');
+			options.type.push("undefined");
 			return options;
 		},
 		nullable: () => {
-			options.type.push('null');
+			options.type.push("null");
 			return options;
 		},
 		default: (value: string) => {
@@ -32,13 +32,13 @@ export const string = (): StringParser => {
 		},
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		parse: (argument: unknown): any => {
-			if (argument === undefined && options.type.includes('undefined') && options.base !== undefined) {
+			if (argument === undefined && options.type.includes("undefined") && options.base !== undefined) {
 				return options.base;
 			}
-			if (options.type.includes('undefined') && argument === undefined) {
+			if (options.type.includes("undefined") && argument === undefined) {
 				return argument;
 			}
-			if (options.type.includes('null') && argument === null) {
+			if (options.type.includes("null") && argument === null) {
 				return argument;
 			}
 			isString(argument, options.constraints);

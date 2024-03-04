@@ -1,10 +1,10 @@
-import { IdEntity } from '../repository/repository.type';
-import { Timing } from '../timing/timing.type';
-import { Parser } from '../validation/parser.type';
+import { IdEntity } from "../repository/repository.type";
+import { Timing } from "../timing/timing.type";
+import { Parser } from "../validation/parser.type";
 
 export type Path = string | { path: string; version?: number; prefix?: string };
 
-export type Method = 'all' | 'get' | 'post' | 'put' | 'patch' | 'delete' | 'options';
+export type Method = "all" | "get" | "post" | "put" | "patch" | "delete" | "options";
 
 export type Param = Record<string, unknown>;
 
@@ -47,16 +47,16 @@ export type HandlerSchema<P, Q, B, J> = {
 
 type TypedParam<P> = P extends undefined
 	? undefined
-	: ReturnType<NonNullable<Schema<P, unknown, unknown, unknown>['param']>['parse']>;
+	: ReturnType<NonNullable<Schema<P, unknown, unknown, unknown>["param"]>["parse"]>;
 
 type TypedQuery<Q> = Q extends undefined
 	? undefined
-	: ReturnType<NonNullable<Schema<unknown, Q, unknown, unknown>['query']>['parse']>;
+	: ReturnType<NonNullable<Schema<unknown, Q, unknown, unknown>["query"]>["parse"]>;
 
 type TypedBody<B> = B extends undefined
 	? undefined
-	: ReturnType<NonNullable<Schema<unknown, unknown, B, unknown>['body']>['parse']>;
+	: ReturnType<NonNullable<Schema<unknown, unknown, B, unknown>["body"]>["parse"]>;
 
 type TypedJwt<J> = J extends undefined
 	? undefined
-	: ReturnType<NonNullable<Schema<unknown, unknown, unknown, J>['jwt']>['parse']>;
+	: ReturnType<NonNullable<Schema<unknown, unknown, unknown, J>["jwt"]>["parse"]>;

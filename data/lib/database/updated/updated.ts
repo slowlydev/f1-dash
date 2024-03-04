@@ -1,9 +1,9 @@
-import { Constraints, Type } from '../column/column.type';
-import { UpdatedParser } from './updated.type';
+import { Constraints, Type } from "../column/column.type";
+import { UpdatedParser } from "./updated.type";
 
 export const updated = (): UpdatedParser => {
 	const options = {
-		type: 'datetime' as Type,
+		type: "datetime" as Type,
 		constraints: {
 			name: undefined,
 			nullable: true,

@@ -1,5 +1,5 @@
-import { debug } from '../../logger/logger';
-import { Serializer } from './serialize.type';
+import { debug } from "../../logger/logger";
+import { Serializer } from "./serialize.type";
 
 export const serializer: Serializer = {
 	req: (request) => request.json(),

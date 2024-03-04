@@ -1,5 +1,5 @@
-import { Env } from 'bun';
-import { Method } from '../router/router.type';
+import { Env } from "bun";
+import { Method } from "../router/router.type";
 
 export const colorTerminal = (env: Env): boolean => {
 	if (env.FORCE_COLOR) {
@@ -8,34 +8,34 @@ export const colorTerminal = (env: Env): boolean => {
 	if (env.NO_COLOR) {
 		return false;
 	}
-	if (env.TERM && env.TERM.includes('color')) {
+	if (env.TERM && env.TERM.includes("color")) {
 		return true;
 	}
 	return false;
 };
 
-export const purple = colorTerminal(process.env) ? '\x1b[35m' : '';
-export const blue = colorTerminal(process.env) ? '\x1b[34m' : '';
-export const cyan = colorTerminal(process.env) ? '\x1b[36m' : '';
-export const green = colorTerminal(process.env) ? '\x1b[32m' : '';
-export const yellow = colorTerminal(process.env) ? '\x1b[33m' : '';
-export const red = colorTerminal(process.env) ? '\x1b[31m' : '';
-export const bold = colorTerminal(process.env) ? '\x1b[1m' : '';
-export const reset = colorTerminal(process.env) ? '\x1b[0m' : '';
+export const purple = colorTerminal(process.env) ? "\x1b[35m" : "";
+export const blue = colorTerminal(process.env) ? "\x1b[34m" : "";
+export const cyan = colorTerminal(process.env) ? "\x1b[36m" : "";
+export const green = colorTerminal(process.env) ? "\x1b[32m" : "";
+export const yellow = colorTerminal(process.env) ? "\x1b[33m" : "";
+export const red = colorTerminal(process.env) ? "\x1b[31m" : "";
+export const bold = colorTerminal(process.env) ? "\x1b[1m" : "";
+export const reset = colorTerminal(process.env) ? "\x1b[0m" : "";
 
 export const colorMethod = (method: Method): string => {
 	switch (true) {
-		case method === 'options':
+		case method === "options":
 			return `${bold}${cyan}${method}${reset}`;
-		case method === 'get':
+		case method === "get":
 			return `${bold}${blue}${method}${reset}`;
-		case method === 'post':
+		case method === "post":
 			return `${bold}${green}${method}${reset}`;
-		case method === 'put':
+		case method === "put":
 			return `${bold}${yellow}${method}${reset}`;
-		case method === 'patch':
+		case method === "patch":
 			return `${bold}${yellow}${method}${reset}`;
-		case method === 'delete':
+		case method === "delete":
 			return `${bold}${red}${method}${reset}`;
 		default:
 			return `${bold}${method}${reset}`;
@@ -79,7 +79,7 @@ export const colorTime = (time: number): string => {
 };
 
 export const colorBytes = (bytes: number | null): string => {
-	if (bytes === null) return '';
+	if (bytes === null) return "";
 	switch (true) {
 		case bytes <= 2048:
 			return `${bold}${cyan}${bytes}${reset} b`;

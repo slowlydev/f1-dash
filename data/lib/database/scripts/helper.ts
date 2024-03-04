@@ -1,6 +1,6 @@
-import { readdirSync, statSync } from 'fs';
-import { join } from 'path';
-import { debug } from '../../logger/logger';
+import { readdirSync, statSync } from "fs";
+import { join } from "path";
+import { debug } from "../../logger/logger";
 
 export const sortFiles = (files: string[]): string[] => {
 	return files.sort((alpha, bravo) => alpha.localeCompare(bravo));
@@ -32,7 +32,7 @@ export const extractExports = (files: string[]): Promise<unknown[]> => {
 	return Promise.all(
 		files.map(async (filePath: string) => {
 			const module = await import(`../../../${filePath}`);
-			const properties = Object.keys(module).filter((key) => key !== 'default');
+			const properties = Object.keys(module).filter((key) => key !== "default");
 			return properties.map((prop: string) => module[prop])[0];
 		}),
 	);

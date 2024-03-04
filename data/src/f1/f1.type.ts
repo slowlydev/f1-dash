@@ -21,7 +21,7 @@ export type ParsedRecap = {
 	Position?: F1Position;
 };
 
-export type F1State = ParsedRecap & Omit<F1Recap, 'CarData.z' | 'Position.z'>;
+export type F1State = ParsedRecap & Omit<F1Recap, "CarData.z" | "Position.z">;
 
 export type F1Recap = {
 	Heartbeat?: F1Heartbeat;
@@ -39,8 +39,8 @@ export type F1Recap = {
 	TimingData?: F1TimingData;
 	TeamRadio?: F1TeamRadio;
 
-	'CarData.z'?: string;
-	'Position.z'?: string;
+	"CarData.z"?: string;
+	"Position.z"?: string;
 };
 
 export type F1Heartbeat = {
@@ -84,7 +84,7 @@ export type F1TimingAppData = {
 
 export type F1Stint = {
 	TotalLaps?: number;
-	Compound?: 'SOFT' | 'MEDIUM' | 'HARD' | 'INTERMEDIATE' | 'WET';
+	Compound?: "SOFT" | "MEDIUM" | "HARD" | "INTERMEDIATE" | "WET";
 	New?: string; // TRUE | FALSE
 };
 
@@ -137,7 +137,7 @@ export type F1Message = {
 	Flag?: string;
 	Scope?: string;
 	Sector?: number;
-	Status?: 'ENABLED' | 'DISABLED';
+	Status?: "ENABLED" | "DISABLED";
 };
 
 export type F1SessionInfo = {
@@ -342,12 +342,12 @@ export type F1Entry = {
  * @property {number} 45 - DRS
  */
 export type F1CarDataChannels = {
-	'0': number;
-	'2': number;
-	'3': number;
-	'4': number;
-	'5': number;
-	'45': number;
+	"0": number;
+	"2": number;
+	"3": number;
+	"4": number;
+	"5": number;
+	"45": number;
 };
 
 export type F1TeamRadio = {

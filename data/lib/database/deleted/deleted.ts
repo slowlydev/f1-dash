@@ -1,9 +1,9 @@
-import { Constraints, Type } from '../column/column.type';
-import { DeletedParser } from './deleted.type';
+import { Constraints, Type } from "../column/column.type";
+import { DeletedParser } from "./deleted.type";
 
 export const deleted = (): DeletedParser => {
 	const options = {
-		type: 'datetime' as Type,
+		type: "datetime" as Type,
 		constraints: {
 			name: undefined,
 			nullable: true,

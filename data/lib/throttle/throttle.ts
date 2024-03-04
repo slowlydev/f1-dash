@@ -1,6 +1,6 @@
-import { config } from '../config/config';
-import { Route } from '../router/router.type';
-import { ThrottleOptions } from './throttle.type';
+import { config } from "../config/config";
+import { Route } from "../router/router.type";
+import { ThrottleOptions } from "./throttle.type";
 
 export const throttleOptions = (route: Route | undefined): ThrottleOptions => {
 	const options: ThrottleOptions = { use: false, ttl: config.throttleTtl, limit: config.throttleLimit };
