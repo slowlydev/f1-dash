@@ -26,6 +26,7 @@ export type Parser<T> = {
 };
 
 export type Constraints = Partial<{
+	regex: RegExp;
 	min: number;
 	max: number;
 }>;
@@ -39,6 +40,10 @@ export type RecursiveParser<T, P, D, Called extends keyof T = never> = {
 		? Type[]
 		: K extends "constraints"
 		? Constraints
+		: K extends "matches"
+		? (
+				regex: RegExp,
+		  ) => RecursiveParser<T, K extends "optional" ? P | undefined : K extends "nullable" ? P | null : P, D, Called | K>
 		: K extends "min" | "max"
 		? (
 				length: number,

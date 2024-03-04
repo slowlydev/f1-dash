@@ -32,6 +32,7 @@ export const isNotMaxLength = (value: string, max: number): ValidationError => {
 
 export function isString(value: unknown, constraints: Constraints): asserts value is string {
 	if (typeof value !== "string") throw isNot(value, "string");
+	if (constraints.regex && !value.match(constraints.regex)) throw isNotRegex(value, constraints.regex);
 	if (constraints.min && value.length < constraints.min) throw isNotMinLength(value, constraints.min);
 	if (constraints.max && value.length > constraints.max) throw isNotMaxLength(value, constraints.max);
 }
@@ -45,6 +46,18 @@ export function isNumber(value: unknown, constraints: Constraints): asserts valu
 
 export function isBoolean(value: unknown): asserts value is boolean {
 	if (typeof value !== "boolean") throw isNot(value, "boolean");
+}
+
+export function isDate(value: unknown): asserts value is Date {
+	if (typeof value === "number" && value >= 0) return;
+	if (typeof value !== "string") throw isNot(value, "string");
+	if (!/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/.test(value)) throw isNot(value, "date");
+}
+
+export function isUuid(value: unknown): asserts value is string {
+	if (typeof value !== "string") throw isNot(value, "string");
+	if (!/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}(?:\/.*)?$/i.test(value))
+		throw isNot(value, "uuid");
 }
 
 export function isObject(value: unknown): asserts value is object {

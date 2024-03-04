@@ -5,7 +5,7 @@ export const string = (): StringParser => {
 	const options: StringParser = {
 		type: ["string"],
 		base: undefined,
-		constraints: { min: undefined, max: undefined },
+		constraints: { regex: undefined, min: undefined, max: undefined },
 		optional: () => {
 			options.type.push("undefined");
 			return options;
@@ -16,6 +16,10 @@ export const string = (): StringParser => {
 		},
 		default: (value: string) => {
 			options.base = value;
+			return options;
+		},
+		matches: (regex: RegExp) => {
+			options.constraints.regex = regex;
 			return options;
 		},
 		min: (length: number) => {
