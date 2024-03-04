@@ -1,8 +1,20 @@
 export type Config = {
-	name: string;
+	stage?: 'test' | 'stage' | 'dev' | 'prod';
 	port: number;
+	name: string;
 	f1BaseUrl: string;
-	f1NegotiateUrl: string;
-	testing: boolean;
-	logLevel: "trace" | "debug" | "info" | "warn" | "error";
+	allowOrigin: string;
+	globalPrefix: string;
+	defaultVersion: number;
+	jwtSecret: string;
+	jwtExpiry: number;
+	cacheTtl: number;
+	cacheLimit: number;
+	throttleTtl: number;
+	throttleLimit: number;
+	databasePath: string | ':memory:';
+	databaseMode: 'readwrite' | 'readonly';
+	logLevel: 'trace' | 'debug' | 'info' | 'warn' | 'error';
+	logRequests: boolean;
+	logResponses: boolean;
 };

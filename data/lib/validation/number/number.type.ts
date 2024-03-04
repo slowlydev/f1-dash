@@ -1,4 +1,4 @@
-import { Constraints, DefaultParser, ParseFunction, Parser, RecursiveParser, Type } from "../parser.type";
+import { Constraints, DefaultParser, ParseFunction, Parser, RecursiveParser, Type } from '../parser.type';
 
 export type NumberParser = RecursiveParser<
 	{

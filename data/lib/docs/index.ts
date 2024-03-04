@@ -1,0 +1,1 @@
+export { generateDocs } from './docs';

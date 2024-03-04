@@ -1,2 +1,17 @@
-# deps
-/node_modules
+# dependencies
+node_modules
+
+# operating system
+.DS_Store
+
+# database
+*.sqlite
+
+# build
+f1-data.js
+
+# credentials
+.env
+
+# logs
+*.log

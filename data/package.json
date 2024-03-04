@@ -1,15 +1,37 @@
 {
+	"name": "f1-data",
+	"version": "0.4.2",
+	"license": "GPL-3.0-only",
+	"description": "backend for f1-dash",
 	"scripts": {
-		"format": "bun prettier -w --config .prettierrc {lib,src}",
-		"start": "bun run ./src/main.ts",
-		"start:dev": "bun run --hot ./src/main.ts"
+		"fmt": "bun run prettier --write {lib,src}",
+		"lint": "bun run eslint --fix {lib,src}",
+		"check": "tsc --noEmit",
+		"bundle": "bun build ./src/main.ts --target bun --minify --outfile f1-data.js",
+		"test:dev": "bun --watch test",
+		"test:prod": "bun test --coverage",
+		"start:dev": "bun run --hot ./src/main.ts",
+		"start:prod": "bun run ./src/main.ts",
+		"schema:init": "bun ./lib/database/scripts/init.ts",
+		"schema:drop": "bun ./lib/database/scripts/drop.ts",
+		"schema:sync": "bun ./lib/database/scripts/sync.ts",
+		"schema:seed": "bun ./lib/database/scripts/seed.ts",
+		"schema:setup": "bun schema:init && bun schema:drop && bun schema:sync && bun schema:seed"
 	},
 	"dependencies": {
-		"@types/lodash": "4.14.197",
 		"lodash": "4.17.21"
 	},
 	"devDependencies": {
-		"bun-types": "1.0.1",
-		"prettier": "3.0.3"
+		"@types/bun": "1.0.0",
+		"@types/lodash": "4.14.202",
+		"@typescript-eslint/eslint-plugin": "6.16.0",
+		"@typescript-eslint/parser": "6.16.0",
+		"eslint": "8.56.0",
+		"eslint-config-prettier": "9.1.0",
+		"eslint-plugin-more": "1.0.5",
+		"eslint-plugin-prettier": "4.2.1",
+		"eslint-plugin-unused-imports": "3.0.0",
+		"prettier": "2.8.8",
+		"typescript": "5.3.3"
 	}
 }

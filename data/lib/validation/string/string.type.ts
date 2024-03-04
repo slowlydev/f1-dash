@@ -1,4 +1,4 @@
-import { Constraints, DefaultParser, ParseFunction, Parser, RecursiveParser, Type } from "../parser.type";
+import { Constraints, DefaultParser, ParseFunction, Parser, RecursiveParser, Type } from '../parser.type';
 
 export type StringParser = RecursiveParser<
 	{
@@ -7,6 +7,7 @@ export type StringParser = RecursiveParser<
 		constraints: Constraints;
 		optional: Parser<string | undefined>;
 		nullable: Parser<string | null>;
+		matches: Parser<string>;
 		min: Parser<string>;
 		max: Parser<string>;
 		default: DefaultParser<string>;

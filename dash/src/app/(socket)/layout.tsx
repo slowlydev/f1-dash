@@ -58,9 +58,9 @@ const SubLayout = ({ children }: Props) => {
 
 	useEffect(() => {
 		setBuffer([]);
-		const socket = new WebSocket(`${env.NEXT_PUBLIC_SOCKET_SERVER_URL}`);
+		const socket = new EventSource(`${env.NEXT_PUBLIC_SERVER_URL}/api/f1/sse`);
 
-		socket.onclose = () => setConnected(false);
+		socket.onerror = () => setConnected(false);
 		socket.onopen = () => setConnected(true);
 
 		socket.onmessage = (event) => {
