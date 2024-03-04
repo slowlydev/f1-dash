@@ -8,6 +8,7 @@ import { F1State } from "./f1.type";
 type Negotiation = { token: string; cookie: string | null };
 const negotiate = async (): Promise<Negotiation | null> => {
 	info("negotiating...");
+	if (config.f1BaseUrl.includes("localhost")) return { token: "", cookie: null };
 	const params = new URLSearchParams({
 		clientProtocol: "1.5",
 		connectionData: JSON.stringify([{ name: "Streaming" }]),
