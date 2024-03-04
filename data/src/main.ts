@@ -5,6 +5,7 @@ import "./archive/archive.controller";
 import "./f1/f1.controller";
 import { debug, error, info, warn } from "./log/log.service";
 import "./meeting/meeting.controller";
+import "./ping/ping.controller";
 import { req } from "./req/req.service";
 import { res } from "./res/res.service";
 
