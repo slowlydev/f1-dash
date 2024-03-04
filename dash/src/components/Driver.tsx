@@ -62,10 +62,13 @@ export default function Driver({ driver, timingDriver, appTimingDriver, position
 }
 
 const inDangerZone = (position: number, sessionPart: number) => {
-	if (sessionPart == 2) {
-		return position > 10;
-	} else if (sessionPart == 3) {
-		return position > 15;
+	switch (sessionPart) {
+		case 1:
+			return position > 15;
+		case 2:
+			return position > 10;
+		case 3:
+		default:
+			return false;
 	}
-	return false;
 };
