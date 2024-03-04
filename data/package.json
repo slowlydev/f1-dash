@@ -1,7 +1,7 @@
 {
 	"name": "f1-data",
 	"version": "0.4.2",
-	"license": "GPL-3.0-only",
+	"license": "MIT",
 	"description": "backend for f1-dash",
 	"scripts": {
 		"fmt": "bun run prettier --write {lib,src}",
