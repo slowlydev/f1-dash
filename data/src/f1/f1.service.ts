@@ -1,10 +1,9 @@
 import { config } from "lib/config";
 import { emit, emitter, subscribe } from "lib/event";
-import { error, info, warn } from "lib/logger";
+import { error, info } from "lib/logger";
 import { updateState } from "./f1.handler";
 import { translate } from "./f1.translator";
 import { F1State } from "./f1.type";
-import { sleep } from "bun";
 
 const channel = "f1-data";
 let state: F1State = {};
@@ -96,14 +95,23 @@ const setup = async (): Promise<void> => {
 		state = updateState(state, JSON.parse(event.data));
 		emit(channel, translate(state));
 	};
-	socket.onclose = async () => {
-		warn("web socket got closed");
-		await sleep(2000);
-		info("reconnecting...");
-		return setup();
+	socket.onclose = () => {
+		state = {};
+		socket = null;
 	};
 };
-await setup();
+
+setInterval(async () => {
+	if (emitter.listenerCount(channel) > 0 && !socket) {
+		info("we got connections opening web socket");
+		await setup();
+	} else if (emitter.listenerCount(channel) === 0 && socket) {
+		info("no connections left closing web socket");
+		socket.close();
+		state = {};
+		socket = null;
+	}
+}, 2000);
 
 export const streamData = (req: Request): Response => {
 	return subscribe(req, channel, translate(state));
