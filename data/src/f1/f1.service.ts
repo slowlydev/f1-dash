@@ -86,9 +86,9 @@ const connect = (negotiation: Negotiation): Promise<WebSocket | null> => {
 
 const setup = async (): Promise<void> => {
 	const negotiation = await negotiate();
-	if (!negotiation) throw Error("no data from negotiation");
+	if (!negotiation) return error("no data from negotiation");
 	socket = await connect(negotiation);
-	if (!socket) throw Error("failed to connect web socket");
+	if (!socket) return error("failed to connect web socket");
 	socket.onmessage = (event) => {
 		if (typeof event.data !== "string") {
 			return error("received message is not a string");
@@ -99,6 +99,7 @@ const setup = async (): Promise<void> => {
 	socket.onclose = async () => {
 		warn("web socket got closed");
 		await sleep(2000);
+		info("reconnecting...");
 		return setup();
 	};
 };
