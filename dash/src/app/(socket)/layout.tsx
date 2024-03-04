@@ -12,6 +12,9 @@ import { type Message } from "@/types/message.type";
 import Navbar from "@/components/Navbar";
 import SegmentedControls from "@/components/SegmentedControls";
 import DelayInput from "@/components/DelayInput";
+import Timeline from "@/components/Timeline";
+import StreamStatus from "@/components/StreamStatus";
+import PlayControls from "@/components/PlayControls";
 
 type Props = {
 	children: ReactNode;
@@ -26,7 +29,7 @@ export default function SocketLayout({ children }: Props) {
 }
 
 const SubLayout = ({ children }: Props) => {
-	const { setConnected, updateState, ws, setInitial, setDelay } = useSocket();
+	const { setConnected, updateState, ws, setInitial, setDelay, delay, maxDelay } = useSocket();
 
 	useEffect(() => {
 		const socket = new WebSocket(`${env.NEXT_PUBLIC_SOCKET_SERVER_URL}`);
@@ -55,15 +58,35 @@ const SubLayout = ({ children }: Props) => {
 	}, []);
 
 	const [mode, setMode] = useState<string>("simple");
+	const [time, setTime] = useState<number>(0);
+	const [pausedTime, setPausedTime] = useState<number>(0);
+	const [paused, setPaused] = useState<boolean>(false);
+
+	// useEffect(() => {
+	// 	const newDelay = maxDelay - time;
+	// 	setDelay(newDelay);
+	// }, [time]);
+
+	const togglePaused = () => {
+		setPaused((oldState) => {
+			// start a timer and count down
+
+			if (oldState) {
+				setPausedTime(Date.now());
+			}
+
+			return !oldState;
+		});
+	};
 
 	return (
 		<div className="w-full">
-			<div className="grid grid-cols-1 items-center border-b border-zinc-800 bg-black p-2 2xl:grid-cols-3">
+			<div className="grid grid-cols-1 items-center border-b border-zinc-800 bg-black p-2 xl:grid-cols-3">
 				<Navbar />
 
 				<div className="flex items-center justify-center gap-2">
-					{/* <Timeline setTime={setTime} time={time} playing={playing} duration={10} /> */}
-					{/* <StreamStatus live={true} /> */}
+					<Timeline setTime={setTime} time={time} playing={delay > 0} duration={maxDelay} />
+					<StreamStatus live={delay == 0} />
 				</div>
 
 				<div className="flex flex-row-reverse items-center gap-1">
@@ -79,7 +102,7 @@ const SubLayout = ({ children }: Props) => {
 					/>
 					{/* TODO implement setting of user prefered delay */}
 					<DelayInput setDebouncedDelay={setDelay} />
-					{/* <PlayControls playing={playing} onClick={() => setPlaying((old) => !old)} /> */}
+					<PlayControls playing={!paused} onClick={togglePaused} />
 				</div>
 			</div>
 
