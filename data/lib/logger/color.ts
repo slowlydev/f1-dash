@@ -8,7 +8,7 @@ export const colorTerminal = (env: Env): boolean => {
 	if (env.NO_COLOR) {
 		return false;
 	}
-	if (env.TERM && env.TERM.includes("color")) {
+	if (env.TERM) {
 		return true;
 	}
 	return false;
