@@ -27,6 +27,8 @@ type Values = {
 	// delay: number;
 	// setDelay: Dispatch<SetStateAction<Values["delay"]>>;
 	setDelay: (value: number) => void;
+	delay: number;
+	maxDelay: number;
 
 	connected: boolean;
 	setConnected: Dispatch<SetStateAction<Values["connected"]>>;
@@ -48,7 +50,6 @@ type Frame = {
 
 export function SocketProvider({ children }: { children: ReactNode }) {
 	const [connected, setConnected] = useState(false);
-	// const [delay, setDelay] = useState<number>(0);
 	const delayRef = useRef<number>(0);
 
 	const [state, setState] = useState<null | State>(null);
@@ -123,6 +124,9 @@ export function SocketProvider({ children }: { children: ReactNode }) {
 		return () => (requestRef.current != null ? cancelAnimationFrame(requestRef.current) : undefined);
 	}, []);
 
+	const maxDelay = bufferRef.current.length > 0 ? Math.floor((Date.now() - bufferRef.current[0].timestamp) / 1000) : 0;
+	const delay = delayRef.current;
+
 	return (
 		<SocketContext.Provider
 			value={{
@@ -137,6 +141,8 @@ export function SocketProvider({ children }: { children: ReactNode }) {
 				setInitial,
 
 				setDelay,
+				maxDelay,
+				delay,
 
 				ws,
 			}}
