@@ -11,6 +11,7 @@ import { type Message } from "@/types/message.type";
 
 import Navbar from "@/components/Navbar";
 import SegmentedControls from "@/components/SegmentedControls";
+import DelayInput from "@/components/DelayInput";
 
 type Props = {
 	children: ReactNode;
@@ -25,7 +26,7 @@ export default function SocketLayout({ children }: Props) {
 }
 
 const SubLayout = ({ children }: Props) => {
-	const { setConnected, updateState, ws, setInitial } = useSocket();
+	const { setConnected, updateState, ws, setInitial, setDelay } = useSocket();
 
 	useEffect(() => {
 		const socket = new WebSocket(`${env.NEXT_PUBLIC_SOCKET_SERVER_URL}`);
@@ -77,7 +78,7 @@ const SubLayout = ({ children }: Props) => {
 						onSelect={setMode}
 					/>
 					{/* TODO implement setting of user prefered delay */}
-					{/* <DelayInput setDebouncedDelay={setDelay} /> */}
+					<DelayInput setDebouncedDelay={setDelay} />
 					{/* <PlayControls playing={playing} onClick={() => setPlaying((old) => !old)} /> */}
 				</div>
 			</div>
