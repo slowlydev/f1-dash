@@ -68,7 +68,7 @@ const connect = (negotiation: Negotiation): Promise<WebSocket | null> => {
 			resolve(socket);
 		};
 		socket.onclose = () => {
-			error("web socket git closed");
+			error("web socket got closed");
 			resolve(null);
 		};
 		socket.onerror = (err) => {
