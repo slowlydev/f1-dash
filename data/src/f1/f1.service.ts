@@ -1,9 +1,14 @@
 import { config } from "lib/config";
 import { emit, emitter, subscribe } from "lib/event";
-import { error, info } from "lib/logger";
+import { error, info, warn } from "lib/logger";
 import { updateState } from "./f1.handler";
 import { translate } from "./f1.translator";
 import { F1State } from "./f1.type";
+import { sleep } from "bun";
+
+const channel = "f1-data";
+let state: F1State = {};
+let socket: WebSocket | null = null;
 
 type Negotiation = { token: string; cookie: string | null };
 const negotiate = async (): Promise<Negotiation | null> => {
@@ -79,21 +84,25 @@ const connect = (negotiation: Negotiation): Promise<WebSocket | null> => {
 	});
 };
 
-const negotiation = await negotiate();
-if (!negotiation) throw Error("no data from negotiation");
-const socket = await connect(negotiation);
-if (!socket) throw Error("failed to connect web socket");
-
-socket.onmessage = (event) => {
-	if (typeof event.data !== "string") {
-		return error("received message is not a string");
-	}
-	state = updateState(state, JSON.parse(event.data));
-	emit(channel, translate(state));
+const setup = async (): Promise<void> => {
+	const negotiation = await negotiate();
+	if (!negotiation) throw Error("no data from negotiation");
+	socket = await connect(negotiation);
+	if (!socket) throw Error("failed to connect web socket");
+	socket.onmessage = (event) => {
+		if (typeof event.data !== "string") {
+			return error("received message is not a string");
+		}
+		state = updateState(state, JSON.parse(event.data));
+		emit(channel, translate(state));
+	};
+	socket.onclose = async () => {
+		warn("web socket got closed");
+		await sleep(2000);
+		return setup();
+	};
 };
-
-const channel = "f1-data";
-let state: F1State = {};
+await setup();
 
 export const streamData = (req: Request): Response => {
 	return subscribe(req, channel, translate(state));
