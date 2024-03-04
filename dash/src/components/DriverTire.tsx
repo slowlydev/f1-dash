@@ -27,7 +27,7 @@ export default function DriverTire({ stints }: Props) {
 
 			{currentStint && unknownCompound && (
 				<div className="flex h-8 w-8 items-center justify-center">
-					<p>?</p>
+					<Image src={`/tires/unkown.svg`} width={32} height={32} alt={"unkown"} />
 				</div>
 			)}
 
