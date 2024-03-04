@@ -32,7 +32,8 @@ const connect = (negotiation: Negotiation): Promise<WebSocket | null> => {
 			connectionToken: negotiation.token,
 			connectionData: JSON.stringify([{ name: "Streaming" }]),
 		});
-		const url = `wss://${config.f1BaseUrl}/signalr/connect?${params}`;
+		const protocol = config.f1BaseUrl.includes("localhost") ? "ws" : "wss";
+		const url = `${protocol}://${config.f1BaseUrl}/signalr/connect?${params}`;
 		const socket = new WebSocket(url, {
 			headers: { "accept-encoding": "gzip,identity", cookie: negotiation.cookie ?? "" },
 		});
