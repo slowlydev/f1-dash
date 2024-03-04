@@ -23,7 +23,12 @@ export default function TrackInfo({ track, lapCount }: Props) {
 			)}
 
 			{!!currentTrackStatus ? (
-				<div className={clsx("flex h-8 items-center truncate rounded-md px-2", currentTrackStatus.color)}>
+				<div
+					className={clsx("flex h-8 items-center truncate rounded-md px-2", currentTrackStatus.color)}
+					style={{
+						boxShadow: `0 0 60px 10px ${currentTrackStatus.hex}`,
+					}}
+				>
 					<p className="text-xl font-semibold">{currentTrackStatus.message}</p>
 				</div>
 			) : (
