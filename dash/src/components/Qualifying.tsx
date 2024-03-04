@@ -17,25 +17,24 @@ type Props = {
 };
 
 export default function Qualifying({ drivers, driversTiming, appDriversTiming }: Props) {
-	const qualiDrivers =
+	const qualifyingDrivers =
 		!driversTiming?.lines || !drivers
 			? []
 			: objectEntries(driversTiming.lines)
 					.filter((d) => !d.pitOut || !d.inPit) // no pit
 					.filter((d) => d.sectors.every((sec) => !sec.segments.find((s) => s.status === 2064))) // no in or out lap
 					.filter((d) => d.sectors.map((s) => s.personalFastest).includes(true))
-					.filter((d) => d.sectors[2].segments[0].status != 0)
-					.splice(0, 3);
+					.filter((d) => d.sectors[2].segments[0].status != 0);
 
 	const currentBest = driversTiming
 		? objectEntries(driversTiming.lines).find((d) => parseInt(d.position) === 1)
 		: undefined;
 
 	return (
-		<div className="flex gap-4">
+		<div className="flex w-fit gap-4 p-2">
 			<AnimatePresence>
 				{drivers &&
-					qualiDrivers
+					qualifyingDrivers
 						.sort(sortQuali)
 						.map((timingDriver) => (
 							<QualifyingDriver
@@ -48,7 +47,7 @@ export default function Qualifying({ drivers, driversTiming, appDriversTiming }:
 							/>
 						))}
 
-				{qualiDrivers.length < 1 && (
+				{qualifyingDrivers.length < 1 && (
 					<>
 						{new Array(3).fill(null).map((_, i) => (
 							<SkeletonQualifingDriver key={`skeleton.qualifying.driver.${i}`} />

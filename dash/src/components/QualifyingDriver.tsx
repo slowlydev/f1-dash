@@ -1,11 +1,13 @@
 "use client";
 
 import { motion } from "framer-motion";
-
 import Image from "next/image";
 
+import clsx from "clsx";
+
 import DriverTag from "./DriverTag";
-import DriverMiniSectors from "./DriverMiniSectors";
+
+import { getSectorColor, getTimeColor } from "@/lib/getTimeColor";
 
 import { Driver as DriverType, TimingAppDataDriver, TimingDataDriver } from "@/types/state.type";
 
@@ -51,11 +53,7 @@ export default function DriverQuali({
 						/>
 					)}
 
-					{currentStint && unknownCompound && (
-						<div className="flex h-8 w-8 items-center justify-center">
-							<p>?</p>
-						</div>
-					)}
+					{currentStint && unknownCompound && <Image src={`/tires/unkown.svg`} width={32} height={32} alt={"unkown"} />}
 
 					{!currentStint && <div className="h-8 w-8 animate-pulse rounded-md bg-gray-700 font-semibold" />}
 				</div>
@@ -70,7 +68,28 @@ export default function DriverQuali({
 				</div>
 			</div>
 
-			<DriverMiniSectors sectors={timingDriver.sectors} tla={`quali.${driver.tla}`} />
+			<div className="grid grid-cols-3 gap-1">
+				{timingDriver.sectors.map((sector, i) => (
+					<div className="flex flex-col gap-1" key={`quali.sector.${driver.tla}.${i}`}>
+						<div
+							className={clsx(
+								"h-4 rounded-md",
+								getSectorColor("bg", sector.overallFastest, sector.personalFastest),
+								!sector.value ? "bg-gray-500" : "",
+							)}
+						/>
+						<p
+							className={clsx(
+								"text-center text-lg font-semibold leading-none",
+								getSectorColor("text", sector.overallFastest, sector.personalFastest),
+								!sector.value ? "text-gray-500" : "",
+							)}
+						>
+							{!!sector.value ? sector.value : "-- ---"}
+						</p>
+					</div>
+				))}
+			</div>
 		</motion.div>
 	);
 }
