@@ -28,20 +28,19 @@ pub fn merge(base: &mut Value, update: &Value) {
                 }
 
                 // find item with racing number eq to k
-                let rnr_item = prev.iter_mut().find(|val| {
-                    if let Some(rnr) = val.get("RacingNumber") {
-                        return rnr == k;
-                    }
-                    false
-                });
-
-                if let Some(rnr_item_found) = rnr_item {
-                    merge(rnr_item_found, v)
-                } else {
-                    k.parse::<usize>()
-                        .ok()
-                        .and_then(|index| prev.get_mut(index).map(|item| merge(item, v)));
-                }
+                // let rnr_item = prev.iter_mut().find(|val| {
+                //     if let Some(rnr) = val.get("racingNumber") {
+                //         return rnr == k;
+                //     }
+                //     false
+                // });
+                // if let Some(rnr_item_found) = rnr_item {
+                //     merge(rnr_item_found, v)
+                // } else {
+                // }
+                k.parse::<usize>()
+                    .ok()
+                    .and_then(|index| prev.get_mut(index).map(|item| merge(item, v)));
             }
         }
         (a, b) => *a = b.clone(),
