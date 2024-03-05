@@ -115,6 +115,13 @@ export function SocketProvider({ children }: { children: ReactNode }) {
 	};
 
 	useEffect(() => {
+		if (typeof window != undefined) {
+			const localStorageDelay = localStorage.getItem("delay");
+			if (localStorageDelay) delay.current = parseInt(localStorageDelay);
+		}
+	}, []);
+
+	useEffect(() => {
 		requestRef.current = requestAnimationFrame(animateNextFrame);
 		return () => (requestRef.current != null ? cancelAnimationFrame(requestRef.current) : undefined);
 	}, []);

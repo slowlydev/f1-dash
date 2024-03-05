@@ -84,6 +84,10 @@ const SubLayout = ({ children }: Props) => {
 		}
 
 		delay.current = newDelay;
+
+		if (typeof window != undefined) {
+			localStorage.setItem("delay", `${newDelay}`);
+		}
 	};
 
 	return (
