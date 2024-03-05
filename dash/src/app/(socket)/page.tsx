@@ -61,7 +61,7 @@ export default function Page() {
 
 						<div className={clsx("flex w-full flex-col divide-y divide-zinc-800")}>
 							<div className={clsx("h-96 overflow-y-auto p-2")}>
-								<RaceControl messages={state?.raceControlMessages} />
+								<RaceControl messages={state?.raceControlMessages} utcOffset={state?.sessionInfo?.gmtOffset ?? ""} />
 							</div>
 
 							<div className={clsx("h-96 overflow-y-auto p-2")}>

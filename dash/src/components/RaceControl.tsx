@@ -10,9 +10,10 @@ import { RaceControlMessages } from "@/types/state.type";
 
 type Props = {
 	messages: RaceControlMessages | undefined;
+	utcOffset: string;
 };
 
-export default function RaceControl({ messages }: Props) {
+export default function RaceControl({ messages, utcOffset }: Props) {
 	return (
 		<ul className="flex flex-col gap-2">
 			{!messages &&
@@ -21,7 +22,11 @@ export default function RaceControl({ messages }: Props) {
 			{messages && (
 				<AnimatePresence>
 					{messages.messages.sort(sortUtc).map((msg) => (
-						<RaceControlMessage key={`msg.${utc(msg.utc).unix()}.${msg.message.toLocaleLowerCase()}`} msg={msg} />
+						<RaceControlMessage
+							key={`msg.${utc(msg.utc).unix()}.${msg.message.toLocaleLowerCase()}`}
+							msg={msg}
+							utcOffset={utcOffset}
+						/>
 					))}
 				</AnimatePresence>
 			)}
