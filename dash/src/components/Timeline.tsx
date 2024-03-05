@@ -1,6 +1,13 @@
 "use client";
 
-import { motion, useMotionValue, useDragControls, AnimatePresence } from "framer-motion";
+import {
+	motion,
+	useMotionValue,
+	useDragControls,
+	AnimatePresence,
+	useTransform,
+	useMotionTemplate,
+} from "framer-motion";
 
 import { useState, useRef, useEffect, MutableRefObject, Dispatch, SetStateAction } from "react";
 
@@ -46,12 +53,13 @@ type Props = {
 	setTime: Dispatch<SetStateAction<number>>;
 	time: number;
 
-	duration: number;
 	playing: boolean;
+
+	maxDelay: number;
 };
 
-export default function Timeline({ playing, duration, time, setTime }: Props) {
-	const DURATION = duration;
+export default function Timeline({ playing, maxDelay, time, setTime }: Props) {
+	const DURATION = maxDelay;
 
 	let [dragging, setDragging] = useState(false);
 	let constraintsRef = useRef<HTMLDivElement | null>(null);
