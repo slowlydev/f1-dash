@@ -16,13 +16,15 @@ type Props = {
 export default function SessionInfo({ session, clock }: Props) {
 	const { delay } = useSocket();
 
+	const delayCurrent = delay.current;
+
 	const timeRemaining =
 		!!clock && !!clock.remaining
 			? clock.extrapolating
 				? utc(
 						duration(clock.remaining)
 							.subtract(utc().diff(utc(clock.utc)))
-							.asMilliseconds() + (delay ? delay * 1000 : 0),
+							.asMilliseconds() + (delayCurrent ? delayCurrent * 1000 : 0),
 					).format("HH:mm:ss")
 				: clock.remaining
 			: undefined;
