@@ -27,11 +27,11 @@ export default function DriverTire({ stints }: Props) {
 
 			{currentStint && unknownCompound && (
 				<div className="flex h-8 w-8 items-center justify-center">
-					<Image src={`/tires/unkown.svg`} width={32} height={32} alt={"unkown"} />
+					<Image src={`/tires/unknown.svg`} width={32} height={32} alt={"unknown"} />
 				</div>
 			)}
 
-			{!currentStint && <div className="h-8 w-8 animate-pulse rounded-md bg-gray-700 font-semibold" />}
+			{!currentStint && <div className="h-8 w-8 animate-pulse rounded-full bg-gray-700 font-semibold" />}
 
 			{/* TODO move this to a tooltip */}
 			<div>
