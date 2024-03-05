@@ -4,6 +4,7 @@ import { debug, error, info } from "lib/logger";
 import { updateState } from "./f1.handler";
 import { translate } from "./f1.translator";
 import { F1State } from "./f1.type";
+import { throttledDebounce } from "./f1.util";
 
 const channel = "f1-data";
 let state: F1State = {};
@@ -89,6 +90,8 @@ const encode = (data: F1State): string => {
 	return JSON.stringify(translate(data));
 };
 
+const maybeEmit = throttledDebounce(emit, 200);
+
 const setup = async (): Promise<void> => {
 	const negotiation = await negotiate();
 	if (!negotiation) return error("no data from negotiation");
@@ -99,7 +102,7 @@ const setup = async (): Promise<void> => {
 			return error("received message is not a string");
 		}
 		state = updateState(state, JSON.parse(event.data));
-		emit(channel, encode(state));
+		maybeEmit(channel, encode(state));
 	};
 	socket.onclose = () => {
 		state = {};

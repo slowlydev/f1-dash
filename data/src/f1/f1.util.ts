@@ -25,3 +25,31 @@ export const toTrackTime = (utc: string, offset: string): string => {
 
 	return date.toISOString();
 };
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const throttledDebounce = <T extends (...args: any[]) => void>(
+	func: T,
+	delay: number,
+): ((...args: Parameters<typeof func>) => void) => {
+	let timeout: Timer;
+	let lastCalled = 0;
+	let lastExecuted = 0;
+	return (...args) => {
+		const now = Date.now();
+		if (timeout) {
+			clearTimeout(timeout);
+		}
+		if (now - lastCalled > delay) {
+			func(...args);
+			lastCalled = now;
+			lastExecuted = now;
+		} else {
+			lastCalled = now;
+			const nextCall = delay - (now - lastExecuted);
+			timeout = setTimeout(() => {
+				func(...args);
+				lastExecuted = now + nextCall;
+			}, nextCall);
+		}
+	};
+};
