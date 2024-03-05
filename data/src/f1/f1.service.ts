@@ -84,6 +84,11 @@ const connect = (negotiation: Negotiation): Promise<WebSocket | null> => {
 	});
 };
 
+const encode = (data: F1State): string => {
+	// TODO: implement inflation and coordinate with frontend
+	return JSON.stringify(translate(data));
+};
+
 const setup = async (): Promise<void> => {
 	const negotiation = await negotiate();
 	if (!negotiation) return error("no data from negotiation");
@@ -94,7 +99,7 @@ const setup = async (): Promise<void> => {
 			return error("received message is not a string");
 		}
 		state = updateState(state, JSON.parse(event.data));
-		emit(channel, translate(state));
+		emit(channel, encode(state));
 	};
 	socket.onclose = () => {
 		state = {};
@@ -117,7 +122,7 @@ setInterval(async () => {
 }, 2000);
 
 export const streamData = (req: Request): Response => {
-	return subscribe(req, channel, translate(state));
+	return subscribe(req, channel, encode(state));
 };
 
 export const findConnections = (): { connections: number } => {

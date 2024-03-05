@@ -5,14 +5,16 @@ import { debug, info } from "../logger/logger";
 export const emitter = new EventEmitter();
 emitter.setMaxListeners(2048);
 
-export const subscribe = (req: Request, channel: string, data?: unknown): Response => {
+export const subscribe = (req: Request, channel: string, data?: unknown | string): Response => {
 	return new Response(
 		new ReadableStream({
 			type: "direct",
 			pull(controller: ReadableStreamDirectController) {
 				let id = +(req.headers.get("last-event-id") ?? 1);
-				const handler = async (dat: unknown): Promise<void> => {
-					await controller.write(`id:${id}\ndata:${dat !== undefined ? JSON.stringify(dat) : ""}\n\n`);
+				const handler = async (dat: unknown | string): Promise<void> => {
+					await controller.write(
+						`id:${id}\ndata:${dat !== undefined ? (typeof dat === "string" ? dat : JSON.stringify(dat)) : ""}\n\n`,
+					);
 					await controller.flush();
 					id++;
 				};
@@ -33,7 +35,7 @@ export const subscribe = (req: Request, channel: string, data?: unknown): Respon
 	);
 };
 
-export const emit = (channel: string, data?: unknown): void => {
+export const emit = (channel: string, data?: unknown | string): void => {
 	debug(`emitting to channel '${channel}'`);
 	emitter.emit(channel, data);
 };
