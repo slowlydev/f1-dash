@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useMotionValue } from "framer-motion";
 import Image from "next/image";
 
 import clsx from "clsx";
@@ -31,7 +31,13 @@ export default function DriverQuali({
 	const currentStint = stints ? stints[stints.length - 1] : null;
 	const unknownCompound = !["soft", "medium", "hard", "intermediate", "wet"].includes(currentStint?.compound ?? "");
 
-	// const currentTime =
+	const currentTime = timingDriver.sectors[2].value
+		? timingDriver.sectors[2].value
+		: timingDriver.sectors[1].value
+			? timingDriver.sectors[1].value
+			: timingDriver.sectors[0].value
+				? timingDriver.sectors[0].value
+				: "-- --";
 
 	return (
 		<motion.div
@@ -60,11 +66,15 @@ export default function DriverQuali({
 			</div>
 
 			<div className="flex justify-between">
-				<p className="text-3xl font-semibold">1231</p>
+				<p className="text-3xl font-semibold">{currentTime}</p>
 
 				<div className="flex flex-col items-end">
-					<p className="text-xl leading-none text-gray-500">{currentBestTime}</p>
-					<p className="text-sm font-medium leading-none text-gray-500">{currentBestName}</p>
+					{currentBestTime && (
+						<>
+							<p className="text-xl leading-none text-gray-500">{currentBestTime}</p>
+							<p className="text-sm font-medium leading-none text-gray-500">{currentBestName}</p>
+						</>
+					)}
 				</div>
 			</div>
 
