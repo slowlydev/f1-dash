@@ -9,22 +9,23 @@ type Props = {
 
 export default function DriverHistoryTires({ stints }: Props) {
 	const unknownCompound = (stint: Stint) =>
-		!["soft", "medium", "hard", "intermediate", "wet"].includes(stint.compound ?? "");
+		!["soft", "medium", "hard", "intermediate", "wet"].includes(stint.compound?.toLowerCase() ?? "");
 
 	return (
 		<div className="flex flex-row items-center justify-start gap-1">
 			{stints.map((stint, i) => (
 				<div className="flex flex-col items-center gap-1">
-					{unknownCompound(stint) && (
-						<div className="flex h-8 w-8 items-center justify-center">
-							<p>?</p>
-						</div>
-					)}
+					{unknownCompound(stint) && <Image src={`/tires/unknown.svg`} width={32} height={32} alt="unknown" />}
 					{!unknownCompound(stint) && (
-						<Image src={`/tires/${stint.compound.toLowerCase()}.svg`} width={32} height={32} alt={stint.compound} />
+						<Image
+							src={`/tires/${stint.compound?.toLowerCase()}.svg`}
+							width={32}
+							height={32}
+							alt={stint?.compound ?? ""}
+						/>
 					)}
 
-					<p className="text-sm font-bold leading-none text-zinc-600">{stint.laps} L</p>
+					<p className="text-sm font-bold leading-none text-zinc-600">{stint.totalLaps} L</p>
 				</div>
 			))}
 
