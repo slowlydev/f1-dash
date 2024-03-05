@@ -33,7 +33,7 @@ export default function Driver({ driver, timingDriver, appTimingDriver, position
 			onClick={() => setOpen((old) => !old)}
 			className={clsx("cursor-pointer select-none px-2", {
 				"opacity-50": timingDriver.knockedOut || timingDriver.retired || timingDriver.stopped,
-				"bg-indigo-800 bg-opacity-30": timingDriver.bestLapTime.position == 1,
+				"bg-violet-800 bg-opacity-30": timingDriver.bestLapTime.position == 1,
 				"bg-red-800 bg-opacity-30": sessionPart != undefined && inDangerZone(position, sessionPart),
 			})}
 		>
