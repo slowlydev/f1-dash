@@ -1,20 +1,20 @@
 "use client";
 
 import { ReactNode, useEffect, useState } from "react";
-import { SocketProvider, useSocket } from "@/context/SocketContext";
 
 import { env } from "@/env.mjs";
+
+import { SocketProvider, useSocket } from "@/context/SocketContext";
+import { ModeProvider, useMode } from "@/context/ModeContext";
 
 import { messageIsInitial, messageIsUpdate } from "@/lib/messageHelpers";
 
 import { type Message } from "@/types/message.type";
 
 import Navbar from "@/components/Navbar";
-import SegmentedControls from "@/components/SegmentedControls";
 import DelayInput from "@/components/DelayInput";
-import Timeline from "@/components/Timeline";
-import StreamStatus from "@/components/StreamStatus";
 import PlayControls from "@/components/PlayControls";
+import SegmentedControls from "@/components/SegmentedControls";
 
 type Props = {
 	children: ReactNode;
@@ -23,13 +23,16 @@ type Props = {
 export default function SocketLayout({ children }: Props) {
 	return (
 		<SocketProvider>
-			<SubLayout>{children}</SubLayout>
+			<ModeProvider>
+				<SubLayout>{children}</SubLayout>
+			</ModeProvider>
 		</SocketProvider>
 	);
 }
 
 const SubLayout = ({ children }: Props) => {
-	const { setConnected, updateState, ws, setInitial, setDelay, delay, maxDelay } = useSocket();
+	const { setConnected, updateState, ws, setInitial, delay, playing, maxDelay } = useSocket();
+	const { mode, setMode } = useMode();
 
 	useEffect(() => {
 		const socket = new WebSocket(`${env.NEXT_PUBLIC_SOCKET_SERVER_URL}`);
@@ -57,52 +60,56 @@ const SubLayout = ({ children }: Props) => {
 		return () => socket.close();
 	}, []);
 
-	const [mode, setMode] = useState<string>("simple");
-	const [time, setTime] = useState<number>(0);
 	const [pausedTime, setPausedTime] = useState<number>(0);
-	const [paused, setPaused] = useState<boolean>(false);
+	const [playback, setPlayback] = useState<boolean>(true);
 
-	// useEffect(() => {
-	// 	const newDelay = maxDelay - time;
-	// 	setDelay(newDelay);
-	// }, [time]);
-
-	const togglePaused = () => {
-		setPaused((oldState) => {
-			// start a timer and count down
-
-			if (oldState) {
+	const togglePlayback = () => {
+		setPlayback((old) => {
+			if (old) {
 				setPausedTime(Date.now());
+			} else {
+				setDelay(Math.round((Date.now() - pausedTime) / 1000) + delay.current);
 			}
 
-			return !oldState;
+			playing.current = !playing.current;
+
+			return !old;
 		});
+	};
+
+	const setDelay = (newDelay: number) => {
+		if (newDelay === 0) {
+			playing.current = true;
+			setPausedTime(0);
+		}
+
+		delay.current = newDelay;
 	};
 
 	return (
 		<div className="w-full">
-			<div className="grid grid-cols-1 items-center border-b border-zinc-800 bg-black p-2 xl:grid-cols-3">
+			<div className="grid grid-cols-1 items-center gap-4 border-b border-zinc-800 bg-black p-2 md:grid-cols-2">
 				<Navbar />
 
-				<div className="flex items-center justify-center gap-2">
-					<Timeline setTime={setTime} time={time} playing={delay > 0} duration={maxDelay} />
-					<StreamStatus live={delay == 0} />
-				</div>
+				{/* <div className="flex items-center justify-center gap-2">
+					<Timeline setTime={setTime} time={time} playing={delay.current > 0} maxDelay={maxDelay} />
+					<StreamStatus live={delay.current == 0} />
+				</div> */}
 
 				<div className="flex flex-row-reverse items-center gap-1">
 					<SegmentedControls
+						selected={mode}
+						onSelect={setMode}
 						options={[
 							{ label: "Simple", value: "simple" },
 							{ label: "Advanced", value: "advanced" },
 							{ label: "Expert", value: "expert" },
 							{ label: "Custom", value: "custom" },
 						]}
-						selected={mode}
-						onSelect={setMode}
 					/>
 					{/* TODO implement setting of user prefered delay */}
-					<DelayInput setDebouncedDelay={setDelay} />
-					<PlayControls playing={!paused} onClick={togglePaused} />
+					<DelayInput delay={delay.current} setDebouncedDelay={setDelay} />
+					<PlayControls playing={playback} onClick={() => togglePlayback()} />
 				</div>
 			</div>
 
