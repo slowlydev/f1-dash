@@ -1,16 +1,16 @@
-import { DriverType, RaceControlMessageType } from "../types/state.type";
+import { DriverList, RaceControlMessages } from "@/types/state.type";
 
 type Props = {
-	messages: RaceControlMessageType[];
-	drivers: DriverType[];
+	messages: RaceControlMessages;
+	drivers: DriverList;
 };
 
 export default function TrackViolations({ messages, drivers }: Props) {
-	const incidents = messages
+	const incidents = messages.messages
 		.filter((rcm) => rcm.category == "Other")
 		.filter((rcm) => rcm.message.includes("INCIDENT INVOLVING"));
 
-	const trackLimits = messages
+	const trackLimits = messages.messages
 		.filter((rcm) => rcm.category == "Other")
 		.filter((rcm) => rcm.message.includes("TRACK LIMITS"));
 
