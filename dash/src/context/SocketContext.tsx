@@ -15,7 +15,7 @@ import {
 import { inflate } from "@/lib/inflate";
 import { merge } from "@/lib/merge";
 
-import { HistoryType, InitialMessage, UpdateMessage } from "@/types/message.type";
+import { InitialMessage, UpdateMessage } from "@/types/message.type";
 import { CarData, Position, State } from "@/types/state.type";
 
 type Values = {
@@ -24,12 +24,6 @@ type Values = {
 	carData: null | CarData;
 	position: null | Position;
 
-	// delay: number;
-	// setDelay: Dispatch<SetStateAction<Values["delay"]>>;
-	setDelay: (value: number) => void;
-	delay: number;
-	maxDelay: number;
-
 	connected: boolean;
 	setConnected: Dispatch<SetStateAction<Values["connected"]>>;
 
@@ -37,6 +31,9 @@ type Values = {
 	setInitial: (initialMessage: InitialMessage) => void;
 
 	ws: MutableRefObject<WebSocket | null>;
+	playing: MutableRefObject<boolean>;
+	delay: MutableRefObject<number>;
+	maxDelay: number;
 };
 
 const SocketContext = createContext<Values | undefined>(undefined);
@@ -49,8 +46,13 @@ type Frame = {
 };
 
 export function SocketProvider({ children }: { children: ReactNode }) {
-	const [connected, setConnected] = useState(false);
-	const delayRef = useRef<number>(0);
+	const [connected, setConnected] = useState<boolean>(false);
+
+	const bufferRef = useRef<Frame[]>([]);
+
+	const delay = useRef<number>(0);
+	const playing = useRef<boolean>(true);
+	const ws = useRef<WebSocket | null>(null);
 
 	const [state, setState] = useState<null | State>(null);
 	const [carData, setCarData] = useState<null | CarData>(null);
@@ -59,14 +61,6 @@ export function SocketProvider({ children }: { children: ReactNode }) {
 	const stateRef = useRef<null | State>(null);
 	const carDataRef = useRef<null | CarData>(null);
 	const positionRef = useRef<null | Position>(null);
-
-	const bufferRef = useRef<Frame[]>([]);
-
-	const ws = useRef<WebSocket | null>(null);
-
-	const setDelay = (value: number) => {
-		delayRef.current = value;
-	};
 
 	const setInitial = (initialMessage: InitialMessage) => {
 		const initial = initialMessage.initial;
@@ -103,17 +97,18 @@ export function SocketProvider({ children }: { children: ReactNode }) {
 	const requestRef = useRef<number | null>(null);
 
 	const animateNextFrame = () => {
-		const buffer = bufferRef.current;
-		const delay = delayRef.current;
-		const isRealtime = delay === 0;
-		const lastFrame = isRealtime
-			? buffer[buffer.length - 1]
-			: buffer.find((frame) => frame.timestamp > Date.now() - delay * 1000);
+		if (playing.current) {
+			const buffer = bufferRef.current;
+			const isRealtime = delay.current === 0;
+			const lastFrame = isRealtime
+				? buffer[buffer.length - 1]
+				: buffer.find((frame) => frame.timestamp > Date.now() - delay.current * 1000);
 
-		if (lastFrame) {
-			if (lastFrame.state) setState(lastFrame.state);
-			if (lastFrame.carData) setCarData(lastFrame.carData);
-			if (lastFrame.position) setPosition(lastFrame.position);
+			if (lastFrame) {
+				if (lastFrame.state) setState(lastFrame.state);
+				if (lastFrame.carData) setCarData(lastFrame.carData);
+				if (lastFrame.position) setPosition(lastFrame.position);
+			}
 		}
 
 		requestRef.current = requestAnimationFrame(animateNextFrame);
@@ -125,7 +120,6 @@ export function SocketProvider({ children }: { children: ReactNode }) {
 	}, []);
 
 	const maxDelay = bufferRef.current.length > 0 ? Math.floor((Date.now() - bufferRef.current[0].timestamp) / 1000) : 0;
-	const delay = delayRef.current;
 
 	return (
 		<SocketContext.Provider
@@ -140,9 +134,10 @@ export function SocketProvider({ children }: { children: ReactNode }) {
 				updateState,
 				setInitial,
 
-				setDelay,
 				maxDelay,
 				delay,
+
+				playing,
 
 				ws,
 			}}
