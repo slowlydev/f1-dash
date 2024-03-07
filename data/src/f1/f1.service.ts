@@ -9,6 +9,7 @@ const channel = "f1-data";
 let state: F1State = {};
 let socket: WebSocket | null = null;
 let connecting = false;
+let connections = 0;
 
 type Negotiation = { token: string; cookie: string | null };
 const negotiate = async (): Promise<Negotiation | null> => {
@@ -118,6 +119,10 @@ setInterval(async () => {
 		socket.close();
 		state = {};
 		socket = null;
+	}
+	if (emitter.listenerCount(channel) !== connections) {
+		connections = emitter.listenerCount(channel);
+		info(`we are now serving ${connections} connections`);
 	}
 }, 2000);
 
