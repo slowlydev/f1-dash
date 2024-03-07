@@ -246,6 +246,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/pako@npm:^2.0.3":
+  version: 2.0.3
+  resolution: "@types/pako@npm:2.0.3"
+  checksum: 0746dd5d29eccf5b2e6cceb3ccb093851219e78bd2e2e20d25757e247987139e061e5d4ba37cb5295493f06e3c683c74f8876011cd8a3f3748a09244fbc841d9
+  languageName: node
+  linkType: hard
+
 "@types/prop-types@npm:*":
   version: 15.7.5
   resolution: "@types/prop-types@npm:15.7.5"
@@ -756,6 +763,7 @@ __metadata:
   dependencies:
     "@headlessui/react": 1.7.17
     "@types/node": 18.15.5
+    "@types/pako": ^2.0.3
     "@types/react": 18.2.33
     "@types/react-dom": 18.2.14
     autoprefixer: 10.4.14
@@ -764,6 +772,7 @@ __metadata:
     framer-motion: 10.16.4
     moment: 2.29.4
     next: 14.0.1
+    pako: 2.1.0
     postcss: 8.4.31
     prettier: 3.0.3
     prettier-plugin-tailwindcss: 0.5.6
@@ -1599,6 +1608,13 @@ __metadata:
   dependencies:
     aggregate-error: ^3.0.0
   checksum: cb0ab21ec0f32ddffd31dfc250e3afa61e103ef43d957cc45497afe37513634589316de4eb88abdfd969fe6410c22c0b93ab24328833b8eb1ccc087fc0442a1c
+  languageName: node
+  linkType: hard
+
+"pako@npm:2.1.0":
+  version: 2.1.0
+  resolution: "pako@npm:2.1.0"
+  checksum: 71666548644c9a4d056bcaba849ca6fd7242c6cf1af0646d3346f3079a1c7f4a66ffec6f7369ee0dc88f61926c10d6ab05da3e1fca44b83551839e89edd75a3e
   languageName: node
   linkType: hard
 
