@@ -1,6 +1,7 @@
 import { config } from "lib/config";
 import { emit, emitter, subscribe } from "lib/event";
 import { debug, error, info } from "lib/logger";
+import { deflateSync } from "zlib";
 import { updateState } from "./f1.handler";
 import { translate } from "./f1.translator";
 import { F1State } from "./f1.type";
@@ -86,8 +87,7 @@ const connect = (negotiation: Negotiation): Promise<WebSocket | null> => {
 };
 
 const encode = (data: F1State): string => {
-	// TODO: implement inflation and coordinate with frontend
-	return JSON.stringify(translate(data));
+	return deflateSync(JSON.stringify(translate(data))).toString("base64");
 };
 
 const setup = async (): Promise<void> => {

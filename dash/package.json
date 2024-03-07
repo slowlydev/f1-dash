@@ -16,6 +16,7 @@
 		"framer-motion": "10.16.4",
 		"moment": "2.29.4",
 		"next": "14.0.1",
+		"pako": "2.1.0",
 		"react": "18.2.0",
 		"react-chartjs-2": "5.2.0",
 		"react-dom": "18.2.0",
@@ -23,6 +24,7 @@
 	},
 	"devDependencies": {
 		"@types/node": "18.15.5",
+		"@types/pako": "^2.0.3",
 		"@types/react": "18.2.33",
 		"@types/react-dom": "18.2.14",
 		"autoprefixer": "10.4.14",
