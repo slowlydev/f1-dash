@@ -1,3 +1,4 @@
+import { error } from "lib/logger";
 import {
 	Driver,
 	DriverPosition,
@@ -310,39 +311,47 @@ export const translateDrivers = (
 };
 
 export const translate = (state: F1State): State => {
-	return {
-		...(state.ExtrapolatedClock && { extrapolatedClock: translateExtrapolatedClock(state.ExtrapolatedClock) }),
-		...(state.SessionData && { sessionData: translateSessionData(state.SessionData) }),
-		...(state.TrackStatus && { trackStatus: translateTrackStatus(state.TrackStatus) }),
-		...(state.LapCount && { lapCount: translateLapCount(state.LapCount) }),
-		...(state.WeatherData && { weather: translateWeather(state.WeatherData) }),
-		...(state.SessionInfo && state.TimingData && { session: translateSession(state.SessionInfo, state.TimingData) }),
+	try {
+		const translated = {
+			...(state.ExtrapolatedClock && { extrapolatedClock: translateExtrapolatedClock(state.ExtrapolatedClock) }),
+			...(state.SessionData && { sessionData: translateSessionData(state.SessionData) }),
+			...(state.TrackStatus && { trackStatus: translateTrackStatus(state.TrackStatus) }),
+			...(state.LapCount && { lapCount: translateLapCount(state.LapCount) }),
+			...(state.WeatherData && { weather: translateWeather(state.WeatherData) }),
+			...(state.SessionInfo && state.TimingData && { session: translateSession(state.SessionInfo, state.TimingData) }),
 
-		...(state.RaceControlMessages &&
-			state.SessionInfo && {
-				raceControlMessages: translateRaceControlMessages(state.RaceControlMessages, state.SessionInfo),
-			}),
+			...(state.RaceControlMessages &&
+				state.SessionInfo && {
+					raceControlMessages: translateRaceControlMessages(state.RaceControlMessages, state.SessionInfo),
+				}),
 
-		...(state.TeamRadio &&
-			state.DriverList &&
-			state.SessionInfo && { teamRadios: translateTeamRadios(state.TeamRadio, state.DriverList, state.SessionInfo) }),
+			...(state.TeamRadio &&
+				state.DriverList &&
+				state.SessionInfo && { teamRadios: translateTeamRadios(state.TeamRadio, state.DriverList, state.SessionInfo) }),
 
-		...(state.Position &&
-			state.DriverList &&
-			state.TimingData && { positionBatches: translatePositions(state.Position, state.DriverList, state.TimingData) }),
+			...(state.Position &&
+				state.DriverList &&
+				state.TimingData && {
+					positionBatches: translatePositions(state.Position, state.DriverList, state.TimingData),
+				}),
 
-		// TODO maybe make work without other categories
-		...(state.DriverList &&
-			state.TimingData &&
-			state.TimingStats &&
-			state.TimingAppData && {
-				drivers: translateDrivers(
-					state.DriverList,
-					state.TimingData,
-					state.TimingStats,
-					state.CarData,
-					state.TimingAppData,
-				),
-			}),
-	};
+			// TODO maybe make work without other categories
+			...(state.DriverList &&
+				state.TimingData &&
+				state.TimingStats &&
+				state.TimingAppData && {
+					drivers: translateDrivers(
+						state.DriverList,
+						state.TimingData,
+						state.TimingStats,
+						state.CarData,
+						state.TimingAppData,
+					),
+				}),
+		};
+		return translated;
+	} catch (err) {
+		error("translating state failed", err);
+		return {};
+	}
 };
