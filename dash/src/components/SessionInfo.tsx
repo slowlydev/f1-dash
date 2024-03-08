@@ -3,14 +3,14 @@
 import { utc, duration } from "moment";
 
 import { ExtrapolatedClock } from "../types/extrapolated-clock.type";
-import { SessionInfo } from "../types/session.type";
+import { SessionInfo as SessionInfoType } from "../types/session.type";
 
 import Flag from "./Flag";
 
 import { useSocket } from "../context/SocketContext";
 
 type Props = {
-	session: SessionInfo | undefined;
+	session: SessionInfoType | undefined;
 	clock: ExtrapolatedClock | undefined;
 };
 
