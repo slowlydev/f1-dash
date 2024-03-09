@@ -17,6 +17,10 @@ export const NoContent = (detail?: string): HttpException => {
 	return new HttpException(204, "no content", detail);
 };
 
+export const BadRequest = (detail?: string): HttpException => {
+	return new HttpException(400, "bad request", detail);
+};
+
 export const Unauthorized = (detail?: string): HttpException => {
 	return new HttpException(401, "unauthorized", detail);
 };

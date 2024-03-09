@@ -1,5 +1,6 @@
 export {
 	Accepted,
+	BadRequest,
 	Conflict,
 	Forbidden,
 	IamTeapot,
