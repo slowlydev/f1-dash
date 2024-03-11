@@ -33,41 +33,42 @@ impl From<&mut models::Message> for Update {
 }
 
 pub fn message(message: String) -> ParsedMessage {
-    let socket_message: models::SocketMessage =
-        serde_json::from_str::<models::SocketMessage>(&message).unwrap();
+    let socket_message = serde_json::from_str::<models::SocketMessage>(&message);
 
-    if let Some(messages) = socket_message.m {
-        if messages.len() < 1 {
-            return ParsedMessage::Empty;
-        };
-
-        let mut updates: HashMap<String, Update> = HashMap::new();
-
-        for mut message in messages {
-            let update = Update::from(&mut message);
-            updates.insert(update.category.clone(), update);
-        }
-
-        // TimingDataF1 is a dupe of TimingData
-        updates.retain(|k, _| k != "TimingDataF1");
-
-        if updates.len() < 1 {
-            return ParsedMessage::Empty;
-        };
-
-        return ParsedMessage::Updates(updates);
-    };
-
-    if let Some(initial) = socket_message.r {
-        if let Ok(mut initial) = serde_json::from_value::<HashMap<String, Value>>(initial) {
-            // TimingDataF1 is a dupe of TimingData
-            initial.retain(|k, _| k != "TimingDataF1");
-
-            if initial.len() < 1 {
+    if let Ok(socket_message) = socket_message {
+        if let Some(messages) = socket_message.m {
+            if messages.len() < 1 {
                 return ParsedMessage::Empty;
             };
 
-            return ParsedMessage::Initial(initial);
+            let mut updates: HashMap<String, Update> = HashMap::new();
+
+            for mut message in messages {
+                let update = Update::from(&mut message);
+                updates.insert(update.category.clone(), update);
+            }
+
+            // TimingDataF1 is a dupe of TimingData
+            updates.retain(|k, _| k != "TimingDataF1");
+
+            if updates.len() < 1 {
+                return ParsedMessage::Empty;
+            };
+
+            return ParsedMessage::Updates(updates);
+        };
+
+        if let Some(initial) = socket_message.r {
+            if let Ok(mut initial) = serde_json::from_value::<HashMap<String, Value>>(initial) {
+                // TimingDataF1 is a dupe of TimingData
+                initial.retain(|k, _| k != "TimingDataF1");
+
+                if initial.len() < 1 {
+                    return ParsedMessage::Empty;
+                };
+
+                return ParsedMessage::Initial(initial);
+            }
         }
     }
 
