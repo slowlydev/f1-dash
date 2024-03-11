@@ -5,13 +5,14 @@ import { ReactNode, useEffect, useState } from "react";
 import { env } from "@/env.mjs";
 
 import { SocketProvider, useSocket } from "@/context/SocketContext";
+import { WalkthroughProvider } from "@/context/WalkthroughContext";
 import { ModeProvider, useMode } from "@/context/ModeContext";
 
 import { messageIsInitial, messageIsUpdate } from "@/lib/messageHelpers";
 
 import { type Message } from "@/types/message.type";
 
-import Navbar from "@/components/Navbar";
+import Menubar from "@/components/Menubar";
 import DelayInput from "@/components/DelayInput";
 import PlayControls from "@/components/PlayControls";
 import SegmentedControls from "@/components/SegmentedControls";
@@ -24,7 +25,9 @@ export default function SocketLayout({ children }: Props) {
 	return (
 		<SocketProvider>
 			<ModeProvider>
-				<SubLayout>{children}</SubLayout>
+				<WalkthroughProvider>
+					<SubLayout>{children}</SubLayout>
+				</WalkthroughProvider>
 			</ModeProvider>
 		</SocketProvider>
 	);
@@ -93,7 +96,7 @@ const SubLayout = ({ children }: Props) => {
 	return (
 		<div className="w-full">
 			<div className="grid grid-cols-1 items-center gap-4 border-b border-zinc-800 bg-black p-2 md:grid-cols-2">
-				<Navbar />
+				<Menubar />
 
 				{/* <div className="flex items-center justify-center gap-2">
 					<Timeline setTime={setTime} time={time} playing={delay.current > 0} maxDelay={maxDelay} />
