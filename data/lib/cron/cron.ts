@@ -1,4 +1,4 @@
-import { error } from "../logger/logger";
+import { debug, error } from "../logger/logger";
 import { Tab } from "./cron.type";
 
 export const tabs: Tab[] = [];
@@ -37,5 +37,15 @@ export const crontab = (time: number): void => {
 			match(second, date.getSeconds())
 		);
 	});
-	fire.forEach((tab) => tab.handler());
+
+	void (async (): Promise<void> => {
+		for (const tab of fire) {
+			debug(`running cron schedule ${tab.schedule}`);
+			try {
+				await tab.handler();
+			} catch (err) {
+				error(`failed to run cron schedule ${tab.schedule}`, err);
+			}
+		}
+	})();
 };
