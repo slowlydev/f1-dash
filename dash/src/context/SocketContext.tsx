@@ -17,6 +17,8 @@ import { merge } from "@/lib/merge";
 
 import { InitialMessage, UpdateMessage } from "@/types/message.type";
 import { CarData, Position, State } from "@/types/state.type";
+import { WindowKey, windows } from "../lib/windows";
+import { WindowMessage } from "../types/window-message.type";
 
 type Values = {
 	state: null | State;
@@ -29,6 +31,8 @@ type Values = {
 
 	updateState: (message: UpdateMessage) => void;
 	setInitial: (initialMessage: InitialMessage) => void;
+
+	openSubWindow: (key: WindowKey) => void;
 
 	ws: MutableRefObject<WebSocket | null>;
 	playing: MutableRefObject<boolean>;
@@ -61,6 +65,8 @@ export function SocketProvider({ children }: { children: ReactNode }) {
 	const stateRef = useRef<null | State>(null);
 	const carDataRef = useRef<null | CarData>(null);
 	const positionRef = useRef<null | Position>(null);
+
+	const subWindowsRef = useRef<Window[]>([]);
 
 	const setInitial = (initialMessage: InitialMessage) => {
 		const initial = initialMessage.initial;
@@ -105,9 +111,18 @@ export function SocketProvider({ children }: { children: ReactNode }) {
 				: buffer.find((frame) => frame.timestamp > Date.now() - delay.current * 1000);
 
 			if (lastFrame) {
-				if (lastFrame.state) setState(lastFrame.state);
-				if (lastFrame.carData) setCarData(lastFrame.carData);
-				if (lastFrame.position) setPosition(lastFrame.position);
+				if (lastFrame.state) {
+					setState(lastFrame.state);
+					broadcastToWindows({ updateType: "state", state: lastFrame.state });
+				}
+				if (lastFrame.carData) {
+					setCarData(lastFrame.carData);
+					broadcastToWindows({ updateType: "car-data", carData: lastFrame.carData });
+				}
+				if (lastFrame.position) {
+					setPosition(lastFrame.position);
+					broadcastToWindows({ updateType: "position", position: lastFrame.position });
+				}
 			}
 		}
 
@@ -128,6 +143,18 @@ export function SocketProvider({ children }: { children: ReactNode }) {
 
 	const maxDelay = bufferRef.current.length > 0 ? Math.floor((Date.now() - bufferRef.current[0].timestamp) / 1000) : 0;
 
+	const openSubWindow = (key: WindowKey) => {
+		let newSubWindow = window.open(`/window/${key}`, undefined, "popup=yes");
+
+		if (newSubWindow) {
+			subWindowsRef.current = [...subWindowsRef.current, newSubWindow];
+		}
+	};
+
+	const broadcastToWindows = (message: WindowMessage) => {
+		subWindowsRef.current.forEach((window) => window.postMessage(message));
+	};
+
 	return (
 		<SocketContext.Provider
 			value={{
@@ -140,6 +167,8 @@ export function SocketProvider({ children }: { children: ReactNode }) {
 
 				updateState,
 				setInitial,
+
+				openSubWindow,
 
 				maxDelay,
 				delay,
