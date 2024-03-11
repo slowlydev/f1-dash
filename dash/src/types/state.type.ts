@@ -277,8 +277,6 @@ export type RadioCapture = {
 	path: string;
 };
 
-// TODO handle those blow somehow
-
 export type Position = {
 	Position: PositionItem[];
 };
@@ -310,20 +308,17 @@ export type Entry = {
 	};
 };
 
-/**
- * @namespace
- * @property {number} 0 - RPM
- * @property {number} 2 - Speed number km/h
- * @property {number} 3 - gear number
- * @property {number} 4 - Throttle int 0-100
- * @property {number} 5 - Brake number boolean
- * @property {number} 45 - DRS
- */
 export type CarDataChannels = {
+	/** 0 - RPM */
 	"0": number;
+	/** 2 - Speed number km/h */
 	"2": number;
+	/** 3 - gear number */
 	"3": number;
+	/** 4 - Throttle int 0-100 */
 	"4": number;
+	/** 5 - Brake number boolean */
 	"5": number;
+	/** 45 - DRS */
 	"45": number;
 };
