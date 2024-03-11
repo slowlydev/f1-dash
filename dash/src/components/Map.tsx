@@ -77,8 +77,8 @@ export default function Map({ circuitKey, drivers, timingDrivers, positionBatche
 
 	if (!points || !minX || !minY || !widthX || !widthY)
 		return (
-			<div className="flex h-full w-full items-center justify-center">
-				<div className="h-5/6 w-5/6 animate-pulse rounded-lg bg-gray-700" />
+			<div className="h-full w-full p-2" style={{ minHeight: "35rem" }}>
+				<div className="h-full w-full animate-pulse rounded-lg bg-gray-700" />
 			</div>
 		);
 
