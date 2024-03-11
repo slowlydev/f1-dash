@@ -39,7 +39,7 @@ export default function DriverTire({ stints }: Props) {
 					L {currentStint?.totalLaps ?? 0}
 					{currentStint?.new ? "" : "*"}
 				</p>
-				<p className="text-sm font-medium leading-none text-gray-500">St {stops}</p>
+				<p className="text-sm font-medium leading-none text-gray-500">PIT {stops}</p>
 			</div>
 		</div>
 	);

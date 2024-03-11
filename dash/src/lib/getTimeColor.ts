@@ -4,8 +4,14 @@ export const getTimeColor = (fastest: boolean, pb: boolean) => {
 	return "";
 };
 
-export const getSectorColor = (type: "bg" | "text", fastest: boolean, pb: boolean) => {
-	if (fastest) return `${type}-indigo-500`;
-	else if (pb) return `${type}-emerald-500`;
-	return `${type}-yellow-500`;
+export const getSectorColorBG = (fastest: boolean, pb: boolean) => {
+	if (fastest) return "bg-violet-500";
+	else if (pb) return "bg-emerald-500";
+	return "bg-yellow-500";
+};
+
+export const getSectorColorText = (fastest: boolean, pb: boolean) => {
+	if (fastest) return "text-violet-500";
+	else if (pb) return "text-emerald-500";
+	return "text-yellow-500";
 };

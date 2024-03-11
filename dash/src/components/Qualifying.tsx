@@ -21,17 +21,18 @@ export default function Qualifying({ drivers, driversTiming, appDriversTiming }:
 		!driversTiming?.lines || !drivers
 			? []
 			: objectEntries(driversTiming.lines)
-					.filter((d) => !d.pitOut || !d.inPit) // no pit
-					.filter((d) => d.sectors.every((sec) => !sec.segments.find((s) => s.status === 2064))) // no in or out lap
-					.filter((d) => d.sectors.map((s) => s.personalFastest).includes(true))
-					.filter((d) => d.sectors[2].segments[0].status != 0);
+					.filter((d) => !d.pitOut && !d.inPit && !d.knockedOut && !d.stopped) // no out, no pit, no stopped
+					.filter((d) => d.sectors.every((sec) => !sec.segments.find((s) => s.status === 2064))) // no in/out lap
+					.filter((d) => d.sectors.map((s) => s.personalFastest).includes(true)); // has any personal fastest
 
-	const currentBest = driversTiming
-		? objectEntries(driversTiming.lines).find((d) => parseInt(d.position) === 1)
+	const sessionPart = driversTiming?.sessionPart;
+	const comparingDriverPosition = sessionPart === 1 ? 15 : sessionPart === 2 ? 10 : sessionPart === 3 ? 1 : 1;
+	const comparingDriver = driversTiming
+		? objectEntries(driversTiming.lines).find((d) => parseInt(d.position) === comparingDriverPosition)
 		: undefined;
 
 	return (
-		<div className="flex w-fit gap-4 p-2">
+		<div className="flex gap-4 p-2">
 			<AnimatePresence>
 				{drivers &&
 					qualifyingDrivers
@@ -42,15 +43,15 @@ export default function Qualifying({ drivers, driversTiming, appDriversTiming }:
 								driver={drivers[timingDriver.racingNumber]}
 								timingDriver={timingDriver}
 								appTimingDriver={appDriversTiming?.lines[timingDriver.racingNumber]}
-								currentBestName={currentBest ? drivers[currentBest?.racingNumber].firstName : undefined}
-								currentBestTime={currentBest ? currentBest.bestLapTime.value : undefined}
+								currentBestName={comparingDriver ? drivers[comparingDriver?.racingNumber].tla : undefined}
+								currentBestTime={comparingDriver ? comparingDriver.bestLapTime.value : undefined}
 							/>
 						))}
 
 				{qualifyingDrivers.length < 1 && (
 					<>
 						{new Array(3).fill(null).map((_, i) => (
-							<SkeletonQualifingDriver key={`skeleton.qualifying.driver.${i}`} />
+							<SkeletonQualifyingDriver key={`skeleton.qualifying.driver.${i}`} />
 						))}
 					</>
 				)}
@@ -59,11 +60,11 @@ export default function Qualifying({ drivers, driversTiming, appDriversTiming }:
 	);
 }
 
-const SkeletonQualifingDriver = () => {
+const SkeletonQualifyingDriver = () => {
 	const animateClass = "h-8 animate-pulse rounded-md bg-gray-700";
 
 	return (
-		<div className="flex w-[18rem] flex-col gap-2">
+		<div className="flex min-w-72 flex-col gap-2">
 			<div className="flex justify-between">
 				<div className={clsx(animateClass, "w-20")} />
 				<div className={clsx(animateClass, "w-8")} />

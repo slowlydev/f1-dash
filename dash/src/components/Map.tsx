@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import clsx from "clsx";
 
-import { DriverList, Position } from "@/types/state.type";
+import { DriverList, Position, TimingData } from "@/types/state.type";
 import { MapType } from "@/types/map.type";
 
 import { utc } from "moment";
@@ -13,6 +13,7 @@ import { objectEntries } from "@/lib/driverHelper";
 type Props = {
 	circuitKey: number | undefined;
 	drivers: DriverList | undefined;
+	timingDrivers: TimingData | undefined;
 	positionBatches: Position | null;
 };
 
@@ -35,12 +36,12 @@ const rotate = (x: number, y: number, a: number, px: number, py: number) => {
 
 const rotationFIX = 90;
 
-export default function Map({ circuitKey, drivers, positionBatches }: Props) {
+export default function Map({ circuitKey, drivers, timingDrivers, positionBatches }: Props) {
 	const [points, setPoints] = useState<null | { x: number; y: number }[]>(null);
 	const [rotation, setRotation] = useState<number>(0);
-	const [ogPoints, setOgPoints] = useState<null | { x: number; y: number }[]>(null);
 
 	const [[minX, minY, widthX, widthY], setBounds] = useState<(null | number)[]>([null, null, null, null]);
+	const [[centerX, centerY], setCenter] = useState<(null | number)[]>([null, null]);
 
 	const positions = positionBatches
 		? positionBatches.Position.sort((a, b) => utc(b.Timestamp).diff(utc(a.Timestamp)))[0].Entries
@@ -67,10 +68,10 @@ export default function Map({ circuitKey, drivers, positionBatches }: Props) {
 			const cWidthX = Math.max(...pointsX) - cMinX + space * 2;
 			const cWidthY = Math.max(...pointsY) - cMinY + space * 2;
 
+			setCenter([centerX, centerY]);
 			setBounds([cMinX, cMinY, cWidthX, cWidthY]);
 			setPoints(rotatedPoints);
 			setRotation(fixedRotation);
-			setOgPoints(mapJson.x.map((xItem, index) => ({ x: xItem, y: mapJson.y[index] })));
 		})();
 	}, [circuitKey]);
 
@@ -88,7 +89,7 @@ export default function Map({ circuitKey, drivers, positionBatches }: Props) {
 			xmlns="http://www.w3.org/2000/svg"
 		>
 			<path
-				className="stroke-slate-700"
+				className="stroke-slate-800"
 				strokeWidth={300}
 				strokeLinejoin="round"
 				fill="transparent"
@@ -103,36 +104,25 @@ export default function Map({ circuitKey, drivers, positionBatches }: Props) {
 				d={`M${points[0].x},${points[0].y} ${points.map((point) => `L${point.x},${point.y}`).join(" ")}`}
 			/>
 
-			{ogPoints && positions && drivers && (
+			{centerX && centerY && positions && drivers && (
 				<>
 					{objectEntries(drivers)
 						.reverse()
 						.filter((driver) => !!positions[driver.racingNumber].X && !!positions[driver.racingNumber].Y)
 						.map((driver) => {
 							const pos = positions[driver.racingNumber];
+							const timingDriver = timingDrivers?.lines[driver.racingNumber];
+							const hidden = timingDriver ? timingDriver.knockedOut : false;
+							const pit = timingDriver ? timingDriver.inPit || timingDriver.pitOut : false;
 
-							// TODO move to backend
-							const xS = ogPoints.map((item) => item.x);
-							const yS = ogPoints.map((item) => item.y);
-
-							const rotatedPos = rotate(
-								pos.X,
-								pos.Y,
-								rotation,
-								(Math.max(...xS) - Math.min(...xS)) / 2,
-								(Math.max(...yS) - Math.min(...yS)) / 2,
-							);
-
-							const out = pos.Status === "OUT" || pos.Status === "RETIRED" || pos.Status === "STOPPED";
-
+							const rotatedPos = rotate(pos.X, pos.Y, rotation, centerX, centerY);
 							const transform = [`translateX(${rotatedPos.x}px)`, `translateY(${rotatedPos.y}px)`].join(" ");
 
 							return (
 								<g
 									key={`map.driver.${driver.racingNumber}`}
 									id={`map.driver.${driver.racingNumber}`}
-									fill={`#${driver.teamColour}`}
-									className={clsx("fill-zinc-700", { "opacity-30": out })}
+									className={clsx("fill-zinc-700", { "opacity-30": pit }, { "opacity-0": hidden })}
 									style={{
 										transition: "all 1s linear",
 										transform,

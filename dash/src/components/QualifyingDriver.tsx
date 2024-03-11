@@ -7,7 +7,7 @@ import clsx from "clsx";
 
 import DriverTag from "./DriverTag";
 
-import { getSectorColor, getTimeColor } from "@/lib/getTimeColor";
+import { getSectorColorBG, getSectorColorText } from "@/lib/getTimeColor";
 
 import { Driver as DriverType, TimingAppDataDriver, TimingDataDriver } from "@/types/state.type";
 
@@ -29,7 +29,9 @@ export default function DriverQuali({
 }: Props) {
 	const stints = appTimingDriver?.stints ?? [];
 	const currentStint = stints ? stints[stints.length - 1] : null;
-	const unknownCompound = !["soft", "medium", "hard", "intermediate", "wet"].includes(currentStint?.compound ?? "");
+	const unknownCompound = !["soft", "medium", "hard", "intermediate", "wet"].includes(
+		currentStint?.compound?.toLowerCase() ?? "",
+	);
 
 	const currentTime = timingDriver.sectors[2].value
 		? timingDriver.sectors[2].value
@@ -42,7 +44,7 @@ export default function DriverQuali({
 	return (
 		<motion.div
 			layout
-			className="flex w-72 flex-col gap-2"
+			className="flex min-w-72 flex-col gap-2"
 			exit={{ opacity: 0 }}
 			animate={{ opacity: 1 }}
 			initial={{ opacity: 0 }}
@@ -86,15 +88,15 @@ export default function DriverQuali({
 						<div
 							className={clsx(
 								"h-4 rounded-md",
-								getSectorColor("bg", sector.overallFastest, sector.personalFastest),
-								!sector.value ? "bg-gray-500" : "",
+								getSectorColorBG(sector.overallFastest, sector.personalFastest),
+								!sector.value ? "!bg-gray-500" : "",
 							)}
 						/>
 						<p
 							className={clsx(
 								"text-center text-lg font-semibold leading-none",
-								getSectorColor("text", sector.overallFastest, sector.personalFastest),
-								!sector.value ? "text-gray-500" : "",
+								getSectorColorText(sector.overallFastest, sector.personalFastest),
+								!sector.value ? "!text-gray-500" : "",
 							)}
 						>
 							{!!sector.value ? sector.value : "-- ---"}
