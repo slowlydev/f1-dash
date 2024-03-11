@@ -4,21 +4,30 @@ import { AnimatePresence } from "framer-motion";
 import Image from "next/image";
 
 import infoIcon from "public/icons/info.svg";
+import { ReactNode } from "react";
+import Button from "./Button";
 
 type Props = {
-	label: string;
+	children: ReactNode;
 	show: boolean;
+
+	onNext?: () => void;
+	nextLabel?: string;
 };
 
-export default function InfoPopover({ label, show }: Props) {
+export default function InfoPopover({ children, show, onNext, nextLabel }: Props) {
 	return (
 		<AnimatePresence>
 			{show && (
 				<div className="absolute z-40 -ml-[2px]">
 					<Tip className="ml-[6px]" />
-					<div className="bg-popover flex items-center justify-center gap-2 rounded-2xl p-4 bg-blend-overlay backdrop-blur-3xl">
+					<div className="flex gap-4 rounded-2xl bg-popover p-4 bg-blend-overlay backdrop-blur-3xl">
 						<Image src={infoIcon} alt="info" className="h-6 w-6" />
-						<p className="font-medium text-white">{label}</p>
+
+						<div className="flex flex-col items-center justify-center gap-4">
+							<p className="font-medium text-white">{children}</p>
+							{nextLabel && <Button>{nextLabel}</Button>}
+						</div>
 					</div>
 				</div>
 			)}
