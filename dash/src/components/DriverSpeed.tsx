@@ -15,7 +15,7 @@ export default function DriverSpeed({ speed }: Props) {
 					strokeWidth="20"
 					strokeLinecap="round"
 					initial={{ pathLength: 0 }}
-					animate={{ pathLength: speed / 400 }}
+					animate={{ pathLength: speed / 340 }}
 				/>
 			</motion.svg>
 
