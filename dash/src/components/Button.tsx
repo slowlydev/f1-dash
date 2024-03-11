@@ -1,5 +1,6 @@
-import clsx from "clsx";
 import type { ReactNode } from "react";
+import { motion } from "framer-motion";
+import clsx from "clsx";
 
 type Props = {
 	children: ReactNode;
@@ -10,11 +11,12 @@ type Props = {
 export default function Button({ children, onClick, className }: Props) {
 	// TODO add hover effect
 	return (
-		<button
-			className={clsx(className, "rounded-lg border-[1px] border-gray-500 bg-zinc-900 p-2 px-3 text-center")}
+		<motion.button
+			whileTap={{ scale: 0.95 }}
+			className={clsx(className, "rounded-lg bg-zinc-800 p-2 text-center leading-none text-white")}
 			onClick={onClick}
 		>
 			{children}
-		</button>
+		</motion.button>
 	);
 }
