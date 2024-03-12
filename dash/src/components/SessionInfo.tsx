@@ -2,12 +2,7 @@
 
 import { utc, duration } from "moment";
 
-<<<<<<< HEAD
 import Flag from "@/components/Flag";
-=======
-import { ExtrapolatedClock } from "../types/extrapolated-clock.type";
-import { SessionInfo as SessionInfoType } from "../types/session.type";
->>>>>>> 0f3c8938b26873181d27ad5d50d05fb2187d85d4
 
 import { useSocket } from "@/context/SocketContext";
 

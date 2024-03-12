@@ -64,7 +64,13 @@ export default function SubWindow({ params: { key } }: Props) {
 				/>
 			)}
 
-			{key === "track-limits" && <TrackViolations messages={state?.raceControlMessages} drivers={state?.driverList} />}
+			{key === "track-limits" && (
+				<TrackViolations
+					messages={state?.raceControlMessages}
+					drivers={state?.driverList}
+					driversTiming={state?.timingData}
+				/>
+			)}
 		</div>
 	);
 }
