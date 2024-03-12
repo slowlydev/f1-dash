@@ -64,7 +64,7 @@ start() {
   fi
 
   log "info" "starting server..."
-  screen -dmSL "${app}" -Logfile "screen.log" ./target/release/backend
+  screen -dmSL "${app}" -Logfile "screen.log" ./target/release/f1-dash-backend
 
   checks=0
   while [ ${checks} -lt 4 ]; do

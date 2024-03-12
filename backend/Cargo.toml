@@ -1,5 +1,5 @@
 [package]
-name = "backend"
+name = "f1-dash-backend"
 version = "0.1.0"
 edition = "2021"
 
