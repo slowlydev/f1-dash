@@ -76,7 +76,7 @@ async fn handle_connection(peer_map: PeerMap, raw_stream: TcpStream, addr: Socke
 async fn main() -> Result<(), IoError> {
     tracing_subscriber::fmt::init();
 
-    let addr = "127.0.0.1:8000".to_string();
+    let addr = "localhost:8000".to_string();
 
     let state = PeerMap::new(Mutex::new(HashMap::new()));
 

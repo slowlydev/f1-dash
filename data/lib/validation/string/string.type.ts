@@ -7,6 +7,7 @@ export type StringParser = RecursiveParser<
 		constraints: Constraints;
 		optional: Parser<string | undefined>;
 		nullable: Parser<string | null>;
+		matches: Parser<string>;
 		min: Parser<string>;
 		max: Parser<string>;
 		default: DefaultParser<string>;

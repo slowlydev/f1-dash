@@ -1,0 +1,45 @@
+{
+	"root": true,
+	"ignorePatterns": ["node_modules/**"],
+	"extends": [
+		"eslint:recommended",
+		"plugin:@typescript-eslint/eslint-recommended",
+		"plugin:@typescript-eslint/recommended",
+		"plugin:prettier/recommended"
+	],
+	"parser": "@typescript-eslint/parser",
+	"parserOptions": {
+		"project": "./tsconfig.json",
+		"tsconfigRootDir": "./"
+	},
+	"plugins": ["@typescript-eslint", "more", "prettier", "unused-imports"],
+	"rules": {
+		"@typescript-eslint/no-shadow": "warn",
+		"@typescript-eslint/no-unsafe-call": "warn",
+		"@typescript-eslint/no-unused-vars": "warn",
+		"@typescript-eslint/await-thenable": "warn",
+		"@typescript-eslint/no-explicit-any": "warn",
+		"@typescript-eslint/no-implied-eval": "error",
+		"@typescript-eslint/unified-signatures": "warn",
+		"@typescript-eslint/no-require-imports": "error",
+		"@typescript-eslint/no-floating-promises": "warn",
+		"@typescript-eslint/restrict-plus-operands": "warn",
+		"@typescript-eslint/prefer-ts-expect-error": "error",
+		"@typescript-eslint/prefer-nullish-coalescing": "warn",
+		"@typescript-eslint/require-array-sort-compare": "warn",
+		"@typescript-eslint/explicit-module-boundary-types": "warn",
+		"@typescript-eslint/explicit-function-return-type": ["warn", { "allowExpressions": true }],
+		"eqeqeq": "warn",
+		"no-eval": "error",
+		"eol-last": "warn",
+		"more/no-then": "warn",
+		"require-await": "warn",
+		"no-return-await": "warn",
+		"func-call-spacing": "warn",
+		"more/prefer-includes": "warn",
+		"no-multiple-empty-lines": "warn",
+		"unused-imports/no-unused-imports": "warn",
+		"id-length": ["warn", { "min": 2, "max": 22 }],
+		"prettier/prettier": ["warn", {}, { "usePrettierrc": true }]
+	}
+}

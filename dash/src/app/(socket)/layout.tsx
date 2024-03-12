@@ -11,6 +11,7 @@ import DelayInput from "@/components/DelayInput";
 import SessionInfo from "@/components/SessionInfo";
 import TrackInfo from "@/components/TrackInfo";
 import ConnectionStatus from "@/components/ConnectionStatus";
+import { decode } from "@/lib/inflate";
 
 type BufferFrame = {
 	timestamp: number;
@@ -58,13 +59,13 @@ const SubLayout = ({ children }: Props) => {
 
 	useEffect(() => {
 		setBuffer([]);
-		const socket = new WebSocket(`${env.NEXT_PUBLIC_SOCKET_SERVER_URL}`);
+		const socket = new EventSource(`${env.NEXT_PUBLIC_SERVER_URL}/api/f1/sse`);
 
-		socket.onclose = () => setConnected(false);
+		socket.onerror = () => setConnected(false);
 		socket.onopen = () => setConnected(true);
 
 		socket.onmessage = (event) => {
-			const state: State = JSON.parse(event.data);
+			const state: State = decode(event.data);
 
 			if (Object.keys(state).length === 0) return;
 

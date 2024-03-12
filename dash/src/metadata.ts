@@ -54,7 +54,7 @@ export const metadata: Metadata = {
 
 	creator: "Slowlydev",
 	publisher: "Slowlydev",
-	authors: [{ name: "Slowlydev", url: "https://slowlydev.vercel.app" }],
+	authors: [{ name: "Slowlydev", url: "https://slowly.dev" }],
 
 	appleWebApp: {
 		capable: true,

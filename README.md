@@ -13,7 +13,7 @@ A real-time F1 dashboard that shows the leader board, tires, gaps, laps, mini se
 
 ## project structure
 
-This project is mono-repo style. Which means it includes the frontend aswell as the backend and some extra tools for developing and testing.
+This project is mono-repo style. Which means it includes the frontend as well as the backend and some extra tools for developing and testing.
 I will go over every single of of them and explain them below.
 
 The main two parts used in production are:
@@ -28,7 +28,7 @@ The main two parts used in production are:
 Other tools used during development or testing are:
 
 - `data-saver`  
-  Connects to the f1 socket and porints out the messages it recives.
+  Connects to the f1 socket and prints out the messages it receives.
   Its written in rust. I usually use it to pipe the output into a txt file which the `data-simulator` then can use.
   Write to txt like this: `cargo run > some-name.data.txt`
 
@@ -38,25 +38,25 @@ Other tools used during development or testing are:
 
 ## setup
 
-Because we have multiple components u need to install follwuing things
+Because we have multiple components you need to install following things
 
 - node
 - yarn
 - bun
-- rsutup (cargo)
+- rustup (cargo)
 
 to start the whole thing do this
 
 ```bash
-# note u will need 3 terminals u can't abort one command
+# note you will need 3 terminals you can't abort one command
 
 cd dash/
 yarn # install deps
 yarn dev # start frontend in dev mode
 
 cd data/
-bun i # install deps
-bun start # start backend
+bun install # install deps
+bun start:dev # start backend
 
 cd data-simulator/
 cargo run some-name.data.txt # will install, compile and start
@@ -65,10 +65,14 @@ cargo run some-name.data.txt # will install, compile and start
 
 cd data-saver/
 cargo run > some-name.data.txt # will install, compile and start
-# its supid simple but it works
+# its stupid simple but it works
 ```
 
 ## contributing
 
-I really appreaciate it if you want to contribute to this project. I can reccomend the Github issues marked as "Good First Issue" to get started.
-If you want to support me and make me focus more on this project support me here by [buying me a coffee](https://www.buymeacoffee.com/slowlydev).
+I really appreciate it if you want to contribute to this project. I can recommend the GitHub issues marked as "Good First Issue" to get started.
+If you want to support me and make me focus more on this project, support me here by [buying me a coffee](https://www.buymeacoffee.com/slowlydev).
+
+## notice
+
+This project/website is unofficial and is not associated in any way with the Formula 1 companies. F1, FORMULA ONE, FORMULA 1, FIA FORMULA ONE WORLD CHAMPIONSHIP, GRAND PRIX and related marks are trade marks of Formula One Licensing B.V

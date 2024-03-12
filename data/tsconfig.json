@@ -1,18 +1,17 @@
 {
 	"compilerOptions": {
-		"types": ["bun-types"],
-		"target": "es5",
-		"lib": ["dom", "dom.iterable", "esnext"],
-		"allowJs": true,
-		"skipLibCheck": true,
-		"strict": true,
-		"forceConsistentCasingInFileNames": true,
-		"noEmit": true,
-		"esModuleInterop": true,
+		"lib": ["esnext"],
 		"module": "esnext",
-		"moduleResolution": "node",
+		"target": "esnext",
+		"moduleResolution": "bundler",
+		"strict": true,
+		"skipLibCheck": true,
+		"esModuleInterop": true,
+		"strictNullChecks": true,
 		"resolveJsonModule": true,
-		"isolatedModules": true,
-		"incremental": true
+		"forceConsistentCasingInFileNames": true,
+		"paths": {
+			"lib/*": ["./lib/*/index"]
+		}
 	}
 }

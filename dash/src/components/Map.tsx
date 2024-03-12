@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { DriverPositionBatch } from "../types/positions.type";
 import { SessionInfo } from "../types/session.type";
-import { MapType } from "../types/map.type";
 import { utc } from "moment";
 import clsx from "clsx";
 
 import { sortPos } from "../lib/sortPos";
+import { fetchMap } from "../lib/fetchMap";
 
 // This is basically fearlessly copied from
 // https://github.com/tdjsnelling/monaco
@@ -46,8 +46,7 @@ export default function Map({ circuitKey, positionBatches }: Props) {
 	useEffect(() => {
 		(async () => {
 			if (!circuitKey) return;
-			const mapReq = await fetch(`/api/map/${circuitKey}`);
-			const mapJson: MapType = await mapReq.json();
+			const mapJson = await fetchMap(circuitKey);
 
 			const centerX = (Math.max(...mapJson.x) - Math.min(...mapJson.x)) / 2;
 			const centerY = (Math.max(...mapJson.y) - Math.min(...mapJson.y)) / 2;
@@ -127,7 +126,11 @@ export default function Map({ circuitKey, positionBatches }: Props) {
 									key={`map.driver.${pos.driverNr}`}
 									id={`map.driver.${pos.driverNr}`}
 									className={clsx("fill-zinc-700", { "opacity-30": out })}
-									style={{ transition: "all 1s linear", transform, ...(pos.teamColor && ({ fill: `#${pos.teamColor}` })) }}
+									style={{
+										transition: "all 1s linear",
+										transform,
+										...(pos.teamColor && { fill: `#${pos.teamColor}` }),
+									}}
 								>
 									<circle id={`map.driver.${pos.driverNr}.circle`} r={120} />
 									<text

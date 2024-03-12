@@ -4,7 +4,7 @@ export default function Footer() {
 	return (
 		<footer className="mt-4 flex flex-wrap gap-2 text-sm font-medium text-gray-200">
 			<p>
-				Made with ♥ by <TextLink website="https://slowlydev.vercel.app">Slowlydev</TextLink>.
+				Made with ♥ by <TextLink website="https://slowly.dev">Slowlydev</TextLink>.
 			</p>
 
 			<p>
@@ -12,7 +12,7 @@ export default function Footer() {
 			</p>
 
 			<p>
-				Contribute on <TextLink website="https://github.com/Slowlydev/f1-dash">Github</TextLink>.
+				Contribute on <TextLink website="https://github.com/Slowlydev/f1-dash">GitHub</TextLink>.
 			</p>
 
 			<p>
