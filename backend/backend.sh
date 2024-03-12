@@ -2,8 +2,8 @@
 
 set -e
 
-name="dev-f1-data"
-app="dev-f1-data"
+name="dev-f1-backend"
+app="dev-f1-backend"
 
 red="$(tput setaf 1)"
 green="$(tput setaf 2)"
