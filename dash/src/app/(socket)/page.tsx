@@ -19,7 +19,7 @@ export default function Page() {
 
 	return (
 		<div className="flex w-full flex-col">
-			<div className="flex flex-wrap items-center justify-between gap-2 overflow-hidden border-b border-zinc-800 p-1 p-2 px-2">
+			<div className="flex flex-wrap items-center justify-between gap-2 overflow-hidden border-b border-zinc-800 p-2 px-2">
 				<div className="flex flex-wrap gap-2">
 					<div className="flex w-full items-center justify-between md:w-auto">
 						<SessionInfo session={state?.sessionInfo} clock={state?.extrapolatedClock} />
