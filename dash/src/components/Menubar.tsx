@@ -63,7 +63,7 @@ export default function Menubar() {
 
 			{/* TODO streams o.o */}
 
-			<Modal open={liveWarning} onClose={cancelLeaveLive}>
+			<Modal open={liveWarning}>
 				<div className="flex flex-col items-center gap-4">
 					<Image alt="warning icon" src={alertIcon} />
 
@@ -80,7 +80,7 @@ export default function Menubar() {
 				</div>
 			</Modal>
 
-			<Modal open={windowsModal} onClose={() => setWindowsModal(false)}>
+			<Modal open={windowsModal}>
 				<div className="flex flex-col gap-4">
 					<p className="text-left">Open Additional Windows</p>
 

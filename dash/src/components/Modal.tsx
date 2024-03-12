@@ -1,13 +1,12 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { type ReactNode } from "react";
+import { type MouseEvent, type ReactNode } from "react";
 
 type Props = {
 	open: boolean;
-	onClose: () => void;
 	children: ReactNode;
 };
 
-export default function Modal({ children, open, onClose }: Props) {
+export default function Modal({ children, open }: Props) {
 	return (
 		<AnimatePresence>
 			{open && (
@@ -20,7 +19,7 @@ export default function Modal({ children, open, onClose }: Props) {
 					role="dialog"
 					aria-modal="true"
 				>
-					<div className="fixed inset-0 backdrop-blur-sm transition-opacity" onClick={() => onClose()} />
+					<div className="fixed inset-0 backdrop-blur-sm transition-opacity" />
 
 					<div className="fixed inset-0 z-40 w-screen overflow-y-auto">
 						<div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
