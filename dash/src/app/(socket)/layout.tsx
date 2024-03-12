@@ -40,7 +40,7 @@ const SubLayout = ({ children }: Props) => {
 	useEffect(() => {
 		const socket = new WebSocket(`${env.NEXT_PUBLIC_SOCKET_SERVER_URL}`);
 
-		socket.onclose = () => setConnected(false);
+		socket.onerror = () => setConnected(false);
 		socket.onopen = () => setConnected(true);
 
 		socket.onmessage = (event) => {

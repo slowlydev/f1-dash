@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+<<<<<<< HEAD
 import clsx from "clsx";
 
 import { DriverList, Position, TimingData } from "@/types/state.type";
@@ -6,6 +7,15 @@ import { MapType } from "@/types/map.type";
 
 import { utc } from "moment";
 import { objectEntries } from "@/lib/driverHelper";
+=======
+import { DriverPositionBatch } from "../types/positions.type";
+import { SessionInfo } from "../types/session.type";
+import { utc } from "moment";
+import clsx from "clsx";
+
+import { sortPos } from "../lib/sortPos";
+import { fetchMap } from "../lib/fetchMap";
+>>>>>>> 0f3c8938b26873181d27ad5d50d05fb2187d85d4
 
 // This is basically fearlessly copied from
 // https://github.com/tdjsnelling/monaco
@@ -50,8 +60,7 @@ export default function Map({ circuitKey, drivers, timingDrivers, positionBatche
 	useEffect(() => {
 		(async () => {
 			if (!circuitKey) return;
-			const mapReq = await fetch(`/api/map/${circuitKey}`);
-			const mapJson: MapType = await mapReq.json();
+			const mapJson = await fetchMap(circuitKey);
 
 			const centerX = (Math.max(...mapJson.x) - Math.min(...mapJson.x)) / 2;
 			const centerY = (Math.max(...mapJson.y) - Math.min(...mapJson.y)) / 2;
@@ -120,6 +129,7 @@ export default function Map({ circuitKey, drivers, timingDrivers, positionBatche
 
 							return (
 								<g
+<<<<<<< HEAD
 									key={`map.driver.${driver.racingNumber}`}
 									id={`map.driver.${driver.racingNumber}`}
 									className={clsx("fill-zinc-700", { "opacity-30": pit }, { "opacity-0": hidden })}
@@ -127,6 +137,15 @@ export default function Map({ circuitKey, drivers, timingDrivers, positionBatche
 										transition: "all 1s linear",
 										transform,
 										...(driver.teamColour && { fill: `#${driver.teamColour}` }),
+=======
+									key={`map.driver.${pos.driverNr}`}
+									id={`map.driver.${pos.driverNr}`}
+									className={clsx("fill-zinc-700", { "opacity-30": out })}
+									style={{
+										transition: "all 1s linear",
+										transform,
+										...(pos.teamColor && { fill: `#${pos.teamColor}` }),
+>>>>>>> 0f3c8938b26873181d27ad5d50d05fb2187d85d4
 									}}
 								>
 									<circle id={`map.driver.${driver.racingNumber}.circle`} r={120} />
