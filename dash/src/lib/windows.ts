@@ -39,6 +39,6 @@ export const windows: Window[] = [
 	},
 	{
 		key: "track-limits",
-		label: "🚧 Track Limits Tracker",
+		label: "Track Limits Tracker",
 	},
 ];

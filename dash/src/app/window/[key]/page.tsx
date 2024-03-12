@@ -6,6 +6,7 @@ import { CarData, Position, State } from "@/types/state.type";
 import { WindowMessage } from "@/types/window-message.type";
 import { WindowKey } from "@/lib/windows";
 
+import TrackViolations from "@/components/TrackViolations";
 import RaceControl from "@/components/RaceControl";
 import TeamRadios from "@/components/TeamRadios";
 import Map from "@/components/Map";
@@ -62,6 +63,8 @@ export default function SubWindow({ params: { key } }: Props) {
 					positionBatches={position}
 				/>
 			)}
+
+			{key === "track-limits" && <TrackViolations messages={state?.raceControlMessages} drivers={state?.driverList} />}
 		</div>
 	);
 }
