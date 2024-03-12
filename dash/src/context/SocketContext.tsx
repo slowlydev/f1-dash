@@ -152,7 +152,7 @@ export function SocketProvider({ children }: { children: ReactNode }) {
 	};
 
 	const broadcastToWindows = (message: WindowMessage) => {
-		subWindowsRef.current.forEach((window) => window.postMessage(message));
+		subWindowsRef.current.forEach((subWindow) => subWindow.postMessage(message));
 	};
 
 	return (
