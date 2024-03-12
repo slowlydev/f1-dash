@@ -90,7 +90,7 @@ export function WalkthroughProvider({ children }: { children: ReactNode }) {
 	return (
 		<WalkthroughContext.Provider value={{ start, end }}>
 			{currentStep.type === "popup" && (
-				<motion.div layout style={{ x: currentStep.ref.current?.offsetLeft, y: currentStep.ref.current?.offsetTop }}>
+				<motion.div layout>
 					<InfoPopover children={undefined} show={inProgress}></InfoPopover>
 				</motion.div>
 			)}
