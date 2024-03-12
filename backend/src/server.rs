@@ -15,7 +15,11 @@ use tracing::{debug, error, info};
 use crate::broadcast;
 
 pub async fn listen(broadcast_tx: UnboundedSender<broadcast::Event>) {
-    let addr = "0.0.0.0:4000".to_string();
+    let default_addr = "0.0.0.0:4000".to_string();
+    let addr = std::env::var("BACKEND_ADDRESS").unwrap_or(default_addr);
+
+    info!("starting on {}...", addr);
+
     let listener = TcpListener::bind(&addr).await.expect("TCP failed");
 
     let mut id: u32 = 0;
