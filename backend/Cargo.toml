@@ -9,7 +9,9 @@ edition = "2021"
 tracing = "0.1"
 tracing-subscriber = "0.3"
 
-base64 = "0.21.5"
+dotenvy = "0.15.7"
+
+base64 = "0.22"
 flate2 = "1.0"
 chrono = { version = "0.4", features = ["serde"] }
 serde = { version = "1.0", features = ["derive"] }

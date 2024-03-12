@@ -18,6 +18,8 @@ use data::odctrl::Request;
 
 #[tokio::main(flavor = "multi_thread", worker_threads = 20)]
 async fn main() {
+    dotenvy::dotenv().expect("failed reading env files");
+
     log::init();
 
     let db = db::init().await.expect("db setup failed");
