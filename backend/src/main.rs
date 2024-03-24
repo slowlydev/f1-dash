@@ -8,6 +8,7 @@ pub mod data {
 }
 mod client;
 mod db;
+mod env;
 mod log;
 mod server;
 
@@ -18,8 +19,7 @@ use data::odctrl::Request;
 
 #[tokio::main(flavor = "multi_thread", worker_threads = 20)]
 async fn main() {
-    dotenvy::dotenv().expect("failed reading env files");
-
+    env::init();
     log::init();
 
     let db = db::init().await.expect("db setup failed");
