@@ -21,7 +21,7 @@ const getNextMeeting = async (): Promise<NextMeeting> => {
 	return res;
 };
 
-export default async function ArchivePage() {
+export default function ArchivePage() {
 
 	const [archive, setArchive] = useState<Archive | null>(null);
 	const [nextMeeting, setNextMeeting] = useState<NextMeeting | null>(null);
@@ -30,7 +30,11 @@ export default async function ArchivePage() {
 		(async () => {
 			const meetingData = await getNextMeeting();
 			setNextMeeting(meetingData);
+		})();
+	}, []);
 
+	useEffect(() => {
+		(async () => {
 			const archiveData = await getArchive();
 			setArchive(archiveData);
 		})();
