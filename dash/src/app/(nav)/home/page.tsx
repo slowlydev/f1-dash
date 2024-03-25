@@ -1,5 +1,6 @@
-// "use client";
+"use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -29,13 +30,20 @@ import HomeFeatureCard from "../../../components/HomeFeatureCard";
 import DriverDRS from "../../../components/DriverDRS";
 
 const getNextMeeting = async (): Promise<NextMeeting> => {
-	const req = await fetch(`${env.NEXT_PUBLIC_SERVER_URL}/api/next-meeting`, { next: { revalidate: 30 } });
+	const req = await fetch(`${env.NEXT_PUBLIC_SERVER_URL}/api/next-meeting`);
 	const res: NextMeeting = await req.json();
 	return res;
 };
 
-export default async function Page() {
-	const nextMeeting = await getNextMeeting();
+export default function Page() {
+	const [nextMeeting, setNextMeeting] = useState<NextMeeting | null>(null);
+
+	useEffect(() => {
+		(async () => {
+			const data = await getNextMeeting();
+			setNextMeeting(data);
+		})();
+	}, []);
 
 	return (
 		<div>
@@ -105,7 +113,9 @@ export default async function Page() {
 			</div>
 
 			<div className="mb-8 flex flex-col items-center">
-				<UpNextMeeting nextMeeting={nextMeeting} />
+				{nextMeeting && (
+					<UpNextMeeting nextMeeting={nextMeeting} />
+				)}
 
 				<div className="flex cursor-pointer items-center gap-1 opacity-50">
 					<Link href="/archive">Checkout the archive for past sessions</Link>
