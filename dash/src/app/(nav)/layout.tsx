@@ -27,7 +27,7 @@ export default function Layout({ children }: Props) {
 							className="flex cursor-pointer select-none items-center gap-2"
 						>
 							<Image src={coffeeIcon} alt="github" width={20} height={20} />
-							<p className="opacity-50">Coffee</p>
+							<p>Coffee</p>
 						</motion.div>
 					</a>
 
@@ -38,7 +38,7 @@ export default function Layout({ children }: Props) {
 							className="flex cursor-pointer select-none items-center gap-2"
 						>
 							<Image src={githubIcon} alt="github" width={25} height={25} />
-							<p className="opacity-50">Github</p>
+							<p>Github</p>
 						</motion.div>
 					</a>
 				</div>

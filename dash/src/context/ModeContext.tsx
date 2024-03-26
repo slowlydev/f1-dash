@@ -10,7 +10,7 @@ import {
 	useEffect,
 } from "react";
 
-type UiElements = {
+export type UiElements = {
 	tableHeaders: boolean;
 	sectorFastest: boolean;
 	carMetrics: boolean;

@@ -21,7 +21,7 @@ const roadmap = [
 
 export default function Home() {
 	return (
-		<div className="container mx-auto px-4">
+		<div className="container mx-auto max-w-screen-lg px-4">
 			<section className="flex h-screen w-full flex-col items-center justify-center">
 				<Image src={icon} alt="f1-dash tag logo" width={200} />
 
@@ -31,7 +31,7 @@ export default function Home() {
 				</h1>
 
 				<Link href="/">
-					<Button className="!rounded-xl !bg-indigo-500 p-4 font-medium">Go to Dashboard</Button>
+					<Button className="!rounded-xl p-4 font-medium">Go to Dashboard</Button>
 				</Link>
 
 				<ScrollHint />
@@ -39,7 +39,7 @@ export default function Home() {
 
 			<section className="mb-10 flex w-full flex-col gap-2">
 				<h2 className="mb-4 text-2xl">What are our Features?</h2>
-				<div className="grid grid-flow-row  grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3">
+				<div className="grid grid-flow-row  grid-cols-1 gap-2 sm:grid-cols-2">
 					{features.map((feature, i) => (
 						<FeatureCard key={`feature.${i}`} {...feature} />
 					))}
