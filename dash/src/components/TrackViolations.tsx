@@ -4,7 +4,7 @@ import { DriverList, RaceControlMessages, TimingData } from "@/types/state.type"
 
 import { objectEntries } from "@/lib/driverHelper";
 
-import DriverTag from "./DriverTag";
+import DriverTag from "./driver/DriverTag";
 
 import octagonX from "../../public/icons/x-octagon.svg";
 

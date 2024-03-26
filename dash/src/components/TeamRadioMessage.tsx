@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { utc } from "moment";
 
-import DriverTag from "./DriverTag";
+import DriverTag from "./driver/DriverTag";
 import PlayControls from "./PlayControls";
 import AudioProgress from "./AudioProgress";
 

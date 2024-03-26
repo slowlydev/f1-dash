@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import clsx from "clsx";
 
-import DriverHistoryTires from "@/components/DriverHistoryTires";
+import DriverHistoryTires from "@/components/driver/DriverHistoryTires";
 import Graph from "@/components/Graph";
 
 import { TimingAppDataDriver } from "@/types/state.type";

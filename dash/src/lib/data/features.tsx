@@ -1,13 +1,13 @@
 import Image from "next/image";
 
 import SegmentedControls from "@/components/SegmentedControls";
-import DriverMiniSectors from "@/components/DriverMiniSectors";
+import DriverMiniSectors from "@/components/driver/DriverMiniSectors";
 import DriverQuali from "@/components/QualifyingDriver";
-import DriverLapTime from "@/components/DriverLapTime";
-import DriverInfo from "@/components/DriverInfo";
-import DriverTire from "@/components/DriverTire";
-import DriverDRS from "@/components/DriverDRS";
-import DriverGap from "@/components/DriverGap";
+import DriverLapTime from "@/components/driver/DriverLapTime";
+import DriverInfo from "@/components/driver/DriverInfo";
+import DriverTire from "@/components/driver/DriverTire";
+import DriverDRS from "@/components/driver/DriverDRS";
+import DriverGap from "@/components/driver/DriverGap";
 
 import softTireIcon from "public/tires/soft.svg";
 import mediumTireIcon from "public/tires/medium.svg";

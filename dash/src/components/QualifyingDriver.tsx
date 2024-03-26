@@ -1,11 +1,10 @@
 "use client";
 
-import { motion, useMotionValue } from "framer-motion";
+import { motion } from "framer-motion";
 import Image from "next/image";
-
 import clsx from "clsx";
 
-import DriverTag from "./DriverTag";
+import DriverTag from "./driver/DriverTag";
 
 import { getSectorColorBG, getSectorColorText } from "@/lib/getTimeColor";
 

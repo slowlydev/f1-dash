@@ -9,7 +9,7 @@ import { useMode } from "@/context/ModeContext";
 
 import { CarData, DriverList, TimingAppData, TimingData, TimingStats } from "@/types/state.type";
 
-import Driver from "@/components/Driver";
+import Driver from "@/components/driver/Driver";
 
 type Props = {
 	drivers: DriverList | undefined;
