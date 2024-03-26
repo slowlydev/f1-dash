@@ -12,18 +12,18 @@ export { metadata } from "@/metadata";
 export { viewport } from "@/viewport";
 
 export default function RootLayout({ children }: { children: ReactNode }) {
-	const disableTracking = !!env.NEXT_PUBLIC_DISABLE_TRACKING;
+	const enableTracking = !!env.NEXT_PUBLIC_ENABLE_TRACKING;
 
 	return (
 		<html lang="en" className={`${inter.variable} bg-zinc-950 font-sans text-white`}>
 			<head />
 
-			{!disableTracking && (
+			{enableTracking && (
 				<Script
 					async
 					defer
 					data-website-id="f1f0eb93-0656-4791-900d-b9a1b0e7af96"
-					src="https://slowly-base.vercel.app/rep.js"
+					src="https://base.slowly.dev/rep.js"
 				/>
 			)}
 
