@@ -20,23 +20,27 @@ export default function Layout({ children }: Props) {
 				<Menubar />
 
 				<div className="flex items-center gap-4 pr-2">
-					<motion.div
-						whileHover={{ scale: 1.05 }}
-						whileTap={{ scale: 0.95 }}
-						className="flex cursor-pointer select-none items-center gap-2"
-					>
-						<Image src={coffeeIcon} alt="github" width={20} height={20} />
-						<p className="opacity-50">Coffee</p>
-					</motion.div>
+					<a target="_blank" href="https://www.buymeacoffee.com/slowlydev">
+						<motion.div
+							whileHover={{ scale: 1.05 }}
+							whileTap={{ scale: 0.95 }}
+							className="flex cursor-pointer select-none items-center gap-2"
+						>
+							<Image src={coffeeIcon} alt="github" width={20} height={20} />
+							<p className="opacity-50">Coffee</p>
+						</motion.div>
+					</a>
 
-					<motion.div
-						whileHover={{ scale: 1.05 }}
-						whileTap={{ scale: 0.95 }}
-						className="flex cursor-pointer select-none items-center gap-2"
-					>
-						<Image src={githubIcon} alt="github" width={25} height={25} />
-						<p className="opacity-50">Github</p>
-					</motion.div>
+					<a target="_blank" href="https://github.com/slowlydev/f1-dash">
+						<motion.div
+							whileHover={{ scale: 1.05 }}
+							whileTap={{ scale: 0.95 }}
+							className="flex cursor-pointer select-none items-center gap-2"
+						>
+							<Image src={githubIcon} alt="github" width={25} height={25} />
+							<p className="opacity-50">Github</p>
+						</motion.div>
+					</a>
 				</div>
 			</div>
 
