@@ -22,7 +22,7 @@ type Modes = {
 	[key in Mode]: UiElements;
 };
 
-const modes: Modes = {
+export const modes: Modes = {
 	simple: {
 		tableHeaders: false,
 		sectorFastest: false,
@@ -38,6 +38,7 @@ const modes: Modes = {
 		sectorFastest: false,
 		carMetrics: true,
 	},
+	// custom is used as default values
 	custom: {
 		tableHeaders: false,
 		sectorFastest: false,
@@ -56,11 +57,16 @@ const ModeContext = createContext<Values | undefined>(undefined);
 
 export function ModeProvider({ children }: { children: ReactNode }) {
 	const [mode, setMode] = useState<Mode>("simple");
+	const [custom, setCustom] = useState<UiElements>(modes.custom);
 
 	useEffect(() => {
 		if (typeof window != undefined) {
 			const localStorageMode = localStorage.getItem("mode");
 			if (localStorageMode && modes[localStorageMode as Mode]) setMode(localStorageMode as Mode);
+
+			const localStorageCustom = localStorage.getItem("custom");
+			const customSettings: UiElements = localStorageCustom ? JSON.parse(localStorageCustom) : modes.custom;
+			setCustom(customSettings);
 		}
 	}, []);
 
@@ -75,7 +81,7 @@ export function ModeProvider({ children }: { children: ReactNode }) {
 			value={{
 				mode,
 				setMode,
-				uiElements: modes[mode],
+				uiElements: mode === "custom" ? custom : modes[mode],
 			}}
 		>
 			{children}

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import { type UiElements } from "@/context/ModeContext";
+import { modes, type UiElements } from "@/context/ModeContext";
 
 import Toggle from "@/components/Toggle";
 
@@ -16,9 +16,7 @@ export default function SettingsPage() {
 			console.log("loading storage...");
 
 			const customStorage = localStorage.getItem("custom");
-			const customSettings: UiElements = customStorage
-				? JSON.parse(customStorage)
-				: { tableHeaders: false, sectorFastest: false, carMetrics: false };
+			const customSettings: UiElements = customStorage ? JSON.parse(customStorage) : modes.custom;
 
 			setTableHeaders(customSettings.tableHeaders);
 			setSectorFastest(customSettings.sectorFastest);
@@ -29,9 +27,7 @@ export default function SettingsPage() {
 	const handleUpdate = (type: "sector" | "table" | "car", newValue: boolean) => {
 		if (typeof window != undefined) {
 			const customStorage = localStorage.getItem("custom");
-			const customSettings: UiElements = customStorage
-				? JSON.parse(customStorage)
-				: { tableHeaders: false, sectorFastest: false, carMetrics: false };
+			const customSettings: UiElements = customStorage ? JSON.parse(customStorage) : modes.custom;
 
 			switch (type) {
 				case "car": {
