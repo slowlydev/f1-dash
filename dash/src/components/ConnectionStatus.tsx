@@ -1,9 +1,10 @@
+"use client";
+
 import clsx from "clsx";
+import { useSocket } from "../context/SocketContext";
 
-type Props = {
-	connected: boolean;
-};
+export default function ConnectionStatus() {
+	const { connected } = useSocket();
 
-export default function ConnectionStatus({ connected }: Props) {
-	return <div className={clsx("h-4 w-4 rounded-full", connected ? "bg-emerald-500" : "bg-red-500")} />;
+	return <div className={clsx("size-3  rounded-full", connected ? "bg-emerald-500" : "animate-pulse bg-red-500")} />;
 }
