@@ -1,15 +1,16 @@
-import React from "react";
 import clsx from "clsx";
 
 import { getTimeColor } from "@/lib/getTimeColor";
-import { TimingDataDriver } from "@/types/state.type";
+import { TimingDataDriver, TimingStatsDriver } from "@/types/state.type";
 
 type Props = {
 	sectors: TimingDataDriver["sectors"];
+	bestSectors: TimingStatsDriver["bestSectors"] | undefined;
 	tla: string;
+	showFastest: boolean;
 };
 
-export default function DriverMiniSectors({ sectors = [], tla }: Props) {
+export default function DriverMiniSectors({ sectors = [], bestSectors, tla, showFastest }: Props) {
 	return (
 		<div className="flex gap-2">
 			{sectors.map((sector, i) => (
@@ -25,10 +26,17 @@ export default function DriverMiniSectors({ sectors = [], tla }: Props) {
 							"text-lg font-semibold leading-none",
 							getTimeColor(sector.overallFastest, sector.personalFastest),
 							!sector.value ? "text-gray-500" : "",
+							showFastest ? "!text-sm" : "",
 						)}
 					>
 						{!!sector.value ? sector.value : !!sector.previousValue ? sector.previousValue : "-- ---"}
 					</p>
+
+					{showFastest && (
+						<p className={clsx("leading-non text-sm font-semibold text-gray-500")}>
+							{bestSectors && bestSectors[i].value ? bestSectors[i].value : "-- ---"}
+						</p>
+					)}
 				</div>
 			))}
 		</div>

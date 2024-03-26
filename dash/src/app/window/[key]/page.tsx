@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 import { CarData, Position, State } from "@/types/state.type";
 import { WindowMessage } from "@/types/window-message.type";
-import { WindowKey } from "@/lib/windows";
+import { WindowKey } from "@/lib/data/windows";
 
 import TrackViolations from "@/components/TrackViolations";
 import RaceControl from "@/components/RaceControl";

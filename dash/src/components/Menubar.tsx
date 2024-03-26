@@ -1,28 +1,28 @@
-import { useRouter } from "next/navigation";
+"use client";
+
+import { usePathname, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import Image from "next/image";
 
-import alertIcon from "../../public/icons/alert-triangle.svg";
+import Modal from "@/components/Modal";
+import Button from "@/components/Button";
+import Windows from "@/components/Windows";
 
-import { windows } from "@/lib/windows";
-
-import { useSocket } from "@/context/SocketContext";
-
-import Modal from "./Modal";
-import Button from "./Button";
+import alertIcon from "public/icons/alert-triangle.svg";
 
 export default function Menubar() {
 	const router = useRouter();
-
-	const { openSubWindow } = useSocket();
+	const pathname = usePathname();
 
 	const [[liveWarning, nextRoute], setLiveWarning] = useState<[boolean, string | null]>([false, null]);
 
 	const liveRoutes = ["/"]; // adjust this when adding head-to-head or track map
+	const onLiveRoute = liveRoutes.includes(pathname);
 
 	const liveTimingGuard = (to: string) => {
-		if (!liveRoutes.includes(to)) {
+		// is on live route and wants to navigate to non live
+		if (onLiveRoute && !liveRoutes.includes(to)) {
 			setLiveWarning([true, to]);
 			return;
 		}
@@ -41,10 +41,8 @@ export default function Menubar() {
 		setLiveWarning([false, null]);
 	};
 
-	const [windowsModal, setWindowsModal] = useState<boolean>(false);
-
 	return (
-		<div className="flex select-none gap-4">
+		<div className="flex select-none gap-4 px-2">
 			<motion.p className="cursor-pointer" whileTap={{ scale: 0.95 }} onClick={() => liveTimingGuard("/home")}>
 				Home
 			</motion.p>
@@ -57,11 +55,14 @@ export default function Menubar() {
 			<motion.p className="cursor-pointer" whileTap={{ scale: 0.95 }} onClick={() => liveTimingGuard("/help")}>
 				Help
 			</motion.p>
-			<motion.p className="cursor-pointer" whileTap={{ scale: 0.95 }} onClick={() => setWindowsModal(true)}>
-				Windows
-			</motion.p>
 
-			{/* TODO streams o.o */}
+			{onLiveRoute && (
+				<>
+					<Windows />
+
+					{/* TODO streams o.o */}
+				</>
+			)}
 
 			<Modal open={liveWarning}>
 				<div className="flex flex-col items-center gap-4">
@@ -77,30 +78,6 @@ export default function Menubar() {
 							Confirm
 						</Button>
 					</div>
-				</div>
-			</Modal>
-
-			<Modal open={windowsModal}>
-				<div className="flex flex-col gap-4">
-					<p className="text-left">Open Additional Windows</p>
-
-					<div className="grid grid-cols-4 gap-4">
-						{windows.map((windowOption, i) => (
-							<motion.div
-								onClick={() => openSubWindow(windowOption.key)}
-								whileHover={{ scale: 1.05 }}
-								whileTap={{ scale: 0.95 }}
-								key={`window.option.${i}`}
-								className=" flex size-40 cursor-pointer flex-col items-start justify-end rounded-lg bg-zinc-800 p-4 text-left"
-							>
-								<p>{windowOption.label}</p>
-							</motion.div>
-						))}
-					</div>
-
-					<Button onClick={() => setWindowsModal(false)} className="w-24">
-						Close
-					</Button>
 				</div>
 			</Modal>
 		</div>

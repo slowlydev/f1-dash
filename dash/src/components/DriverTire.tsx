@@ -1,4 +1,3 @@
-import React from "react";
 import Image from "next/image";
 
 import { Stint } from "@/types/state.type";
@@ -18,7 +17,7 @@ export default function DriverTire({ stints }: Props) {
 		<div className="flex flex-row items-center gap-2 place-self-start">
 			{currentStint && !unknownCompound && currentStint.compound && (
 				<Image
-					src={`/tires/${currentStint.compound.toLowerCase()}.svg`}
+					src={"/tires/" + currentStint.compound.toLowerCase() + ".svg"}
 					width={32}
 					height={32}
 					alt={currentStint.compound}
@@ -27,13 +26,12 @@ export default function DriverTire({ stints }: Props) {
 
 			{currentStint && unknownCompound && (
 				<div className="flex h-8 w-8 items-center justify-center">
-					<Image src={`/tires/unknown.svg`} width={32} height={32} alt={"unknown"} />
+					<Image src={"/tires/unknown.svg"} width={32} height={32} alt={"unknown"} />
 				</div>
 			)}
 
 			{!currentStint && <div className="h-8 w-8 animate-pulse rounded-full bg-gray-700 font-semibold" />}
 
-			{/* TODO move this to a tooltip */}
 			<div>
 				<p className="font-bold leading-none">
 					L {currentStint?.totalLaps ?? 0}

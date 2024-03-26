@@ -8,7 +8,7 @@ type Props<T> = {
 		value: T;
 	}[];
 	selected: T;
-	onSelect: (val: T) => void;
+	onSelect?: (val: T) => void;
 };
 
 export default function SegmentedControls<T>({ options, selected, onSelect }: Props<T>) {
@@ -24,7 +24,7 @@ export default function SegmentedControls<T>({ options, selected, onSelect }: Pr
 							key={option.label}
 						>
 							<button
-								onClick={() => onSelect(option.value)}
+								onClick={() => (onSelect ? onSelect(option.value) : void 0)}
 								className="relative m-0 border-none bg-transparent px-5 py-2 leading-none"
 							>
 								{isActive && (

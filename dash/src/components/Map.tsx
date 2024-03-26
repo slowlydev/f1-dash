@@ -88,7 +88,7 @@ export default function Map({ circuitKey, drivers, timingDrivers, positionBatche
 			xmlns="http://www.w3.org/2000/svg"
 		>
 			<path
-				className="stroke-slate-800"
+				className="stroke-gray-800"
 				strokeWidth={300}
 				strokeLinejoin="round"
 				fill="transparent"
@@ -97,7 +97,7 @@ export default function Map({ circuitKey, drivers, timingDrivers, positionBatche
 
 			<path
 				stroke="white"
-				strokeWidth={60}
+				strokeWidth={80}
 				strokeLinejoin="round"
 				fill="transparent"
 				d={`M${points[0].x},${points[0].y} ${points.map((point) => `L${point.x},${point.y}`).join(" ")}`}

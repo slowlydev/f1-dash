@@ -17,8 +17,8 @@ import { merge } from "@/lib/merge";
 
 import { InitialMessage, UpdateMessage } from "@/types/message.type";
 import { CarData, Position, State } from "@/types/state.type";
-import { WindowKey, windows } from "../lib/windows";
-import { WindowMessage } from "../types/window-message.type";
+import { WindowMessage } from "@/types/window-message.type";
+import { WindowKey } from "@/lib/data/windows";
 
 type Values = {
 	state: null | State;
@@ -138,13 +138,20 @@ export function SocketProvider({ children }: { children: ReactNode }) {
 
 	useEffect(() => {
 		requestRef.current = requestAnimationFrame(animateNextFrame);
-		return () => (requestRef.current != null ? cancelAnimationFrame(requestRef.current) : undefined);
+
+		return () => {
+			if (requestRef.current) {
+				cancelAnimationFrame(requestRef.current);
+			}
+
+			subWindowsRef.current.forEach((subWindow) => subWindow.close());
+		};
 	}, []);
 
 	const maxDelay = bufferRef.current.length > 0 ? Math.floor((Date.now() - bufferRef.current[0].timestamp) / 1000) : 0;
 
 	const openSubWindow = (key: WindowKey) => {
-		let newSubWindow = window.open(`/window/${key}`, undefined, "popup=yes");
+		let newSubWindow = window.open(`/window/${key}`, undefined, "popup=yes,left=100,top=100,width=320,height=320");
 
 		if (newSubWindow) {
 			subWindowsRef.current = [...subWindowsRef.current, newSubWindow];

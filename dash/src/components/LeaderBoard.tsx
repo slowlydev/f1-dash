@@ -7,18 +7,19 @@ import { objectEntries } from "@/lib/driverHelper";
 
 import { useMode } from "@/context/ModeContext";
 
-import { CarData, DriverList, TimingAppData, TimingData } from "@/types/state.type";
+import { CarData, DriverList, TimingAppData, TimingData, TimingStats } from "@/types/state.type";
 
 import Driver from "@/components/Driver";
 
 type Props = {
 	drivers: DriverList | undefined;
 	driversTiming: TimingData | undefined;
+	driversTimingStats: TimingStats | undefined;
 	driversAppTiming: TimingAppData | undefined;
 	carData: CarData | null;
 };
 
-export default function LeaderBoard({ drivers, driversTiming, driversAppTiming, carData }: Props) {
+export default function LeaderBoard({ drivers, driversTiming, driversTimingStats, driversAppTiming, carData }: Props) {
 	const { uiElements } = useMode();
 
 	const currentEntry = carData ? carData.Entries.find((e) => utc(e.Utc).milliseconds() < Date.now())?.Cars : undefined;
@@ -26,7 +27,6 @@ export default function LeaderBoard({ drivers, driversTiming, driversAppTiming, 
 	return (
 		<div className="flex w-fit flex-col divide-y divide-zinc-800">
 			{uiElements.tableHeaders && <TableHeaders />}
-
 			{(!drivers || !driversTiming) &&
 				new Array(20).fill("").map((_, index) => <SkeletonDriver key={`driver.loading.${index}`} />)}
 
@@ -41,6 +41,7 @@ export default function LeaderBoard({ drivers, driversTiming, driversAppTiming, 
 									driver={drivers[timingDriver.racingNumber]}
 									timingDriver={timingDriver}
 									appTimingDriver={driversAppTiming?.lines[timingDriver.racingNumber]}
+									timingStatsDriver={driversTimingStats?.lines[timingDriver.racingNumber]}
 									position={index + 1}
 									sessionPart={driversTiming.sessionPart}
 									carData={currentEntry ? currentEntry[timingDriver.racingNumber].Channels : undefined}

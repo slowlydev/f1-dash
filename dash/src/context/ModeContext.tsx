@@ -12,6 +12,7 @@ import {
 
 type UiElements = {
 	tableHeaders: boolean;
+	sectorFastest: boolean;
 	carMetrics: boolean;
 };
 
@@ -24,18 +25,22 @@ type Modes = {
 const modes: Modes = {
 	simple: {
 		tableHeaders: false,
+		sectorFastest: false,
 		carMetrics: false,
 	},
 	advanced: {
 		tableHeaders: true,
+		sectorFastest: true,
 		carMetrics: false,
 	},
 	expert: {
 		tableHeaders: false,
+		sectorFastest: false,
 		carMetrics: true,
 	},
 	custom: {
 		tableHeaders: false,
+		sectorFastest: false,
 		carMetrics: false,
 	},
 };

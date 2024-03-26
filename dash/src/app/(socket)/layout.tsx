@@ -114,7 +114,6 @@ const SubLayout = ({ children }: Props) => {
 							{ label: "Custom", value: "custom" },
 						]}
 					/>
-					{/* TODO implement setting of user prefered delay */}
 					<DelayInput delay={delay.current} setDebouncedDelay={setDelay} />
 					<PlayControls playing={playback} onClick={() => togglePlayback()} />
 				</div>

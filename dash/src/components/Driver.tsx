@@ -6,7 +6,13 @@ import { motion } from "framer-motion";
 
 import { useMode } from "@/context/ModeContext";
 
-import { Driver as DriverType, TimingDataDriver, TimingAppDataDriver, CarDataChannels } from "@/types/state.type";
+import {
+	Driver as DriverType,
+	TimingDataDriver,
+	TimingAppDataDriver,
+	CarDataChannels,
+	TimingStatsDriver,
+} from "@/types/state.type";
 
 import DriverTag from "./DriverTag";
 import DriverDRS from "./DriverDRS";
@@ -23,11 +29,28 @@ type Props = {
 	sessionPart: number | undefined;
 	driver: DriverType;
 	timingDriver: TimingDataDriver;
+	timingStatsDriver: TimingStatsDriver | undefined;
 	appTimingDriver: TimingAppDataDriver | undefined;
 	carData: CarDataChannels | undefined;
 };
 
-export default function Driver({ driver, timingDriver, appTimingDriver, position, sessionPart, carData }: Props) {
+const hasDRS = (drs: number) => {
+	return drs > 9;
+};
+
+const possibleDRS = (drs: number) => {
+	return drs === 8;
+};
+
+export default function Driver({
+	driver,
+	timingDriver,
+	timingStatsDriver,
+	appTimingDriver,
+	position,
+	sessionPart,
+	carData,
+}: Props) {
 	const { uiElements } = useMode();
 
 	const [open, setOpen] = useState<boolean>(false);
@@ -51,12 +74,22 @@ export default function Driver({ driver, timingDriver, appTimingDriver, position
 				}}
 			>
 				<DriverTag className="!min-w-full" short={driver.tla} teamColor={driver.teamColour} position={position} />
-				<DriverDRS on={false} possible={false} inPit={timingDriver.inPit} pitOut={timingDriver.pitOut} />
+				<DriverDRS
+					on={carData ? hasDRS(carData[45]) : false}
+					possible={carData ? possibleDRS(carData[45]) : false}
+					inPit={timingDriver.inPit}
+					pitOut={timingDriver.pitOut}
+				/>
 				<DriverTire stints={appTimingDriver?.stints} />
 				<DriverInfo timingDriver={timingDriver} />
 				<DriverGap timingDriver={timingDriver} sessionPart={sessionPart} />
 				<DriverLapTime last={timingDriver.lastLapTime} best={timingDriver.bestLapTime} />
-				<DriverMiniSectors sectors={timingDriver.sectors} tla={driver.tla} />
+				<DriverMiniSectors
+					sectors={timingDriver.sectors}
+					bestSectors={timingStatsDriver?.bestSectors}
+					tla={driver.tla}
+					showFastest={uiElements.sectorFastest}
+				/>
 
 				{uiElements.carMetrics && carData && <DriverCarMetrics carData={carData} />}
 			</div>
