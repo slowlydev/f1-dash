@@ -47,6 +47,10 @@ export default function Menubar() {
 			<motion.p className="cursor-pointer" whileTap={{ scale: 0.95 }} onClick={() => liveTimingGuard("/home")}>
 				Home
 			</motion.p>
+			{/* TODO add spoiler guard (check if race is in progress, then show modal) */}
+			<motion.p className="cursor-pointer" whileTap={{ scale: 0.95 }} onClick={() => router.push("/")}>
+				Dashboard
+			</motion.p>
 			<motion.p className="cursor-pointer" whileTap={{ scale: 0.95 }} onClick={() => liveTimingGuard("/archive")}>
 				Archive
 			</motion.p>
