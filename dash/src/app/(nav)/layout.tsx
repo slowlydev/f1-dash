@@ -19,7 +19,7 @@ export default function Layout({ children }: Props) {
 			<div className="sticky left-0 top-0 z-10 flex h-12 w-full items-center justify-between gap-4 border-b border-zinc-800 bg-black p-2">
 				<Menubar />
 
-				<div className="flex items-center gap-4 pr-2">
+				<div className="hidden items-center gap-4 pr-2 sm:flex">
 					<a target="_blank" href="https://www.buymeacoffee.com/slowlydev">
 						<motion.div
 							whileHover={{ scale: 1.05 }}
