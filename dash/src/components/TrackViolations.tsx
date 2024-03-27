@@ -1,12 +1,8 @@
-import Image from "next/image";
-
-import { DriverList, RaceControlMessages, TimingData } from "@/types/state.type";
+import { Driver, DriverList, RaceControlMessages, TimingData } from "@/types/state.type";
 
 import { objectEntries } from "@/lib/driverHelper";
 
-import DriverTag from "./driver/DriverTag";
-
-import octagonX from "../../public/icons/x-octagon.svg";
+import TrackViolationsDriver from "./TrackViolationsDriver";
 
 type Props = {
 	messages: RaceControlMessages | undefined;
@@ -24,7 +20,13 @@ const findCarNumber = (message: string): string | undefined => {
 	return match?.[1];
 };
 
-export default function TrackViolations({ messages, drivers }: Props) {
+const sortViolations = (driverA: Driver, driverB: Driver, violations: DriverViolations): number => {
+	const a = violations[driverA.racingNumber];
+	const b = violations[driverB.racingNumber];
+	return b - a;
+};
+
+export default function TrackViolations({ messages, drivers, driversTiming }: Props) {
 	const trackLimits =
 		messages?.messages
 			.filter((rcm) => rcm.category == "Other")
@@ -33,17 +35,18 @@ export default function TrackViolations({ messages, drivers }: Props) {
 				const carNr = findCarNumber(violations.message);
 				if (!carNr) return acc;
 
-				if (!acc[carNr]) {
-					acc[carNr] = 0;
+				if (acc[carNr] === undefined) {
+					acc[carNr] = 1;
 				} else {
-					acc[carNr] = acc[carNr] + 1;
+					const newValue = acc[carNr] + 1;
+					acc[carNr] = newValue;
 				}
 
 				return acc;
 			}, {}) ?? {};
 
 	const violationDrivers = drivers
-		? objectEntries(drivers).filter((driver) => trackLimits[driver.racingNumber] < 1)
+		? objectEntries(drivers).filter((driver) => trackLimits[driver.racingNumber] > 0)
 		: undefined;
 
 	return (
@@ -56,17 +59,16 @@ export default function TrackViolations({ messages, drivers }: Props) {
 
 			{violationDrivers &&
 				trackLimits &&
-				violationDrivers.map((driver) => (
-					<div className="flex gap-2" key={`violation.${driver.racingNumber}`}>
-						<DriverTag teamColor={driver.teamColour} short={driver.tla} />
-						<div className="flex gap-2">
-							{new Array(trackLimits[driver.racingNumber]).fill("").map((_, i) => (
-								<Image src={octagonX} className="size-8" alt="x in octagon" />
-							))}
-						</div>
-						<div className="flex flex-col">{}</div>
-					</div>
-				))}
+				violationDrivers
+					.sort((a, b) => sortViolations(a, b, trackLimits))
+					.map((driver) => (
+						<TrackViolationsDriver
+							key={`violation.driver.${driver.racingNumber}`}
+							driver={driver}
+							driversTiming={driversTiming}
+							driverViolations={trackLimits[driver.racingNumber]}
+						/>
+					))}
 		</div>
 	);
 }
