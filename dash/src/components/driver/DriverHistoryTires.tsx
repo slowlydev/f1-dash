@@ -1,4 +1,3 @@
-import React from "react";
 import Image from "next/image";
 
 import { Stint } from "@/types/state.type";
@@ -14,11 +13,11 @@ export default function DriverHistoryTires({ stints }: Props) {
 	return (
 		<div className="flex flex-row items-center justify-start gap-1">
 			{stints.map((stint, i) => (
-				<div className="flex flex-col items-center gap-1">
-					{unknownCompound(stint) && <Image src={`/tires/unknown.svg`} width={32} height={32} alt="unknown" />}
+				<div className="flex flex-col items-center gap-1" key={`driver.${i}`}>
+					{unknownCompound(stint) && <Image src={"/tires/unknown.svg"} width={32} height={32} alt="unknown" />}
 					{!unknownCompound(stint) && stint.compound && (
 						<Image
-							src={`/tires/${stint.compound.toLowerCase()}.svg`}
+							src={`/tires/${stint.compound.toLowerCase()}.${"svg"}`}
 							width={32}
 							height={32}
 							alt={stint?.compound ?? ""}

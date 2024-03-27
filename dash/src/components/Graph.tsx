@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { clamping } from "../lib/circle";
+import { clamping } from "@/lib/circle";
 
 type Props = {
 	values: number[];
@@ -30,29 +30,29 @@ export default function Graph({ lines = 19, values }: Props) {
 			>
 				{Array(lines)
 					.fill(null)
-					.map((_, i) => (
-						<>
-							{i % 6 ? (
-								<rect x={i * 6} width="1" height={safeHight} className="fill-zinc-700" key={`short.${i}`} />
-							) : (
-								<rect x={i * 6} width="1" height={height} className="fill-zinc-700" key={`long.${i}`} />
-							)}
-						</>
-					))}
+					.map((_, i) =>
+						i % 6 ? (
+							<rect x={i * 6} width="1" height={safeHight} className="fill-zinc-700" key={`short.${i}`} />
+						) : (
+							<rect x={i * 6} width="1" height={height} className="fill-zinc-700" key={`long.${i}`} />
+						),
+					)}
 
-				<g>
-					<motion.path
-						layout
-						d={`M0 ${scaleValue(values[0])} ${values.map((v, i) => `L${i * 6} ${scaleValue(v)}`).join(" ")} L${values.length * 6} ${scaleValue(values[values.length - 1])} L${values.length * 6} ${height} L0 ${height} Z`}
-						fill="url(#green-gradient)"
-					/>
-					<motion.path
-						layout
-						d={`M0 ${scaleValue(values[0])} ${values.map((v, i) => `L${i * 6} ${scaleValue(v)}`).join(" ")} L${values.length * 6 + 1} ${scaleValue(values[values.length - 1])}`}
-						stroke="#34C85A"
-						strokeWidth="1.5"
-					/>
-				</g>
+				{values.length > 0 && (
+					<g>
+						<motion.path
+							layout
+							d={`M0 ${scaleValue(values[0])} ${values.map((v, i) => `L${i * 6} ${scaleValue(v)}`).join(" ")} L${values.length * 6} ${scaleValue(values[values.length - 1])} L${values.length * 6} ${height} L0 ${height} Z`}
+							fill="url(#green-gradient)"
+						/>
+						<motion.path
+							layout
+							d={`M0 ${scaleValue(values[0])} ${values.map((v, i) => `L${i * 6} ${scaleValue(v)}`).join(" ")} L${values.length * 6 + 1} ${scaleValue(values[values.length - 1])}`}
+							stroke="#34C85A"
+							strokeWidth="1.5"
+						/>
+					</g>
+				)}
 
 				<defs>
 					<linearGradient
