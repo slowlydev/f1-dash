@@ -164,7 +164,7 @@ export function WalkthroughProvider({ children }: { children: ReactNode }) {
 			const isDone = localStorage.getItem("walkthrough");
 			if (!!!isDone) {
 				setInProgress(true);
-				// localStorage.setItem("walkthrough", "hi there, it seems u did the walkthrough :)");
+				localStorage.setItem("walkthrough", "hi there, it seems u did the walkthrough :)");
 			}
 		}
 	}, []);
