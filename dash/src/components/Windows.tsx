@@ -17,7 +17,12 @@ export default function Windows() {
 
 	return (
 		<>
-			<motion.p className="cursor-pointer" whileTap={{ scale: 0.95 }} onClick={() => setWindowsModal(true)}>
+			<motion.p
+				className="cursor-pointer"
+				id="walkthrough-windows"
+				whileTap={{ scale: 0.95 }}
+				onClick={() => setWindowsModal(true)}
+			>
 				Windows
 			</motion.p>
 

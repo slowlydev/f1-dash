@@ -105,6 +105,7 @@ const SubLayout = ({ children }: Props) => {
 
 				<div className="flex flex-row-reverse items-center gap-1">
 					<SegmentedControls
+						id="walkthrough-mode"
 						selected={mode}
 						onSelect={setMode}
 						options={[
@@ -114,8 +115,8 @@ const SubLayout = ({ children }: Props) => {
 							{ label: "Custom", value: "custom" },
 						]}
 					/>
-					<DelayInput delay={delay.current} setDebouncedDelay={setDelay} />
-					<PlayControls playing={playback} onClick={() => togglePlayback()} />
+					<DelayInput id="walkthrough-delay" delay={delay.current} setDebouncedDelay={setDelay} />
+					<PlayControls id="walkthrough-playback" playing={playback} onClick={() => togglePlayback()} />
 				</div>
 			</div>
 

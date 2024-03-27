@@ -11,7 +11,7 @@ type Props = {
 
 export default function DataWeatherInfo({ weather }: Props) {
 	return (
-		<div className="flex gap-2">
+		<div className="flex gap-2" id="walkthrough-weather">
 			{weather ? (
 				<>
 					<TemperatureComplication value={Math.round(parseFloat(weather.trackTemp))} label="TRC" />

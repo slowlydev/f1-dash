@@ -1,12 +1,13 @@
 import { AnimatePresence, motion } from "framer-motion";
 
 type Props = {
+	id?: string;
 	playing: boolean;
 	loading?: boolean;
 	onClick: () => void;
 };
 
-export default function PlayControls({ playing, loading = false, onClick }: Props) {
+export default function PlayControls({ id, playing, loading = false, onClick }: Props) {
 	const variants = {
 		initial: { opacity: 0, scale: 0.5 },
 		animate: { opacity: 1, scale: 1 },
@@ -15,7 +16,7 @@ export default function PlayControls({ playing, loading = false, onClick }: Prop
 
 	return (
 		<AnimatePresence>
-			<div className="flex h-8 w-8 cursor-pointer items-center justify-center" onClick={onClick}>
+			<div id={id} className="flex h-8 w-8 cursor-pointer items-center justify-center" onClick={onClick}>
 				{!playing && !loading && (
 					<motion.svg
 						initial={variants.initial}
