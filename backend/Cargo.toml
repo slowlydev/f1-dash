@@ -16,7 +16,7 @@ flate2 = "1.0"
 chrono = { version = "0.4", features = ["serde"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
-heck = "0.4.1"
+heck = "0.5.0"
 
 tokio = { version = "1", features = ["full", "sync"] }
 tokio-util = "0.7.10"
@@ -31,7 +31,7 @@ tokio-tungstenite = { git = "https://github.com/kazk/tokio-tungstenite.git", bra
 ] }
 
 
-reqwest = { version = "0.11", features = ["native-tls"] }
+reqwest = { version = "0.12", features = ["native-tls"] }
 anyhow = "1.0.79"
 futures = "0.3"
 futures-util = "0.3"
