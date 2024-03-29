@@ -1,3 +1,4 @@
+use chrono::{DateTime, Utc};
 use serde_json::Value;
 use std::{collections::HashMap, net::SocketAddr};
 
@@ -56,6 +57,11 @@ pub enum Event {
     // timestamp requested updates
     OutRequestedUpdates(u32, Vec<odctrl::query::Update>),
     // messages::DelayedUpdatesMessage
+
+    // Requests
+    RequestReconstruct(u32, DateTime<Utc>), // realtime false
+    RequestUpdates(u32, DateTime<Utc>, DateTime<Utc>), // realtime false
+    RequestRealtime(u32),                   // realtime true
 }
 
 // handles outgoing traffic from rdctrl
@@ -94,6 +100,8 @@ pub async fn init(
                     debug!("new client connected, requesting initial state!");
                     let _ = odctrl_tx.send(Request::Initial(id));
                 }
+
+                info!("current connections: {}", connections.len());
             }
             Event::Quit(id) => {
                 connections.remove(&id);
@@ -179,6 +187,29 @@ pub async fn init(
                     }
                     Err(_) => warn!("failed to serialize delayed updates to json"),
                 }
+            }
+            Event::RequestReconstruct(id, timestamp) => {
+                let _ = odctrl_tx.send(Request::Reconstruct(id, timestamp));
+
+                if let Some(conn) = connections.get_mut(&id) {
+                    conn.realtime = false;
+                }
+            }
+            Event::RequestUpdates(id, start, end) => {
+                let _ = odctrl_tx.send(Request::Updates(id, start, end));
+
+                if let Some(conn) = connections.get_mut(&id) {
+                    conn.realtime = false;
+                }
+            }
+            Event::RequestRealtime(id) => {
+                if let Some(conn) = connections.get_mut(&id) {
+                    conn.realtime = true;
+                }
+
+                // when switching to realtime, make sure the client
+                // gets the latest realtime state
+                let _ = odctrl_tx.send(Request::Initial(id));
             }
         }
     }

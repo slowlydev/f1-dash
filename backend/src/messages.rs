@@ -52,14 +52,15 @@ pub fn create_delayed_initial(value: Value) -> DelayedInitialMessage {
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct DelayedUpdatesMessage {
-    delayed_updates: HashMap<String, Value>,
+    delayed_updates: HashMap<String, Vec<Value>>,
 }
 
 pub fn create_delayed_updates(updates: Vec<odctrl::query::Update>) -> DelayedUpdatesMessage {
-    let mut map: HashMap<String, Value> = HashMap::new();
+    let mut map: HashMap<String, Vec<Value>> = HashMap::new();
 
     for update in updates {
-        map.insert(update.category, update.state);
+        let entry = map.entry(update.category).or_insert_with(Vec::new);
+        entry.push(update.state);
     }
 
     DelayedUpdatesMessage {

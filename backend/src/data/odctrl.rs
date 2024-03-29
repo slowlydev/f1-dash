@@ -15,8 +15,8 @@ pub mod recon;
 
 pub enum Request {
     Initial(u32),
-    DelayedInitial(u32, DateTime<Utc>),
-    DelayedUpdates(u32, DateTime<Utc>, DateTime<Utc>),
+    Reconstruct(u32, DateTime<Utc>),
+    Updates(u32, DateTime<Utc>, DateTime<Utc>),
 }
 
 pub async fn init(
@@ -48,7 +48,7 @@ pub async fn init(
                     }
                 });
             }
-            Request::DelayedInitial(id, timestamp) => {
+            Request::Reconstruct(id, timestamp) => {
                 let broadcast_tx = broadcast_tx.clone();
                 let pool = pool.clone();
 
@@ -68,7 +68,7 @@ pub async fn init(
                     }
                 });
             }
-            Request::DelayedUpdates(id, start, end) => {
+            Request::Updates(id, start, end) => {
                 let broadcast_tx = broadcast_tx.clone();
                 let pool = pool.clone();
 
