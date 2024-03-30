@@ -17,11 +17,15 @@ import { merge } from "@/lib/merge";
 
 import { InitialMessage, UpdateMessage } from "@/types/message.type";
 import { CarData, Position, State } from "@/types/state.type";
+import { History } from "@/types/history.type";
+
 import { WindowMessage } from "@/types/window-message.type";
 import { WindowKey } from "@/lib/data/windows";
+import { createHistoryUpdate, updateHistory } from "../lib/history";
 
 type Values = {
 	state: null | State;
+	history: null | History;
 
 	carData: null | CarData;
 	position: null | Position;
@@ -44,8 +48,11 @@ const SocketContext = createContext<Values | undefined>(undefined);
 
 type Frame = {
 	state: null | State;
+	history: null | History;
+
 	carData: null | CarData;
 	position: null | Position;
+
 	timestamp: number;
 };
 
@@ -59,10 +66,12 @@ export function SocketProvider({ children }: { children: ReactNode }) {
 	const ws = useRef<WebSocket | null>(null);
 
 	const [state, setState] = useState<null | State>(null);
+	const [history, setHistory] = useState<null | History>(null);
 	const [carData, setCarData] = useState<null | CarData>(null);
 	const [position, setPosition] = useState<null | Position>(null);
 
 	const stateRef = useRef<null | State>(null);
+	const historyRef = useRef<null | History>(null);
 	const carDataRef = useRef<null | CarData>(null);
 	const positionRef = useRef<null | Position>(null);
 
@@ -70,30 +79,41 @@ export function SocketProvider({ children }: { children: ReactNode }) {
 
 	const setInitial = (initialMessage: InitialMessage) => {
 		const initial = initialMessage.initial;
-		const carData = initialMessage.initial.carDataZ ? inflate<CarData>(initialMessage.initial.carDataZ) : null;
-		const position = initialMessage.initial.positionZ ? inflate<Position>(initialMessage.initial.positionZ) : null;
+		const history = createHistoryUpdate(initial, initial.timingData?.sessionPart);
+		const carData = initial.carDataZ ? inflate<CarData>(initial.carDataZ) : null;
+		const position = initial.positionZ ? inflate<Position>(initial.positionZ) : null;
 
 		stateRef.current = initial;
+		historyRef.current = history;
 		carDataRef.current = carData;
 		positionRef.current = position;
 
-		addToBuffer(initial, carData, position);
+		addToBuffer(initial, carData, position, history);
 	};
 
 	const updateState = (message: UpdateMessage) => {
-		const state = merge(stateRef.current ?? {}, message.update);
+		const state: State = merge(stateRef.current ?? {}, message.update);
+
+		const sessionPart = state.timingData?.sessionPart;
+		const history = updateHistory(historyRef.current ?? {}, createHistoryUpdate(message.update, sessionPart));
 		const carData = message.update.carDataZ ? inflate<CarData>(message.update.carDataZ) : null;
 		const position = message.update.positionZ ? inflate<Position>(message.update.positionZ) : null;
 
 		stateRef.current = state;
+		historyRef.current = history;
 		if (carData) carDataRef.current = carData;
 		if (position) positionRef.current = position;
 
-		addToBuffer(state, carData, position);
+		addToBuffer(state, carData, position, history);
 	};
 
-	const addToBuffer = (state: State | null, carData: CarData | null, position: Position | null) => {
-		const newBuffer = [...bufferRef.current, { state, carData, position, timestamp: Date.now() }];
+	const addToBuffer = (
+		state: State | null,
+		carData: CarData | null,
+		position: Position | null,
+		history: null | History,
+	) => {
+		const newBuffer = [...bufferRef.current, { state, history, carData, position, timestamp: Date.now() }];
 		if (newBuffer.length > 1000) {
 			newBuffer.shift();
 		}
@@ -114,6 +134,10 @@ export function SocketProvider({ children }: { children: ReactNode }) {
 				if (lastFrame.state) {
 					setState(lastFrame.state);
 					broadcastToWindows({ updateType: "state", state: lastFrame.state });
+				}
+				if (lastFrame.history) {
+					setHistory(lastFrame.history);
+					// we do not have to broadcast history yet, and lets save on compute for now
 				}
 				if (lastFrame.carData) {
 					setCarData(lastFrame.carData);
@@ -171,6 +195,7 @@ export function SocketProvider({ children }: { children: ReactNode }) {
 				state,
 				carData,
 				position,
+				history,
 
 				updateState,
 				setInitial,

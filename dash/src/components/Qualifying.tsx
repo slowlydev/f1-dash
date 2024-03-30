@@ -61,7 +61,7 @@ export default function Qualifying({ drivers, driversTiming, appDriversTiming }:
 }
 
 const SkeletonQualifyingDriver = () => {
-	const animateClass = "h-8 animate-pulse rounded-md bg-gray-700";
+	const animateClass = "h-8 animate-pulse rounded-md bg-zinc-800";
 
 	return (
 		<div className="flex min-w-72 flex-col gap-2">

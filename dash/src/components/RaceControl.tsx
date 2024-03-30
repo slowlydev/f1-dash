@@ -38,7 +38,7 @@ export default function RaceControl({ messages, utcOffset }: Props) {
 }
 
 const SkeletonMessage = ({ index }: { index: number }) => {
-	const animateClass = "h-6 animate-pulse rounded-md bg-gray-700";
+	const animateClass = "h-6 animate-pulse rounded-md bg-zinc-800";
 
 	const flag = index % 4 === 0;
 	const long = index % 5 === 0;

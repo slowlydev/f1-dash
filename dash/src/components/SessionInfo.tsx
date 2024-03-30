@@ -40,13 +40,13 @@ export default function SessionInfo({ session, clock }: Props) {
 						{!!session.number ? ` Q${session.number}` : ""}
 					</h1>
 				) : (
-					<div className="h-4 w-[130px] animate-pulse rounded-md bg-gray-700" />
+					<div className="h-4 w-[130px] animate-pulse rounded-md bg-zinc-800" />
 				)}
 
 				{timeRemaining !== undefined ? (
 					<p className="text-2xl font-extrabold leading-none">{timeRemaining}</p>
 				) : (
-					<div className="mt-1 h-6 w-[100px] animate-pulse rounded-md bg-gray-700 font-semibold" />
+					<div className="mt-1 h-6 w-[100px] animate-pulse rounded-md bg-zinc-800 font-semibold" />
 				)}
 			</div>
 		</div>

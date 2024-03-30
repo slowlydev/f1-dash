@@ -77,7 +77,7 @@ export default function Map({ circuitKey, drivers, timingDrivers, positionBatche
 	if (!points || !minX || !minY || !widthX || !widthY)
 		return (
 			<div className="h-full w-full p-2" style={{ minHeight: "35rem" }}>
-				<div className="h-full w-full animate-pulse rounded-lg bg-gray-700" />
+				<div className="h-full w-full animate-pulse rounded-lg bg-zinc-800" />
 			</div>
 		);
 

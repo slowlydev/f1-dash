@@ -30,14 +30,14 @@ export default function DriverTire({ stints }: Props) {
 				</div>
 			)}
 
-			{!currentStint && <div className="h-8 w-8 animate-pulse rounded-full bg-gray-700 font-semibold" />}
+			{!currentStint && <div className="h-8 w-8 animate-pulse rounded-full bg-zinc-800 font-semibold" />}
 
 			<div>
 				<p className="font-bold leading-none">
 					L {currentStint?.totalLaps ?? 0}
 					{currentStint?.new ? "" : "*"}
 				</p>
-				<p className="text-sm font-medium leading-none text-gray-500">PIT {stops}</p>
+				<p className="text-sm font-medium leading-none text-zinc-500">PIT {stops}</p>
 			</div>
 		</div>
 	);

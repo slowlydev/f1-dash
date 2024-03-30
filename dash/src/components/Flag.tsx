@@ -16,7 +16,7 @@ export default function Flag({ countryCode }: Props) {
 					className="h-full w-full overflow-hidden rounded-lg"
 				/>
 			) : (
-				<div className="h-full w-full animate-pulse overflow-hidden rounded-lg bg-gray-700" />
+				<div className="h-full w-full animate-pulse overflow-hidden rounded-lg bg-zinc-800" />
 			)}
 		</div>
 	);

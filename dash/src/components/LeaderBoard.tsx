@@ -8,6 +8,7 @@ import { objectEntries } from "@/lib/driverHelper";
 import { useMode } from "@/context/ModeContext";
 
 import { CarData, DriverList, TimingAppData, TimingData, TimingStats } from "@/types/state.type";
+import { History } from "@/types/history.type";
 
 import Driver from "@/components/driver/Driver";
 
@@ -17,9 +18,17 @@ type Props = {
 	driversTimingStats: TimingStats | undefined;
 	driversAppTiming: TimingAppData | undefined;
 	carData: CarData | null;
+	history: History | undefined;
 };
 
-export default function LeaderBoard({ drivers, driversTiming, driversTimingStats, driversAppTiming, carData }: Props) {
+export default function LeaderBoard({
+	drivers,
+	driversTiming,
+	driversTimingStats,
+	driversAppTiming,
+	carData,
+	history,
+}: Props) {
 	const { uiElements } = useMode();
 
 	const currentEntry = carData ? carData.Entries.find((e) => utc(e.Utc).milliseconds() < Date.now())?.Cars : undefined;
@@ -45,6 +54,7 @@ export default function LeaderBoard({ drivers, driversTiming, driversTimingStats
 									position={index + 1}
 									sessionPart={driversTiming.sessionPart}
 									carData={currentEntry ? currentEntry[timingDriver.racingNumber].Channels : undefined}
+									history={history}
 								/>
 							))}
 					</AnimatePresence>
@@ -74,7 +84,7 @@ const TableHeaders = () => {
 };
 
 const SkeletonDriver = () => {
-	const animateClass = "h-8 animate-pulse rounded-md bg-gray-700";
+	const animateClass = "h-8 animate-pulse rounded-md bg-zinc-800";
 
 	return (
 		<div

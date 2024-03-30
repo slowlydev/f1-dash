@@ -138,7 +138,12 @@ export function WalkthroughProvider({ children }: { children: ReactNode }) {
 	};
 
 	const start = () => setInProgress(true);
-	const end = () => setInProgress(false);
+	const end = () => {
+		setInProgress(false);
+		if (typeof window != undefined) {
+			localStorage.setItem("walkthrough", "hi there, it seems u did the walkthrough :)");
+		}
+	};
 
 	const next = () => {
 		setStep((current) => {
@@ -164,7 +169,6 @@ export function WalkthroughProvider({ children }: { children: ReactNode }) {
 			const isDone = localStorage.getItem("walkthrough");
 			if (!!!isDone) {
 				setInProgress(true);
-				localStorage.setItem("walkthrough", "hi there, it seems u did the walkthrough :)");
 			}
 		}
 	}, []);
@@ -199,10 +203,16 @@ export function WalkthroughProvider({ children }: { children: ReactNode }) {
 									<InfoPopover show={inProgress} elementChildren>
 										<p className="whitespace-nowrap text-white">{currentStep.label}</p>
 										<div className="flex w-full justify-end gap-2">
-											{step > 0 && step < walkthroughScript.length && <Button onClick={() => back()}>Back</Button>}
-											<Button className="!bg-red-500" onClick={() => end()}>
+											<Button className="!border !border-zinc-600 !bg-transparent" onClick={() => end()}>
 												Skip
 											</Button>
+
+											{step > 0 && step < walkthroughScript.length && (
+												<Button className="!bg-zinc-700" onClick={() => back()}>
+													Back
+												</Button>
+											)}
+
 											<Button className="!bg-blue-500" onClick={() => next()}>
 												Next
 											</Button>
@@ -219,10 +229,16 @@ export function WalkthroughProvider({ children }: { children: ReactNode }) {
 								<Button onClick={() => end()}>Close</Button>
 							) : (
 								<div className="flex justify-end gap-2">
-									{step > 0 && step < walkthroughScript.length && <Button onClick={() => back()}>Back</Button>}
-									<Button className="!bg-red-500" onClick={() => end()}>
+									<Button className="!border !border-zinc-600 !bg-transparent" onClick={() => end()}>
 										Skip
 									</Button>
+
+									{step > 0 && step < walkthroughScript.length && (
+										<Button className="!bg-zinc-700" onClick={() => back()}>
+											Back
+										</Button>
+									)}
+
 									<Button className="!bg-blue-500" onClick={() => next()}>
 										Next
 									</Button>

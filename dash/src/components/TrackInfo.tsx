@@ -32,7 +32,7 @@ export default function TrackInfo({ track, lapCount }: Props) {
 					<p className="text-xl font-semibold">{currentTrackStatus.message}</p>
 				</div>
 			) : (
-				<div className="relative h-8 w-28 animate-pulse overflow-hidden rounded-lg bg-gray-700" />
+				<div className="relative h-8 w-28 animate-pulse overflow-hidden rounded-lg bg-zinc-800" />
 			)}
 		</div>
 	);

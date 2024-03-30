@@ -6,6 +6,8 @@ import { motion } from "framer-motion";
 
 import { useMode } from "@/context/ModeContext";
 
+import { History } from "@/types/history.type";
+
 import {
 	Driver as DriverType,
 	TimingDataDriver,
@@ -32,6 +34,7 @@ type Props = {
 	timingStatsDriver: TimingStatsDriver | undefined;
 	appTimingDriver: TimingAppDataDriver | undefined;
 	carData: CarDataChannels | undefined;
+	history: History | undefined;
 };
 
 const hasDRS = (drs: number) => {
@@ -50,6 +53,7 @@ export default function Driver({
 	position,
 	sessionPart,
 	carData,
+	history,
 }: Props) {
 	const { uiElements } = useMode();
 
@@ -94,7 +98,14 @@ export default function Driver({
 				{uiElements.carMetrics && carData && <DriverCarMetrics carData={carData} />}
 			</div>
 
-			{open && appTimingDriver && <DriverDetailed history={undefined} appTimingDriver={appTimingDriver} />}
+			{open && appTimingDriver && (
+				<DriverDetailed
+					racingNumber={driver.racingNumber}
+					timingDriver={timingDriver}
+					history={history}
+					appTimingDriver={appTimingDriver}
+				/>
+			)}
 		</motion.div>
 	);
 }

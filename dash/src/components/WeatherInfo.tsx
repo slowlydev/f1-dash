@@ -34,5 +34,5 @@ export default function DataWeatherInfo({ weather }: Props) {
 }
 
 function Loading() {
-	return <div className="h-[55px] w-[55px] animate-pulse rounded-full bg-gray-700" />;
+	return <div className="h-[55px] w-[55px] animate-pulse rounded-full bg-zinc-800" />;
 }

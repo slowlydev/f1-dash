@@ -16,7 +16,7 @@ export default function InfoPopover({ children, show, elementChildren = false }:
 	return (
 		<AnimatePresence>
 			{show && (
-				<div className="flex gap-4 rounded-2xl bg-popover p-2 bg-blend-overlay backdrop-blur-3xl">
+				<div className="flex gap-2 rounded-2xl bg-popover p-2 bg-blend-overlay backdrop-blur-3xl">
 					<Image src={infoIcon} alt="info" className="m-2 h-6 w-6" />
 
 					<div className="flex flex-col items-center justify-center gap-2">

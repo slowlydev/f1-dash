@@ -18,6 +18,11 @@ type Props = {
 };
 
 export default function SubWindow({ params: { key } }: Props) {
+	// note, we can not use the context here we use on the dashboard page, as this is a complete new instance of the website
+	// thats why we use window messages to get the state updates from the main window
+	// main disadvantages are that we use requestAnimation frame which stops if the main window is not the active tab
+	// so we don't get updates anymore
+
 	const [state, setState] = useState<null | State>();
 	const [carData, setCarData] = useState<null | CarData>(null);
 	const [position, setPosition] = useState<null | Position>(null);

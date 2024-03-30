@@ -6,10 +6,13 @@ import clsx from "clsx";
 import DriverHistoryTires from "@/components/driver/DriverHistoryTires";
 import Graph from "@/components/Graph";
 
-import { TimingAppDataDriver } from "@/types/state.type";
+import { TimingAppDataDriver, TimingDataDriver } from "@/types/state.type";
+import { History } from "@/types/history.type";
 
 type Props = {
-	history: undefined;
+	racingNumber: string;
+	history: History | undefined;
+	timingDriver: TimingDataDriver | undefined;
 	appTimingDriver: TimingAppDataDriver;
 };
 
@@ -17,7 +20,11 @@ const maxLength = (values: number[], max: number): number[] => {
 	return values.slice(-max);
 };
 
-export default function DriverDetailed({ history, appTimingDriver }: Props) {
+export default function DriverDetailed({ racingNumber, history, timingDriver, appTimingDriver }: Props) {
+	const firstSectorLength = timingDriver ? timingDriver.sectors[0].segments.length : 6;
+	const secondSectorLength = timingDriver ? timingDriver.sectors[1].segments.length : 6;
+	const thirdSectorLength = timingDriver ? timingDriver.sectors[2].segments.length : 6;
+
 	return (
 		<motion.div
 			initial={{ opacity: 0 }}
@@ -39,23 +46,47 @@ export default function DriverDetailed({ history, appTimingDriver }: Props) {
 			</div>
 
 			<div className="">
-				<Graph values={maxLength([], 13)} lines={13} />
+				{history?.gapFront && history.gapFront && history.gapFront[racingNumber] ? (
+					<Graph values={maxLength(history.gapFront[racingNumber], 13)} lines={13} />
+				) : (
+					<LoadingGraph />
+				)}
 			</div>
 			<div className="">
-				<Graph values={maxLength([], 13)} lines={13} />
+				{history?.lapTime && history.lapTime && history.lapTime[racingNumber] ? (
+					<Graph values={maxLength(history.lapTime[racingNumber], 13)} lines={13} />
+				) : (
+					<LoadingGraph />
+				)}
 			</div>
 
-			<div className="flex w-full justify-between gap-2">
-				<div>
-					<Graph values={maxLength([] ?? [], 13)} lines={13} />
+			<div className="flex gap-2">
+				<div style={{ width: `${firstSectorLength * 8 + firstSectorLength * 4}px` }}>
+					{history?.sectors && history.sectors && history.sectors[racingNumber] && history.sectors[racingNumber][0] ? (
+						<Graph values={maxLength(history.sectors[racingNumber][0], 13)} lines={13} />
+					) : (
+						<LoadingGraph />
+					)}
 				</div>
-				<div>
-					<Graph values={maxLength([], 13)} lines={13} />
+				<div style={{ width: `${secondSectorLength * 8 + secondSectorLength * 4}px` }}>
+					{history?.sectors && history.sectors && history.sectors[racingNumber] && history.sectors[racingNumber][1] ? (
+						<Graph values={maxLength(history.sectors[racingNumber][1], 13)} lines={13} />
+					) : (
+						<LoadingGraph />
+					)}
 				</div>
-				<div>
-					<Graph values={maxLength([], 13)} lines={13} />
+				<div style={{ width: `${thirdSectorLength * 8 + thirdSectorLength * 4}px` }}>
+					{history?.sectors && history.sectors && history.sectors[racingNumber] && history.sectors[racingNumber][2] ? (
+						<Graph values={maxLength(history.sectors[racingNumber][2], 13)} lines={13} />
+					) : (
+						<LoadingGraph />
+					)}
 				</div>
 			</div>
 		</motion.div>
 	);
 }
+
+const LoadingGraph = () => {
+	return <div className="h-10 w-full animate-pulse rounded-lg bg-zinc-800"></div>;
+};

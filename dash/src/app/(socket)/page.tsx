@@ -15,7 +15,7 @@ import Footer from "@/components/Footer";
 import Map from "@/components/Map";
 
 export default function Page() {
-	const { state, position, carData } = useSocket();
+	const { state, position, carData, history } = useSocket();
 
 	return (
 		<div className="flex w-full flex-col">
@@ -44,6 +44,7 @@ export default function Page() {
 							driversTimingStats={state?.timingStats}
 							driversAppTiming={state?.timingAppData}
 							carData={carData}
+							history={history ?? undefined}
 						/>
 					</div>
 

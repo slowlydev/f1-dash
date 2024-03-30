@@ -32,15 +32,16 @@ export default function Windows() {
 
 					<div className="grid grid-cols-4 gap-4">
 						{windows.map((windowOption, i) => (
-							<motion.div
+							<motion.button
 								onClick={() => openSubWindow(windowOption.key)}
 								whileHover={{ scale: 1.05 }}
+								whileFocus={{ scale: 1.05 }}
 								whileTap={{ scale: 0.95 }}
 								key={`window.option.${i}`}
 								className=" flex size-40 cursor-pointer flex-col items-start justify-end rounded-lg bg-zinc-800 p-4 text-left"
 							>
 								<p>{windowOption.label}</p>
-							</motion.div>
+							</motion.button>
 						))}
 					</div>
 
