@@ -1,0 +1,28 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select category, state from updates where category != 'initial' and created_at < $1 order by created_at asc",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "category",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 1,
+        "name": "state",
+        "type_info": "Json"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Timestamptz"
+      ]
+    },
+    "nullable": [
+      false,
+      false
+    ]
+  },
+  "hash": "ae275554200eed443eec1bbc0c503112a0775a91954b941aec6dcc85fd7ba463"
+}
