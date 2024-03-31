@@ -61,7 +61,7 @@ async fn accept(
     pin_mut!(handle_receiver, handle_sender);
     tokio::select! {
         _ = handle_receiver => {},
-         _ = handle_sender => {}
+        _ = handle_sender => {}
     }
 
     let _ = broadcast_tx.send(broadcast::Event::Quit(id));
