@@ -11,6 +11,6 @@ RUN cargo build --release
 FROM alpine
 
 # COPY --from=build /usr/local/cargo/bin/backend /usr/local/bin/backend
-COPY --from=build /usr/src/app/target/release/f1-dash-backend /usr/local/bin/f1-dash-backend
+COPY --from=build /usr/src/app/target/release/live-backend /usr/local/bin/live-backend
 
-CMD ["f1-dash-backend"]
+CMD ["live-backend"]
