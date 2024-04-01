@@ -1,4 +1,0 @@
-{
-	"rust-analyzer.linkedProjects": ["./data-simulator/Cargo.toml", "./data-saver/Cargo.toml", "./backend/Cargo.toml"],
-	"cSpell.words": ["odctrl", "rdctrl", "sqlx"]
-}
