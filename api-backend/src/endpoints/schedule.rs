@@ -154,7 +154,11 @@ async fn get_schedule(year: i32) -> Result<Vec<Round>, anyhow::Error> {
 
     rounds.sort_unstable_by(|a, b| a.start.cmp(&b.start));
 
+    let utc_now = Utc::now();
+
     for round in &mut rounds {
+        round.over = round.end < utc_now;
+
         round
             .sessions
             .sort_unstable_by(|a, b| a.start.cmp(&b.start));
