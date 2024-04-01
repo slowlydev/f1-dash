@@ -2,7 +2,7 @@ import { AnimatePresence, LayoutGroup } from "framer-motion";
 import { utc } from "moment";
 import clsx from "clsx";
 
-import { sortPos } from "@/lib/sortPos";
+import { sortPos } from "@/lib/sorting/sortPos";
 import { objectEntries } from "@/lib/driverHelper";
 
 import { useMode } from "@/context/ModeContext";

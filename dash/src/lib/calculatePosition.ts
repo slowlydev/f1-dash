@@ -1,6 +1,6 @@
 import { type TimingData } from "@/types/state.type";
 import { objectEntries } from "./driverHelper";
-import { sortPos } from "./sortPos";
+import { sortPos } from "./sorting/sortPos";
 
 export const calculatePosition = (seconds: number, driverNr: string, timingData: TimingData): number | null => {
 	const driverTiming = timingData.lines[driverNr];

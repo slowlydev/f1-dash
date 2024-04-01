@@ -3,7 +3,7 @@
 import { AnimatePresence } from "framer-motion";
 import clsx from "clsx";
 
-import { sortQuali } from "@/lib/sortQuali";
+import { sortQuali } from "@/lib/sorting/sortQuali";
 import { objectEntries } from "@/lib/driverHelper";
 
 import { DriverList, TimingAppData, TimingData } from "@/types/state.type";

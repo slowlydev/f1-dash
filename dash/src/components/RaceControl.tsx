@@ -2,7 +2,7 @@ import { AnimatePresence } from "framer-motion";
 import { utc } from "moment";
 import clsx from "clsx";
 
-import { sortUtc } from "@/lib/sortUtc";
+import { sortUtc } from "@/lib/sorting/sortUtc";
 
 import { RaceControlMessage } from "@/components/RaceControlMessage";
 
