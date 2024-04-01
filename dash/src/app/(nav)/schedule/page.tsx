@@ -1,4 +1,4 @@
-export default function ArchivePage() {
+export default function SchedulePage() {
 	return (
 		<div className="container mx-auto px-4">
 			<section className="flex h-screen w-full flex-col items-center justify-center">

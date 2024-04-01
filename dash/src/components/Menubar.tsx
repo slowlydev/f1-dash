@@ -51,8 +51,8 @@ export default function Menubar() {
 			<motion.p className="cursor-pointer" whileTap={{ scale: 0.95 }} onClick={() => router.push("/")}>
 				Dashboard
 			</motion.p>
-			<motion.p className="cursor-pointer" whileTap={{ scale: 0.95 }} onClick={() => liveTimingGuard("/archive")}>
-				Archive
+			<motion.p className="cursor-pointer" whileTap={{ scale: 0.95 }} onClick={() => liveTimingGuard("/schedule")}>
+				Schedule
 			</motion.p>
 			<motion.p className="cursor-pointer" whileTap={{ scale: 0.95 }} onClick={() => liveTimingGuard("/settings")}>
 				Settings
