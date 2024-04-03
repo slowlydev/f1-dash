@@ -87,7 +87,7 @@ const getLeaderGap = (update: Update, sessionPart: number | undefined): History[
 				? 0
 				: parseFloat(gapToLeaderString)
 			: null;
-		if (!gapToLeader) return acc;
+		if (gapToLeader === null) return acc;
 
 		if (acc[racingNumber] === undefined) {
 			acc[racingNumber] = [gapToLeader];
