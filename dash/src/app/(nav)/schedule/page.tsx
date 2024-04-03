@@ -13,7 +13,7 @@ const getSchedule = async (): Promise<Round[]> => {
 	try {
 		const scheduleReq = await fetch(`${env.NEXT_PUBLIC_SERVER_URL}/api/schedule`, {
 			next: {
-				revalidate: 60 * 60 * 4,
+				revalidate: 3600,
 			},
 		});
 		const schedule: Round[] = await scheduleReq.json();
