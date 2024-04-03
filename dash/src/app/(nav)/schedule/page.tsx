@@ -30,8 +30,10 @@ export default async function SchedulePage() {
 
 	return (
 		<div className="container mx-auto max-w-screen-lg px-4">
-			<h1 className="my-10 text-3xl font-bold">Up Next</h1>
-			<p className="text-zinc-600"></p>
+			<div className="my-10">
+				<h1 className="text-3xl font-bold">Up Next</h1>
+				<p className="text-zinc-600">All times are local time</p>
+			</div>
 
 			{next ? (
 				<NextRound next={next} />
@@ -41,7 +43,10 @@ export default async function SchedulePage() {
 				</div>
 			)}
 
-			<h1 className="my-10 text-3xl font-bold">Schedule</h1>
+			<div className="my-10">
+				<h1 className="text-3xl font-bold">Schedule</h1>
+				<p className="text-zinc-600">All times are local time</p>
+			</div>
 
 			<div className="mb-20 grid grid-cols-1 gap-8 md:grid-cols-2">
 				{schedule.map((round, roundI) => {
@@ -82,7 +87,7 @@ export default async function SchedulePage() {
 														{session.kind}
 													</p>
 
-													<p className="text-sm leading-none text-zinc-500">
+													<p className="text-sm leading-none text-zinc-600">
 														{utc(session.start).local().format("HH:mm")} - {utc(session.end).local().format("HH:mm")}
 													</p>
 												</div>

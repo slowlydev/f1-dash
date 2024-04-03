@@ -5,7 +5,6 @@ import { duration, now, utc } from "moment";
 
 import { Session } from "@/types/schedule.type";
 import { useEffect, useRef, useState } from "react";
-import moment from "moment";
 
 type Props = {
 	next: Session;
@@ -51,7 +50,7 @@ export default function Countdown({ next, type }: Props) {
 							{days}
 						</motion.p>
 
-						<p className="text-base text-zinc-500">days</p>
+						<p className="text-base text-zinc-600">days</p>
 					</div>
 
 					<div>
@@ -64,7 +63,7 @@ export default function Countdown({ next, type }: Props) {
 							{hours}
 						</motion.p>
 
-						<p className="text-base text-zinc-500">hours</p>
+						<p className="text-base text-zinc-600">hours</p>
 					</div>
 
 					<div>
@@ -76,7 +75,7 @@ export default function Countdown({ next, type }: Props) {
 						>
 							{minutes}
 						</motion.p>
-						<p className="text-base text-zinc-500">minutes</p>
+						<p className="text-base text-zinc-600">minutes</p>
 					</div>
 
 					<div>
@@ -88,7 +87,7 @@ export default function Countdown({ next, type }: Props) {
 						>
 							{seconds}
 						</motion.p>
-						<p className="text-base text-zinc-500">seconds</p>
+						<p className="text-base text-zinc-600">seconds</p>
 					</div>
 				</div>
 			</AnimatePresence>

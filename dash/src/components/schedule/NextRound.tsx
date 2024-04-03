@@ -36,7 +36,7 @@ export default async function NextRound({ next }: Props) {
 					<div className="flex gap-1">
 						<p className="text-3xl">{nextMonth}</p>
 
-						<p className="text-zinc-500">
+						<p className="text-zinc-600">
 							{nextStartLocal.format("D")}-{nextEndLocal.format("D")}
 						</p>
 					</div>
@@ -52,7 +52,7 @@ export default async function NextRound({ next }: Props) {
 									<div className="flex flex-col" key={`next.day.${i}.session.${j}`}>
 										<p className="w-28 overflow-hidden text-ellipsis whitespace-nowrap sm:w-auto">{session.kind}</p>
 
-										<p className="text-sm leading-none text-zinc-500">
+										<p className="text-sm leading-none text-zinc-600">
 											{utc(session.start).local().format("HH:mm")} - {utc(session.end).local().format("HH:mm")}
 										</p>
 									</div>
