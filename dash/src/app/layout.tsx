@@ -23,7 +23,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 					async
 					defer
 					data-website-id="f1f0eb93-0656-4791-900d-b9a1b0e7af96"
-					src="https://slowly-base.vercel.app/rep.js"
+					src="https://base.slowly.dev/rep.js"
 				/>
 			)}
 

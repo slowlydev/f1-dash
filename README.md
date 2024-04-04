@@ -19,7 +19,7 @@ I will go over every single of of them and explain them below.
 The main two parts used in production are:
 
 - `dash` (frontend)  
-  displays the data served from the backend. Also know as the thing you see when you visit [f1-dash](https://f1-dash.vercel.app).
+  displays the data served from the backend. Also know as the thing you see when you visit [f1-dash](https://f1-dash.com).
 
 - `data` (backend)  
   Is the backend that grabs the data from f1 and sorts and formats it in a for me useable state.
