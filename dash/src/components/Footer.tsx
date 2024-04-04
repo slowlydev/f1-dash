@@ -8,11 +8,11 @@ export default function Footer() {
 			</p>
 
 			<p>
-				Please give me your <TextLink website="https://slowly-improve.vercel.app/f1-dash">Feedback</TextLink>.
+				Please give me your <TextLink website="https://improve.slowly.dev/f1-dash">Feedback</TextLink>.
 			</p>
 
 			<p>
-				Contribute on <TextLink website="https://github.com/Slowlydev/f1-dash">GitHub</TextLink>.
+				Contribute on <TextLink website="https://github.com/slowlydev/f1-dash">GitHub</TextLink>.
 			</p>
 
 			<p>

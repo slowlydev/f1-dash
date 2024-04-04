@@ -4,7 +4,7 @@ const title = "f1-dash | Formula 1 live timing";
 const description =
 	"Experience live telemetry and timing data from Formula 1 races. Get insights into leaderboards, tire choices, gaps, lap times, sector times, team radios, and more.";
 
-const url = "https://f1-dash.vercel.app";
+const url = "https://f1-dash.com";
 
 export const metadata: Metadata = {
 	generator: "Next.js",
