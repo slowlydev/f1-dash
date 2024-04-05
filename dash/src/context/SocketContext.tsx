@@ -12,16 +12,16 @@ import {
 	useEffect,
 } from "react";
 
-import { inflate } from "@/lib/inflate";
-import { merge } from "@/lib/merge";
-
 import { InitialMessage, UpdateMessage } from "@/types/message.type";
 import { CarData, Position, State } from "@/types/state.type";
+import { WindowMessage } from "@/types/window-message.type";
 import { History } from "@/types/history.type";
 
-import { WindowMessage } from "@/types/window-message.type";
+import { createHistoryUpdate, updateHistory } from "@/lib/history";
 import { WindowKey } from "@/lib/data/windows";
-import { createHistoryUpdate, updateHistory } from "../lib/history";
+
+import { inflate } from "@/lib/inflate";
+import { merge } from "@/lib/merge";
 
 type Values = {
 	state: null | State;

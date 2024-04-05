@@ -1,10 +1,9 @@
 import Image from "next/image";
-
 import { motion } from "framer-motion";
 import { utc } from "moment";
 
 import { Message } from "@/types/state.type";
-import { toTrackTime } from "../lib/toTrackTime";
+import { toTrackTime } from "@/lib/toTrackTime";
 
 type Props = {
 	msg: Message;

@@ -18,7 +18,7 @@ export default function Menubar() {
 
 	const [[liveWarning, nextRoute], setLiveWarning] = useState<[boolean, string | null]>([false, null]);
 
-	const liveRoutes = ["/"]; // adjust this when adding head-to-head or track map
+	const liveRoutes = ["/dashboard"]; // adjust this when adding head-to-head or track map
 	const onLiveRoute = liveRoutes.includes(pathname);
 
 	const liveTimingGuard = (to: string) => {
@@ -44,11 +44,11 @@ export default function Menubar() {
 
 	return (
 		<div className="flex select-none gap-4 px-2">
-			<motion.p className="cursor-pointer" whileTap={{ scale: 0.95 }} onClick={() => liveTimingGuard("/home")}>
+			<motion.p className="cursor-pointer" whileTap={{ scale: 0.95 }} onClick={() => liveTimingGuard("/")}>
 				Home
 			</motion.p>
 			{/* TODO add spoiler guard (check if race is in progress, then show modal) */}
-			<motion.p className="cursor-pointer" whileTap={{ scale: 0.95 }} onClick={() => router.push("/")}>
+			<motion.p className="cursor-pointer" whileTap={{ scale: 0.95 }} onClick={() => router.push("/dashboard")}>
 				Dashboard
 			</motion.p>
 			<motion.p className="cursor-pointer" whileTap={{ scale: 0.95 }} onClick={() => liveTimingGuard("/schedule")}>

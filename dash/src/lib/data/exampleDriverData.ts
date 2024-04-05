@@ -1,4 +1,4 @@
-import { Driver, TimingAppDataDriver, TimingDataDriver, TimingStatsDriver } from "../../types/state.type";
+import { Driver, TimingAppDataDriver, TimingDataDriver, TimingStatsDriver } from "@/types/state.type";
 
 export const driver: Driver = {
 	broadcastName: "G RUSSELL",

@@ -4,16 +4,23 @@ import { useEffect, useState } from "react";
 
 import { modes, type UiElements } from "@/context/ModeContext";
 
+import Button from "@/components/Button";
 import Toggle from "@/components/Toggle";
+import DelayInput from "@/components/DelayInput";
 
 export default function SettingsPage() {
 	const [tableHeaders, setTableHeaders] = useState<boolean>(false);
 	const [sectorFastest, setSectorFastest] = useState<boolean>(false);
 	const [carMetrics, setCarMetrics] = useState<boolean>(false);
 
+	const [delay, setDelay] = useState<number>(0);
+
 	useEffect(() => {
 		if (typeof window != undefined) {
-			console.log("loading storage...");
+			const delayStorage = localStorage.getItem("delay");
+			const delayValue = delayStorage ? parseInt(delayStorage) : 0;
+
+			setDelay(delayValue);
 
 			const customStorage = localStorage.getItem("custom");
 			const customSettings: UiElements = customStorage ? JSON.parse(customStorage) : modes.custom;
@@ -48,6 +55,14 @@ export default function SettingsPage() {
 		}
 	};
 
+	const updateDelay = (newDelay: number) => {
+		setDelay(newDelay);
+
+		if (typeof window != undefined) {
+			localStorage.setItem("delay", `${newDelay}`);
+		}
+	};
+
 	return (
 		<div className="container mx-auto max-w-screen-lg px-4">
 			<h1 className="my-4 text-3xl">Settings</h1>
@@ -68,7 +83,7 @@ export default function SettingsPage() {
 						handleUpdate("table", v);
 					}}
 				/>
-				<p>Show Table Headers</p>
+				<p className="text-zinc-500">Show Table Headers</p>
 			</div>
 
 			<div className="flex gap-2">
@@ -79,7 +94,7 @@ export default function SettingsPage() {
 						handleUpdate("sector", v);
 					}}
 				/>
-				<p>Show Fastest Sector Times</p>
+				<p className="text-zinc-500">Show Fastest Sector Times</p>
 			</div>
 
 			<div className="flex gap-2">
@@ -90,8 +105,25 @@ export default function SettingsPage() {
 						handleUpdate("car", v);
 					}}
 				/>
-				<p>Show Car Metrics (RPM, Gear, Speed)</p>
+				<p className="text-zinc-500">Show Car Metrics (RPM, Gear, Speed)</p>
 			</div>
+
+			<h2 className="my-4 text-2xl">Delay</h2>
+
+			<p className="mb-4 text-zinc-500">
+				Here you have to option to set a delay for the data, it will displayed the amount entered in seconds later than
+				on the live edge. On the Dashboard page there is the same delay input field so you can set it without going to
+				the settings. It can be found in the most top bar on the right side.
+			</p>
+
+			<div className="flex items-center gap-2">
+				<DelayInput delay={delay} setDebouncedDelay={updateDelay} />
+				<p className="text-zinc-500">Delay in seconds</p>
+			</div>
+
+			<Button className="mt-2 !bg-red-500" onClick={() => updateDelay(0)}>
+				Reset delay
+			</Button>
 		</div>
 	);
 }

@@ -1,6 +1,5 @@
 import Image from "next/image";
 
-import SegmentedControls from "@/components/SegmentedControls";
 import DriverMiniSectors from "@/components/driver/DriverMiniSectors";
 import DriverQuali from "@/components/QualifyingDriver";
 import DriverLapTime from "@/components/driver/DriverLapTime";
@@ -113,18 +112,7 @@ export const features = [
 		title: "Customizable UI",
 		description:
 			"Tailor the dashboard to suit your preferences with a customizable user interface. Adjust layouts, data displays, and visual elements to create a personalized viewing experience that enhances your enjoyment of Formula 1 racing.",
-		children: (
-			<div>
-				<SegmentedControls
-					options={[
-						{ label: "Simple", value: "simple" },
-						{ label: "Export", value: "expert" },
-						{ label: "Custom", value: "custom" },
-					]}
-					selected={"simple"}
-				/>
-			</div>
-		),
+		children: <></>,
 	},
 	{
 		title: "Modern Design",

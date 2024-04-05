@@ -1,7 +1,7 @@
 "use client";
 
 import clsx from "clsx";
-import { useSocket } from "../context/SocketContext";
+import { useSocket } from "@/context/SocketContext";
 
 export default function ConnectionStatus() {
 	const { connected } = useSocket();
