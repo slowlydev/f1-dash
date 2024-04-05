@@ -5,6 +5,7 @@ use tracing::{debug, info, warn};
 
 use crate::broadcast;
 
+pub mod history;
 pub mod merge;
 pub mod query;
 pub mod recon;
@@ -34,12 +35,15 @@ pub async fn init(
 
                 tokio::spawn(async move {
                     info!("creating initial message from db");
-                    let initial = recon::initial(pool, chrono::Utc::now()).await;
+                    let now = chrono::Utc::now();
+                    let initial = recon::initial(pool.clone(), now).await;
+                    let queries = history::queries(pool, now).await;
 
                     match initial {
                         Ok(initial) => {
                             info!("sending reconstructed initial state");
-                            let _ = broadcast_tx.send(broadcast::Event::OutInitial(id, initial));
+                            let _ = broadcast_tx
+                                .send(broadcast::Event::OutInitial(id, initial, queries));
                         }
                         Err(_) => {
                             warn!("failed to reconstruct late initial");
@@ -54,13 +58,14 @@ pub async fn init(
 
                 tokio::spawn(async move {
                     debug!("recreating delayed state from db");
-                    let initial = recon::delayed_initial(pool, timestamp).await;
+                    let initial = recon::delayed_initial(pool.clone(), timestamp).await;
+                    let queries = history::queries(pool, timestamp).await;
 
                     match initial {
                         Ok(initial) => {
                             info!("sending reconstructed delayed state");
-                            let _ =
-                                broadcast_tx.send(broadcast::Event::OutReconstruct(id, initial));
+                            let _ = broadcast_tx
+                                .send(broadcast::Event::OutReconstruct(id, initial, queries));
                         }
                         Err(_) => {
                             warn!("failed to reconstruct delayed state");

@@ -43,7 +43,7 @@ pub enum Event {
     // messages::InitialMessage
 
     // reconstructed initial when new clients connect
-    OutInitial(u32, Value),
+    OutInitial(u32, Value, odctrl::history::Queries),
     // messages::InitialMessage
 
     // realtime updates
@@ -51,7 +51,7 @@ pub enum Event {
     // messages::UpdateMessage
 
     // timestamp requested 'computed' initial
-    OutReconstruct(u32, Value),
+    OutReconstruct(u32, Value, odctrl::history::Queries),
     // messages::DelayedInitialMessage
 
     // timestamp requested updates
@@ -113,7 +113,7 @@ pub async fn init(
                 }
             }
             Event::OutFirstInitial(state) => {
-                let msg = messages::create_initial(state);
+                let msg = messages::create_initial(state, None);
                 let text = serde_json::to_string(&msg);
 
                 match text {
@@ -129,8 +129,8 @@ pub async fn init(
                     Err(_) => warn!("failed to serialize first initial to json"),
                 }
             }
-            Event::OutInitial(id, state) => {
-                let msg = messages::create_initial(state);
+            Event::OutInitial(id, state, queries) => {
+                let msg = messages::create_initial(state, Some(queries));
                 let text = serde_json::to_string(&msg);
 
                 match text {
@@ -160,8 +160,8 @@ pub async fn init(
                     Err(_) => warn!("failed to serialize update to json"),
                 }
             }
-            Event::OutReconstruct(id, state) => {
-                let msg = messages::create_delayed_initial(state);
+            Event::OutReconstruct(id, state, queries) => {
+                let msg = messages::create_delayed_initial(state, queries);
                 let text = serde_json::to_string(&msg);
 
                 match text {
