@@ -1,7 +1,11 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { clamping } from "@/lib/circle";
+
+const linearScale = (value: number, minIn: number, maxIn: number, minOut: number, maxOut: number): number => {
+	const normalizedValue = (value - minIn) / (maxIn - minIn);
+	return minOut + normalizedValue * (maxOut - minOut);
+};
 
 type Props = {
 	values: number[];
@@ -14,9 +18,10 @@ export default function Graph({ lines = 19, values }: Props) {
 	const width = lines * 6 - 5; // 6 would be a full, but the last line would be cut
 
 	const maxValue = Math.max(...values);
+	const minValue = Math.min(...values);
 
 	const scaleValue = (v: number): number => {
-		return clamping(v, safeHight, 0, maxValue);
+		return linearScale(v, minValue, maxValue, 0, safeHight);
 	};
 
 	return (
@@ -32,9 +37,9 @@ export default function Graph({ lines = 19, values }: Props) {
 					.fill(null)
 					.map((_, i) =>
 						i % 6 ? (
-							<rect x={i * 6} width="1" height={safeHight} className="fill-zinc-700" key={`short.${i}`} />
+							<rect x={i * 6} width="1" height={safeHight} className="fill-zinc-800" key={`short.${i}`} />
 						) : (
-							<rect x={i * 6} width="1" height={height} className="fill-zinc-700" key={`long.${i}`} />
+							<rect x={i * 6} width="1" height={height} className="fill-zinc-800" key={`long.${i}`} />
 						),
 					)}
 

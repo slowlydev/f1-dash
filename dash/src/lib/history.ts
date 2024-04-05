@@ -79,13 +79,12 @@ const getLeaderGap = (update: Update, sessionPart: number | undefined): History[
 		const gapToLeaderString =
 			timingDriver.gapToLeader ??
 			(timingDriver.stats ? timingDriver.stats[sessionPart ? sessionPart - 1 : 0]?.timeDiffToFastest : undefined) ??
-			timingDriver.timeDiffToFastest ??
-			undefined;
+			timingDriver.timeDiffToFastest;
 
 		const gapToLeader = gapToLeaderString
 			? gapToLeaderString.includes("LAP")
 				? 0
-				: parseFloat(gapToLeaderString)
+				: parseStringDuration(gapToLeaderString)
 			: null;
 		if (gapToLeader === null) return acc;
 
@@ -111,10 +110,13 @@ const getFrontGap = (update: Update, sessionPart: number | undefined): History["
 			(timingDriver.stats
 				? timingDriver.stats[sessionPart ? sessionPart - 1 : 0]?.timeDifftoPositionAhead
 				: undefined) ??
-			timingDriver.timeDiffToPositionAhead ??
-			undefined;
+			timingDriver.timeDiffToPositionAhead;
 
-		const gapToFront = gapToFrontString ? (gapToFrontString.includes("LAP") ? 0 : parseFloat(gapToFrontString)) : null;
+		const gapToFront = gapToFrontString
+			? gapToFrontString.includes("LAP")
+				? 0
+				: parseStringDuration(gapToFrontString)
+			: null;
 		if (!gapToFront) return acc;
 
 		if (acc[racingNumber] === undefined) {
@@ -179,16 +181,16 @@ const getWeather = (update: Update): History["weather"] => {
 	return {
 		trackTemp: weather.trackTemp ? [parseFloat(weather.trackTemp)] : undefined,
 		airTemp: weather.airTemp ? [parseFloat(weather.airTemp)] : undefined,
-		humidity: weather.humidity ? [parseInt(weather.humidity)] : undefined,
+		humidity: weather.humidity ? [parseFloat(weather.humidity)] : undefined,
 		pressure: weather.pressure ? [parseFloat(weather.pressure)] : undefined,
 		rainfall: weather.rainfall ? [!!weather.rainfall] : undefined,
 		windDirection: weather.windDirection ? [parseInt(weather.windDirection)] : undefined,
-		windSpeed: weather.windSpeed ? [parseInt(weather.windSpeed)] : undefined,
+		windSpeed: weather.windSpeed ? [parseFloat(weather.windSpeed)] : undefined,
 	};
 };
 
 const parseStringDuration = (string: string): number => {
-	return duration(string).asMilliseconds();
+	return duration(string, "seconds").asMilliseconds();
 };
 
 const parseLapTime = (string: string): number => {
@@ -203,5 +205,5 @@ const parseLapTime = (string: string): number => {
 		minutes: m ? parseInt(m) : 0,
 		seconds: s ? parseInt(s) : 0,
 		milliseconds: ms ? parseInt(ms) : 0,
-	}).milliseconds();
+	}).asMilliseconds();
 };

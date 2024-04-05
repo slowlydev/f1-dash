@@ -1,10 +1,11 @@
+import { type History } from "./history.type";
 import { type Update, type State } from "./state.type";
 
 export type Message = InitialMessage | UpdateMessage;
 
 export type InitialMessage = {
 	initial: State;
-	history: History;
+	history: History | null;
 };
 
 export type UpdateMessage = {

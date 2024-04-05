@@ -79,7 +79,7 @@ export function SocketProvider({ children }: { children: ReactNode }) {
 
 	const setInitial = (initialMessage: InitialMessage) => {
 		const initial = initialMessage.initial;
-		const history = createHistoryUpdate(initial, initial.timingData?.sessionPart);
+		const history = initialMessage.history;
 		const carData = initial.carDataZ ? inflate<CarData>(initial.carDataZ) : null;
 		const position = initial.positionZ ? inflate<Position>(initial.positionZ) : null;
 
