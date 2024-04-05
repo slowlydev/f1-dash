@@ -35,10 +35,12 @@ export default function DriverDetailed({ racingNumber, history, timingDriver, ap
 				gridTemplateColumns: "10rem 9.5rem 5rem 5rem auto",
 			}}
 		>
-			<div className="flex flex-col gap-1  place-self-start text-sm font-medium leading-none text-zinc-600">
-				<p>Expected Box in 3L</p>
+			<div className="flex flex-col gap-1 place-self-start text-sm font-medium leading-none text-zinc-600">
+				{/* <p>Expected Box in 3L</p>
 				<p>Average Pit: 22s</p>
-				<p>Expected re-join 8th</p>
+				<p>Expected re-join 8th</p> */}
+
+				<p className="flex h-10 flex-col justify-center">🚧 WIP 🚧</p>
 			</div>
 
 			<div className="w-full">
