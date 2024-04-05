@@ -15,7 +15,7 @@ export default function WindSpeedComplication({ speed, directionDeg }: Props) {
 
 				<p className="text-xl font-medium leading-none  text-white">{speed}</p>
 
-				<p className="text-center text-[10px] font-medium leading-none text-white">KMH</p>
+				<p className="text-center text-[10px] font-medium leading-none text-white">m/s</p>
 			</div>
 		</div>
 	);
