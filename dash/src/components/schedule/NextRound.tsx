@@ -1,4 +1,7 @@
-import { utc } from "moment";
+"use client";
+
+import { now, utc } from "moment";
+import clsx from "clsx";
 
 import { Round } from "@/types/schedule.type";
 
@@ -31,10 +34,10 @@ export default async function NextRound({ next }: Props) {
 
 			<div>
 				<div className="flex items-center justify-between gap-4 border-b border-zinc-600 pb-2">
-					<p className="text-3xl">{next.countryName}</p>
+					<p className="text-2xl">{next.countryName}</p>
 
 					<div className="flex gap-1">
-						<p className="text-3xl">{nextMonth}</p>
+						<p className="text-xl">{nextMonth}</p>
 
 						<p className="text-zinc-600">
 							{nextStartLocal.format("D")}-{nextEndLocal.format("D")}
@@ -49,7 +52,10 @@ export default async function NextRound({ next }: Props) {
 
 							<div className="grid grid-rows-2 gap-2">
 								{day.sessions.map((session, j) => (
-									<div className="flex flex-col" key={`next.day.${i}.session.${j}`}>
+									<div
+										className={clsx("flex flex-col", utc(session.end).isBefore(now()) && "opacity-50")}
+										key={`next.day.${i}.session.${j}`}
+									>
 										<p className="w-28 overflow-hidden text-ellipsis whitespace-nowrap sm:w-auto">{session.kind}</p>
 
 										<p className="text-sm leading-none text-zinc-600">
