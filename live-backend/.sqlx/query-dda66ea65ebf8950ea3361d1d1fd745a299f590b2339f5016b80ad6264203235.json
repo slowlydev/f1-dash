@@ -6,7 +6,7 @@
       {
         "ordinal": 0,
         "name": "state",
-        "type_info": "Json"
+        "type_info": "Jsonb"
       },
       {
         "ordinal": 1,

@@ -11,7 +11,7 @@
       {
         "ordinal": 1,
         "name": "state",
-        "type_info": "Json"
+        "type_info": "Jsonb"
       }
     ],
     "parameters": {
