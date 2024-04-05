@@ -6,7 +6,7 @@ import Button from "@/components/Button";
 import icon from "../../../../public/tag-logo.svg";
 
 import FeatureCard from "@/components/landing/FeatureCard";
-import ScrollHint from "@/components/landing/ScollHint";
+import ScrollHint from "@/components/landing/ScrollHint";
 
 import { features } from "@/lib/data/features";
 
@@ -14,7 +14,7 @@ const roadmap = [
 	"Favorite Driver Highlighting & Filtering",
 	"Driver Analytics for Pit Stop",
 	"Driver Head-to-Head Comparison",
-	"Go back to start of current race",
+	"Delay all the way back to start of current race",
 	"Notifications for Race Control Messages of selected drivers",
 	"Tire Lap Times Comparison",
 ];
@@ -49,12 +49,12 @@ export default function Home() {
 			<section>
 				<h2 className="mb-4 text-2xl">Whats on our roadmap?</h2>
 
-				<p className="text-xl font-medium">
-					{roadmap.join(" · ")} {" · "} <span className="text-xl font-medium text-zinc-500">Your suggestion?</span>
+				<p className="text-xl">
+					{roadmap.join(" · ")} {" · "} <span className="text-xl text-zinc-600">Your suggestion?</span>
 				</p>
 			</section>
 
-			<footer className="my-10 w-full text-zinc-500">
+			<footer className="my-10 w-full text-zinc-600">
 				<div className="mb-4 flex flex-wrap gap-x-8 gap-y-2">
 					<p>Developed with ❤️ by Slowly</p>
 					<p>Contribute on GitHub</p>
