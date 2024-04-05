@@ -30,9 +30,17 @@ export default function Home() {
 					telemetry and timing
 				</h1>
 
-				<Link href="/">
-					<Button className="!rounded-xl p-4 font-medium">Go to Dashboard</Button>
-				</Link>
+				<div className="flex flex-wrap gap-4">
+					<Link href="/dashboard">
+						<Button className="!rounded-xl border-2 border-transparent p-4 font-medium">Go to Dashboard</Button>
+					</Link>
+
+					<Link href="/schedule">
+						<Button className="!rounded-xl border-2 border-zinc-700 !bg-transparent p-4 font-medium">
+							Check Schedule
+						</Button>
+					</Link>
+				</div>
 
 				<ScrollHint />
 			</section>
