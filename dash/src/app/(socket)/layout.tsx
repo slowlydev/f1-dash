@@ -103,8 +103,9 @@ const SubLayout = ({ children }: Props) => {
 					<StreamStatus live={delay.current == 0} />
 				</div> */}
 
-				<div className="flex flex-row-reverse items-center gap-1">
+				<div className="flex flex-row-reverse flex-wrap-reverse items-center gap-1">
 					<SegmentedControls
+						className="w-full md:w-auto"
 						id="walkthrough-mode"
 						selected={mode}
 						onSelect={setMode}

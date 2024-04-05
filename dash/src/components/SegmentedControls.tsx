@@ -1,9 +1,11 @@
 "use client";
 
+import clsx from "clsx";
 import { LayoutGroup, motion } from "framer-motion";
 
 type Props<T> = {
 	id?: string;
+	className?: string;
 	options: {
 		label: string;
 		value: T;
@@ -12,10 +14,10 @@ type Props<T> = {
 	onSelect?: (val: T) => void;
 };
 
-export default function SegmentedControls<T>({ id, options, selected, onSelect }: Props<T>) {
+export default function SegmentedControls<T>({ id, className, options, selected, onSelect }: Props<T>) {
 	return (
 		<LayoutGroup>
-			<div id={id} className="m-0 inline-flex h-fit rounded-lg bg-zinc-800 p-0.5">
+			<div id={id} className={clsx("m-0 inline-flex h-fit justify-between rounded-lg bg-zinc-800 p-0.5", className)}>
 				{options.map((option, i) => {
 					const isActive = option.value === selected;
 					return (

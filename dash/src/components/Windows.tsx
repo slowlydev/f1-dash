@@ -15,10 +15,13 @@ export default function Windows() {
 
 	const [windowsModal, setWindowsModal] = useState<boolean>(false);
 
+	// *note for now we hide windows on small window sizes as they are most likely on a mobile device
+	// where the browsers don't support popup windows, it also improves the UI on smaller screens
+
 	return (
 		<>
 			<motion.p
-				className="cursor-pointer"
+				className="hidden cursor-pointer sm:block"
 				id="walkthrough-windows"
 				whileTap={{ scale: 0.95 }}
 				onClick={() => setWindowsModal(true)}

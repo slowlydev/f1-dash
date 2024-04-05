@@ -17,7 +17,7 @@ export default function Modal({ children, open }: Props) {
 					className="relative z-10"
 					aria-labelledby="modal-title"
 					role="dialog"
-					aria-modal="true"
+					aria-modal
 				>
 					<div className="fixed inset-0 backdrop-blur-sm transition-opacity" />
 

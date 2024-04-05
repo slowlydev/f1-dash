@@ -17,7 +17,7 @@ export default function TrackInfo({ track, lapCount }: Props) {
 	return (
 		<div className="flex w-fit flex-row items-center gap-4">
 			{!!lapCount && (
-				<p className="whitespace-nowrap text-3xl font-extrabold">
+				<p className="hidden whitespace-nowrap text-3xl font-extrabold sm:block">
 					{lapCount?.currentLap} / {lapCount?.totalLaps}
 				</p>
 			)}
