@@ -20,7 +20,7 @@ export default function DriverInfo({ timingDriver }: Props) {
 							: null;
 
 	return (
-		<div className="place-self-start text-lg font-semibold">
+		<div className="place-self-start text-lg font-semibold" id="walkthrough-driver-info">
 			<p className="leading-none">L {timingDriver.numberOfLaps ?? 0}</p>
 			<p className="text-sm font-medium leading-none text-gray-500">{status ?? "-"}</p>
 		</div>

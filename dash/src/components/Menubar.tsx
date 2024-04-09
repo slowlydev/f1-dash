@@ -43,7 +43,7 @@ export default function Menubar() {
 	};
 
 	return (
-		<div className="flex select-none flex-wrap gap-x-4 gap-y-2 px-2">
+		<div className="flex select-none flex-wrap gap-x-4 gap-y-2 px-2" id="walkthrough-menu">
 			<motion.p className="cursor-pointer" whileTap={{ scale: 0.95 }} onClick={() => liveTimingGuard("/")}>
 				Home
 			</motion.p>

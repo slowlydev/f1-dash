@@ -12,7 +12,7 @@ type Props = {
 
 export default function DriverMiniSectors({ sectors = [], bestSectors, tla, showFastest }: Props) {
 	return (
-		<div className="flex gap-2">
+		<div className="flex gap-2" id="walkthrough-driver-sectors">
 			{sectors.map((sector, i) => (
 				<div key={`sector.${tla}.${i}`} className="flex flex-col gap-[0.2rem]">
 					<div className="flex h-[10px] flex-row gap-1">

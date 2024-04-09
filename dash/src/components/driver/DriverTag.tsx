@@ -10,6 +10,7 @@ type Props = {
 export default function DriverTag({ position, teamColor, short, className }: Props) {
 	return (
 		<div
+			id="walkthrough-driver-position"
 			className={clsx(
 				"flex w-fit items-center justify-between gap-0.5 rounded-lg bg-zinc-600 px-1 py-1 font-black",
 				className,

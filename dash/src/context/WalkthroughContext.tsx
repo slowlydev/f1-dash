@@ -29,9 +29,13 @@ const walkthroughScript: Step[] = [
 	{
 		type: "modal",
 		label: (
-			<div className="flex flex-col items-center">
-				<p className="text-2xl font-bold">Welcome to the walkthrough!</p>
-				<p>press next to go the next element</p>
+			<div className="flex flex-col items-center gap-4">
+				<p className="text-center text-4xl font-bold">Welcome to the walkthrough!</p>
+				<p>
+					This walkthrough should show you how to navigate f1-dash <br />
+					and give you a idea about the different information f1-dash shows. <br />
+					You can skip this walkthrough and do it later by resetting it in the settings.
+				</p>
 			</div>
 		),
 	},
@@ -39,8 +43,19 @@ const walkthroughScript: Step[] = [
 		type: "popup",
 		label: (
 			<>
-				Here you can open parts of <br />
-				the live timing in separate windows
+				This is the menu, it is used to navigate between pages and more. <br />
+				You will get a popup if you are about to switch away <br />
+				from live timing to avoid any accidents.
+			</>
+		),
+		id: "walkthrough-menu",
+	},
+	{
+		type: "popup",
+		label: (
+			<>
+				With this "windows" menu point you can open additional windows <br />
+				for example the track map, team radios and race control messages.
 			</>
 		),
 		id: "walkthrough-windows",
@@ -49,7 +64,8 @@ const walkthroughScript: Step[] = [
 		type: "popup",
 		label: (
 			<>
-				This allows to stop and start <br /> playback and setup delay
+				This allows to stop and start the data, this allows you to easily <br />
+				sync f1-dash with your F1 video stream.
 			</>
 		),
 		id: "walkthrough-playback",
@@ -80,6 +96,67 @@ const walkthroughScript: Step[] = [
 			</>
 		),
 		id: "walkthrough-weather",
+	},
+	{
+		type: "popup",
+		label: (
+			<>
+				This shows the Three Letter Acronym (TLA) <br /> of the driver and the current position
+			</>
+		),
+		id: "walkthrough-driver-position",
+	},
+	{
+		type: "popup",
+		label: (
+			<>
+				This is shows if the driver has DRS active <br /> or it is possible or it shows PIT if the driver is in the Pit
+				lane
+			</>
+		),
+		id: "walkthrough-driver-drs",
+	},
+	{
+		type: "popup",
+		label: (
+			<>
+				The current tire of the driver, <br /> how any pit stops he has made <br /> and how many laps he has done on it
+				and if its used or not
+			</>
+		),
+		id: "walkthrough-driver-tire",
+	},
+	{
+		type: "popup",
+		label: (
+			<>
+				This shows the current lap number <br /> and the status of the driver
+			</>
+		),
+		id: "walkthrough-driver-info",
+	},
+	{
+		type: "popup",
+		label: (
+			<>
+				This shows the gap to the driver in front <br /> and the driver behind
+			</>
+		),
+		id: "walkthrough-driver-gap",
+	},
+	{
+		type: "popup",
+		label: <>This shows last and best the lap time of the driver</>,
+		id: "walkthrough-driver-laptime",
+	},
+	{
+		type: "popup",
+		label: (
+			<>
+				This shows the current sector times <br /> of the driver as well as the sectors mini sectors
+			</>
+		),
+		id: "walkthrough-driver-sectors",
 	},
 	{
 		type: "modal",

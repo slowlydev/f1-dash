@@ -10,7 +10,7 @@ type Props = {
 
 export default function DriverLapTime({ last, best }: Props) {
 	return (
-		<div className="place-self-start">
+		<div className="place-self-start" id="walkthrough-driver-laptime">
 			<p
 				className={clsx(
 					"text-lg font-semibold leading-none",

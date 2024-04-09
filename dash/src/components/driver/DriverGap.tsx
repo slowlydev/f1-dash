@@ -22,7 +22,7 @@ export default function DriverGap({ timingDriver, sessionPart }: Props) {
 	const catching = timingDriver.intervalToPositionAhead?.catching;
 
 	return (
-		<div className="place-self-start text-lg font-semibold">
+		<div className="place-self-start text-lg font-semibold" id="walkthrough-driver-gap">
 			<p
 				className={clsx("leading-none", {
 					"text-emerald-500": catching,
