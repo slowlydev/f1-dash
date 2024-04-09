@@ -2,7 +2,7 @@
 
 ## what does it do
 
-it connects to the f1 api webscket and stores all data into a postgres db.
+it connects to the f1 api websocket and stores all data into a postgres db.
 it also transforms the data and sends it to clients.
 it also allows requesting data or state older than the connection the client has.
 which is useful for graphs and history of values and allowing for delayed timing data.
