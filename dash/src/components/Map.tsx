@@ -6,6 +6,9 @@ import clsx from "clsx";
 
 import { sortPos } from "../lib/sortPos";
 import { fetchMap } from "../lib/fetchMap";
+import { MapType, TrackPosition } from "@/types/map.type";
+import {RaceControlMessageType} from "@/types/race-control-message.type";
+import {sortUtc} from "@/lib/sortUtc";
 
 // This is basically fearlessly copied from
 // https://github.com/tdjsnelling/monaco
@@ -13,6 +16,7 @@ import { fetchMap } from "../lib/fetchMap";
 type Props = {
 	circuitKey: SessionInfo["circuitKey"] | undefined;
 	positionBatches: DriverPositionBatch[] | undefined;
+	raceControlMessages: RaceControlMessageType[] | undefined;
 };
 
 const space = 1000;
@@ -32,10 +36,90 @@ const rotate = (x: number, y: number, a: number, px: number, py: number) => {
 	return { y: newX + px, x: newY + py };
 };
 
+type Sector = {
+	"number": number,
+	"start": TrackPosition,
+	"end": TrackPosition,
+	"points": TrackPosition[],
+}
+
+const calculateDistance = (x1: number, y1: number, x2: number, y2: number) => {
+	return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+}
+
+const findMinDistance = (point: TrackPosition, points: TrackPosition[]) => {
+	let min = Infinity;
+	let minIndex = -1;
+	for (let i = 0; i < points.length; i++) {
+		const distance = calculateDistance(point.x, point.y, points[i].x, points[i].y);
+		if (distance < min) {
+			min = distance;
+			minIndex = i;
+		}
+	}
+	return minIndex;
+}
+
+const sector_color = (sector: number, messages: RaceControlMessageType[] | undefined) => {
+	const msg = messages?.sort(sortUtc).find((msg) => {
+		if (msg.scope === "Sector" && msg.sector !== sector) {
+			return false;
+		}
+		if (msg.flag) {
+			return ["CLEAR", "YELLOW", "DOUBLE YELLOW", "RED"].includes(msg.flag);
+		}
+		return msg.category === "SafetyCar";
+	})
+
+	if (!msg || msg.flag === "CLEAR") {
+		return "#FFFFFF";
+	}
+	if (msg.flag === "YELLOW" || msg.flag === "DOUBLE YELLOW") {
+		return "#ffff14";
+	}
+	// @ts-ignore
+	if (msg.flag === "RED") {
+		return "#930013";
+	}
+	if (msg.category === "SafetyCar") {
+		return "#44DDEE";
+	}
+	return "#FFFFFF";
+}
+
+const createSectors = (data: MapType) => {
+	const sectors: Sector[] = [];
+	const points: TrackPosition[] = data.x.map((x, index) => ({ x, y: data.y[index] }));
+
+	for (let i = 0; i < data.marshalSectors.length; i++) {
+		sectors.push({
+			number: i + 1,
+			start: data.marshalSectors[i].trackPosition,
+			end: data.marshalSectors[i + 1] ? data.marshalSectors[i + 1].trackPosition : data.marshalSectors[0].trackPosition,
+			points: []
+		});
+	}
+
+	let dividers: number[] = sectors.map(s => findMinDistance(s.start, points));
+	for (let i = 0; i < dividers.length; i++) {
+		let start = dividers[i];
+		let end = dividers[i + 1] ? dividers[i + 1] : dividers[0];
+		if (start < end) {
+			sectors[i].points = points.slice(start, end + 1);
+		} else {
+			sectors[i].points = points.slice(start).concat(points.slice(0, end + 1));
+		}
+	}
+
+	return sectors;
+}
+
 const rotationFIX = 90;
 
-export default function Map({ circuitKey, positionBatches }: Props) {
+export default function Map({ circuitKey, raceControlMessages, positionBatches }: Props) {
 	const [points, setPoints] = useState<null | { x: number; y: number }[]>(null);
+	const [sectors, setSectors] = useState<Sector[]>([]);
+
 	const [rotation, setRotation] = useState<number>(0);
 	const [ogPoints, setOgPoints] = useState<null | { x: number; y: number }[]>(null);
 
@@ -53,6 +137,18 @@ export default function Map({ circuitKey, positionBatches }: Props) {
 
 			const fixedRotation = mapJson.rotation + rotationFIX;
 
+			const sectors = createSectors(mapJson).map((s) => {
+				const start = rotate(s.start.x, s.start.y, fixedRotation, centerX, centerY);
+				const end = rotate(s.end.x, s.end.y, fixedRotation, centerX, centerY);
+				const points = s.points.map((p) => rotate(p.x, p.y, fixedRotation, centerX, centerY));
+				return {
+					...s,
+					start,
+					end,
+					points,
+				};
+			})
+
 			const rotatedPoints = mapJson.x.map((x, index) => rotate(x, mapJson.y[index], fixedRotation, centerX, centerY));
 
 			const pointsX = rotatedPoints.map((item) => item.x);
@@ -64,6 +160,7 @@ export default function Map({ circuitKey, positionBatches }: Props) {
 			const cWidthY = Math.max(...pointsY) - cMinY + space * 2;
 
 			setBounds([cMinX, cMinY, cWidthX, cWidthY]);
+			setSectors(sectors);
 			setPoints(rotatedPoints);
 			setRotation(fixedRotation);
 			setOgPoints(mapJson.x.map((xItem, index) => ({ x: xItem, y: mapJson.y[index] })));
@@ -91,13 +188,24 @@ export default function Map({ circuitKey, positionBatches }: Props) {
 				d={`M${points[0].x},${points[0].y} ${points.map((point) => `L${point.x},${point.y}`).join(" ")}`}
 			/>
 
-			<path
-				stroke="white"
-				strokeWidth={60}
-				strokeLinejoin="round"
-				fill="transparent"
-				d={`M${points[0].x},${points[0].y} ${points.map((point) => `L${point.x},${point.y}`).join(" ")}`}
-			/>
+			{<>{
+				sectors.map((sector) => {
+					const start = `M${sector.points[0].x},${sector.points[0].y}`;
+					const rest = sector.points.map((point) => `L${point.x},${point.y}`).join(" ");
+					const color = sector_color(sector.number, raceControlMessages)
+					return (
+						<path
+							key={`map.sector.${sector.number}`}
+							stroke={color}
+							strokeWidth={color === "#FFFFFF" ? 60 : 120}
+							strokeLinecap="round"
+							strokeLinejoin="round"
+							fill="transparent"
+							d={`${start} ${rest}`}
+						/>
+					);
+				})
+			}</>}
 
 			{ogPoints && positions && (
 				<>

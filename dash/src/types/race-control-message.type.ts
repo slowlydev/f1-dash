@@ -5,7 +5,7 @@ export type RaceControlMessageType = {
 	message: string;
 	category: "Other" | "Sector" | "Flag" | "Drs" | "SafetyCar" | string;
 
-	flag?: "BLACK AND WHITE" | "BLUE" | "CLEAR" | "YELLOW" | "GREEN" | "DOUBLE YELLOW";
+	flag?: "BLACK AND WHITE" | "BLUE" | "CLEAR" | "YELLOW" | "GREEN" | "DOUBLE YELLOW" | "RED";
 	scope?: "Driver" | "Track" | "Sector";
 	sector?: number;
 	drsEnabled?: boolean;
