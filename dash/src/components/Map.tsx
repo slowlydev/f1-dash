@@ -9,6 +9,8 @@ import { fetchMap } from "../lib/fetchMap";
 import { MapType, TrackPosition } from "@/types/map.type";
 import {RaceControlMessageType} from "@/types/race-control-message.type";
 import {sortUtc} from "@/lib/sortUtc";
+import {TrackStatus} from "@/types/track-status.type";
+import {getTrackStatusMessage} from "@/lib/getTrackStatusMessage";
 
 // This is basically fearlessly copied from
 // https://github.com/tdjsnelling/monaco
@@ -16,6 +18,7 @@ import {sortUtc} from "@/lib/sortUtc";
 type Props = {
 	circuitKey: SessionInfo["circuitKey"] | undefined;
 	positionBatches: DriverPositionBatch[] | undefined;
+	trackStatus: TrackStatus | undefined;
 	raceControlMessages: RaceControlMessageType[] | undefined;
 };
 
@@ -60,42 +63,50 @@ const findMinDistance = (point: TrackPosition, points: TrackPosition[]) => {
 	return minIndex;
 }
 
-const sector_color = (sector: number, messages: RaceControlMessageType[] | undefined) => {
-	const msg = messages?.sort(sortUtc).find((msg) => {
-		if (msg.scope === "Sector" && msg.sector !== sector) {
-			return false;
-		}
-		if (msg.flag) {
-			return ["CLEAR", "YELLOW", "DOUBLE YELLOW", "RED"].includes(msg.flag);
-		}
-		return msg.category === "SafetyCar";
-	})
+const findYellowSectors = (messages: RaceControlMessageType[] | undefined): Set<number> => {
+	const msgs = messages?.sort(sortUtc).filter((msg) => {
+		return msg.flag === "YELLOW" || msg.flag === "DOUBLE YELLOW" || msg.flag === "CLEAR";
+	});
 
-	if (!msg || msg.flag === "CLEAR") {
-		return "#FFFFFF";
+	if (!msgs) {
+		return new Set();
 	}
-	if (msg.flag === "YELLOW" || msg.flag === "DOUBLE YELLOW") {
-		return "#ffff14";
+
+	const done: Set<number> = new Set();
+	const sectors: Set<number> = new Set();
+	for (let i = 0; i < msgs.length; i++) {
+		const msg = msgs[i];
+		if (msg.scope === "Track" && msg.flag !== "CLEAR") {
+			// Spam with sectors so all sectors are yellow no matter what
+			// number of sectors there really are
+			for (let j = 0; j < 100; j++) {
+				sectors.add(j);
+			}
+			return sectors;
+		}
+		if (msg.scope === "Sector") {
+			if (!msg.sector || done.has(msg.sector)) {
+				continue;
+			}
+			if (msg.flag === "CLEAR") {
+				done.add(msg.sector);
+			} else {
+				sectors.add(msg.sector);
+			}
+		}
 	}
-	// @ts-ignore
-	if (msg.flag === "RED") {
-		return "#930013";
-	}
-	if (msg.category === "SafetyCar") {
-		return "#44DDEE";
-	}
-	return "#FFFFFF";
+	return sectors;
 }
 
-const createSectors = (data: MapType) => {
+const createSectors = (map: MapType) => {
 	const sectors: Sector[] = [];
-	const points: TrackPosition[] = data.x.map((x, index) => ({ x, y: data.y[index] }));
+	const points: TrackPosition[] = map.x.map((x, index) => ({ x, y: map.y[index] }));
 
-	for (let i = 0; i < data.marshalSectors.length; i++) {
+	for (let i = 0; i < map.marshalSectors.length; i++) {
 		sectors.push({
 			number: i + 1,
-			start: data.marshalSectors[i].trackPosition,
-			end: data.marshalSectors[i + 1] ? data.marshalSectors[i + 1].trackPosition : data.marshalSectors[0].trackPosition,
+			start: map.marshalSectors[i].trackPosition,
+			end: map.marshalSectors[i + 1] ? map.marshalSectors[i + 1].trackPosition : map.marshalSectors[0].trackPosition,
 			points: []
 		});
 	}
@@ -116,7 +127,7 @@ const createSectors = (data: MapType) => {
 
 const rotationFIX = 90;
 
-export default function Map({ circuitKey, raceControlMessages, positionBatches }: Props) {
+export default function Map({ circuitKey, trackStatus, raceControlMessages, positionBatches }: Props) {
 	const [points, setPoints] = useState<null | { x: number; y: number }[]>(null);
 	const [sectors, setSectors] = useState<Sector[]>([]);
 
@@ -188,24 +199,55 @@ export default function Map({ circuitKey, raceControlMessages, positionBatches }
 				d={`M${points[0].x},${points[0].y} ${points.map((point) => `L${point.x},${point.y}`).join(" ")}`}
 			/>
 
-			{<>{
-				sectors.map((sector) => {
+			{sectors
+				.map((sector) => {
 					const start = `M${sector.points[0].x},${sector.points[0].y}`;
 					const rest = sector.points.map((point) => `L${point.x},${point.y}`).join(" ");
-					const color = sector_color(sector.number, raceControlMessages)
+
+					const status = getTrackStatusMessage(trackStatus?.status);
+					if (status?.bySector) {
+						const yellowSectors = findYellowSectors(raceControlMessages);
+						return {
+							number: sector.number,
+							start,
+							rest,
+							color: yellowSectors.has(sector.number) ? status?.trackColor || "stroke-white" : "stroke-white"
+						}
+					}
+
+					return {
+						number: sector.number,
+						start,
+						rest,
+						color: status?.trackColor || "stroke-white",
+						pulse: status?.pulse
+					}
+				}).sort((a, b) => {
+					// Draw differently colored sectors first
+					if (a.color === "stroke-white" && b.color !== "stroke-white") {
+						return 1;
+					}
+					if (a.color !== "stroke-white" && b.color === "stroke-white") {
+						return -1;
+					}
+					return a.number - b.number;
+				}).map(({number, start, rest, color, pulse}) => {
+					const style = pulse ? {
+						animation: `${pulse * 100}ms linear infinite pulse`,
+					} : {};
 					return (
 						<path
-							key={`map.sector.${sector.number}`}
-							stroke={color}
-							strokeWidth={color === "#FFFFFF" ? 60 : 120}
+							key={`map.sector.${number}`}
+							className={color}
+							strokeWidth={color === "stroke-white" ? 60 : 120}
 							strokeLinecap="round"
 							strokeLinejoin="round"
 							fill="transparent"
 							d={`${start} ${rest}`}
+							style={style}
 						/>
 					);
-				})
-			}</>}
+				})}
 
 			{ogPoints && positions && (
 				<>
@@ -233,7 +275,7 @@ export default function Map({ circuitKey, raceControlMessages, positionBatches }
 								<g
 									key={`map.driver.${pos.driverNr}`}
 									id={`map.driver.${pos.driverNr}`}
-									className={clsx("fill-zinc-700", { "opacity-30": out })}
+									className={clsx("fill-zinc-700", {"opacity-30": out})}
 									style={{
 										transition: "all 1s linear",
 										transform,

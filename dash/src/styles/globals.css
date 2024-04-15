@@ -1,3 +1,12 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@keyframes pulse {
+    0%, 100% {
+        stroke-width: 120;
+    }
+    50% {
+        stroke-width: 60;
+    }
+}
