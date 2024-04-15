@@ -63,6 +63,33 @@ const findMinDistance = (point: TrackPosition, points: TrackPosition[]) => {
 	return minIndex;
 }
 
+const createSectors = (map: MapType) => {
+	const sectors: Sector[] = [];
+	const points: TrackPosition[] = map.x.map((x, index) => ({ x, y: map.y[index] }));
+
+	for (let i = 0; i < map.marshalSectors.length; i++) {
+		sectors.push({
+			number: i + 1,
+			start: map.marshalSectors[i].trackPosition,
+			end: map.marshalSectors[i + 1] ? map.marshalSectors[i + 1].trackPosition : map.marshalSectors[0].trackPosition,
+			points: []
+		});
+	}
+
+	let dividers: number[] = sectors.map(s => findMinDistance(s.start, points));
+	for (let i = 0; i < dividers.length; i++) {
+		let start = dividers[i];
+		let end = dividers[i + 1] ? dividers[i + 1] : dividers[0];
+		if (start < end) {
+			sectors[i].points = points.slice(start, end + 1);
+		} else {
+			sectors[i].points = points.slice(start).concat(points.slice(0, end + 1));
+		}
+	}
+
+	return sectors;
+}
+
 const findYellowSectors = (messages: RaceControlMessageType[] | undefined): Set<number> => {
 	const msgs = messages?.sort(sortUtc).filter((msg) => {
 		return msg.flag === "YELLOW" || msg.flag === "DOUBLE YELLOW" || msg.flag === "CLEAR";
@@ -98,31 +125,22 @@ const findYellowSectors = (messages: RaceControlMessageType[] | undefined): Set<
 	return sectors;
 }
 
-const createSectors = (map: MapType) => {
-	const sectors: Sector[] = [];
-	const points: TrackPosition[] = map.x.map((x, index) => ({ x, y: map.y[index] }));
+type RenderedSector = {
+	number: number,
+	d: string,
+	color: string,
+	stroke_width: number,
+	pulse?: number,
+}
 
-	for (let i = 0; i < map.marshalSectors.length; i++) {
-		sectors.push({
-			number: i + 1,
-			start: map.marshalSectors[i].trackPosition,
-			end: map.marshalSectors[i + 1] ? map.marshalSectors[i + 1].trackPosition : map.marshalSectors[0].trackPosition,
-			points: []
-		});
+const priorizeColoredSectors = (a: RenderedSector, b: RenderedSector) => {
+	if (a.color === "stroke-white" && b.color !== "stroke-white") {
+		return -1;
 	}
-
-	let dividers: number[] = sectors.map(s => findMinDistance(s.start, points));
-	for (let i = 0; i < dividers.length; i++) {
-		let start = dividers[i];
-		let end = dividers[i + 1] ? dividers[i + 1] : dividers[0];
-		if (start < end) {
-			sectors[i].points = points.slice(start, end + 1);
-		} else {
-			sectors[i].points = points.slice(start).concat(points.slice(0, end + 1));
-		}
+	if (a.color !== "stroke-white" && b.color === "stroke-white") {
+		return 1;
 	}
-
-	return sectors;
+	return a.number - b.number;
 }
 
 const rotationFIX = 90;
@@ -178,6 +196,41 @@ export default function Map({ circuitKey, trackStatus, raceControlMessages, posi
 		})();
 	}, [circuitKey]);
 
+	const [renderedSectors, setRenderedSectors] = useState<RenderedSector[]>([]);
+	useEffect(() => {
+		const status = getTrackStatusMessage(trackStatus?.status);
+		let color: (sector: Sector) => string;
+		if (status?.bySector) {
+			const yellowSectors = findYellowSectors(raceControlMessages);
+			color = (sector) => {
+				if (yellowSectors.has(sector.number)) {
+					return status?.trackColor || "stroke-white";
+				} else {
+					return "stroke-white";
+				}
+			}
+		} else {
+			color = (_) => status?.trackColor || "stroke-white"
+		}
+
+		const newSectors: RenderedSector[] = sectors.map((sector) => {
+			const start = `M${sector.points[0].x},${sector.points[0].y}`;
+			const rest = sector.points.map((point) => `L${point.x},${point.y}`).join(" ");
+
+			const c = color(sector)
+			return {
+				number: sector.number,
+				d: `${start} ${rest}`,
+				color: c,
+				stroke_width: c === "stroke-white" ? 60 : 120,
+				pulse: status?.pulse
+			}
+		}).sort(priorizeColoredSectors);
+
+		setRenderedSectors(newSectors);
+	}, [trackStatus, raceControlMessages, sectors])
+
+
 	if (!points || !minX || !minY || !widthX || !widthY)
 		return (
 			<div className="flex h-full w-full items-center justify-center">
@@ -199,55 +252,23 @@ export default function Map({ circuitKey, trackStatus, raceControlMessages, posi
 				d={`M${points[0].x},${points[0].y} ${points.map((point) => `L${point.x},${point.y}`).join(" ")}`}
 			/>
 
-			{sectors
-				.map((sector) => {
-					const start = `M${sector.points[0].x},${sector.points[0].y}`;
-					const rest = sector.points.map((point) => `L${point.x},${point.y}`).join(" ");
-
-					const status = getTrackStatusMessage(trackStatus?.status);
-					if (status?.bySector) {
-						const yellowSectors = findYellowSectors(raceControlMessages);
-						return {
-							number: sector.number,
-							start,
-							rest,
-							color: yellowSectors.has(sector.number) ? status?.trackColor || "stroke-white" : "stroke-white"
-						}
-					}
-
-					return {
-						number: sector.number,
-						start,
-						rest,
-						color: status?.trackColor || "stroke-white",
-						pulse: status?.pulse
-					}
-				}).sort((a, b) => {
-					// Draw differently colored sectors first
-					if (a.color === "stroke-white" && b.color !== "stroke-white") {
-						return 1;
-					}
-					if (a.color !== "stroke-white" && b.color === "stroke-white") {
-						return -1;
-					}
-					return a.number - b.number;
-				}).map(({number, start, rest, color, pulse}) => {
-					const style = pulse ? {
-						animation: `${pulse * 100}ms linear infinite pulse`,
-					} : {};
-					return (
-						<path
-							key={`map.sector.${number}`}
-							className={color}
-							strokeWidth={color === "stroke-white" ? 60 : 120}
-							strokeLinecap="round"
-							strokeLinejoin="round"
-							fill="transparent"
-							d={`${start} ${rest}`}
-							style={style}
-						/>
-					);
-				})}
+			{renderedSectors.map((sector) => {
+				const style = sector.pulse ? {
+					animation: `${sector.pulse * 100}ms linear infinite pulse`,
+				} : {};
+				return (
+					<path
+						key={`map.sector.${sector.number}`}
+						className={sector.color}
+						strokeWidth={sector.stroke_width}
+						strokeLinecap="round"
+						strokeLinejoin="round"
+						fill="transparent"
+						d={sector.d}
+						style={style}
+					/>
+				);
+			})}
 
 			{ogPoints && positions && (
 				<>
