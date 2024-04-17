@@ -167,7 +167,7 @@ const walkthroughScript: Step[] = [
 		label: (
 			<div className="flex w-80 flex-col items-center gap-4">
 				<p className="text-2xl font-bold">Thats it for the walkthrough!</p>
-				<p>I hope with this short walkthrough of the dashboard u learned more about the functionality of f1-dash.</p>
+				<p>I hope with this short walkthrough of the dashboard you learned more about the functionality of f1-dash.</p>
 				<p>I hope you gave fun using f1-dash!</p>
 				<p>If you want to restart the walkthrough got to the settings page found in the top left menu.</p>
 			</div>
@@ -224,7 +224,7 @@ export function WalkthroughProvider({ children }: { children: ReactNode }) {
 	const end = () => {
 		setInProgress(false);
 		if (typeof window != undefined) {
-			localStorage.setItem("walkthrough", "hi there, it seems u did the walkthrough :)");
+			localStorage.setItem("walkthrough", "hi there, it seems you did the walkthrough :)");
 		}
 	};
 

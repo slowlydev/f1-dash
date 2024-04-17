@@ -249,7 +249,7 @@ export default function HelpPage() {
 				<p className="text-sm text-zinc-500">2</p>
 				<p className="mb-2">
 					Either you manually input a delay in seconds, this you usually do if you know what kind of delays you usually
-					need or if u want to make small adjustments without the start/stop button.
+					need or if you want to make small adjustments without the start/stop button.
 				</p>
 			</div>
 

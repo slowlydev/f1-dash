@@ -81,9 +81,9 @@ export default function SettingsPage() {
 			<h2 className="my-4 text-2xl">Configure Custom Mode</h2>
 
 			<p className="mb-4">
-				Here you can setup the "custom" mode that u can activate with the slider in the top right on the dashboard. Its
-				here to toggle some parts of the UI u might want or not want to see, as u might prefer more or less data or
-				information and/or a simpler UI.
+				Here you can setup the "custom" mode that you can activate with the slider in the top right on the dashboard.
+				Its here to toggle some parts of the UI you might want or not want to see, as you might prefer more or less data
+				or information and/or a simpler UI.
 			</p>
 
 			<div className="flex gap-2">
