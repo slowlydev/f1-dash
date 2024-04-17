@@ -105,7 +105,9 @@ export default function Page() {
 				</div>
 			</div>
 
-			<Footer />
+			<div className="px-2">
+				<Footer />
+			</div>
 		</div>
 	);
 }
