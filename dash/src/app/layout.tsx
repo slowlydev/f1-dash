@@ -1,4 +1,3 @@
-import { Inter } from "next/font/google";
 import { type ReactNode } from "react";
 import Script from "next/script";
 
@@ -6,7 +5,8 @@ import "@/styles/globals.css";
 
 import { env } from "@/env.mjs";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+import { GeistMono } from "geist/font/mono";
+import { GeistSans } from "geist/font/sans";
 
 export { metadata } from "@/metadata";
 export { viewport } from "@/viewport";
@@ -15,7 +15,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 	const enableTracking = !!env.NEXT_PUBLIC_ENABLE_TRACKING;
 
 	return (
-		<html lang="en" className={`${inter.variable} bg-zinc-950 font-sans text-white`}>
+		<html lang="en" className={`${GeistSans.variable} ${GeistMono.variable} bg-zinc-950 font-sans text-white`}>
 			<head />
 
 			{enableTracking && (
