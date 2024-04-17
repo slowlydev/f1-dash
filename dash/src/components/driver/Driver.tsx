@@ -59,13 +59,15 @@ export default function Driver({
 
 	const [open, setOpen] = useState<boolean>(false);
 
+	const hasFastest = timingStatsDriver?.personalBestLapTime.position == 1;
+
 	return (
 		<motion.div
 			layout="position"
 			onClick={() => setOpen((old) => !old)}
 			className={clsx("flex cursor-pointer select-none flex-col gap-1 p-1.5", {
 				"opacity-50": timingDriver.knockedOut || timingDriver.retired || timingDriver.stopped,
-				"bg-violet-800 bg-opacity-30": timingDriver.bestLapTime.position == 1,
+				"bg-violet-800 bg-opacity-30": hasFastest,
 				"bg-red-800 bg-opacity-30": sessionPart != undefined && inDangerZone(position, sessionPart),
 			})}
 		>
@@ -87,7 +89,7 @@ export default function Driver({
 				<DriverTire stints={appTimingDriver?.stints} />
 				<DriverInfo timingDriver={timingDriver} />
 				<DriverGap timingDriver={timingDriver} sessionPart={sessionPart} />
-				<DriverLapTime last={timingDriver.lastLapTime} best={timingDriver.bestLapTime} />
+				<DriverLapTime last={timingDriver.lastLapTime} best={timingDriver.bestLapTime} hasFastest={hasFastest} />
 				<DriverMiniSectors
 					sectors={timingDriver.sectors}
 					bestSectors={timingStatsDriver?.bestSectors}

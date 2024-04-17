@@ -6,9 +6,10 @@ import { TimingDataDriver } from "@/types/state.type";
 type Props = {
 	last: TimingDataDriver["lastLapTime"];
 	best: TimingDataDriver["bestLapTime"];
+	hasFastest: boolean;
 };
 
-export default function DriverLapTime({ last, best }: Props) {
+export default function DriverLapTime({ last, best, hasFastest }: Props) {
 	return (
 		<div className="place-self-start" id="walkthrough-driver-laptime">
 			<p
@@ -23,7 +24,7 @@ export default function DriverLapTime({ last, best }: Props) {
 			<p
 				className={clsx(
 					"text-sm font-medium leading-none text-gray-500",
-					getTimeColor(best.position == 1, true),
+					getTimeColor(hasFastest, true),
 					!best.value ? "text-gray-500" : "",
 				)}
 			>
