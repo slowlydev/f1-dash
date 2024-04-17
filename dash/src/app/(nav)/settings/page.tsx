@@ -1,14 +1,18 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 import { modes, type UiElements } from "@/context/ModeContext";
 
 import Button from "@/components/Button";
 import Toggle from "@/components/Toggle";
+import Note from "@/components/Note";
 import DelayInput from "@/components/DelayInput";
 
 export default function SettingsPage() {
+	const router = useRouter();
+
 	const [tableHeaders, setTableHeaders] = useState<boolean>(false);
 	const [sectorFastest, setSectorFastest] = useState<boolean>(false);
 	const [carMetrics, setCarMetrics] = useState<boolean>(false);
@@ -60,6 +64,13 @@ export default function SettingsPage() {
 
 		if (typeof window != undefined) {
 			localStorage.setItem("delay", `${newDelay}`);
+		}
+	};
+
+	const startWalkthrough = () => {
+		if (typeof window != undefined) {
+			localStorage.removeItem("walkthrough");
+			router.push("/dashboard");
 		}
 	};
 
@@ -123,6 +134,21 @@ export default function SettingsPage() {
 
 			<Button className="mt-2 !bg-red-500" onClick={() => updateDelay(0)}>
 				Reset delay
+			</Button>
+
+			<h2 className="my-4 text-2xl">Walkthrough</h2>
+
+			<p className="mb-4 text-zinc-500">
+				Here you start the walkthrough of the dashboard again if you skipped it or you want to be refreshed. It is
+				explaining the different parts of the UI and how to use them.
+			</p>
+
+			<Note className="mb-4">
+				This will move you to the dashboard page and might show data of an ongoing or ended session and might spoil you.
+			</Note>
+
+			<Button className="!bg-red-500" onClick={() => startWalkthrough()}>
+				Start Walkthrough
 			</Button>
 		</div>
 	);
