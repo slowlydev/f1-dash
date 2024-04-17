@@ -5,10 +5,11 @@ import { useRouter } from "next/navigation";
 
 import { modes, type UiElements } from "@/context/ModeContext";
 
+import DelayInput from "@/components/DelayInput";
 import Button from "@/components/Button";
 import Toggle from "@/components/Toggle";
+import Footer from "@/components/Footer";
 import Note from "@/components/Note";
-import DelayInput from "@/components/DelayInput";
 
 export default function SettingsPage() {
 	const router = useRouter();
@@ -148,6 +149,8 @@ export default function SettingsPage() {
 			</Note>
 
 			<Button onClick={() => startWalkthrough()}>Start Walkthrough</Button>
+
+			<Footer />
 		</div>
 	);
 }

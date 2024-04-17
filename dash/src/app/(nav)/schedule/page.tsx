@@ -2,6 +2,7 @@ import { Round as RoundType } from "@/types/schedule.type";
 
 import { env } from "@/env.mjs";
 
+import Footer from "@/components/Footer";
 import Round from "@/components/schedule/Round";
 import NextRound from "@/components/schedule/NextRound";
 
@@ -49,6 +50,8 @@ export default async function SchedulePage() {
 					<Round nextName={next?.name} round={round} key={`round.${roundI}`} />
 				))}
 			</div>
+
+			<Footer />
 		</div>
 	);
 }
