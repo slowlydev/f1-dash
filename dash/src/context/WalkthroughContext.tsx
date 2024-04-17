@@ -146,14 +146,18 @@ const walkthroughScript: Step[] = [
 	},
 	{
 		type: "popup",
-		label: <>This shows last and best the lap time of the driver</>,
+		label: (
+			<>
+				This shows last and personal best <br /> lap time of the driver
+			</>
+		),
 		id: "walkthrough-driver-laptime",
 	},
 	{
 		type: "popup",
 		label: (
 			<>
-				This shows the current sector times <br /> of the driver as well as the sectors mini sectors
+				This shows the current sector times of the driver <br /> as well as the sectors mini sectors
 			</>
 		),
 		id: "walkthrough-driver-sectors",
@@ -163,7 +167,9 @@ const walkthroughScript: Step[] = [
 		label: (
 			<div className="flex w-80 flex-col items-center gap-4">
 				<p className="text-2xl font-bold">Thats it for the walkthrough!</p>
-				<p>I hope u learned more about the functionality of f1-dash. Have fun using it!</p>
+				<p>I hope with this short walkthrough of the dashboard u learned more about the functionality of f1-dash.</p>
+				<p>I hope you gave fun using f1-dash!</p>
+				<p>If you want to restart the walkthrough got to the settings page found in the top left menu.</p>
 			</div>
 		),
 	},
@@ -279,7 +285,11 @@ export function WalkthroughProvider({ children }: { children: ReactNode }) {
 								>
 									<InfoPopover show={inProgress} elementChildren>
 										<p className="whitespace-nowrap text-white">{currentStep.label}</p>
-										<div className="flex w-full justify-end gap-2">
+										<div className="flex w-full items-center justify-end gap-2">
+											<p className="text-zinc-500">
+												Step {step + 1} / {walkthroughScript.length}
+											</p>
+
 											<Button className="!border !border-zinc-600 !bg-transparent" onClick={() => end()}>
 												Skip
 											</Button>
