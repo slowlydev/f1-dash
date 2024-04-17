@@ -69,7 +69,7 @@ export const features = [
 		description: "Compare current and best lap times and analyze gaps between drivers.",
 		children: (
 			<div className="flex gap-4">
-				<DriverLapTime last={timingDriver.lastLapTime} best={timingDriver.bestLapTime} />
+				<DriverLapTime last={timingDriver.lastLapTime} best={timingDriver.bestLapTime} hasFastest={true} />
 				<DriverGap timingDriver={timingDriver} sessionPart={0} />
 			</div>
 		),
