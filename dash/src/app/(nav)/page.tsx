@@ -2,20 +2,21 @@ import Image from "next/image";
 import Link from "next/link";
 
 import Button from "@/components/Button";
-
-import icon from "public/tag-logo.svg";
+import Footer from "@/components/Footer";
 
 import FeatureCard from "@/components/landing/FeatureCard";
 import ScrollHint from "@/components/landing/ScrollHint";
 
 import { features } from "@/lib/data/features";
 
+import icon from "public/tag-logo.svg";
+
 const roadmap = [
 	"Favorite Driver Highlighting & Filtering",
 	"Driver Analytics for Pit Stop",
 	"Driver Head-to-Head Comparison",
-	"Delay all the way back to start of current race",
-	"Notifications for Race Control Messages of selected drivers",
+	"Full Race Playback",
+	"Notifications for Race Control Messages",
 	"Tire Lap Times Comparison",
 ];
 
@@ -58,26 +59,18 @@ export default function Home() {
 			<section>
 				<h2 className="mb-4 text-2xl">Whats on our roadmap?</h2>
 
-				<p className="text-xl">
-					{roadmap.join(" · ")} {" · "} <span className="text-xl text-zinc-600">Your suggestion?</span>
+				<p className="text-md">
+					{roadmap.join(" · ")} {" · "} <span className="text-zinc-600">Your suggestion?</span>
 				</p>
 			</section>
 
-			<footer className="my-10 w-full text-zinc-600">
-				<div className="mb-4 flex flex-wrap gap-x-8 gap-y-2">
-					<p>Developed with ❤️ by Slowly</p>
+			{/* <p>Developed with ❤️ by Slowly</p>
 					<p>Contribute on GitHub</p>
 					<p>Checkout the Community Discord</p>
 					<p>Get help</p>
-					<p>Buy me a coffee to support me</p>
-				</div>
+					<p>Buy me a coffee to support me</p> */}
 
-				<p className="text-sm">
-					This project/website is unofficial and is not associated in any way with the Formula 1 companies. F1, FORMULA
-					ONE, FORMULA 1, FIA FORMULA ONE WORLD CHAMPIONSHIP, GRAND PRIX and related marks are trade marks of Formula
-					One Licensing B.V
-				</p>
-			</footer>
+			<Footer />
 		</div>
 	);
 }

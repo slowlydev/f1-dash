@@ -78,17 +78,7 @@ export const features = [
 		title: "Qualifying Mode",
 		description:
 			"Switch to qualifying mode for in-depth analysis of qualifying sessions. Access detailed insights into each driver's performance during qualifying laps, including sector times, lap history, and starting positions for the race.",
-		children: (
-			<div className="w-72">
-				<DriverQuali
-					driver={driver}
-					timingDriver={timingDriver}
-					appTimingDriver={appTimingDriver}
-					currentBestName="Verstappen"
-					currentBestTime="1:01.203"
-				/>
-			</div>
-		),
+		children: <></>,
 	},
 	{
 		title: "Violation Tracker",

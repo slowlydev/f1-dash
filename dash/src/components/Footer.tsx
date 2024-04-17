@@ -1,22 +1,30 @@
-import { ReactNode } from "react";
+import Link from "next/link";
 
 export default function Footer() {
 	return (
-		<footer className="flex flex-wrap gap-2 p-4 text-sm font-medium text-gray-200">
-			<p>
-				Made with ♥ by <TextLink website="https://slowly.dev">Slowlydev</TextLink>.
-			</p>
+		<footer className="my-8 text-sm text-zinc-600">
+			<div className="mb-4 flex flex-wrap gap-2">
+				<p>
+					Made with ♥ by <TextLink website="https://slowly.dev">Slowly</TextLink>.
+				</p>
+
+				<p>
+					Contribute on <TextLink website="https://github.com/slowlydev/f1-dash">GitHub</TextLink>.
+				</p>
+
+				<p>
+					Get <Link className="text-blue-500" href="/help">Help</Link>.
+				</p>
+
+				<p>
+					<TextLink website="https://www.buymeacoffee.com/slowlydev">Buy me a coffee</TextLink> to support me.
+				</p>
+			</div>
 
 			<p>
-				Please give me your <TextLink website="https://improve.slowly.dev/f1-dash">Feedback</TextLink>.
-			</p>
-
-			<p>
-				Contribute on <TextLink website="https://github.com/Slowlydev/f1-dash">GitHub</TextLink>.
-			</p>
-
-			<p>
-				<TextLink website="https://www.buymeacoffee.com/slowlydev">Buy me a coffee</TextLink> to support me.
+				This project/website is unofficial and is not associated in any way with the Formula 1 companies. F1, FORMULA
+				ONE, FORMULA 1, FIA FORMULA ONE WORLD CHAMPIONSHIP, GRAND PRIX and related marks are trade marks of Formula One
+				Licensing B.V
 			</p>
 		</footer>
 	);
@@ -24,7 +32,7 @@ export default function Footer() {
 
 type TextLinkProps = {
 	website: string;
-	children: ReactNode;
+	children: string;
 };
 
 const TextLink = ({ website, children }: TextLinkProps) => {

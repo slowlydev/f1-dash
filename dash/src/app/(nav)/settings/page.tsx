@@ -80,7 +80,7 @@ export default function SettingsPage() {
 
 			<h2 className="my-4 text-2xl">Configure Custom Mode</h2>
 
-			<p className="mb-4 text-zinc-500">
+			<p className="mb-4">
 				Here you can setup the "custom" mode that u can activate with the slider in the top right on the dashboard. Its
 				here to toggle some parts of the UI u might want or not want to see, as u might prefer more or less data or
 				information and/or a simpler UI.
@@ -121,7 +121,7 @@ export default function SettingsPage() {
 
 			<h2 className="my-4 text-2xl">Delay</h2>
 
-			<p className="mb-4 text-zinc-500">
+			<p className="mb-4">
 				Here you have to option to set a delay for the data, it will displayed the amount entered in seconds later than
 				on the live edge. On the Dashboard page there is the same delay input field so you can set it without going to
 				the settings. It can be found in the most top bar on the right side.
@@ -138,7 +138,7 @@ export default function SettingsPage() {
 
 			<h2 className="my-4 text-2xl">Walkthrough</h2>
 
-			<p className="mb-4 text-zinc-500">
+			<p className="mb-4">
 				Here you start the walkthrough of the dashboard again if you skipped it or you want to be refreshed. It is
 				explaining the different parts of the UI and how to use them.
 			</p>
@@ -147,9 +147,7 @@ export default function SettingsPage() {
 				This will move you to the dashboard page and might show data of an ongoing or ended session and might spoil you.
 			</Note>
 
-			<Button className="!bg-red-500" onClick={() => startWalkthrough()}>
-				Start Walkthrough
-			</Button>
+			<Button onClick={() => startWalkthrough()}>Start Walkthrough</Button>
 		</div>
 	);
 }
