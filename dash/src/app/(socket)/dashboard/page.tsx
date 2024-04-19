@@ -22,7 +22,7 @@ export default function Page() {
 			<div className="flex flex-wrap items-center justify-between gap-2 overflow-hidden border-b border-zinc-800 p-2 px-2">
 				<div className="flex flex-wrap items-center justify-between gap-2">
 					<div className="flex w-full items-center justify-between md:w-auto">
-						<SessionInfo session={state?.sessionInfo} clock={state?.extrapolatedClock} />
+						<SessionInfo session={state?.sessionInfo} clock={state?.extrapolatedClock} timingData={state?.timingData} />
 						<div className="block md:hidden">
 							<TrackInfo track={state?.trackStatus} lapCount={state?.lapCount} />
 						</div>
@@ -77,14 +77,14 @@ export default function Page() {
 						<div
 							className={clsx(
 								"flex w-full flex-col divide-y divide-zinc-800",
-								"xl:min-w-0 xl:flex-row xl:divide-x xl:divide-y-0",
+								"2xl:min-w-0 2xl:flex-row 2xl:divide-x 2xl:divide-y-0",
 							)}
 						>
-							<div className={clsx("h-96 overflow-y-auto p-2", "xl:w-1/2")}>
+							<div className={clsx("h-96 overflow-y-auto p-2", "2xl:w-1/2")}>
 								<RaceControl messages={state?.raceControlMessages} utcOffset={state?.sessionInfo?.gmtOffset ?? ""} />
 							</div>
 
-							<div className={clsx("h-96 overflow-y-auto p-2", "xl:w-1/2")}>
+							<div className={clsx("h-96 overflow-y-auto p-2", "2xl:w-1/2")}>
 								<TeamRadios
 									sessionPath={state?.sessionInfo?.path}
 									drivers={state?.driverList}

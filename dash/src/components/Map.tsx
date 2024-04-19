@@ -111,7 +111,7 @@ export default function Map({ circuitKey, drivers, timingDrivers, positionBatche
 						.map((driver) => {
 							const pos = positions[driver.racingNumber];
 							const timingDriver = timingDrivers?.lines[driver.racingNumber];
-							const hidden = timingDriver ? timingDriver.knockedOut : false;
+							const hidden = timingDriver ? timingDriver.knockedOut || timingDriver.stopped : false;
 							const pit = timingDriver ? timingDriver.inPit || timingDriver.pitOut : false;
 
 							const rotatedPos = rotate(pos.X, pos.Y, rotation, centerX, centerY);
