@@ -24,7 +24,7 @@ export default function Page() {
 			</p>
 
 			<p className="mb-2 text-zinc-400">
-				In August 2023 I released f1-dash to the public by making a few posts here and there (mastodon, lemmy, tired
+				In August 2023 I released f1-dash to the public by making a few posts here and there (mastodon, lemmy, tried
 				reddit, but was not able to post).
 			</p>
 
