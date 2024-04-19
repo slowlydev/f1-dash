@@ -22,6 +22,10 @@ export default function Navbar() {
 				<NavItem name="Help" active={pathname === "/help"} />
 			</Link>
 
+			<Link href="/info" className="h-full">
+				<NavItem name="Info" active={pathname === "/info"} />
+			</Link>
+
 			<div className="h-full w-[2px] bg-gray-500" />
 
 			<Link href="/" className="h-full">
