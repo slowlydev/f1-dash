@@ -68,7 +68,7 @@ export default function Page() {
 				<p className="text-xl font-semibold text-gray-500">What's our</p>
 				<h2 className="mb-4 text-3xl font-bold">Core Features</h2>
 
-				<div className="grid grid-cols-1 gap-2 sm:grid-cols-2 xl:grid-cols-4">
+				<div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
 					<HomeFeatureCard
 						title="Tires & Pitstops"
 						description="Discover which tires the drivers are using and how old they are. As well as their numbers of pitstops."
@@ -113,9 +113,7 @@ export default function Page() {
 			</div>
 
 			<div className="mb-8 flex flex-col items-center">
-				{nextMeeting && (
-					<UpNextMeeting nextMeeting={nextMeeting} />
-				)}
+				{nextMeeting && <UpNextMeeting nextMeeting={nextMeeting} />}
 
 				<div className="flex cursor-pointer items-center gap-1 opacity-50">
 					<Link href="/archive">Checkout the archive for past sessions</Link>
