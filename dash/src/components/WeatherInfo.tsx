@@ -17,7 +17,7 @@ export default function DataWeatherInfo({ weather }: Props) {
 					<TemperatureComplication value={Math.round(parseFloat(weather.trackTemp))} label="TRC" />
 					<TemperatureComplication value={Math.round(parseFloat(weather.airTemp))} label="AIR" />
 					<HumidityComplication value={parseFloat(weather.humidity)} />
-					<RainComplication rain={!!weather.rainfall} />
+					<RainComplication rain={weather.rainfall === "1"} />
 					<WindSpeedComplication speed={parseFloat(weather.windSpeed)} directionDeg={parseInt(weather.windDirection)} />
 				</>
 			) : (

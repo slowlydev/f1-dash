@@ -183,7 +183,7 @@ const getWeather = (update: Update): History["weather"] => {
 		airTemp: weather.airTemp ? [parseFloat(weather.airTemp)] : undefined,
 		humidity: weather.humidity ? [parseFloat(weather.humidity)] : undefined,
 		pressure: weather.pressure ? [parseFloat(weather.pressure)] : undefined,
-		rainfall: weather.rainfall ? [!!weather.rainfall] : undefined,
+		rainfall: weather.rainfall ? [weather.rainfall === "1"] : undefined,
 		windDirection: weather.windDirection ? [parseInt(weather.windDirection)] : undefined,
 		windSpeed: weather.windSpeed ? [parseFloat(weather.windSpeed)] : undefined,
 	};
