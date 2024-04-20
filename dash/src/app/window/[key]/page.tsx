@@ -66,6 +66,8 @@ export default function SubWindow({ params: { key } }: Props) {
 					drivers={state?.driverList}
 					timingDrivers={state?.timingData}
 					positionBatches={position}
+					trackStatus={state?.trackStatus}
+					raceControlMessages={state?.raceControlMessages?.messages}
 				/>
 			)}
 
