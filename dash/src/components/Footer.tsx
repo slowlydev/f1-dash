@@ -13,7 +13,11 @@ export default function Footer() {
 				</p>
 
 				<p>
-					Get <Link className="text-blue-500" href="/help">Help</Link>.
+					Get{" "}
+					<Link className="text-blue-500" href="/help">
+						Help
+					</Link>
+					.
 				</p>
 
 				<p>

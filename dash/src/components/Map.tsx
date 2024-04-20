@@ -7,8 +7,8 @@ import { DriverList, Position, TimingData, TrackStatus, Message as RaceControlMe
 import { objectEntries } from "@/lib/driverHelper";
 import { fetchMap } from "@/lib/fetchMap";
 import { MapType, TrackPosition } from "@/types/map.type";
-import {sortUtc} from "@/lib/sorting/sortUtc";
-import {getTrackStatusMessage} from "@/lib/getTrackStatusMessage";
+import { sortUtc } from "@/lib/sorting/sortUtc";
+import { getTrackStatusMessage } from "@/lib/getTrackStatusMessage";
 
 // This is basically fearlessly copied from
 // https://github.com/tdjsnelling/monaco
@@ -41,15 +41,15 @@ const rotate = (x: number, y: number, a: number, px: number, py: number) => {
 };
 
 type Sector = {
-	"number": number,
-	"start": TrackPosition,
-	"end": TrackPosition,
-	"points": TrackPosition[],
-}
+	number: number;
+	start: TrackPosition;
+	end: TrackPosition;
+	points: TrackPosition[];
+};
 
 const calculateDistance = (x1: number, y1: number, x2: number, y2: number) => {
 	return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
-}
+};
 
 const findMinDistance = (point: TrackPosition, points: TrackPosition[]) => {
 	let min = Infinity;
@@ -62,7 +62,7 @@ const findMinDistance = (point: TrackPosition, points: TrackPosition[]) => {
 		}
 	}
 	return minIndex;
-}
+};
 
 const createSectors = (map: MapType) => {
 	const sectors: Sector[] = [];
@@ -73,11 +73,11 @@ const createSectors = (map: MapType) => {
 			number: i + 1,
 			start: map.marshalSectors[i].trackPosition,
 			end: map.marshalSectors[i + 1] ? map.marshalSectors[i + 1].trackPosition : map.marshalSectors[0].trackPosition,
-			points: []
+			points: [],
 		});
 	}
 
-	let dividers: number[] = sectors.map(s => findMinDistance(s.start, points));
+	let dividers: number[] = sectors.map((s) => findMinDistance(s.start, points));
 	for (let i = 0; i < dividers.length; i++) {
 		let start = dividers[i];
 		let end = dividers[i + 1] ? dividers[i + 1] : dividers[0];
@@ -89,7 +89,7 @@ const createSectors = (map: MapType) => {
 	}
 
 	return sectors;
-}
+};
 
 const findYellowSectors = (messages: RaceControlMessage[] | undefined): Set<number> => {
 	const msgs = messages?.sort(sortUtc).filter((msg) => {
@@ -124,15 +124,15 @@ const findYellowSectors = (messages: RaceControlMessage[] | undefined): Set<numb
 		}
 	}
 	return sectors;
-}
+};
 
 type RenderedSector = {
-	number: number,
-	d: string,
-	color: string,
-	stroke_width: number,
-	pulse?: number,
-}
+	number: number;
+	d: string;
+	color: string;
+	stroke_width: number;
+	pulse?: number;
+};
 
 const priorizeColoredSectors = (a: RenderedSector, b: RenderedSector) => {
 	if (a.color === "stroke-white" && b.color !== "stroke-white") {
@@ -142,11 +142,18 @@ const priorizeColoredSectors = (a: RenderedSector, b: RenderedSector) => {
 		return 1;
 	}
 	return a.number - b.number;
-}
+};
 
 const rotationFIX = 90;
 
-export default function Map({ circuitKey, drivers, timingDrivers, trackStatus, raceControlMessages, positionBatches }: Props) {
+export default function Map({
+	circuitKey,
+	drivers,
+	timingDrivers,
+	trackStatus,
+	raceControlMessages,
+	positionBatches,
+}: Props) {
 	const [points, setPoints] = useState<null | { x: number; y: number }[]>(null);
 	const [sectors, setSectors] = useState<Sector[]>([]);
 
@@ -179,7 +186,7 @@ export default function Map({ circuitKey, drivers, timingDrivers, trackStatus, r
 					end,
 					points,
 				};
-			})
+			});
 
 			const rotatedPoints = mapJson.x.map((x, index) => rotate(x, mapJson.y[index], fixedRotation, centerX, centerY));
 
@@ -211,28 +218,29 @@ export default function Map({ circuitKey, drivers, timingDrivers, trackStatus, r
 				} else {
 					return "stroke-white";
 				}
-			}
+			};
 		} else {
-			color = (_) => status?.trackColor || "stroke-white"
+			color = (_) => status?.trackColor || "stroke-white";
 		}
 
-		const newSectors: RenderedSector[] = sectors.map((sector) => {
-			const start = `M${sector.points[0].x},${sector.points[0].y}`;
-			const rest = sector.points.map((point) => `L${point.x},${point.y}`).join(" ");
+		const newSectors: RenderedSector[] = sectors
+			.map((sector) => {
+				const start = `M${sector.points[0].x},${sector.points[0].y}`;
+				const rest = sector.points.map((point) => `L${point.x},${point.y}`).join(" ");
 
-			const c = color(sector)
-			return {
-				number: sector.number,
-				d: `${start} ${rest}`,
-				color: c,
-				stroke_width: c === "stroke-white" ? 60 : 120,
-				pulse: status?.pulse
-			}
-		}).sort(priorizeColoredSectors);
+				const c = color(sector);
+				return {
+					number: sector.number,
+					d: `${start} ${rest}`,
+					color: c,
+					stroke_width: c === "stroke-white" ? 60 : 120,
+					pulse: status?.pulse,
+				};
+			})
+			.sort(priorizeColoredSectors);
 
 		setRenderedSectors(newSectors);
-	}, [trackStatus, raceControlMessages, sectors])
-
+	}, [trackStatus, raceControlMessages, sectors]);
 
 	if (!points || !minX || !minY || !widthX || !widthY)
 		return (
@@ -256,9 +264,11 @@ export default function Map({ circuitKey, drivers, timingDrivers, trackStatus, r
 			/>
 
 			{renderedSectors.map((sector) => {
-				const style = sector.pulse ? {
-					animation: `${sector.pulse * 100}ms linear infinite pulse`,
-				} : {};
+				const style = sector.pulse
+					? {
+							animation: `${sector.pulse * 100}ms linear infinite pulse`,
+						}
+					: {};
 				return (
 					<path
 						key={`map.sector.${sector.number}`}
