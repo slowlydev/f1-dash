@@ -1,13 +1,7 @@
-"use client";
-
-import { motion } from "framer-motion";
 import { type ReactNode } from "react";
-import Image from "next/image";
 
 import Menubar from "@/components/Menubar";
-
-import githubIcon from "public/icons/github.svg";
-import coffeeIcon from "public/icons/bmc-logo.svg";
+import IconLabelButton from "@/components/IconLabelButton";
 
 type Props = {
 	children: ReactNode;
@@ -20,27 +14,13 @@ export default function Layout({ children }: Props) {
 				<Menubar />
 
 				<div className="hidden items-center gap-4 pr-2 sm:flex">
-					<a target="_blank" href="https://www.buymeacoffee.com/slowlydev">
-						<motion.div
-							whileHover={{ scale: 1.05 }}
-							whileTap={{ scale: 0.95 }}
-							className="flex cursor-pointer select-none items-center gap-2"
-						>
-							<Image src={coffeeIcon} alt="github" width={20} height={20} />
-							<p>Coffee</p>
-						</motion.div>
-					</a>
+					<IconLabelButton icon="bmc" href="https://www.buymeacoffee.com/slowlydev">
+						Coffee
+					</IconLabelButton>
 
-					<a target="_blank" href="https://github.com/slowlydev/f1-dash">
-						<motion.div
-							whileHover={{ scale: 1.05 }}
-							whileTap={{ scale: 0.95 }}
-							className="flex cursor-pointer select-none items-center gap-2"
-						>
-							<Image src={githubIcon} alt="github" width={25} height={25} />
-							<p>Github</p>
-						</motion.div>
-					</a>
+					<IconLabelButton icon="github" href="https://github.com/slowlydev/f1-dash">
+						GitHub
+					</IconLabelButton>
 				</div>
 			</div>
 

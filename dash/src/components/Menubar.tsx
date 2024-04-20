@@ -2,7 +2,7 @@
 
 import { usePathname, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 
 import Modal from "@/components/Modal";
@@ -42,24 +42,32 @@ export default function Menubar() {
 		setLiveWarning([false, null]);
 	};
 
+	useEffect(() => {
+		router.prefetch("/");
+		router.prefetch("/dashboard");
+		router.prefetch("/schedule");
+		router.prefetch("/settings");
+		router.prefetch("/help");
+	}, []);
+
 	return (
 		<div className="flex select-none flex-wrap gap-x-4 gap-y-2 px-2" id="walkthrough-menu">
-			<motion.p className="cursor-pointer" whileTap={{ scale: 0.95 }} onClick={() => liveTimingGuard("/")}>
+			<motion.a className="cursor-pointer" whileTap={{ scale: 0.95 }} onClick={() => liveTimingGuard("/")}>
 				Home
-			</motion.p>
+			</motion.a>
 			{/* TODO add spoiler guard (check if race is in progress, then show modal) */}
-			<motion.p className="cursor-pointer" whileTap={{ scale: 0.95 }} onClick={() => router.push("/dashboard")}>
+			<motion.a className="cursor-pointer" whileTap={{ scale: 0.95 }} onClick={() => router.push("/dashboard")}>
 				Dashboard
-			</motion.p>
-			<motion.p className="cursor-pointer" whileTap={{ scale: 0.95 }} onClick={() => liveTimingGuard("/schedule")}>
+			</motion.a>
+			<motion.a className="cursor-pointer" whileTap={{ scale: 0.95 }} onClick={() => liveTimingGuard("/schedule")}>
 				Schedule
-			</motion.p>
-			<motion.p className="cursor-pointer" whileTap={{ scale: 0.95 }} onClick={() => liveTimingGuard("/settings")}>
+			</motion.a>
+			<motion.a className="cursor-pointer" whileTap={{ scale: 0.95 }} onClick={() => liveTimingGuard("/settings")}>
 				Settings
-			</motion.p>
-			<motion.p className="cursor-pointer" whileTap={{ scale: 0.95 }} onClick={() => liveTimingGuard("/help")}>
+			</motion.a>
+			<motion.a className="cursor-pointer" whileTap={{ scale: 0.95 }} onClick={() => liveTimingGuard("/help")}>
 				Help
-			</motion.p>
+			</motion.a>
 
 			{onLiveRoute && (
 				<div className="flex select-none items-center gap-4">
