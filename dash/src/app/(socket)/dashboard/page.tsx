@@ -71,6 +71,8 @@ export default function Page() {
 								positionBatches={position}
 								drivers={state?.driverList}
 								timingDrivers={state?.timingData}
+								trackStatus={state?.trackStatus}
+								raceControlMessages={state?.raceControlMessages?.messages}
 							/>
 						</div>
 
@@ -101,6 +103,8 @@ export default function Page() {
 						positionBatches={position}
 						drivers={state?.driverList}
 						timingDrivers={state?.timingData}
+						trackStatus={state?.trackStatus}
+						raceControlMessages={state?.raceControlMessages?.messages}
 					/>
 				</div>
 			</div>
