@@ -112,10 +112,10 @@ export type RaceControlMessages = {
 export type Message = {
 	utc: string;
 	lap: number;
-	category: string;
 	message: string;
-	flag?: string;
-	scope?: string;
+	category: "Other" | "Sector" | "Flag" | "Drs" | "SafetyCar" | string;
+	flag?: "BLACK AND WHITE" | "BLUE" | "CLEAR" | "YELLOW" | "GREEN" | "DOUBLE YELLOW" | "RED";
+	scope?: "Driver" | "Track" | "Sector";
 	sector?: number;
 	status?: "ENABLED" | "DISABLED";
 };
