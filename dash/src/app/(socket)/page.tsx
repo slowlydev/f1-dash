@@ -56,7 +56,12 @@ export default function Page() {
 				</div>
 
 				<div className={"max-h-screen xl:mt-2 3xl:ml-2 3xl:w-1/2 3xl:flex-grow"}>
-					<Map circuitKey={state?.session?.circuitKey} positionBatches={state?.positionBatches} />
+					<Map
+						circuitKey={state?.session?.circuitKey}
+						trackStatus={state?.trackStatus}
+						raceControlMessages={state?.raceControlMessages}
+						positionBatches={state?.positionBatches}
+					/>
 				</div>
 			</div>
 
