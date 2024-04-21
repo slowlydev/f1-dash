@@ -291,7 +291,9 @@ export default function Map({
 						.map((driver) => {
 							const pos = positions[driver.racingNumber];
 							const timingDriver = timingDrivers?.lines[driver.racingNumber];
-							const hidden = timingDriver ? timingDriver.knockedOut || timingDriver.stopped : false;
+							const hidden = timingDriver
+								? timingDriver.knockedOut || timingDriver.stopped || timingDriver.retired
+								: false;
 							const pit = timingDriver ? timingDriver.inPit || timingDriver.pitOut : false;
 
 							const rotatedPos = rotate(pos.X, pos.Y, rotation, centerX, centerY);
@@ -301,7 +303,7 @@ export default function Map({
 								<g
 									key={`map.driver.${driver.racingNumber}`}
 									id={`map.driver.${driver.racingNumber}`}
-									className={clsx("fill-zinc-700", { "opacity-30": pit }, { "opacity-0": hidden })}
+									className={clsx("fill-zinc-700", { "opacity-30": pit }, { "!opacity-0": hidden })}
 									style={{
 										transition: "all 1s linear",
 										transform,
