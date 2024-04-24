@@ -25,7 +25,7 @@ export default function DriverHistoryTires({ stints }: Props) {
 							/>
 						)}
 
-						<p className="text-sm font-bold leading-none text-zinc-600">{stint.totalLaps} L</p>
+						<p className="whitespace-nowrap text-sm font-medium leading-none text-zinc-600">{stint.totalLaps}L</p>
 					</div>
 				))}
 

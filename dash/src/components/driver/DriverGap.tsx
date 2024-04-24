@@ -26,12 +26,12 @@ export default function DriverGap({ timingDriver, sessionPart }: Props) {
 			<p
 				className={clsx("leading-none", {
 					"text-emerald-500": catching,
-					"text-gray-500": !gapToFront,
+					"text-zinc-600": !gapToFront,
 				})}
 			>
 				{!!gapToFront ? gapToFront : "-- ---"}
 			</p>
-			<p className="text-sm font-medium leading-none text-gray-500">{!!gapToLeader ? gapToLeader : "-- ---"}</p>
+			<p className="text-sm font-medium leading-none text-zinc-600">{!!gapToLeader ? gapToLeader : "-- ---"}</p>
 		</div>
 	);
 }

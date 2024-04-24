@@ -32,10 +32,10 @@ export default function DriverDetailed({ racingNumber, history, timingDriver, ap
 			animate={{ opacity: 1 }}
 			className={clsx("grid items-center gap-2")}
 			style={{
-				gridTemplateColumns: "10rem 9.5rem 5rem 5rem auto",
+				gridTemplateColumns: "5.5rem 4rem 5.5rem 4rem 5rem 5.5rem auto",
 			}}
 		>
-			<div className="flex flex-col gap-1 place-self-start text-sm font-medium leading-none text-zinc-600">
+			<div className="col-span-2 flex flex-col gap-1 place-self-start text-sm font-medium leading-none text-zinc-600">
 				{/* <p>Expected Box in 3L</p>
 				<p>Average Pit: 22s</p>
 				<p>Expected re-join 8th</p> */}
@@ -43,18 +43,19 @@ export default function DriverDetailed({ racingNumber, history, timingDriver, ap
 				<p className="flex h-10 flex-col justify-center">🚧 WIP 🚧</p>
 			</div>
 
-			<div className="w-full">
+			<div className="col-span-2 w-full">
 				<DriverHistoryTires stints={appTimingDriver.stints} />
 			</div>
 
-			<div className="">
+			<div>
 				{history?.gapFront && history.gapFront && history.gapFront[racingNumber] ? (
 					<Graph values={maxLength(history.gapFront[racingNumber], 13)} lines={13} />
 				) : (
 					<LoadingGraph />
 				)}
 			</div>
-			<div className="">
+
+			<div>
 				{history?.lapTime && history.lapTime && history.lapTime[racingNumber] ? (
 					<Graph values={maxLength(history.lapTime[racingNumber], 13)} lines={13} />
 				) : (
@@ -63,21 +64,23 @@ export default function DriverDetailed({ racingNumber, history, timingDriver, ap
 			</div>
 
 			<div className="flex gap-2">
-				<div style={{ width: `${firstSectorLength * 8 + firstSectorLength * 4}px` }}>
+				<div style={{ width: `${firstSectorLength * 8 + (firstSectorLength - 1) * 4}px` }}>
 					{history?.sectors && history.sectors && history.sectors[racingNumber] && history.sectors[racingNumber][0] ? (
 						<Graph values={maxLength(history.sectors[racingNumber][0], 13)} lines={13} />
 					) : (
 						<LoadingGraph />
 					)}
 				</div>
-				<div style={{ width: `${secondSectorLength * 8 + secondSectorLength * 4}px` }}>
+
+				<div style={{ width: `${secondSectorLength * 8 + (secondSectorLength - 1) * 4}px` }}>
 					{history?.sectors && history.sectors && history.sectors[racingNumber] && history.sectors[racingNumber][1] ? (
 						<Graph values={maxLength(history.sectors[racingNumber][1], 13)} lines={13} />
 					) : (
 						<LoadingGraph />
 					)}
 				</div>
-				<div style={{ width: `${thirdSectorLength * 8 + thirdSectorLength * 4}px` }}>
+
+				<div style={{ width: `${thirdSectorLength * 8 + (thirdSectorLength - 1) * 4}px` }}>
 					{history?.sectors && history.sectors && history.sectors[racingNumber] && history.sectors[racingNumber][2] ? (
 						<Graph values={maxLength(history.sectors[racingNumber][2], 13)} lines={13} />
 					) : (

@@ -75,8 +75,8 @@ export default function Driver({
 				className={clsx("grid items-center gap-2")}
 				style={{
 					gridTemplateColumns: uiElements.carMetrics
-						? "5.5rem 4rem 5.5rem 4rem 5rem 5rem auto auto"
-						: "5.5rem 4rem 5.5rem 4rem 5rem 5rem auto",
+						? "5.5rem 4rem 5.5rem 4rem 5rem 5.5rem auto auto"
+						: "5.5rem 4rem 5.5rem 4rem 5rem 5.5rem auto",
 				}}
 			>
 				<DriverTag className="!min-w-full" short={driver.tla} teamColor={driver.teamColour} position={position} />
