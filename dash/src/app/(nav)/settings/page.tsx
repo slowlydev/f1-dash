@@ -68,12 +68,12 @@ export default function SettingsPage() {
 		}
 	};
 
-	const startWalkthrough = () => {
-		if (typeof window != undefined) {
-			localStorage.removeItem("walkthrough");
-			router.push("/dashboard");
-		}
-	};
+	// const startWalkthrough = () => {
+	// 	if (typeof window != undefined) {
+	// 		localStorage.removeItem("walkthrough");
+	// 		router.push("/dashboard");
+	// 	}
+	// };
 
 	return (
 		<div className="container mx-auto max-w-screen-lg px-4">
@@ -137,7 +137,7 @@ export default function SettingsPage() {
 				Reset delay
 			</Button>
 
-			<h2 className="my-4 text-2xl">Walkthrough</h2>
+			{/* <h2 className="my-4 text-2xl">Walkthrough</h2>
 
 			<p className="mb-4">
 				Here you start the walkthrough of the dashboard again if you skipped it or you want to be refreshed. It is
@@ -148,7 +148,7 @@ export default function SettingsPage() {
 				This will move you to the dashboard page and might show data of an ongoing or ended session and might spoil you.
 			</Note>
 
-			<Button onClick={() => startWalkthrough()}>Start Walkthrough</Button>
+			<Button onClick={() => startWalkthrough()}>Start Walkthrough</Button> */}
 
 			<Footer />
 		</div>

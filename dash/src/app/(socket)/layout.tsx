@@ -5,7 +5,7 @@ import { ReactNode, useEffect, useState } from "react";
 import { env } from "@/env.mjs";
 
 import { SocketProvider, useSocket } from "@/context/SocketContext";
-import { WalkthroughProvider } from "@/context/WalkthroughContext";
+// import { WalkthroughProvider } from "@/context/WalkthroughContext";
 import { ModeProvider, useMode } from "@/context/ModeContext";
 
 import { messageIsInitial, messageIsUpdate } from "@/lib/messageHelpers";
@@ -25,9 +25,8 @@ export default function SocketLayout({ children }: Props) {
 	return (
 		<SocketProvider>
 			<ModeProvider>
-				<WalkthroughProvider>
-					<SubLayout>{children}</SubLayout>
-				</WalkthroughProvider>
+				{/* no walkthrough for now... */}
+				<SubLayout>{children}</SubLayout>
 			</ModeProvider>
 		</SocketProvider>
 	);
