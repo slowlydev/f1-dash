@@ -20,7 +20,7 @@ struct InitialState {
     pub state: Value,
 }
 
-pub async fn initial(pool: PgPool, timestamp: DateTime<Utc>) -> Result<Value, anyhow::Error> {
+pub async fn initial(pool: &PgPool, timestamp: DateTime<Utc>) -> Result<Value, anyhow::Error> {
     // reconstruct a initial value for the frontend
 
     // two approaches possible
@@ -34,7 +34,7 @@ pub async fn initial(pool: PgPool, timestamp: DateTime<Utc>) -> Result<Value, an
         "select state, created_at from updates where category = 'initial' and created_at < $1 order by created_at desc",
         timestamp
     )
-    .fetch_one(&pool)
+    .fetch_one(pool)
     .await?;
 
     let updates = sqlx::query_as!(
@@ -42,7 +42,7 @@ pub async fn initial(pool: PgPool, timestamp: DateTime<Utc>) -> Result<Value, an
         "select category, state from updates where category != 'initial' and created_at > $1 order by created_at asc",
         initial.created_at
     )
-    .fetch_all(&pool)
+    .fetch_all(pool)
     .await?;
 
     let mut reconstructed_initial: Value = initial.state;
@@ -61,7 +61,7 @@ pub async fn initial(pool: PgPool, timestamp: DateTime<Utc>) -> Result<Value, an
 }
 
 pub async fn delayed_initial(
-    pool: PgPool,
+    pool: &PgPool,
     timestamp: DateTime<Utc>,
 ) -> Result<Value, anyhow::Error> {
     // reconstruct a initial value for the frontend
@@ -77,7 +77,7 @@ pub async fn delayed_initial(
         "select state from updates where category = 'initial' and created_at < $1 order by created_at desc",
         timestamp
     )
-    .fetch_one(&pool)
+    .fetch_one(pool)
     .await?;
 
     let updates = sqlx::query_as!(
@@ -85,7 +85,7 @@ pub async fn delayed_initial(
         "select category, state from updates where category != 'initial' and created_at < $1 order by created_at asc",
         timestamp
     )
-    .fetch_all(&pool)
+    .fetch_all(pool)
     .await?;
 
     let mut reconstructed_initial: Value = initial.state;

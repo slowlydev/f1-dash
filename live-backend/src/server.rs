@@ -1,11 +1,11 @@
 use chrono::{DateTime, Utc};
-use futures::{channel::mpsc, pin_mut, StreamExt};
+use futures::{pin_mut, StreamExt};
 use futures_util::stream::SplitStream;
 use serde::Deserialize;
 use std::net::SocketAddr;
 use tokio::{
     net::{TcpListener, TcpStream},
-    sync::mpsc::UnboundedSender,
+    sync::mpsc::Sender,
 };
 
 use tokio_tungstenite::{
@@ -16,7 +16,7 @@ use tracing::{debug, error, info};
 
 use crate::broadcast;
 
-pub async fn listen(broadcast_tx: UnboundedSender<broadcast::Event>) {
+pub async fn listen(broadcast_tx: Sender<broadcast::Event>) {
     let default_addr = "0.0.0.0:4000".to_string();
     let addr = std::env::var("BACKEND_ADDRESS").unwrap_or(default_addr);
 
@@ -47,32 +47,24 @@ async fn accept(
     stream: WebSocketStream<TcpStream>,
     addr: SocketAddr,
     id: u32,
-    broadcast_tx: UnboundedSender<broadcast::Event>,
+    broadcast_tx: Sender<broadcast::Event>,
 ) {
-    let (tx, rx) = mpsc::unbounded();
+    let (tx, rx) = stream.split();
 
-    let (sender, receiver) = stream.split();
     let conn = broadcast::Connection::new(id, addr, tx);
-    let _ = broadcast_tx.send(broadcast::Event::Join(conn));
+    let _ = broadcast_tx.send(broadcast::Event::Join(conn)).await;
 
-    let handle_receiver = tokio::spawn(handle_receiving(receiver, id, broadcast_tx.clone()));
-    let handle_sender = rx.map(Ok).forward(sender);
+    handle_receiving(rx, id, broadcast_tx.clone()).await;
 
-    pin_mut!(handle_receiver, handle_sender);
-    tokio::select! {
-        _ = handle_receiver => {},
-        _ = handle_sender => {}
-    }
+    let _ = broadcast_tx.send(broadcast::Event::Quit(id)).await;
 
-    let _ = broadcast_tx.send(broadcast::Event::Quit(id));
-
-    debug!("we are gonna disconnect, hopefully");
+    debug!("send broadcast cleanup and ending connection to {}", addr);
 }
 
 async fn handle_receiving(
     mut receiver: SplitStream<WebSocketStream<TcpStream>>,
     id: u32,
-    broadcast_tx: UnboundedSender<broadcast::Event>,
+    broadcast_tx: Sender<broadcast::Event>,
 ) {
     while let Some(Ok(msg)) = receiver.next().await {
         match msg {
@@ -94,18 +86,18 @@ async fn handle_receiving(
                     ClientMessage::RequestReconstruct { timestamp } => {
                         info!("requesting reconstruct: {:?}", timestamp);
                         let event = broadcast::Event::RequestReconstruct(id, timestamp);
-                        let _ = broadcast_tx.send(event);
+                        let _ = broadcast_tx.send(event).await;
                     }
                     ClientMessage::RequestUpdates { start, end } => {
                         info!("requesting updates: {:?} - {:?}", start, end);
                         let event = broadcast::Event::RequestUpdates(id, start, end);
-                        let _ = broadcast_tx.send(event);
+                        let _ = broadcast_tx.send(event).await;
                     }
                     ClientMessage::RequestRealtime { realtime } => {
                         if realtime {
                             info!("requesting realtime");
                             let event = broadcast::Event::RequestRealtime(id);
-                            let _ = broadcast_tx.send(event);
+                            let _ = broadcast_tx.send(event).await;
                         }
                     }
                 }

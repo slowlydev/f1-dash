@@ -18,12 +18,12 @@ pub async fn save_initial(pool: PgPool, state: Value) {
 }
 
 pub async fn save_updates(pool: PgPool, updates: HashMap<String, client::parser::Update>) {
-    for (_, update) in updates {
-        tokio::spawn(save_update(pool.clone(), update));
+    for (_, update) in updates.iter() {
+        save_update(&pool, update).await;
     }
 }
 
-async fn save_update(pool: PgPool, update: client::parser::Update) {
+async fn save_update(pool: &PgPool, update: &client::parser::Update) {
     let _ = sqlx::query!(
         r#"
 		insert into updates (category, state)
@@ -32,6 +32,6 @@ async fn save_update(pool: PgPool, update: client::parser::Update) {
         update.category,
         update.state
     )
-    .execute(&pool)
+    .execute(pool)
     .await;
 }

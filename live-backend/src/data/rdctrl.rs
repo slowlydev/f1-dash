@@ -1,5 +1,5 @@
 use sqlx::PgPool;
-use tokio::sync::mpsc::{UnboundedReceiver, UnboundedSender};
+use tokio::sync::mpsc::{Receiver, Sender};
 use tracing::info;
 
 use crate::{
@@ -17,23 +17,25 @@ pub mod transformer;
 
 pub async fn init(
     pool: PgPool,
-    mut client_rx: UnboundedReceiver<client::parser::ParsedMessage>,
-    broadcast_tx: UnboundedSender<broadcast::Event>,
+    mut client_rx: Receiver<client::parser::ParsedMessage>,
+    broadcast_tx: Sender<broadcast::Event>,
 ) {
     info!("starting...");
 
     while let Some(message) = client_rx.recv().await {
         match message {
             client::parser::ParsedMessage::Empty => (),
-            client::parser::ParsedMessage::Initial(state) => {
+            client::parser::ParsedMessage::Initial(mut state) => {
                 // transform
-                let initial = transformer::transform_map(&mut state.clone());
+                let initial = transformer::transform_map(&mut state);
 
                 // insert into db
                 tokio::spawn(keeper::save_initial(pool.clone(), initial.clone()));
 
                 // send to broadcast
-                let _ = broadcast_tx.send(broadcast::Event::OutFirstInitial(initial));
+                let _ = broadcast_tx
+                    .send(broadcast::Event::OutFirstInitial(initial))
+                    .await;
             }
             client::parser::ParsedMessage::Updates(updates) => {
                 // transform
@@ -44,7 +46,9 @@ pub async fn init(
                 tokio::spawn(keeper::save_updates(pool.clone(), updates.clone()));
 
                 // send to broadcast
-                let _ = broadcast_tx.send(broadcast::Event::OutUpdate(updates));
+                let _ = broadcast_tx
+                    .send(broadcast::Event::OutUpdate(updates))
+                    .await;
             }
         };
     }

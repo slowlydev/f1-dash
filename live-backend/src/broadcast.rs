@@ -1,8 +1,10 @@
 use chrono::{DateTime, Utc};
+use futures::SinkExt;
+// use futures::SinkExt;
 use serde_json::Value;
 use std::{collections::HashMap, net::SocketAddr};
 
-use tokio::sync::mpsc::{UnboundedReceiver, UnboundedSender};
+use tokio::sync::mpsc::{Receiver, Sender};
 use tokio_tungstenite::tungstenite::Message;
 use tracing::{debug, info, warn};
 
@@ -10,8 +12,9 @@ use crate::client::manager::ClientManagerEvent;
 use crate::data::odctrl::{self, Request};
 use crate::{client, messages};
 
-// type SenderSink = SplitSink<WebSocketStream<TcpStream>, Message>;
-type ConnectionTx = futures::channel::mpsc::UnboundedSender<Message>;
+// type ConnectionTx = tokio::sync::mpsc::Sender<Message>;
+type ConnectionTx =
+    futures::stream::SplitSink<tokio_tungstenite::WebSocketStream<tokio::net::TcpStream>, Message>;
 
 #[derive(Debug)]
 pub struct Connection {
@@ -74,9 +77,9 @@ pub enum Event {
 // TODO refactor duplicate code
 
 pub async fn init(
-    mut rx: UnboundedReceiver<Event>,
-    manager_tx: UnboundedSender<ClientManagerEvent>,
-    odctrl_tx: UnboundedSender<Request>,
+    mut rx: Receiver<Event>,
+    manager_tx: Sender<ClientManagerEvent>,
+    odctrl_tx: Sender<Request>,
 ) {
     info!("starting...");
 
@@ -94,11 +97,11 @@ pub async fn init(
 
                 connections.insert(conn.id, conn);
 
-                let _ = manager_tx.send(ClientManagerEvent::Start);
+                let _ = manager_tx.send(ClientManagerEvent::Start).await;
 
                 if connections.len() > 1 {
                     debug!("new client connected, requesting initial state!");
-                    let _ = odctrl_tx.send(Request::Initial(id));
+                    let _ = odctrl_tx.send(Request::Initial(id)).await;
                 }
 
                 info!("current connections: {}", connections.len());
@@ -109,7 +112,7 @@ pub async fn init(
 
                 if connections.len() < 1 {
                     info!("last client disconnected, killing socket!");
-                    let _ = manager_tx.send(ClientManagerEvent::Kill);
+                    let _ = manager_tx.send(ClientManagerEvent::Kill).await;
                 }
             }
             Event::OutFirstInitial(state) => {
@@ -123,7 +126,8 @@ pub async fn init(
                                 continue;
                             }
 
-                            let _ = conn.tx.unbounded_send(Message::Text(text.clone()));
+                            let text = text.clone();
+                            let _ = conn.tx.send(Message::Text(text)).await;
                         }
                     }
                     Err(_) => warn!("failed to serialize first initial to json"),
@@ -137,7 +141,9 @@ pub async fn init(
                     Ok(text) => {
                         if let Some(conn) = connections.get_mut(&id) {
                             conn.initial = true;
-                            let _ = conn.tx.unbounded_send(Message::Text(text));
+
+                            let text = text.clone();
+                            let _ = conn.tx.send(Message::Text(text)).await;
                         }
                     }
                     Err(_) => warn!("failed to serialize initial to json"),
@@ -154,7 +160,8 @@ pub async fn init(
                                 continue;
                             }
 
-                            let _ = conn.tx.unbounded_send(Message::Text(text.clone()));
+                            let text = text.clone();
+                            let _ = conn.tx.send(Message::Text(text)).await;
                         }
                     }
                     Err(_) => warn!("failed to serialize update to json"),
@@ -168,7 +175,9 @@ pub async fn init(
                     Ok(text) => {
                         if let Some(conn) = connections.get_mut(&id) {
                             conn.realtime = false;
-                            let _ = conn.tx.unbounded_send(Message::Text(text));
+
+                            let text = text.clone();
+                            let _ = conn.tx.send(Message::Text(text)).await;
                         }
                     }
                     Err(_) => warn!("failed to serialize delayed initial to json"),
@@ -182,21 +191,23 @@ pub async fn init(
                     Ok(text) => {
                         if let Some(conn) = connections.get_mut(&id) {
                             conn.realtime = false;
-                            let _ = conn.tx.unbounded_send(Message::Text(text));
+
+                            let text = text.clone();
+                            let _ = conn.tx.send(Message::Text(text)).await;
                         }
                     }
                     Err(_) => warn!("failed to serialize delayed updates to json"),
                 }
             }
             Event::RequestReconstruct(id, timestamp) => {
-                let _ = odctrl_tx.send(Request::Reconstruct(id, timestamp));
+                let _ = odctrl_tx.send(Request::Reconstruct(id, timestamp)).await;
 
                 if let Some(conn) = connections.get_mut(&id) {
                     conn.realtime = false;
                 }
             }
             Event::RequestUpdates(id, start, end) => {
-                let _ = odctrl_tx.send(Request::Updates(id, start, end));
+                let _ = odctrl_tx.send(Request::Updates(id, start, end)).await;
 
                 if let Some(conn) = connections.get_mut(&id) {
                     conn.realtime = false;
@@ -209,7 +220,7 @@ pub async fn init(
 
                 // when switching to realtime, make sure the client
                 // gets the latest realtime state
-                let _ = odctrl_tx.send(Request::Initial(id));
+                let _ = odctrl_tx.send(Request::Initial(id)).await;
             }
         }
     }

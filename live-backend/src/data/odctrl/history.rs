@@ -65,23 +65,22 @@ pub type Queries = (
     Result<Vec<WeatherEntry>, anyhow::Error>,
 );
 
-pub async fn queries(pool: PgPool, timestamp: DateTime<Utc>) -> Queries {
-    let start = timestamp.clone() - Duration::minutes(10);
-    let end = timestamp;
+pub async fn queries(pool: &PgPool, end: DateTime<Utc>) -> Queries {
+    let start = end - Duration::minutes(10);
 
     debug!("reconstructing history from {} back to {}", start, end);
 
-    let gap_leader = driver_gap_leader(pool.clone(), start, end);
-    let gap_front = driver_gap_front(pool.clone(), start, end);
-    let lap_time = driver_lap_time(pool.clone(), start, end);
-    let sectors = sectors(pool.clone(), start, end);
-    let weather = weather(pool.clone(), start, end);
+    let gap_leader = driver_gap_leader(&pool, start, end);
+    let gap_front = driver_gap_front(&pool, start, end);
+    let lap_time = driver_lap_time(&pool, start, end);
+    let sectors = sectors(&pool, start, end);
+    let weather = weather(&pool, start, end);
 
     tokio::join!(gap_leader, gap_front, lap_time, sectors, weather)
 }
 
 async fn weather(
-    pool: PgPool,
+    pool: &PgPool,
     start: DateTime<Utc>,
     end: DateTime<Utc>,
 ) -> Result<Vec<WeatherEntry>, anyhow::Error> {
@@ -100,14 +99,14 @@ async fn weather(
         start,
         end
     )
-    .fetch_all(&pool)
+    .fetch_all(pool)
     .await?;
 
     Ok(weather)
 }
 
 async fn sectors(
-    pool: PgPool,
+    pool: &PgPool,
     start: DateTime<Utc>,
     end: DateTime<Utc>,
 ) -> Result<Vec<DriverSector>, anyhow::Error> {
@@ -135,14 +134,14 @@ async fn sectors(
         start,
         end
     )
-    .fetch_all(&pool)
+    .fetch_all(pool)
     .await?;
 
     Ok(driver_sector)
 }
 
 pub async fn driver_gap_leader(
-    pool: PgPool,
+    pool: &PgPool,
     start: DateTime<Utc>,
     end: DateTime<Utc>,
 ) -> Result<Vec<Driver>, anyhow::Error> {
@@ -162,14 +161,14 @@ pub async fn driver_gap_leader(
         start,
         end
     )
-    .fetch_all(&pool)
+    .fetch_all(pool)
     .await?;
 
     Ok(driver_gap_leader)
 }
 
 pub async fn driver_gap_front(
-    pool: PgPool,
+    pool: &PgPool,
     start: DateTime<Utc>,
     end: DateTime<Utc>,
 ) -> Result<Vec<Driver>, anyhow::Error> {
@@ -189,14 +188,14 @@ pub async fn driver_gap_front(
         start,
         end
     )
-    .fetch_all(&pool)
+    .fetch_all(pool)
     .await?;
 
     Ok(driver_gap_front)
 }
 
 pub async fn driver_lap_time(
-    pool: PgPool,
+    pool: &PgPool,
     start: DateTime<Utc>,
     end: DateTime<Utc>,
 ) -> Result<Vec<Driver>, anyhow::Error> {
@@ -216,7 +215,7 @@ pub async fn driver_lap_time(
         start,
         end
     )
-    .fetch_all(&pool)
+    .fetch_all(pool)
     .await?;
 
     Ok(driver_lap_time)

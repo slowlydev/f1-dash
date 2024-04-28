@@ -2,7 +2,7 @@ use std::time::Duration;
 
 use futures::StreamExt;
 use tokio::{
-    sync::mpsc::{UnboundedReceiver, UnboundedSender},
+    sync::mpsc::{Receiver, Sender},
     time::sleep,
 };
 use tokio_tungstenite::tungstenite::Message;
@@ -19,9 +19,9 @@ pub enum ClientManagerEvent {
 }
 
 pub async fn init(
-    mut manager_rx: UnboundedReceiver<ClientManagerEvent>,
-    manager_tx: UnboundedSender<ClientManagerEvent>,
-    client_tx: UnboundedSender<ParsedMessage>,
+    mut manager_rx: Receiver<ClientManagerEvent>,
+    manager_tx: Sender<ClientManagerEvent>,
+    client_tx: Sender<ParsedMessage>,
 ) {
     info!("starting...");
     // we need to be started on backend start
@@ -70,8 +70,8 @@ pub async fn init(
 }
 
 async fn client_loop(
-    manager_tx: UnboundedSender<ClientManagerEvent>,
-    client_tx: UnboundedSender<ParsedMessage>,
+    manager_tx: Sender<ClientManagerEvent>,
+    client_tx: Sender<ParsedMessage>,
     token: CancellationToken,
 ) {
     Box::pin(async move {
@@ -85,7 +85,7 @@ async fn client_loop(
                         Ok(msg) => match msg {
                             Message::Text(text) => {
                                 let parsed = parser::message(text);
-                                let _ = client_tx.send(parsed);
+                                let _ = client_tx.send(parsed).await;
                             }
                             Message::Close(_) => {
                                 debug!("got close, restarting");

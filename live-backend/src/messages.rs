@@ -163,8 +163,8 @@ pub struct UpdateMessage {
 pub fn create_update(updates: HashMap<String, client::parser::Update>) -> UpdateMessage {
     let mut map: HashMap<String, Value> = HashMap::new();
 
-    for (_, update) in updates.iter() {
-        map.insert(update.category.clone(), update.state.clone());
+    for (_, update) in updates {
+        map.insert(update.category, update.state);
     }
 
     UpdateMessage { update: map }

@@ -29,21 +29,21 @@ async fn main() {
         restarts on close,
         closes on no clients
     */
-    let (manager_tx, manager_rx) = mpsc::unbounded_channel::<ClientManagerEvent>();
-    let (client_tx, client_rx) = mpsc::unbounded_channel::<ParsedMessage>();
+    let (manager_tx, manager_rx) = mpsc::channel::<ClientManagerEvent>(10);
+    let (client_tx, client_rx) = mpsc::channel::<ParsedMessage>(10);
     tokio::spawn(client::manager::init(
         manager_rx,
         manager_tx.clone(),
         client_tx,
     ));
 
-    let (broadcast_tx, broadcast_rx) = mpsc::unbounded_channel::<Event>();
+    let (broadcast_tx, broadcast_rx) = mpsc::channel::<Event>(10);
 
     /*
         handles requests for older updates,
         handles reconstruction of initial states for the frontend
     */
-    let (odctrl_tx, odctrl_rx) = mpsc::unbounded_channel::<Request>();
+    let (odctrl_tx, odctrl_rx) = mpsc::channel::<Request>(10);
     tokio::spawn(data::odctrl::init(
         db.clone(),
         odctrl_rx,
