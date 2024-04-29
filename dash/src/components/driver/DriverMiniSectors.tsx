@@ -25,7 +25,7 @@ export default function DriverMiniSectors({ sectors = [], bestSectors, tla, show
 						className={clsx(
 							"text-lg font-semibold leading-none",
 							getTimeColor(sector.overallFastest, sector.personalFastest),
-							!sector.value ? "text-gray-500" : "",
+							!sector.value ? "text-zinc-600" : "",
 							showFastest ? "!text-sm" : "",
 						)}
 					>
@@ -33,7 +33,7 @@ export default function DriverMiniSectors({ sectors = [], bestSectors, tla, show
 					</p>
 
 					{showFastest && (
-						<p className={clsx("leading-non text-sm font-semibold text-gray-500")}>
+						<p className={clsx("leading-non text-sm font-semibold text-zinc-600")}>
 							{bestSectors && bestSectors[i].value ? bestSectors[i].value : "-- ---"}
 						</p>
 					)}
@@ -51,7 +51,7 @@ function MiniSector({ status }: { status: number }) {
 				"bg-emerald-500": status === 2049,
 				"bg-violet-600": status === 2051,
 				"bg-blue-500": status === 2064,
-				"bg-gray-800": status === 0,
+				"bg-zinc-700": status === 0,
 			})}
 		/>
 	);
