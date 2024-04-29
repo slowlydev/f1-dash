@@ -27,10 +27,10 @@ export default function DriverDetailed({ racingNumber, history, timingDriver, ap
 
 	return (
 		<motion.div
-			initial={{ opacity: 0 }}
-			exit={{ opacity: 0 }}
-			animate={{ opacity: 1 }}
-			className={clsx("grid items-center gap-2")}
+			initial={{ opacity: 0, scale: 0.95 }}
+			animate={{ opacity: 1, scale: 1 }}
+			exit={{ opacity: 0, scale: 0.95 }}
+			className="grid items-center gap-2 overflow-hidden"
 			style={{
 				gridTemplateColumns: "5.5rem 4rem 5.5rem 4rem 5rem 5.5rem auto",
 			}}
@@ -39,8 +39,6 @@ export default function DriverDetailed({ racingNumber, history, timingDriver, ap
 				{/* <p>Expected Box in 3L</p>
 				<p>Average Pit: 22s</p>
 				<p>Expected re-join 8th</p> */}
-
-				<p className="flex h-10 flex-col justify-center">🚧 WIP 🚧</p>
 			</div>
 
 			<div className="col-span-2 w-full">

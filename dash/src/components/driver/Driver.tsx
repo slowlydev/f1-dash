@@ -2,7 +2,7 @@
 
 import clsx from "clsx";
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 
 import { useMode } from "@/context/ModeContext";
 
@@ -100,14 +100,16 @@ export default function Driver({
 				{uiElements.carMetrics && carData && <DriverCarMetrics carData={carData} />}
 			</div>
 
-			{open && appTimingDriver && (
-				<DriverDetailed
-					racingNumber={driver.racingNumber}
-					timingDriver={timingDriver}
-					history={history}
-					appTimingDriver={appTimingDriver}
-				/>
-			)}
+			<AnimatePresence>
+				{open && appTimingDriver && (
+					<DriverDetailed
+						racingNumber={driver.racingNumber}
+						timingDriver={timingDriver}
+						history={history}
+						appTimingDriver={appTimingDriver}
+					/>
+				)}
+			</AnimatePresence>
 		</motion.div>
 	);
 }
