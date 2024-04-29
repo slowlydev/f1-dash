@@ -13,31 +13,41 @@ import RaceControl from "@/components/RaceControl";
 import TeamRadios from "@/components/TeamRadios";
 import Footer from "@/components/Footer";
 import Map from "@/components/Map";
+import LapCount from "@/components/LapCount";
 
 export default function Page() {
 	const { state, position, carData, history } = useSocket();
 
 	return (
 		<div className="flex w-full flex-col">
-			<div className="flex flex-wrap items-center justify-between gap-2 overflow-hidden border-b border-zinc-800 p-2 px-2">
+			{/* md upwards, desktop ipad design */}
+			<div className="hidden flex-wrap items-center justify-between gap-2 overflow-hidden border-b border-zinc-800 p-2 px-2 md:flex">
 				<div className="flex flex-wrap items-center justify-between gap-2">
 					<div className="flex w-full items-center justify-between md:w-auto">
 						<SessionInfo session={state?.sessionInfo} clock={state?.extrapolatedClock} timingData={state?.timingData} />
-						<div className="block md:hidden">
-							<TrackInfo track={state?.trackStatus} lapCount={state?.lapCount} />
-						</div>
 					</div>
+
 					<WeatherInfo weather={state?.weatherData} />
 
-					{!!state?.lapCount && (
-						<p className="whitespace-nowrap text-3xl font-extrabold sm:hidden">
-							{state?.lapCount?.currentLap} / {state?.lapCount?.totalLaps}
-						</p>
-					)}
+					<LapCount lapCount={state?.lapCount} />
 				</div>
 
-				<div className="hidden md:block">
+				<TrackInfo track={state?.trackStatus} lapCount={state?.lapCount} />
+			</div>
+
+			{/* sm, mobile design */}
+			<div className="flex w-full flex-col divide-y divide-zinc-800 border-b border-zinc-800 md:hidden">
+				<div className="p-2">
+					<SessionInfo session={state?.sessionInfo} clock={state?.extrapolatedClock} timingData={state?.timingData} />
+				</div>
+
+				<div className="p-2">
+					<WeatherInfo weather={state?.weatherData} />
+				</div>
+
+				<div className="flex justify-between overflow-hidden p-4">
 					<TrackInfo track={state?.trackStatus} lapCount={state?.lapCount} />
+					<LapCount lapCount={state?.lapCount} />
 				</div>
 			</div>
 
