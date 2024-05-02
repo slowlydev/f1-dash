@@ -1,15 +1,17 @@
 "use client";
 
+import { clsx } from "clsx";
 import { AnimatePresence, motion } from "framer-motion";
 
 type Props = {
 	id?: string;
+	className?: string;
 	playing: boolean;
 	loading?: boolean;
 	onClick: () => void;
 };
 
-export default function PlayControls({ id, playing, loading = false, onClick }: Props) {
+export default function PlayControls({ id, className, playing, loading = false, onClick }: Props) {
 	const variants = {
 		initial: { opacity: 0, scale: 0.5 },
 		animate: { opacity: 1, scale: 1 },
@@ -17,8 +19,12 @@ export default function PlayControls({ id, playing, loading = false, onClick }: 
 	};
 
 	return (
-		<AnimatePresence>
-			<div id={id} className="flex h-8 w-8 cursor-pointer items-center justify-center" onClick={onClick}>
+		<div
+			id={id}
+			className={clsx("flex h-8 w-8 cursor-pointer items-center justify-center", className)}
+			onClick={onClick}
+		>
+			<AnimatePresence>
 				{!playing && !loading && (
 					<motion.svg
 						initial={variants.initial}
@@ -68,7 +74,7 @@ export default function PlayControls({ id, playing, loading = false, onClick }: 
 						<circle className="pulse-loading-spinner" style={{ animationDelay: ".6s" }} cx="12" cy="12" r="0" />
 					</motion.svg>
 				)}
-			</div>
-		</AnimatePresence>
+			</AnimatePresence>
+		</div>
 	);
 }

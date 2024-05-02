@@ -16,6 +16,7 @@ import Menubar from "@/components/Menubar";
 import DelayInput from "@/components/DelayInput";
 import PlayControls from "@/components/PlayControls";
 import SegmentedControls from "@/components/SegmentedControls";
+import StreamStatus from "@/components/StreamStatus";
 
 type Props = {
 	children: ReactNode;
@@ -97,10 +98,12 @@ const SubLayout = ({ children }: Props) => {
 			<div className="grid grid-cols-1 items-center gap-4 border-b border-zinc-800 bg-black p-2 md:grid-cols-2">
 				<Menubar />
 
-				{/* <div className="flex items-center justify-center gap-2">
-					<Timeline setTime={setTime} time={time} playing={delay.current > 0} maxDelay={maxDelay} />
+				<div className="flex items-center gap-2 sm:hidden">
+					{/* <Timeline setTime={setTime} time={time} playing={delay.current > 0} maxDelay={maxDelay} /> */}
+					<DelayInput className="flex md:hidden" delay={delay.current} setDebouncedDelay={setDelay} />
+					<PlayControls className="flex md:hidden" playing={playback} onClick={() => togglePlayback()} />
 					<StreamStatus live={delay.current == 0} />
-				</div> */}
+				</div>
 
 				<div className="flex flex-row-reverse flex-wrap-reverse items-center gap-1">
 					<SegmentedControls
@@ -115,8 +118,8 @@ const SubLayout = ({ children }: Props) => {
 							{ label: "Custom", value: "custom" },
 						]}
 					/>
-					<DelayInput id="walkthrough-delay" delay={delay.current} setDebouncedDelay={setDelay} />
-					<PlayControls id="walkthrough-playback" playing={playback} onClick={() => togglePlayback()} />
+					<DelayInput className="hidden md:flex" delay={delay.current} setDebouncedDelay={setDelay} />
+					<PlayControls className="hidden md:flex" playing={playback} onClick={() => togglePlayback()} />
 				</div>
 			</div>
 
