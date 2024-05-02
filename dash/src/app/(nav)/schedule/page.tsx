@@ -1,30 +1,11 @@
-import { Round as RoundType } from "@/types/schedule.type";
-
-import { env } from "@/env.mjs";
+import { Suspense } from "react";
 
 import Footer from "@/components/Footer";
-import Round from "@/components/schedule/Round";
-import NextRound from "@/components/schedule/NextRound";
 
-const getSchedule = async (): Promise<RoundType[]> => {
-	try {
-		const scheduleReq = await fetch(`${env.NEXT_PUBLIC_SERVER_URL}/api/schedule`, {
-			next: {
-				revalidate: 3600,
-			},
-		});
-		const schedule: RoundType[] = await scheduleReq.json();
-		return schedule;
-	} catch (e) {
-		return [];
-	}
-};
+import NextRound from "@/components/schedule/NextRound";
+import FullSchedule from "@/components/schedule/FullSchedule";
 
 export default async function SchedulePage() {
-	const schedule = await getSchedule();
-
-	const next = schedule.filter((round) => !round.over)[0] as RoundType | undefined;
-
 	return (
 		<div className="container mx-auto max-w-screen-lg px-4">
 			<div className="my-4">
@@ -32,26 +13,60 @@ export default async function SchedulePage() {
 				<p className="text-zinc-600">All times are local time</p>
 			</div>
 
-			{next ? (
-				<NextRound next={next} />
-			) : (
-				<div className="flex h-40 w-full items-center justify-center">
-					<p className="text-zinc-600">no next session found</p>
-				</div>
-			)}
+			<Suspense fallback={<NextRoundLoading />}>
+				<NextRound />
+			</Suspense>
 
 			<div className="my-4">
 				<h1 className="text-3xl">Schedule</h1>
 				<p className="text-zinc-600">All times are local time</p>
 			</div>
 
-			<div className="mb-20 grid grid-cols-1 gap-8 md:grid-cols-2">
-				{schedule.map((round, roundI) => (
-					<Round nextName={next?.name} round={round} key={`round.${roundI}`} />
-				))}
-			</div>
+			<Suspense fallback={<FullScheduleLoading />}>
+				<FullSchedule />
+			</Suspense>
 
 			<Footer />
 		</div>
 	);
 }
+
+const RoundLoading = () => {
+	return (
+		<div className="flex flex-col gap-1">
+			<div className="h-12 w-full animate-pulse rounded-md bg-zinc-800" />
+
+			<div className="grid grid-cols-3 gap-8 pt-1">
+				{Array.from({ length: 3 }).map((_, i) => (
+					<div key={`day.${i}`} className="grid grid-rows-2 gap-2">
+						<div className="h-12 w-full animate-pulse rounded-md bg-zinc-800" />
+						<div className="h-12 w-full animate-pulse rounded-md bg-zinc-800" />
+					</div>
+				))}
+			</div>
+		</div>
+	);
+};
+
+const NextRoundLoading = () => {
+	return (
+		<div className="grid h-44 grid-cols-1 gap-8 sm:grid-cols-2">
+			<div className="flex flex-col gap-4">
+				<div className="h-1/2 w-3/4 animate-pulse rounded-md bg-zinc-800" />
+				<div className="h-1/2 w-3/4 animate-pulse rounded-md bg-zinc-800" />
+			</div>
+
+			<RoundLoading />
+		</div>
+	);
+};
+
+const FullScheduleLoading = () => {
+	return (
+		<div className="mb-20 grid grid-cols-1 gap-8 md:grid-cols-2">
+			{Array.from({ length: 6 }).map((_, i) => (
+				<RoundLoading key={`round.${i}`} />
+			))}
+		</div>
+	);
+};

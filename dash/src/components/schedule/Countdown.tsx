@@ -28,16 +28,18 @@ export default function Countdown({ next, type }: Props) {
 		} else {
 			setDuration([0, 0, 0, 0]);
 		}
+
+		requestRef.current = requestAnimationFrame(animateNextFrame);
 	};
 
 	useEffect(() => {
 		requestRef.current = requestAnimationFrame(animateNextFrame);
 		return () => (requestRef.current ? cancelAnimationFrame(requestRef.current) : void 0);
-	});
+	}, []);
 
 	return (
 		<div>
-			<p className="text-xl">Countdown until the next {type === "race" ? "race" : "session"}</p>
+			<p className="text-lg">Countdown until the next {type === "race" ? "race" : "session"}</p>
 
 			<AnimatePresence>
 				<div className="grid auto-cols-max grid-flow-col gap-4 text-3xl">
