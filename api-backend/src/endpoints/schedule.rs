@@ -1,11 +1,13 @@
 use chrono::{DateTime, Datelike, NaiveDateTime, TimeZone, Utc};
 use ical::parser::ical::component::IcalEvent;
 use regex::Regex;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use std::io::BufReader;
 use tracing::{debug, error, warn};
 
-#[derive(Serialize, Debug)]
+use cached::proc_macro::io_cached;
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Session {
     kind: String,
@@ -13,7 +15,7 @@ pub struct Session {
     end: DateTime<Utc>,
 }
 
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Round {
     name: String,
@@ -106,6 +108,11 @@ fn update_round(event: IcalEvent, round: &mut Round, kind: &str) -> Option<()> {
     Some(())
 }
 
+#[io_cached(
+    map_error = r##"|e| anyhow::anyhow!(format!("disk cache error {:?}", e))"##,
+    disk = true,
+    time = 1800
+)]
 async fn get_schedule(year: i32) -> Result<Vec<Round>, anyhow::Error> {
     // webcal://ics.ecal.com/ecal-sub/660897ca63f9ca0008bcbea6/Formula%201.ics
     // *note this is a link created by entering a email and other info on the f1 website
@@ -173,6 +180,27 @@ pub async fn get() -> Result<axum::Json<Vec<Round>>, axum::http::StatusCode> {
 
     match schedule {
         Ok(schedule) => Ok(axum::Json(schedule)),
+        Err(_) => {
+            error!("failed to create schedule for year {}", year);
+            Err(axum::http::StatusCode::INTERNAL_SERVER_ERROR)
+        }
+    }
+}
+
+pub async fn get_next() -> Result<axum::Json<Round>, axum::http::StatusCode> {
+    let year = chrono::Utc::now().year();
+    let schedule = get_schedule(year).await;
+
+    match schedule {
+        Ok(schedule) => {
+            let not_over: Vec<Round> = schedule.into_iter().filter(|r| !r.over).collect();
+            let next_round = not_over.first().cloned();
+
+            match next_round {
+                Some(next_round) => Ok(axum::Json(next_round)),
+                None => Err(axum::http::StatusCode::NO_CONTENT),
+            }
+        }
         Err(_) => {
             error!("failed to create schedule for year {}", year);
             Err(axum::http::StatusCode::INTERNAL_SERVER_ERROR)

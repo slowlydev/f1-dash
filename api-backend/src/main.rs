@@ -13,7 +13,9 @@ async fn main() {
     env::init();
     log::init();
 
-    let app = Router::new().route("/api/schedule", get(endpoints::schedule::get));
+    let app = Router::new()
+        .route("/api/schedule", get(endpoints::schedule::get))
+        .route("/api/schedule/next", get(endpoints::schedule::get_next));
 
     let default_addr = "0.0.0.0:5000".to_string();
     let addr = std::env::var("BACKEND_ADDRESS").unwrap_or(default_addr);
