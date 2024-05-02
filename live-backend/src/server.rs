@@ -1,5 +1,5 @@
 use chrono::{DateTime, Utc};
-use futures::{pin_mut, StreamExt};
+use futures::StreamExt;
 use futures_util::stream::SplitStream;
 use serde::Deserialize;
 use std::net::SocketAddr;
