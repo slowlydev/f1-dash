@@ -54,7 +54,7 @@ pub async fn initial(pool: &PgPool, timestamp: DateTime<Utc>) -> Result<Value, a
     for update in updates {
         let mut map = Map::new();
         map.insert(update.category, update.state);
-        merge::merge(&mut reconstructed_initial, &Value::Object(map));
+        merge::category_merge(&mut reconstructed_initial, map);
     }
 
     Ok(reconstructed_initial)
@@ -97,7 +97,7 @@ pub async fn delayed_initial(
     for update in updates {
         let mut map = Map::new();
         map.insert(update.category, update.state);
-        merge::merge(&mut reconstructed_initial, &Value::Object(map));
+        merge::category_merge(&mut reconstructed_initial, map);
     }
 
     Ok(reconstructed_initial)

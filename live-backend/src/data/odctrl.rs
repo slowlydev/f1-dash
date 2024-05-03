@@ -36,8 +36,10 @@ pub async fn init(
                 tokio::spawn(async move {
                     info!("creating initial message from db");
                     let now = chrono::Utc::now();
-                    let initial = recon::initial(&pool, now).await;
-                    let queries = history::queries(&pool, now).await;
+                    let initial = recon::initial(&pool, now);
+                    let queries = history::queries(&pool, now);
+
+                    let (initial, queries) = tokio::join!(initial, queries);
 
                     match initial {
                         Ok(initial) => {
