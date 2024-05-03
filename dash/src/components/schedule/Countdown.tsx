@@ -1,10 +1,10 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
 import { duration, now, utc } from "moment";
 
 import { Session } from "@/types/schedule.type";
-import { useEffect, useRef, useState } from "react";
 
 type Props = {
 	next: Session;

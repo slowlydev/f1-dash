@@ -111,7 +111,7 @@ export function SocketProvider({ children }: { children: ReactNode }) {
 		state: State | null,
 		carData: CarData | null,
 		position: Position | null,
-		history: null | History,
+		history: History | null,
 	) => {
 		const newBuffer = [...bufferRef.current, { state, history, carData, position, timestamp: Date.now() }];
 		if (newBuffer.length > 1000) {

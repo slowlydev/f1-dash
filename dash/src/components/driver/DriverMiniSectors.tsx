@@ -21,22 +21,24 @@ export default function DriverMiniSectors({ sectors = [], bestSectors, tla, show
 						))}
 					</div>
 
-					<p
-						className={clsx(
-							"text-lg font-semibold leading-none",
-							getTimeColor(sector.overallFastest, sector.personalFastest),
-							!sector.value ? "text-zinc-600" : "",
-							showFastest ? "!text-sm" : "",
-						)}
-					>
-						{!!sector.value ? sector.value : !!sector.previousValue ? sector.previousValue : "-- ---"}
-					</p>
-
-					{showFastest && (
-						<p className={clsx("leading-non text-sm font-semibold text-zinc-600")}>
-							{bestSectors && bestSectors[i].value ? bestSectors[i].value : "-- ---"}
+					<div>
+						<p
+							className={clsx(
+								"text-lg font-semibold leading-none",
+								getTimeColor(sector.overallFastest, sector.personalFastest),
+								!sector.value ? "text-zinc-600" : "",
+								showFastest ? "!text-sm" : "",
+							)}
+						>
+							{!!sector.value ? sector.value : !!sector.previousValue ? sector.previousValue : "-- ---"}
 						</p>
-					)}
+
+						{showFastest && (
+							<p className={clsx("text-sm font-semibold leading-none text-violet-600")}>
+								{bestSectors && bestSectors[i].value ? bestSectors[i].value : "-- ---"}
+							</p>
+						)}
+					</div>
 				</div>
 			))}
 		</div>

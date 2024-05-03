@@ -64,12 +64,6 @@ export default function Home() {
 				</p>
 			</section>
 
-			{/* <p>Developed with ❤️ by Slowly</p>
-					<p>Contribute on GitHub</p>
-					<p>Checkout the Community Discord</p>
-					<p>Get help</p>
-					<p>Buy me a coffee to support me</p> */}
-
 			<Footer />
 		</div>
 	);

@@ -34,7 +34,7 @@ export default function SocketLayout({ children }: Props) {
 }
 
 const SubLayout = ({ children }: Props) => {
-	const { setConnected, updateState, ws, setInitial, delay, playing, maxDelay } = useSocket();
+	const { setConnected, updateState, ws, setInitial, delay, playing } = useSocket();
 	const { mode, setMode } = useMode();
 
 	useEffect(() => {

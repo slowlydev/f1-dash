@@ -89,14 +89,30 @@ export default function Page() {
 						<div
 							className={clsx(
 								"flex w-full flex-col divide-y divide-zinc-800",
+								"md:min-w-0 md:flex-row md:divide-x md:divide-y-0",
+								"xl:flex-1 xl:flex-col xl:divide-x-0 xl:divide-y xl:pl-2",
 								"2xl:min-w-0 2xl:flex-row 2xl:divide-x 2xl:divide-y-0",
 							)}
 						>
-							<div className={clsx("h-96 overflow-y-auto p-2", "2xl:w-1/2")}>
+							<div
+								className={clsx(
+									"h-96 overflow-y-auto p-2",
+									"md:w-1/2",
+									"xl:auto xl:mr-0 xl:w-auto xl:flex-grow",
+									"2xl:w-1/2",
+								)}
+							>
 								<RaceControl messages={state?.raceControlMessages} utcOffset={state?.sessionInfo?.gmtOffset ?? ""} />
 							</div>
 
-							<div className={clsx("h-96 overflow-y-auto p-2", "2xl:w-1/2")}>
+							<div
+								className={clsx(
+									"h-96 overflow-y-auto p-2",
+									"md:w-1/2",
+									"xl:auto xl:mr-0 xl:w-auto xl:flex-grow",
+									"2xl:w-1/2",
+								)}
+							>
 								<TeamRadios
 									sessionPath={state?.sessionInfo?.path}
 									drivers={state?.driverList}
