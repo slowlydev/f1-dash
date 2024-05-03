@@ -65,6 +65,7 @@ export function SocketProvider({ children }: { children: ReactNode }) {
 	const playing = useRef<boolean>(true);
 	const ws = useRef<WebSocket | null>(null);
 
+	const [maxDelay, setMaxDelay] = useState<number>(0);
 	const [state, setState] = useState<null | State>(null);
 	const [history, setHistory] = useState<null | History>(null);
 	const [carData, setCarData] = useState<null | CarData>(null);
@@ -148,6 +149,8 @@ export function SocketProvider({ children }: { children: ReactNode }) {
 					broadcastToWindows({ updateType: "position", position: lastFrame.position });
 				}
 			}
+
+			setMaxDelay(bufferRef.current.length > 0 ? Math.floor((Date.now() - bufferRef.current[0].timestamp) / 1000) : 0);
 		}
 
 		requestRef.current = requestAnimationFrame(animateNextFrame);
@@ -171,8 +174,6 @@ export function SocketProvider({ children }: { children: ReactNode }) {
 			subWindowsRef.current.forEach((subWindow) => subWindow.close());
 		};
 	}, []);
-
-	const maxDelay = bufferRef.current.length > 0 ? Math.floor((Date.now() - bufferRef.current[0].timestamp) / 1000) : 0;
 
 	const openSubWindow = (key: WindowKey) => {
 		let newSubWindow = window.open(`/window/${key}`, undefined, "popup=yes,left=100,top=100,width=320,height=320");

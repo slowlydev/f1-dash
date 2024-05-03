@@ -17,6 +17,7 @@ import DelayInput from "@/components/DelayInput";
 import PlayControls from "@/components/PlayControls";
 import SegmentedControls from "@/components/SegmentedControls";
 import StreamStatus from "@/components/StreamStatus";
+import { clsx } from "clsx";
 
 type Props = {
 	children: ReactNode;
@@ -34,7 +35,7 @@ export default function SocketLayout({ children }: Props) {
 }
 
 const SubLayout = ({ children }: Props) => {
-	const { setConnected, updateState, ws, setInitial, delay, playing } = useSocket();
+	const { setConnected, updateState, ws, setInitial, delay, maxDelay, playing } = useSocket();
 	const { mode, setMode } = useMode();
 
 	useEffect(() => {
@@ -93,6 +94,8 @@ const SubLayout = ({ children }: Props) => {
 		}
 	};
 
+	const synching = maxDelay < delay.current;
+
 	return (
 		<div className="w-full">
 			<div className="grid grid-cols-1 items-center gap-4 border-b border-zinc-800 bg-black p-2 md:grid-cols-2">
@@ -123,7 +126,15 @@ const SubLayout = ({ children }: Props) => {
 				</div>
 			</div>
 
-			<div className="h-max w-full">{children}</div>
+			{synching && (
+				<div className="flex w-full flex-col items-center justify-center">
+					<h1 className="my-20 text-center text-5xl font-bold">Synching...</h1>
+					<p>Please wait for {delay.current - maxDelay} seconds.</p>
+					<p>Or make your delay smaller.</p>
+				</div>
+			)}
+
+			<div className={clsx("h-max w-full", synching && "hidden")}>{children}</div>
 		</div>
 	);
 };
