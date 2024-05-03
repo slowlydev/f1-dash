@@ -24,12 +24,8 @@ export default function RaceControl({ messages, utcOffset }: Props) {
 					{messages.messages
 						.sort(sortUtc)
 						.filter((msg) => (msg.flag ? msg.flag.toLowerCase() === "blue" : true))
-						.map((msg) => (
-							<RaceControlMessage
-								key={`msg.${utc(msg.utc).unix()}.${msg.message.toLocaleLowerCase()}`}
-								msg={msg}
-								utcOffset={utcOffset}
-							/>
+						.map((msg, i) => (
+							<RaceControlMessage key={`msg.${i}`} msg={msg} utcOffset={utcOffset} />
 						))}
 				</AnimatePresence>
 			)}
