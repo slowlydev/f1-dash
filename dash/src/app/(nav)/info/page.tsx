@@ -8,7 +8,7 @@ export default function Page() {
 					f1-dash v2 beta is out now, feel free to test it and give feedback in the community Discord or on GitHub. You
 					will find both links in the footer of the new website.
 				</p>
-				<a className="text-blue-300 underline" target="_blank" href="https://v2.f1-dash.com">
+				<a className="text-blue-300 underline" target="_blank" href="https://v2.f1-dash.com?utm_campaign=v2-beta">
 					v2.f1-dash.com
 				</a>
 			</div>
