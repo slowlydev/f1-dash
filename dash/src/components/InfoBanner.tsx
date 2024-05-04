@@ -47,7 +47,7 @@ export default function InfoBanner() {
 			</div>
 			<div className="flex flex-wrap items-center gap-x-4 gap-y-2">
 				<Link href={"/info"}>
-					<p className="text-sm leading-6 text-white">f1-dash infos about issues and up coming v2 release</p>
+					<p className="text-sm leading-6 text-white">f1-dash v2 beta release</p>
 				</Link>
 			</div>
 			<div className="flex flex-1 justify-end">

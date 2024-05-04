@@ -1,7 +1,17 @@
 export default function Page() {
 	return (
 		<div className="mt-4 ">
-			<h1 className="mb-2 text-3xl font-extrabold">Infos about issues and v2</h1>
+			<h1 className="mb-2 text-3xl font-extrabold">Infos about issues and v2 beta</h1>
+
+			<div className="my-2 rounded-lg bg-blue-600 p-4">
+				<p>
+					f1-dash v2 beta is out now, feel free to test it and give feedback in the community Discord or on GitHub. You
+					will find both links in the footer of the new website.
+				</p>
+				<a className="text-blue-300 underline" target="_blank" href="https://v2.f1-dash.com">
+					v2.f1-dash.com
+				</a>
+			</div>
 
 			<p className="mb-2 text-zinc-400">
 				Hey there! First thank you for being here, using f1-dash, it's been amazing seeing it being used and the
@@ -65,48 +75,6 @@ export default function Page() {
 				I hope I can release the v2 soon™ and that it will mitigate the issues that appeared during the last few Grand
 				Prix weekends.
 			</p>
-
-			<h2 className="my-2 text-2xl font-extrabold">Community</h2>
-
-			<p className="mb-2 text-zinc-400">Currently the only way to interact with me or the community is either</p>
-
-			<ul className="mb-2 ml-8 list-disc">
-				<li className="list-item">Commenting under Social media posts spread across multiple platforms</li>
-				<li className="list-item">Opening GitHub issues or pull requests and comments</li>
-				<li className="list-item">
-					Sending feedback on <code>improve.slowly.dev</code> but I have no way to contact you back or respond to your
-					feedback.
-				</li>
-			</ul>
-
-			<p className="mb-2 text-zinc-400">
-				These different platforms are not really the best way to get feedback and build a community. That's why I am
-				thinking of building a discord server or similar to have a place where the community can interact.
-			</p>
-
-			<p className="mb-2 text-zinc-400">
-				But I want to ask you, the community, first, where you think the best place for a community would be. So I
-				created this small form, which also includes some questions about the issues on f1-dash. I would be very
-				thankful if you could fill it out.
-			</p>
-
-			<a className="text-lg text-blue-500" href="https://forms.gle/5UcevvAtryi6EeXc7">
-				Google Forms about: f1-dash community questions
-			</a>
-
-			<h2 className="my-2 text-2xl font-extrabold">TL;DR;</h2>
-
-			<p className="mb-2 text-zinc-400">
-				Very thankful for the feedback and usage of f1-dash. The project grew faster than I expected and the backend was
-				not able to keep up. I'm working on a new version of f1-dash which will hopefully fix the issues and bring a new
-				design as well as new features.
-			</p>
-
-			<p className="mb-2 text-zinc-400">Also please fill out this form:</p>
-
-			<a className="text-lg text-blue-500" href="https://forms.gle/5UcevvAtryi6EeXc7">
-				Google Forms about: f1-dash community questions
-			</a>
 		</div>
 	);
 }

@@ -18,7 +18,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 	const disableTracking = !!env.NEXT_PUBLIC_DISABLE_TRACKING;
 
 	const cookiesStore = cookies();
-	const showBanner = cookiesStore.get("info-banner")?.value !== "hidden";
+	const showBanner = cookiesStore.get("v2-banner")?.value !== "hidden";
 
 	return (
 		<html lang="en" className={`${inter.variable} bg-zinc-900 font-sans text-white`}>
