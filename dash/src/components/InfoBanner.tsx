@@ -11,7 +11,7 @@ export default function InfoBanner() {
 	const onClose = () => {
 		setHidden(true);
 		if (typeof document === "undefined") return;
-		document.cookie = "info-banner=hidden; max-age=31536000; path=/";
+		document.cookie = "v2-banner=hidden; max-age=31536000; path=/";
 	};
 
 	return (
