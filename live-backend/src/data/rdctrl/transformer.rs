@@ -19,8 +19,7 @@ pub fn transform(value: &mut Value) {
                 }
 
                 transform(value);
-                let new_key = to_camel_case(&key);
-                camel_case_map.insert(new_key, mem::take(value));
+                camel_case_map.insert(to_camel_case(&key), mem::take(value));
             }
 
             *value = Value::Object(camel_case_map);

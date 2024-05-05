@@ -20,13 +20,13 @@ pub struct Update {
     pub timestamp: chrono::DateTime<Utc>,
 }
 
-impl From<&mut models::Message> for Update {
-    fn from(message: &mut models::Message) -> Update {
+impl From<models::Message> for Update {
+    fn from(message: models::Message) -> Update {
         let timestamp = chrono::Utc::now();
 
         Update {
-            category: mem::take(&mut message.a.0),
-            state: mem::take(&mut message.a.1),
+            category: message.a.0,
+            state: message.a.1,
             timestamp,
         }
     }
@@ -43,8 +43,8 @@ pub fn message(message: String) -> ParsedMessage {
 
             let mut updates: HashMap<String, Update> = HashMap::new();
 
-            for mut message in messages {
-                let update = Update::from(&mut message);
+            for message in messages {
+                let update = Update::from(message);
                 updates.insert(update.category.clone(), update);
             }
 
