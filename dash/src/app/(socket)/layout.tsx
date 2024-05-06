@@ -94,7 +94,7 @@ const SubLayout = ({ children }: Props) => {
 		}
 	};
 
-	const synching = maxDelay < delay.current;
+	const syncing = maxDelay < delay.current;
 
 	return (
 		<div className="w-full">
@@ -126,15 +126,15 @@ const SubLayout = ({ children }: Props) => {
 				</div>
 			</div>
 
-			{synching && (
+			{syncing && (
 				<div className="flex w-full flex-col items-center justify-center">
-					<h1 className="my-20 text-center text-5xl font-bold">Synching...</h1>
+					<h1 className="my-20 text-center text-5xl font-bold">Syncing...</h1>
 					<p>Please wait for {delay.current - maxDelay} seconds.</p>
 					<p>Or make your delay smaller.</p>
 				</div>
 			)}
 
-			<div className={clsx("h-max w-full", synching && "hidden")}>{children}</div>
+			<div className={clsx("h-max w-full", syncing && "hidden")}>{children}</div>
 		</div>
 	);
 };

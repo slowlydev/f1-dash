@@ -39,7 +39,7 @@ export default function Countdown({ next, type }: Props) {
 
 	return (
 		<div>
-			<p className="text-lg">Countdown until the next {type === "race" ? "race" : "session"}</p>
+			<p className="text-lg">Next {type === "race" ? "race" : "session"} in</p>
 
 			<AnimatePresence>
 				<div className="grid auto-cols-max grid-flow-col gap-4 text-3xl">
