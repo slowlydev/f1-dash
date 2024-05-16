@@ -21,7 +21,6 @@ use crate::{
 
 mod consts;
 mod message;
-mod utils;
 
 type Stream = WebSocketStream<MaybeTlsStream<tokio::net::TcpStream>>;
 
@@ -41,10 +40,13 @@ pub fn spawn_init(tx: Sender<LiveEvent>, state: LiveState) {
 
                 let stream = init().await;
 
-                let Ok(stream) = stream else {
-                    error!("client setup failed, restarting in 5 seconds");
-                    sleep(Duration::from_secs(5)).await;
-                    continue;
+                let stream = match stream {
+                    Ok(stream) => stream,
+                    Err(e) => {
+                        error!("client setup failed, restarting in 5 seconds {}", e);
+                        sleep(Duration::from_secs(5)).await;
+                        continue;
+                    }
                 };
 
                 handle_stream(tx.clone(), stream, state.clone()).await;
@@ -72,7 +74,7 @@ pub async fn handle_stream(tx: Sender<LiveEvent>, mut stream: Stream, state: Liv
 
                 match message {
                     message::Message::Updates(mut updates) => {
-                        debug!("recived update");
+                        trace!("recived update");
 
                         let mut state = state.lock().unwrap();
 
@@ -111,7 +113,7 @@ pub async fn handle_stream(tx: Sender<LiveEvent>, mut stream: Stream, state: Liv
                         mem::drop(state);
                     }
                     message::Message::Initial(mut initial) => {
-                        debug!("recived initial");
+                        trace!("recived initial");
 
                         transformer::transform(&mut initial);
 
@@ -145,21 +147,50 @@ pub async fn handle_stream(tx: Sender<LiveEvent>, mut stream: Stream, state: Liv
 pub async fn init() -> Result<Stream, Box<dyn Error>> {
     let req = create_request().await?;
 
+    debug!("created request");
+
+    trace!("request='{:?}'", req);
+
     let (mut socket, _) = tokio_tungstenite::connect_async(req).await?;
+
+    debug!("connected");
 
     socket
         .send(Message::text(consts::SIGNALR_SUBSCRIBE))
         .await?;
 
+    debug!("subscribed");
+
     Ok(socket)
 }
 
 async fn create_request() -> Result<Request<()>, Box<dyn Error>> {
+    trace!("creating request");
+
     match env_url() {
         Some(url) => Ok(url.into_client_request()?),
         None => {
+            trace!("no url detected");
+
             let negotiation = negotiate().await?;
-            let url = create_url(&negotiation.token)?;
+
+            trace!(
+                "token='{}' cookie='{}'",
+                negotiation.token,
+                negotiation.cookie
+            );
+
+            let url = Url::parse_with_params(
+                &format!("wss://{}/connect", consts::F1_BASE_URL),
+                &[
+                    ("clientProtocol", "1.5"),
+                    ("transport", "webSockets"),
+                    ("connectionToken", &negotiation.token),
+                    ("connectionData", &consts::SIGNALR_HUB),
+                ],
+            )?;
+
+            trace!("url='{}'", url);
 
             let mut req: Request<()> = url.into_client_request()?;
 
@@ -188,11 +219,15 @@ struct Negotiaion {
 }
 
 async fn negotiate() -> Result<Negotiaion, Box<dyn Error>> {
-    let url = format!(
-        "https://{}/negotiate?connectionData={}&clientProtocol=1.5",
-        consts::F1_BASE_URL,
-        utils::encode_uri_component(consts::SIGNALR_HUB)
-    );
+    trace!("negotiating");
+
+    let url = Url::parse_with_params(
+        &format!("https://{}/negotiate", consts::F1_BASE_URL),
+        &[
+            ("clientProtocol", "1.5"),
+            ("connectionData", &consts::SIGNALR_HUB),
+        ],
+    )?;
 
     let res = reqwest::get(url).await?;
 
@@ -200,6 +235,8 @@ async fn negotiate() -> Result<Negotiaion, Box<dyn Error>> {
     let headers = res.headers().clone();
     let body = res.text().await?;
     let json = serde_json::from_str::<Value>(&body)?;
+
+    trace!("negotiation response='{}'", json);
 
     Ok(Negotiaion {
         token: json["ConnectionToken"]
@@ -211,21 +248,6 @@ async fn negotiate() -> Result<Negotiaion, Box<dyn Error>> {
             .unwrap_or_default()
             .to_string(),
     })
-}
-
-fn create_url(token: &str) -> Result<Url, Box<dyn Error>> {
-    let hub = utils::encode_uri_component(consts::SIGNALR_HUB);
-    let encoded_token = utils::encode_uri_component(token);
-
-    Ok(Url::parse_with_params(
-        &format!("wss://{}/connect", consts::F1_BASE_URL),
-        &[
-            ("clientProtocol", "1.5"),
-            ("transport", "webSockets"),
-            ("connectionToken", &encoded_token),
-            ("connectionData", &hub),
-        ],
-    )?)
 }
 
 fn env_url() -> Option<Url> {
