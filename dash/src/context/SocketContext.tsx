@@ -46,10 +46,12 @@ export function SocketProvider({ children }: { children: ReactNode }) {
 	const positionEngine = useStateEngine<Positions>("position");
 
 	const handleInitial = (message: State) => {
+		stateEngine.setState(message);
 		liveStateRef.current = message;
 
 		if (message.carDataZ) {
 			const carData = inflate<CarData>(message.carDataZ);
+			carDataEngine.setState(carData.Entries[0].Cars);
 			carDataEngine.addFramesWithTimestamp(
 				carData.Entries.map((e) => ({ data: e.Cars, timestamp: utc(e.Utc).local().milliseconds() })),
 			);
@@ -57,6 +59,7 @@ export function SocketProvider({ children }: { children: ReactNode }) {
 
 		if (message.positionZ) {
 			const position = inflate<Position>(message.positionZ);
+			positionEngine.setState(position.Position[0].Entries);
 			positionEngine.addFramesWithTimestamp(
 				position.Position.map((p) => ({ data: p.Entries, timestamp: utc(p.Timestamp).local().milliseconds() })),
 			);

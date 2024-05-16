@@ -64,6 +64,7 @@ export const useStateEngine = <T>(name?: string) => {
 
 	return {
 		state,
+		setState,
 		addFrame,
 		addFramesWithTimestamp,
 		setDelay,

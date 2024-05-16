@@ -48,11 +48,13 @@ const SubLayout = ({ children }: Props) => {
 
 		sse.addEventListener("initial", (message) => {
 			const decompressed = inflate<State>(message.data);
+			console.log({ decompressed, message });
 			handleInitial(decompressed);
 		});
 
 		sse.onmessage = (message) => {
 			const decompressed = inflate<MessageData>(message.data);
+			console.log({ decompressed, message });
 			handleMessage(decompressed);
 		};
 
