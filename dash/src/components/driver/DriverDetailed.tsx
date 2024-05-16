@@ -1,17 +1,15 @@
 "use client";
 
 import { motion } from "framer-motion";
-import clsx from "clsx";
 
 import DriverHistoryTires from "@/components/driver/DriverHistoryTires";
 import Graph from "@/components/Graph";
 
 import { TimingAppDataDriver, TimingDataDriver } from "@/types/state.type";
-import { History } from "@/types/history.type";
 
 type Props = {
 	racingNumber: string;
-	history: History | undefined;
+	history: any | undefined;
 	timingDriver: TimingDataDriver | undefined;
 	appTimingDriver: TimingAppDataDriver;
 };

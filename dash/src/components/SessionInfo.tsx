@@ -28,15 +28,13 @@ const sessionPartPrefix = (name: string) => {
 export default function SessionInfo({ session, clock, timingData }: Props) {
 	const { delay } = useSocket();
 
-	const delayCurrent = delay.current;
-
 	const timeRemaining =
 		!!clock && !!clock.remaining
 			? clock.extrapolating
 				? utc(
 						duration(clock.remaining)
 							.subtract(utc().diff(utc(clock.utc)))
-							.asMilliseconds() + (delayCurrent ? delayCurrent * 1000 : 0),
+							.asMilliseconds() + (delay ? delay * 1000 : 0),
 					).format("HH:mm:ss")
 				: clock.remaining
 			: undefined;

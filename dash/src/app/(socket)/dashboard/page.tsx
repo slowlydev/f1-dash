@@ -60,7 +60,6 @@ export default function Page() {
 							driversTimingStats={state?.timingStats}
 							driversAppTiming={state?.timingAppData}
 							carsData={carsData}
-							history={undefined}
 						/>
 					</div>
 
