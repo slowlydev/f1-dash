@@ -5,6 +5,6 @@ create table if not exists state(
 
 create index on state (time);
 
-select create_hypertable('state', by_range('time'));
+select create_hypertable('state', 'time');
 
 select add_retention_policy('state', INTERVAL '4 hours');
