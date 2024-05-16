@@ -1,4 +1,4 @@
-use serde_json::{Map, Value};
+use serde_json::Value;
 
 pub fn merge(base: &mut Value, update: Value) {
     match (base, update) {
@@ -18,16 +18,5 @@ pub fn merge(base: &mut Value, update: Value) {
             }
         }
         (a, b) => *a = b,
-    }
-}
-
-pub fn category_merge(base: &mut Value, update: Map<String, Value>) {
-    match base {
-        Value::Object(ref mut prev) => {
-            for (k, v) in update {
-                merge(prev.entry(k).or_insert(Value::Null), v);
-            }
-        }
-        _ => merge(base, Value::Object(update)),
     }
 }

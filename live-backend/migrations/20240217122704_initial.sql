@@ -1,10 +1,10 @@
-CREATE TABLE IF NOT EXISTS updates(
-    id serial,
-    category text NOT NULL,
-    state json NOT NULL,
-    created_at timestamptz NOT NULL DEFAULT now()
+create table if not exists state(
+    time timestamptz not null,
+    state jsonb NOT NULL
 );
 
-CREATE INDEX ON updates(category, created_at);
+create index on state (time);
 
--- TODO write indexes for gap leader, gap ahead, laptime, sector times, weather
+select create_hypertable('state', by_range('time'));
+
+select add_retention_policy('state', INTERVAL '4 hours');

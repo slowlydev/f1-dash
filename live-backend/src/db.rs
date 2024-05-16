@@ -1,7 +1,9 @@
+use std::error::Error;
+
 use sqlx::PgPool;
 use tracing::info;
 
-pub async fn init() -> anyhow::Result<PgPool> {
+pub async fn init() -> Result<PgPool, Box<dyn Error>> {
     info!("starting...");
 
     let database_url = std::env::var("DATABASE_URL")?;

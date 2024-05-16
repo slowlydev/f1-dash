@@ -1,149 +1,234 @@
-use futures::SinkExt;
-use serde::{Deserialize, Serialize};
-use serde_json::{json, Value};
+use std::{env, error::Error, mem, thread, time::Duration};
 
-use tokio::net::TcpStream;
+use axum::http::HeaderValue;
+use futures::SinkExt;
+use reqwest::{header, Url};
+use serde_json::Value;
+
+use tokio::{sync::broadcast::Sender, time::sleep};
+use tokio_stream::StreamExt;
 use tokio_tungstenite::{
-    connect_async,
     tungstenite::{client::IntoClientRequest, http::Request, Message},
     MaybeTlsStream, WebSocketStream,
 };
-use tracing::{debug, info};
+use tracing::{debug, error, info, trace};
 
-const F1_BASE_URL: &str = "livetiming.formula1.com/signalr";
+use crate::{
+    data::{compression, merge::merge, transformer},
+    server::live::LiveEvent,
+    LiveState,
+};
 
-pub mod manager;
-pub mod parser;
+mod consts;
+mod message;
+mod utils;
 
-#[derive(Serialize, Deserialize)]
-#[serde(rename_all = "PascalCase")]
-pub struct NegotiateResult {
-    url: String,
-    connection_token: String,
-    connection_id: String,
-    keep_alive_timeout: f32,
-    disconnect_timeout: f32,
-    connection_timeout: f32,
-    try_web_sockets: bool,
-    protocol_version: String,
-    transport_connect_timeout: f32,
-    long_poll_delay: f32,
-}
+type Stream = WebSocketStream<MaybeTlsStream<tokio::net::TcpStream>>;
 
-pub struct Client {
-    pub socket: WebSocketStream<MaybeTlsStream<TcpStream>>,
-}
+pub fn spawn_init(tx: Sender<LiveEvent>, state: LiveState) {
+    thread::spawn(move || {
+        let rt = tokio::runtime::Runtime::new().unwrap();
 
-impl Client {
-    pub async fn new() -> Result<Client, anyhow::Error> {
-        debug!("creating new client");
+        rt.block_on(async {
+            loop {
+                if tx.receiver_count() < 2 {
+                    debug!("no connections yet, retrying in 5 seconds");
+                    sleep(Duration::from_secs(5)).await;
+                    continue;
+                }
 
-        let (cookie, token) = negotiate().await?;
-        let req = create_request(&cookie, &token)?;
-        let (socket, _) = connect_async(req).await?;
+                info!("starting client...");
 
-        let mut client = Client { socket };
-        client.subscribe().await?;
-        Ok(client)
-    }
+                let stream = init().await;
 
-    async fn subscribe(&mut self) -> anyhow::Result<()> {
-        debug!("subscribing to socket");
+                let Ok(stream) = stream else {
+                    error!("client setup failed, restarting in 5 seconds");
+                    sleep(Duration::from_secs(5)).await;
+                    continue;
+                };
 
-        let request: Value = json!({
-            "H": "Streaming",
-            "M": "Subscribe",
-            "A": [[
-                "Heartbeat",
-                "CarData.z",
-                "Position.z",
-                "ExtrapolatedClock",
-                "TopThree",
-                "RcmSeries",
-                "TimingStats",
-                "TimingAppData",
-                "WeatherData",
-                "TrackStatus",
-                "DriverList",
-                "RaceControlMessages",
-                "SessionInfo",
-                "SessionData",
-                "LapCount",
-                "TimingData",
-                "TeamRadio",
-                "PitLaneTimeCollection"
-            ]],
-            "I": 1,
+                handle_stream(tx.clone(), stream, state.clone()).await;
+
+                info!("client stopped, restarting in 5 seconds");
+
+                sleep(Duration::from_secs(5)).await;
+            }
         });
-
-        self.socket.send(Message::Text(request.to_string())).await?;
-
-        Ok(())
-    }
+    });
 }
 
-async fn negotiate() -> Result<(String, String), anyhow::Error> {
-    let hub = create_hub();
-    let url = format!("https://{F1_BASE_URL}/negotiate?connectionData={hub}&clientProtocol=1.5");
-    let res = reqwest::get(url).await?;
+pub async fn handle_stream(tx: Sender<LiveEvent>, mut stream: Stream, state: LiveState) {
+    while let Some(Ok(msg)) = stream.next().await {
+        match msg {
+            Message::Text(txt) => {
+                let message = message::parse(txt);
 
-    let cookie = get_header_key(res.headers(), "set-cookie");
-    let token = serde_json::from_str::<NegotiateResult>(&res.text().await?)?;
+                // todo detect if session name changed if so, kill the while let loop
 
-    Ok((cookie, token.connection_token))
-}
+                let Some(message) = message else {
+                    debug!("message was empty");
+                    continue;
+                };
 
-fn create_hub() -> String {
-    let json: &Value = &json!([{ "name": "Streaming" }]);
-    encode_uri_component(&json.to_string())
-}
+                match message {
+                    message::Message::Updates(mut updates) => {
+                        debug!("recived update");
 
-fn get_header_key(header: &reqwest::header::HeaderMap, key: &str) -> String {
-    header.get(key).unwrap().to_str().unwrap().to_owned()
-}
+                        let mut state = state.lock().unwrap();
 
-fn encode_uri_component(s: &str) -> String {
-    let mut encoded: String = String::new();
-    for ch in s.chars() {
-        match ch {
-            '-' | '_' | '.' | '!' | '~' | '*' | '\'' | '(' | ')' => {
-                encoded.push(ch);
-            }
-            '0'..='9' | 'a'..='z' | 'A'..='Z' => {
-                encoded.push(ch);
-            }
-            _ => {
-                for b in ch.to_string().as_bytes() {
-                    encoded.push_str(format!("%{:X}", b).as_str());
+                        for update in updates.iter_mut() {
+                            let update = transformer::transform_map(update);
+
+                            if let Some(new_session_name) = update.pointer("sessionInfo/name") {
+                                let current_session_name = state
+                                    .pointer("sessionInfo/name")
+                                    .expect("we always should have a session name");
+
+                                if new_session_name != current_session_name {
+                                    info!("session name changed, restarting client");
+                                    return;
+                                }
+                            }
+
+                            let Some(update_compressed) = compression::deflate(update.to_string())
+                            else {
+                                error!("failed compressing update");
+                                continue;
+                            };
+
+                            trace!("update compressed='{}'", update_compressed);
+
+                            match tx.send(LiveEvent::Update(update_compressed)) {
+                                Ok(_) => debug!("update sent"),
+                                Err(e) => {
+                                    error!("failed sending update: {}", e)
+                                }
+                            };
+
+                            merge(&mut state, update)
+                        }
+
+                        mem::drop(state);
+                    }
+                    message::Message::Initial(mut initial) => {
+                        debug!("recived initial");
+
+                        transformer::transform(&mut initial);
+
+                        // check if this unwrap needs to be handled
+                        let mut state = state.lock().unwrap();
+                        *state = initial.clone();
+                        mem::drop(state);
+
+                        let Some(initial) = compression::deflate(initial.to_string()) else {
+                            error!("failed compressing update");
+                            continue;
+                        };
+
+                        trace!("initial compressed='{}'", initial);
+
+                        match tx.send(LiveEvent::Initial(initial)) {
+                            Ok(_) => debug!("initial sent"),
+                            Err(e) => {
+                                error!("failed sending initial: {}", e)
+                            }
+                        };
+                    }
                 }
             }
+            Message::Close(_) => break,
+            _ => {}
+        };
+    }
+}
+
+pub async fn init() -> Result<Stream, Box<dyn Error>> {
+    let req = create_request().await?;
+
+    let (mut socket, _) = tokio_tungstenite::connect_async(req).await?;
+
+    socket
+        .send(Message::text(consts::SIGNALR_SUBSCRIBE))
+        .await?;
+
+    Ok(socket)
+}
+
+async fn create_request() -> Result<Request<()>, Box<dyn Error>> {
+    match env_url() {
+        Some(url) => Ok(url.into_client_request()?),
+        None => {
+            let negotiation = negotiate().await?;
+            let url = create_url(&negotiation.token)?;
+
+            let mut req: Request<()> = url.into_client_request()?;
+
+            let headers = req.headers_mut();
+            headers.insert(
+                header::USER_AGENT, // asd
+                HeaderValue::from_static("BestHTTP"),
+            );
+            headers.insert(
+                header::ACCEPT_ENCODING,
+                HeaderValue::from_static("gzip,identity"),
+            );
+            headers.insert(
+                header::COOKIE, //asd
+                negotiation.cookie.parse().unwrap(),
+            );
+
+            Ok(req)
         }
     }
-    encoded
 }
 
-fn create_url(token: &str) -> String {
-    if let Some(env_url) = std::env::var_os("WS_URL") {
-        if let Ok(env_url) = env_url.into_string() {
-            info!("using env for F1 URL {env_url}");
-            return env_url;
-        };
-    };
-
-    let hub: String = create_hub();
-    let encoded_token: String = encode_uri_component(token);
-
-    format!("wss://{F1_BASE_URL}/connect?clientProtocol=1.5&transport=webSockets&connectionToken={encoded_token}&connectionData={hub}")
+struct Negotiaion {
+    token: String,
+    cookie: String,
 }
 
-fn create_request(cookie: &str, token: &str) -> Result<Request<()>, anyhow::Error> {
-    let url = create_url(&token);
-    let mut req: Request<()> = url.into_client_request()?;
+async fn negotiate() -> Result<Negotiaion, Box<dyn Error>> {
+    let url = format!(
+        "https://{}/negotiate?connectionData={}&clientProtocol=1.5",
+        consts::F1_BASE_URL,
+        utils::encode_uri_component(consts::SIGNALR_HUB)
+    );
 
-    let headers = req.headers_mut();
-    headers.insert("User-Agent", "BestHTTP".parse().unwrap());
-    headers.insert("Accept-Encoding", "gzip,identity".parse().unwrap());
-    headers.insert("Cookie", cookie.parse().unwrap());
+    let res = reqwest::get(url).await?;
 
-    Ok(req)
+    // TODO refactor this
+    let headers = res.headers().clone();
+    let body = res.text().await?;
+    let json = serde_json::from_str::<Value>(&body)?;
+
+    Ok(Negotiaion {
+        token: json["ConnectionToken"]
+            .as_str()
+            .unwrap_or_default()
+            .to_string(),
+        cookie: headers[header::SET_COOKIE]
+            .to_str()
+            .unwrap_or_default()
+            .to_string(),
+    })
+}
+
+fn create_url(token: &str) -> Result<Url, Box<dyn Error>> {
+    let hub = utils::encode_uri_component(consts::SIGNALR_HUB);
+    let encoded_token = utils::encode_uri_component(token);
+
+    Ok(Url::parse_with_params(
+        &format!("wss://{}/connect", consts::F1_BASE_URL),
+        &[
+            ("clientProtocol", "1.5"),
+            ("transport", "webSockets"),
+            ("connectionToken", &encoded_token),
+            ("connectionData", &hub),
+        ],
+    )?)
+}
+
+fn env_url() -> Option<Url> {
+    let env_url = env::var_os("WS_URL")?.into_string().ok()?;
+    Some(Url::parse(&env_url).ok()?)
 }

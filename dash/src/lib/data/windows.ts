@@ -26,19 +26,19 @@ export const windows: Window[] = [
 		label: "Team Radios",
 	},
 	{
-		key: "lap-series",
-		label: "🚧 Lap Series",
-	},
-	{
-		key: "tire-pace",
-		label: "🚧 Tire Pace Comparison",
-	},
-	{
-		key: "head-to-head",
-		label: "🚧 Head-to-Head",
-	},
-	{
 		key: "track-limits",
 		label: "Track Limits Tracker",
 	},
+	// {
+	// 	key: "lap-series",
+	// 	label: "🚧 Lap Series",
+	// },
+	// {
+	// 	key: "tire-pace",
+	// 	label: "🚧 Tire Pace Comparison",
+	// },
+	// {
+	// 	key: "head-to-head",
+	// 	label: "🚧 Head-to-Head",
+	// },
 ];

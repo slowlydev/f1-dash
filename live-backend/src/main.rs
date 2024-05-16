@@ -1,79 +1,39 @@
-use tokio::sync::mpsc::{self};
+use std::sync::{Arc, Mutex};
 
-mod broadcast;
-pub mod messages;
-pub mod data {
-    pub mod odctrl;
-    pub mod rdctrl;
-}
+use serde_json::{json, Value};
+use tokio::sync::broadcast;
+
 mod client;
 mod db;
 mod env;
+mod keeper;
 mod log;
 mod server;
+mod data {
+    pub mod compression;
+    pub mod merge;
+    pub mod transformer;
+}
 
-use broadcast::Event;
-use client::manager::ClientManagerEvent;
-use client::parser::ParsedMessage;
-use data::odctrl::Request;
+type LiveState = Arc<Mutex<Value>>;
 
-#[tokio::main(flavor = "multi_thread", worker_threads = 20)]
+#[tokio::main]
 async fn main() {
     env::init();
     log::init();
 
-    let db = db::init().await.expect("db setup failed");
+    let db = db::init().await.expect("failed to setup db");
 
-    /*
-        manage f1 client connection,
-        restarts on close,
-        closes on no clients
-    */
-    let (manager_tx, manager_rx) = mpsc::channel::<ClientManagerEvent>(10);
-    let (client_tx, client_rx) = mpsc::channel::<ParsedMessage>(10);
-    tokio::spawn(client::manager::init(
-        manager_rx,
-        manager_tx.clone(),
-        client_tx,
-    ));
+    let (tx, _rx) = broadcast::channel::<server::live::LiveEvent>(10);
+    let state = Arc::new(Mutex::new(json!({})));
 
-    let (broadcast_tx, broadcast_rx) = mpsc::channel::<Event>(10);
+    client::spawn_init(tx.clone(), state.clone());
 
-    /*
-        handles requests for older updates,
-        handles reconstruction of initial states for the frontend
-    */
-    let (odctrl_tx, odctrl_rx) = mpsc::channel::<Request>(10);
-    tokio::spawn(data::odctrl::init(
-        db.clone(),
-        odctrl_rx,
-        broadcast_tx.clone(),
-    ));
+    keeper::spawn_init(db.clone(), state.clone());
 
-    /*
-        split R,
-        transform updates,
-        handle DB inserts,
-        create history out of updates
-    */
-    tokio::spawn(data::rdctrl::init(
-        db.clone(),
-        client_rx,
-        broadcast_tx.clone(),
-    ));
-
-    /*
-        handles all outgoing messages.
-        requests older data from odctrl when requested
-    */
-    tokio::spawn(broadcast::init(broadcast_rx, manager_tx, odctrl_tx));
-
-    /*
-        start ws server,
-        listen to messages,
-        send messages
-    */
-    server::listen(broadcast_tx.clone()).await;
+    server::init(db.clone(), tx.clone(), state)
+        .await
+        .expect("http server setup failed");
 
     db.close().await;
 }

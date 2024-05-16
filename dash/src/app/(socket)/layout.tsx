@@ -1,23 +1,24 @@
 "use client";
 
 import { ReactNode, useEffect, useState } from "react";
+import { clsx } from "clsx";
 
 import { env } from "@/env.mjs";
 
+import { inflate } from "@/lib/inflate";
+
+import { MessageData } from "@/types/message.type";
+import { State } from "@/types/state.type";
+
 import { SocketProvider, useSocket } from "@/context/SocketContext";
-// import { WalkthroughProvider } from "@/context/WalkthroughContext";
 import { ModeProvider, useMode } from "@/context/ModeContext";
-
-import { messageIsInitial, messageIsUpdate } from "@/lib/messageHelpers";
-
-import { type Message } from "@/types/message.type";
+import { WindowsProvider } from "@/context/WindowsContext";
 
 import Menubar from "@/components/Menubar";
 import DelayInput from "@/components/DelayInput";
 import PlayControls from "@/components/PlayControls";
-import SegmentedControls from "@/components/SegmentedControls";
 import StreamStatus from "@/components/StreamStatus";
-import { clsx } from "clsx";
+import SegmentedControls from "@/components/SegmentedControls";
 
 type Props = {
 	children: ReactNode;
@@ -27,41 +28,35 @@ export default function SocketLayout({ children }: Props) {
 	return (
 		<SocketProvider>
 			<ModeProvider>
-				{/* no walkthrough for now... */}
-				<SubLayout>{children}</SubLayout>
+				<WindowsProvider>
+					<SubLayout>{children}</SubLayout>
+				</WindowsProvider>
 			</ModeProvider>
 		</SocketProvider>
 	);
 }
 
 const SubLayout = ({ children }: Props) => {
-	const { setConnected, updateState, ws, setInitial, delay, maxDelay, playing } = useSocket();
+	const { handleMessage, handleInitial, setConnected, setDelay, delay, maxDelay, pause, resume } = useSocket();
 	const { mode, setMode } = useMode();
 
 	useEffect(() => {
-		const socket = new WebSocket(`${env.NEXT_PUBLIC_LIVE_SOCKET_URL}`);
+		const sse = new EventSource(`${env.NEXT_PUBLIC_LIVE_SOCKET_URL}/api/sse`);
 
-		socket.onerror = () => setConnected(false);
-		socket.onopen = () => setConnected(true);
+		sse.onerror = () => setConnected(false);
+		sse.onopen = () => setConnected(true);
 
-		socket.onmessage = (event) => {
-			if (typeof event.data != "string") return;
-			const message: Message = JSON.parse(event.data);
+		sse.addEventListener("initial", (message) => {
+			const decompressed = inflate<State>(message.data);
+			handleInitial(decompressed);
+		});
 
-			if (Object.keys(message).length === 0) return;
-
-			if (messageIsUpdate(message)) {
-				updateState(message);
-			}
-
-			if (messageIsInitial(message)) {
-				setInitial(message);
-			}
+		sse.onmessage = (message) => {
+			const decompressed = inflate<MessageData>(message.data);
+			handleMessage(decompressed);
 		};
 
-		ws.current = socket;
-
-		return () => socket.close();
+		return () => sse.close();
 	}, []);
 
 	const [pausedTime, setPausedTime] = useState<number>(0);
@@ -71,30 +66,30 @@ const SubLayout = ({ children }: Props) => {
 		setPlayback((old) => {
 			if (old) {
 				setPausedTime(Date.now());
+				pause();
 			} else {
-				setDelay(Math.round((Date.now() - pausedTime) / 1000) + delay.current);
+				setDelay(Math.round((Date.now() - pausedTime) / 1000) + delay);
+				resume();
 			}
-
-			playing.current = !playing.current;
 
 			return !old;
 		});
 	};
 
-	const setDelay = (newDelay: number) => {
+	const setDelayProxy = (newDelay: number) => {
 		if (newDelay === 0) {
-			playing.current = true;
+			resume();
 			setPausedTime(0);
 		}
 
-		delay.current = newDelay;
+		setDelay(newDelay);
 
 		if (typeof window != undefined) {
 			localStorage.setItem("delay", `${newDelay}`);
 		}
 	};
 
-	const syncing = maxDelay < delay.current;
+	const syncing = maxDelay < delay;
 
 	return (
 		<div className="w-full">
@@ -103,15 +98,14 @@ const SubLayout = ({ children }: Props) => {
 
 				<div className="flex items-center gap-2 sm:hidden">
 					{/* <Timeline setTime={setTime} time={time} playing={delay.current > 0} maxDelay={maxDelay} /> */}
-					<DelayInput className="flex md:hidden" delay={delay.current} setDebouncedDelay={setDelay} />
+					<DelayInput className="flex md:hidden" delay={delay} setDebouncedDelay={setDelayProxy} />
 					<PlayControls className="flex md:hidden" playing={playback} onClick={() => togglePlayback()} />
-					<StreamStatus live={delay.current == 0} />
+					<StreamStatus live={delay == 0} />
 				</div>
 
 				<div className="flex flex-row-reverse flex-wrap-reverse items-center gap-1">
 					<SegmentedControls
 						className="w-full md:w-auto"
-						id="walkthrough-mode"
 						selected={mode}
 						onSelect={setMode}
 						options={[
@@ -121,7 +115,7 @@ const SubLayout = ({ children }: Props) => {
 							{ label: "Custom", value: "custom" },
 						]}
 					/>
-					<DelayInput className="hidden md:flex" delay={delay.current} setDebouncedDelay={setDelay} />
+					<DelayInput className="hidden md:flex" delay={delay} setDebouncedDelay={setDelay} />
 					<PlayControls className="hidden md:flex" playing={playback} onClick={() => togglePlayback()} />
 				</div>
 			</div>
@@ -129,7 +123,7 @@ const SubLayout = ({ children }: Props) => {
 			{syncing && (
 				<div className="flex w-full flex-col items-center justify-center">
 					<h1 className="my-20 text-center text-5xl font-bold">Syncing...</h1>
-					<p>Please wait for {delay.current - maxDelay} seconds.</p>
+					<p>Please wait for {delay - maxDelay} seconds.</p>
 					<p>Or make your delay smaller.</p>
 				</div>
 			)}

@@ -1,5 +1,4 @@
 import { AnimatePresence, LayoutGroup } from "framer-motion";
-import { utc } from "moment";
 import clsx from "clsx";
 
 import { sortPos } from "@/lib/sorting/sortPos";
@@ -7,8 +6,7 @@ import { objectEntries } from "@/lib/driverHelper";
 
 import { useMode } from "@/context/ModeContext";
 
-import { CarData, DriverList, TimingAppData, TimingData, TimingStats } from "@/types/state.type";
-import { History } from "@/types/history.type";
+import { CarsData, DriverList, TimingAppData, TimingData, TimingStats } from "@/types/state.type";
 
 import Driver from "@/components/driver/Driver";
 
@@ -17,21 +15,11 @@ type Props = {
 	driversTiming: TimingData | undefined;
 	driversTimingStats: TimingStats | undefined;
 	driversAppTiming: TimingAppData | undefined;
-	carData: CarData | null;
-	history: History | undefined;
+	carsData: CarsData | null;
 };
 
-export default function LeaderBoard({
-	drivers,
-	driversTiming,
-	driversTimingStats,
-	driversAppTiming,
-	carData,
-	history,
-}: Props) {
+export default function LeaderBoard({ drivers, driversTiming, driversTimingStats, driversAppTiming, carsData }: Props) {
 	const { uiElements } = useMode();
-
-	const currentEntry = carData ? carData.Entries.find((e) => utc(e.Utc).milliseconds() < Date.now())?.Cars : undefined;
 
 	return (
 		<div className="flex w-fit flex-col divide-y divide-zinc-800">
@@ -53,8 +41,7 @@ export default function LeaderBoard({
 									timingStatsDriver={driversTimingStats?.lines[timingDriver.racingNumber]}
 									position={index + 1}
 									sessionPart={driversTiming.sessionPart}
-									carData={currentEntry ? currentEntry[timingDriver.racingNumber].Channels : undefined}
-									history={history}
+									carData={carsData ? carsData[timingDriver.racingNumber].Channels : undefined}
 								/>
 							))}
 					</AnimatePresence>

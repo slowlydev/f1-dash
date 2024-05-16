@@ -1,191 +1,112 @@
 "use client";
 
-import {
-	type Dispatch,
-	type ReactNode,
-	type SetStateAction,
-	type MutableRefObject,
-	createContext,
-	useState,
-	useContext,
-	useRef,
-	useEffect,
-} from "react";
+import { type Dispatch, type ReactNode, type SetStateAction, createContext, useState, useContext, useRef } from "react";
+import { utc } from "moment";
 
-import { InitialMessage, UpdateMessage } from "@/types/message.type";
-import { CarData, Position, State } from "@/types/state.type";
-import { WindowMessage } from "@/types/window-message.type";
-import { History } from "@/types/history.type";
-
-import { createHistoryUpdate, updateHistory } from "@/lib/history";
-import { WindowKey } from "@/lib/data/windows";
-
-import { inflate } from "@/lib/inflate";
 import { merge } from "@/lib/merge";
+import { inflate } from "@/lib/inflate";
+
+import { useStateEngine } from "@/hooks/useStateEngine";
+
+import { CarData, CarsData, Position, Positions, State } from "@/types/state.type";
+import { MessageData } from "@/types/message.type";
+import { useDevMode } from "@/hooks/useDevMode";
 
 type Values = {
-	state: null | State;
-	history: null | History;
-
-	carData: null | CarData;
-	position: null | Position;
-
 	connected: boolean;
 	setConnected: Dispatch<SetStateAction<Values["connected"]>>;
 
-	updateState: (message: UpdateMessage) => void;
-	setInitial: (initialMessage: InitialMessage) => void;
+	handleMessage: (message: MessageData) => void;
+	handleInitial: (message: State) => void;
 
-	openSubWindow: (key: WindowKey) => void;
+	state: State | null;
+	carsData: CarsData | null;
+	positions: Positions | null;
 
-	ws: MutableRefObject<WebSocket | null>;
-	playing: MutableRefObject<boolean>;
-	delay: MutableRefObject<number>;
+	setDelay: (delay: number) => void;
+	delay: number;
 	maxDelay: number;
+
+	pause: () => void;
+	resume: () => void;
 };
 
 const SocketContext = createContext<Values | undefined>(undefined);
 
-type Frame = {
-	state: null | State;
-	history: null | History;
-
-	carData: null | CarData;
-	position: null | Position;
-
-	timestamp: number;
-};
-
 export function SocketProvider({ children }: { children: ReactNode }) {
 	const [connected, setConnected] = useState<boolean>(false);
+	const [delay, setDelayI] = useState<number>(0);
 
-	const bufferRef = useRef<Frame[]>([]);
+	const liveStateRef = useRef<null | State>(null);
 
-	const delay = useRef<number>(0);
-	const playing = useRef<boolean>(true);
-	const ws = useRef<WebSocket | null>(null);
+	const devMode = useDevMode();
 
-	const [maxDelay, setMaxDelay] = useState<number>(0);
-	const [state, setState] = useState<null | State>(null);
-	const [history, setHistory] = useState<null | History>(null);
-	const [carData, setCarData] = useState<null | CarData>(null);
-	const [position, setPosition] = useState<null | Position>(null);
+	const stateEngine = useStateEngine<State>("state");
+	const carDataEngine = useStateEngine<CarsData>("carData");
+	const positionEngine = useStateEngine<Positions>("position");
 
-	const stateRef = useRef<null | State>(null);
-	const historyRef = useRef<null | History>(null);
-	const carDataRef = useRef<null | CarData>(null);
-	const positionRef = useRef<null | Position>(null);
+	const handleInitial = (message: State) => {
+		liveStateRef.current = message;
 
-	const subWindowsRef = useRef<Window[]>([]);
-
-	const setInitial = (initialMessage: InitialMessage) => {
-		const initial = initialMessage.initial;
-		const history = initialMessage.history;
-		const carData = initial.carDataZ ? inflate<CarData>(initial.carDataZ) : null;
-		const position = initial.positionZ ? inflate<Position>(initial.positionZ) : null;
-
-		stateRef.current = initial;
-		historyRef.current = history;
-		carDataRef.current = carData;
-		positionRef.current = position;
-
-		addToBuffer(initial, carData, position, history);
-	};
-
-	const updateState = (message: UpdateMessage) => {
-		const state: State = merge(stateRef.current ?? {}, message.update);
-
-		const sessionPart = state.timingData?.sessionPart;
-		const history = updateHistory(historyRef.current ?? {}, createHistoryUpdate(message.update, sessionPart));
-		const carData = message.update.carDataZ ? inflate<CarData>(message.update.carDataZ) : null;
-		const position = message.update.positionZ ? inflate<Position>(message.update.positionZ) : null;
-
-		stateRef.current = state;
-		historyRef.current = history;
-		if (carData) carDataRef.current = carData;
-		if (position) positionRef.current = position;
-
-		addToBuffer(state, carData, position, history);
-	};
-
-	const addToBuffer = (
-		state: State | null,
-		carData: CarData | null,
-		position: Position | null,
-		history: History | null,
-	) => {
-		const newBuffer = [...bufferRef.current, { state, history, carData, position, timestamp: Date.now() }];
-		if (newBuffer.length > 1000) {
-			newBuffer.shift();
-		}
-		bufferRef.current = newBuffer;
-	};
-
-	const requestRef = useRef<number | null>(null);
-
-	const animateNextFrame = () => {
-		if (playing.current) {
-			const buffer = bufferRef.current;
-			const isRealtime = delay.current === 0;
-			const lastFrame = isRealtime
-				? buffer[buffer.length - 1]
-				: buffer.find((frame) => frame.timestamp > Date.now() - delay.current * 1000);
-
-			if (lastFrame) {
-				if (lastFrame.state) {
-					setState(lastFrame.state);
-					broadcastToWindows({ updateType: "state", state: lastFrame.state });
-				}
-				if (lastFrame.history) {
-					setHistory(lastFrame.history);
-					// we do not have to broadcast history yet, and lets save on compute for now
-				}
-				if (lastFrame.carData) {
-					setCarData(lastFrame.carData);
-					broadcastToWindows({ updateType: "car-data", carData: lastFrame.carData });
-				}
-				if (lastFrame.position) {
-					setPosition(lastFrame.position);
-					broadcastToWindows({ updateType: "position", position: lastFrame.position });
-				}
-			}
-
-			setMaxDelay(bufferRef.current.length > 0 ? Math.floor((Date.now() - bufferRef.current[0].timestamp) / 1000) : 0);
+		if (message.carDataZ) {
+			const carData = inflate<CarData>(message.carDataZ);
+			carDataEngine.addFramesWithTimestamp(
+				carData.Entries.map((e) => ({ data: e.Cars, timestamp: utc(e.Utc).local().milliseconds() })),
+			);
 		}
 
-		requestRef.current = requestAnimationFrame(animateNextFrame);
-	};
-
-	useEffect(() => {
-		if (typeof window != undefined) {
-			const localStorageDelay = localStorage.getItem("delay");
-			if (localStorageDelay) delay.current = parseInt(localStorageDelay);
-		}
-	}, []);
-
-	useEffect(() => {
-		requestRef.current = requestAnimationFrame(animateNextFrame);
-
-		return () => {
-			if (requestRef.current) {
-				cancelAnimationFrame(requestRef.current);
-			}
-
-			subWindowsRef.current.forEach((subWindow) => subWindow.close());
-		};
-	}, []);
-
-	const openSubWindow = (key: WindowKey) => {
-		let newSubWindow = window.open(`/window/${key}`, undefined, "popup=yes,left=100,top=100,width=320,height=320");
-
-		if (newSubWindow) {
-			subWindowsRef.current = [...subWindowsRef.current, newSubWindow];
+		if (message.positionZ) {
+			const position = inflate<Position>(message.positionZ);
+			positionEngine.addFramesWithTimestamp(
+				position.Position.map((p) => ({ data: p.Entries, timestamp: utc(p.Timestamp).local().milliseconds() })),
+			);
 		}
 	};
 
-	const broadcastToWindows = (message: WindowMessage) => {
-		subWindowsRef.current.forEach((subWindow) => subWindow.postMessage(message));
+	const handleMessage = (message: MessageData) => {
+		liveStateRef.current = merge(liveStateRef.current ?? {}, message);
+
+		if (liveStateRef.current) {
+			stateEngine.addFrame(liveStateRef.current);
+		}
+
+		if (message.carDataZ) {
+			const carData = inflate<CarData>(message.carDataZ);
+			carDataEngine.addFramesWithTimestamp(
+				carData.Entries.map((e) => ({ data: e.Cars, timestamp: utc(e.Utc).local().milliseconds() })),
+			);
+		}
+
+		if (message.positionZ) {
+			const position = inflate<Position>(message.positionZ);
+			positionEngine.addFramesWithTimestamp(
+				position.Position.map((p) => ({ data: p.Entries, timestamp: utc(p.Timestamp).local().milliseconds() })),
+			);
+		}
 	};
+
+	const setDelay = (delay: number) => {
+		setDelayI(delay);
+		stateEngine.setDelay(delay);
+		carDataEngine.setDelay(delay);
+		positionEngine.setDelay(delay);
+	};
+
+	const pause = () => {
+		stateEngine.pause();
+		carDataEngine.pause();
+		positionEngine.pause();
+	};
+
+	const resume = () => {
+		stateEngine.resume();
+		carDataEngine.resume();
+		positionEngine.resume();
+	};
+
+	// todo ? handle pausing
+
+	const maxDelay = Math.min(stateEngine.maxDelay, carDataEngine.maxDelay, positionEngine.maxDelay);
 
 	return (
 		<SocketContext.Provider
@@ -193,24 +114,32 @@ export function SocketProvider({ children }: { children: ReactNode }) {
 				connected,
 				setConnected,
 
-				state,
-				carData,
-				position,
-				history,
+				handleMessage,
+				handleInitial,
 
-				updateState,
-				setInitial,
+				state: stateEngine.state,
+				carsData: carDataEngine.state,
+				positions: positionEngine.state,
 
-				openSubWindow,
-
-				maxDelay,
+				setDelay,
 				delay,
+				maxDelay,
 
-				playing,
-
-				ws,
+				pause,
+				resume,
 			}}
 		>
+			{devMode.active && (
+				<div className="fixed right-5 top-5 z-50 rounded-lg bg-black p-2 text-sm">
+					<pre>Max Delay: {maxDelay}</pre>
+					<pre>Current Delay: {delay}</pre>
+
+					<pre>State Engine Buffer: {stateEngine.metrics.bufferLength}</pre>
+					<pre>CarData Engine Buffer: {carDataEngine.metrics.bufferLength}</pre>
+					<pre>Position Engine Buffer: {positionEngine.metrics.bufferLength}</pre>
+				</div>
+			)}
+
 			{children}
 		</SocketContext.Provider>
 	);

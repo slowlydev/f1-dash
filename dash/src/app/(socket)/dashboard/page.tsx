@@ -16,7 +16,7 @@ import Map from "@/components/Map";
 import LapCount from "@/components/LapCount";
 
 export default function Page() {
-	const { state, position, carData, history } = useSocket();
+	const { state, positions, carsData } = useSocket();
 
 	return (
 		<div className="flex w-full flex-col">
@@ -59,8 +59,8 @@ export default function Page() {
 							driversTiming={state?.timingData}
 							driversTimingStats={state?.timingStats}
 							driversAppTiming={state?.timingAppData}
-							carData={carData}
-							history={history ?? undefined}
+							carsData={carsData}
+							history={undefined}
 						/>
 					</div>
 
@@ -78,7 +78,7 @@ export default function Page() {
 						<div className="hidden w-full xl:block">
 							<Map
 								circuitKey={state?.sessionInfo?.meeting.circuit.key}
-								positionBatches={position}
+								positions={positions}
 								drivers={state?.driverList}
 								timingDrivers={state?.timingData}
 								trackStatus={state?.trackStatus}
@@ -126,7 +126,7 @@ export default function Page() {
 				<div className="xl:hidden">
 					<Map
 						circuitKey={state?.sessionInfo?.meeting.circuit.key}
-						positionBatches={position}
+						positions={positions}
 						drivers={state?.driverList}
 						timingDrivers={state?.timingData}
 						trackStatus={state?.trackStatus}

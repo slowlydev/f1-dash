@@ -1,5 +1,4 @@
 import { AnimatePresence } from "framer-motion";
-import { utc } from "moment";
 import clsx from "clsx";
 
 import { sortUtc } from "@/lib/sorting/sortUtc";

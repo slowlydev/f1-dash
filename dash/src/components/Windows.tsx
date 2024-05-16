@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 
-import { useSocket } from "@/context/SocketContext";
+import { useWindows } from "@/context/WindowsContext";
 
 import { windows } from "@/lib/data/windows";
 
@@ -11,7 +11,7 @@ import Modal from "@/components/Modal";
 import Button from "@/components/Button";
 
 export default function Windows() {
-	const { openSubWindow } = useSocket();
+	const { openWindow } = useWindows();
 
 	const [windowsModal, setWindowsModal] = useState<boolean>(false);
 
@@ -36,7 +36,7 @@ export default function Windows() {
 					<div className="grid grid-cols-4 gap-4">
 						{windows.map((windowOption, i) => (
 							<motion.button
-								onClick={() => openSubWindow(windowOption.key)}
+								onClick={() => openWindow(windowOption.key)}
 								whileHover={{ scale: 1.05 }}
 								whileFocus={{ scale: 1.05 }}
 								whileTap={{ scale: 0.95 }}

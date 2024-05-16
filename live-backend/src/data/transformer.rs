@@ -1,8 +1,6 @@
-use std::{collections::HashMap, mem};
+use std::mem;
 
 use serde_json::{Map, Value};
-
-use crate::client::parser::Update;
 
 fn to_camel_case(string: &str) -> String {
     heck::AsLowerCamelCase(string).to_string()
@@ -33,7 +31,7 @@ pub fn transform(value: &mut Value) {
     }
 }
 
-pub fn transform_map(map: &mut HashMap<String, Value>) -> Value {
+pub fn transform_map(map: &mut Map<String, Value>) -> Value {
     let mut camel_case_map = Map::new();
 
     for (key, value) in map.iter_mut() {
@@ -43,11 +41,4 @@ pub fn transform_map(map: &mut HashMap<String, Value>) -> Value {
     }
 
     Value::Object(camel_case_map)
-}
-
-pub fn transform_updates(map: &mut HashMap<String, Update>) {
-    for (_, update) in map.iter_mut() {
-        transform(&mut update.state);
-        update.category = to_camel_case(&update.category);
-    }
 }

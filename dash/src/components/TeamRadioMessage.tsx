@@ -18,7 +18,6 @@ export default function TeamRadioMessage({ driver, capture, basePath }: Props) {
 	const audioRef = useRef<HTMLAudioElement | null>(null);
 	const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-	const [state, setState] = useState<"idle" | "loading" | "loaded">("idle");
 	const [playing, setPlaying] = useState<boolean>(false);
 	const [duration, setDuration] = useState<number>(10);
 	const [progress, setProgress] = useState<number>(0);
@@ -28,15 +27,6 @@ export default function TeamRadioMessage({ driver, capture, basePath }: Props) {
 		setDuration(audioRef.current.duration);
 	};
 
-	const onLoaded = () => {
-		if (!audioRef.current) return;
-
-		setState("loaded");
-		setPlaying(true);
-		audioRef.current.play();
-		intervalRef.current = setInterval(updateProgress, 10);
-	};
-
 	const onEnded = () => {
 		setPlaying(false);
 		setProgress(0);
@@ -44,8 +34,6 @@ export default function TeamRadioMessage({ driver, capture, basePath }: Props) {
 		if (intervalRef.current) {
 			clearInterval(intervalRef.current);
 		}
-
-		setState("idle");
 	};
 
 	const updateProgress = () => {
@@ -54,22 +42,11 @@ export default function TeamRadioMessage({ driver, capture, basePath }: Props) {
 	};
 
 	const togglePlayback = () => {
-		if (state === "loading") {
-			setState("idle");
-			return;
-		}
-
-		if (state === "idle") {
-			setState("loading");
-			return;
-		}
-
 		setPlaying((old) => {
 			if (!audioRef.current) return old;
 
 			if (!old) {
 				audioRef.current.play();
-
 				intervalRef.current = setInterval(updateProgress, 10);
 			} else {
 				audioRef.current.pause();
@@ -78,10 +55,9 @@ export default function TeamRadioMessage({ driver, capture, basePath }: Props) {
 					clearInterval(intervalRef.current);
 				}
 
-				// remove audio tag and 'unload' after 10 seconds
 				setTimeout(() => {
-					setState("idle");
 					setProgress(0);
+					audioRef.current?.fastSeek(0);
 				}, 10000);
 			}
 
@@ -109,18 +85,16 @@ export default function TeamRadioMessage({ driver, capture, basePath }: Props) {
 				</div>
 
 				<div className="flex items-center gap-1">
-					<PlayControls playing={playing} onClick={togglePlayback} loading={state === "loading"} />
+					<PlayControls playing={playing} onClick={togglePlayback} />
 					<AudioProgress duration={duration} progress={progress} />
 
-					{(state === "loading" || state === "loaded") && (
-						<audio
-							src={`${basePath}${capture.path}`}
-							ref={audioRef}
-							onEnded={() => onEnded()}
-							onLoadedData={() => onLoaded()}
-							onLoadedMetadata={() => loadMeta()}
-						/>
-					)}
+					<audio
+						preload="none"
+						src={`${basePath}${capture.path}`}
+						ref={audioRef}
+						onEnded={() => onEnded()}
+						onLoadedMetadata={() => loadMeta()}
+					/>
 				</div>
 			</div>
 		</motion.li>

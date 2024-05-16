@@ -293,9 +293,12 @@ export type Position = {
 
 export type PositionItem = {
 	Timestamp: string;
-	Entries: {
-		[key: string]: PositionCar;
-	};
+	Entries: Positions;
+};
+
+export type Positions = {
+	// this is what we have at state
+	[key: string]: PositionCar;
 };
 
 export type PositionCar = {
@@ -311,10 +314,13 @@ export type CarData = {
 
 export type Entry = {
 	Utc: string;
-	Cars: {
-		[key: string]: {
-			Channels: CarDataChannels;
-		};
+	Cars: CarsData;
+};
+
+export type CarsData = {
+	// this is what we have at state
+	[key: string]: {
+		Channels: CarDataChannels;
 	};
 };
 

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { utc } from "moment";
 import clsx from "clsx";
 
-import { DriverList, Position, TimingData, TrackStatus, Message as RaceControlMessage } from "@/types/state.type";
+import { DriverList, TimingData, TrackStatus, Message as RaceControlMessage, Positions } from "@/types/state.type";
 
 import { objectEntries } from "@/lib/driverHelper";
 import { fetchMap } from "@/lib/fetchMap";
@@ -17,7 +17,7 @@ type Props = {
 	circuitKey: number | undefined;
 	drivers: DriverList | undefined;
 	timingDrivers: TimingData | undefined;
-	positionBatches: Position | null;
+	positions: Positions | null;
 
 	trackStatus: TrackStatus | undefined;
 	raceControlMessages: RaceControlMessage[] | undefined;
@@ -152,7 +152,7 @@ export default function Map({
 	timingDrivers,
 	trackStatus,
 	raceControlMessages,
-	positionBatches,
+	positions,
 }: Props) {
 	const [points, setPoints] = useState<null | { x: number; y: number }[]>(null);
 	const [sectors, setSectors] = useState<Sector[]>([]);
@@ -161,10 +161,6 @@ export default function Map({
 
 	const [[minX, minY, widthX, widthY], setBounds] = useState<(null | number)[]>([null, null, null, null]);
 	const [[centerX, centerY], setCenter] = useState<(null | number)[]>([null, null]);
-
-	const positions = positionBatches
-		? positionBatches.Position.sort((a, b) => utc(b.Timestamp).diff(utc(a.Timestamp)))[0].Entries
-		: null;
 
 	useEffect(() => {
 		(async () => {

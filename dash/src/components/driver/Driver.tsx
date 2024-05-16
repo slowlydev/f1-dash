@@ -1,12 +1,9 @@
 "use client";
 
 import clsx from "clsx";
-import { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 
 import { useMode } from "@/context/ModeContext";
-
-import { History } from "@/types/history.type";
 
 import {
 	Driver as DriverType,
@@ -23,7 +20,6 @@ import DriverTire from "./DriverTire";
 import DriverMiniSectors from "./DriverMiniSectors";
 import DriverLapTime from "./DriverLapTime";
 import DriverInfo from "./DriverInfo";
-import DriverDetailed from "./DriverDetailed";
 import DriverCarMetrics from "./DriverCarMetrics";
 
 type Props = {
@@ -34,7 +30,6 @@ type Props = {
 	timingStatsDriver: TimingStatsDriver | undefined;
 	appTimingDriver: TimingAppDataDriver | undefined;
 	carData: CarDataChannels | undefined;
-	history: History | undefined;
 };
 
 const hasDRS = (drs: number) => {
@@ -53,19 +48,18 @@ export default function Driver({
 	position,
 	sessionPart,
 	carData,
-	history,
 }: Props) {
 	const { uiElements } = useMode();
 
-	const [open, setOpen] = useState<boolean>(false);
+	// const [open, setOpen] = useState<boolean>(false);
 
 	const hasFastest = timingStatsDriver?.personalBestLapTime.position == 1;
 
 	return (
 		<motion.div
 			layout="position"
-			onClick={() => setOpen((old) => !old)}
-			className={clsx("flex cursor-pointer select-none flex-col gap-1 p-1.5", {
+			// onClick={() => setOpen((old) => !old)}
+			className={clsx("flex select-none flex-col gap-1 p-1.5", {
 				"opacity-50": timingDriver.knockedOut || timingDriver.retired || timingDriver.stopped,
 				"bg-violet-800 bg-opacity-30": hasFastest,
 				"bg-red-800 bg-opacity-30": sessionPart != undefined && inDangerZone(position, sessionPart),
@@ -100,7 +94,7 @@ export default function Driver({
 				{uiElements.carMetrics && carData && <DriverCarMetrics carData={carData} />}
 			</div>
 
-			<AnimatePresence>
+			{/* <AnimatePresence>
 				{open && appTimingDriver && (
 					<DriverDetailed
 						racingNumber={driver.racingNumber}
@@ -109,7 +103,7 @@ export default function Driver({
 						appTimingDriver={appTimingDriver}
 					/>
 				)}
-			</AnimatePresence>
+			</AnimatePresence> */}
 		</motion.div>
 	);
 }
