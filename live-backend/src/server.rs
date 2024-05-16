@@ -18,6 +18,10 @@ pub struct AppState {
     db: PgPool,
 }
 
+fn addr() -> String {
+    std::env::var("BACKEND_ADDRESS").unwrap_or("0.0.0.0:4000".to_string())
+}
+
 pub async fn init(
     db: PgPool,
     tx: broadcast::Sender<live::LiveEvent>,
@@ -34,7 +38,7 @@ pub async fn init(
         .layer(cors)
         .with_state(app_state);
 
-    let listener = tokio::net::TcpListener::bind("127.0.0.1:4000")
+    let listener = tokio::net::TcpListener::bind(addr())
         .await
         .expect("failed to bind to port");
 
