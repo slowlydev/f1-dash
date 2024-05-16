@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "select state, created_at from updates where category = 'initial' and created_at < $1 order by created_at desc",
+  "query": "select state, time from state where time >= $1",
   "describe": {
     "columns": [
       {
@@ -10,7 +10,7 @@
       },
       {
         "ordinal": 1,
-        "name": "created_at",
+        "name": "time",
         "type_info": "Timestamptz"
       }
     ],
@@ -24,5 +24,5 @@
       false
     ]
   },
-  "hash": "dda66ea65ebf8950ea3361d1d1fd745a299f590b2339f5016b80ad6264203235"
+  "hash": "c9c9f2a299dda9ab9de33669dbeb781a5f5aa72afe67d0ead078284b166c98b7"
 }

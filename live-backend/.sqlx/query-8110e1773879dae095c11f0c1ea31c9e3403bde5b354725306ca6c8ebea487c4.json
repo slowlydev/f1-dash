@@ -1,0 +1,22 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select v::text from (\n            select state -> 'timingData' -> 'lines' -> $1 -> 'lastLapTime' ->> 'value' as v from state order by time desc\n        ) as sub where v is not null limit 20;\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "v",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text"
+      ]
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "8110e1773879dae095c11f0c1ea31c9e3403bde5b354725306ca6c8ebea487c4"
+}
