@@ -24,6 +24,8 @@ type Tx = UnboundedSender<Message>;
 type PeerMap = Arc<Mutex<HashMap<SocketAddr, Tx>>>;
 
 fn random_duration() -> Duration {
+    // Duration::from_millis(10)
+
     let mut durations = vec![
         Duration::from_millis(10),
         Duration::from_millis(50),

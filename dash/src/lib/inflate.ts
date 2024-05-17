@@ -1,8 +1,8 @@
-import { inflate } from "pako";
+import { inflateRaw } from "pako";
 
-export const decode = <T>(data: string): T => {
+export const inflate = <T>(data: string): T => {
 	return JSON.parse(
-		inflate(
+		inflateRaw(
 			Uint8Array.from(atob(data), (c) => c.charCodeAt(0)),
 			{ to: "string" },
 		),

@@ -1,37 +1,42 @@
-import { FormEvent, useState } from "react";
+"use client";
+
+import { clsx } from "clsx";
+import { useEffect, useState, type FormEvent } from "react";
 
 type Props = {
+	id?: string;
+	className?: string;
+	delay: number;
 	setDebouncedDelay: (delay: number) => void;
-	maxDelay: number;
 };
 
-export default function DelayInput({ setDebouncedDelay, maxDelay }: Props) {
-	const [delay, setDelay] = useState("");
+export default function DelayInput({ id, className, delay, setDebouncedDelay }: Props) {
+	const [delayI, setDelayI] = useState<string>("");
 
 	const updateDebounced = () => {
-		const nextDelay = delay ? parseInt(delay) : 0;
+		const nextDelay = delayI ? parseInt(delayI) : 0;
 		if (nextDelay < 0) return;
 		setDebouncedDelay(nextDelay);
 	};
 
-	const handleSubmit = (event: FormEvent) => {
+	const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 		updateDebounced();
 	};
 
-	return (
-		<div className="flex min-w-[5rem] gap-2 rounded-lg border-[1px] border-gray-500 bg-zinc-900 px-2 py-1 text-center font-mono">
-			<form onSubmit={handleSubmit} className="w-min">
-				<input
-					value={delay}
-					onChange={(e) => setDelay(e.target.value)}
-					onBlur={() => updateDebounced()}
-					placeholder="0s delay"
-					className="w-20 bg-zinc-900 !text-gray-500"
-				/>
-			</form>
+	useEffect(() => {
+		setDelayI(delay.toString());
+	}, [delay]);
 
-			<p className="text-gray-300">max {maxDelay}s</p>
-		</div>
+	return (
+		<form id={id} className={clsx("flex rounded-lg bg-zinc-800 p-2", className)} onSubmit={handleSubmit}>
+			<input
+				value={delayI}
+				onChange={(e) => setDelayI(e.target.value)}
+				onBlur={() => updateDebounced()}
+				placeholder="0s"
+				className="w-16 bg-zinc-800 text-center leading-none text-white placeholder-white"
+			/>
+		</form>
 	);
 }

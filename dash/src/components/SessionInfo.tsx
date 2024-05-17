@@ -2,19 +2,30 @@
 
 import { utc, duration } from "moment";
 
-import { ExtrapolatedClock } from "../types/extrapolated-clock.type";
-import { SessionInfo as SessionInfoType } from "../types/session.type";
+import Flag from "@/components/Flag";
 
-import Flag from "./Flag";
+import { useSocket } from "@/context/SocketContext";
 
-import { useSocket } from "../context/SocketContext";
+import { ExtrapolatedClock, SessionInfo as SessionInfoType, TimingData } from "@/types/state.type";
 
 type Props = {
 	session: SessionInfoType | undefined;
 	clock: ExtrapolatedClock | undefined;
+	timingData: TimingData | undefined;
 };
 
-export default function SessionInfo({ session, clock }: Props) {
+const sessionPartPrefix = (name: string) => {
+	switch (name) {
+		case "Sprint Qualifying":
+			return "SQ";
+		case "Qualifying":
+			return "Q";
+		default:
+			return "";
+	}
+};
+
+export default function SessionInfo({ session, clock, timingData }: Props) {
 	const { delay } = useSocket();
 
 	const timeRemaining =
@@ -24,28 +35,28 @@ export default function SessionInfo({ session, clock }: Props) {
 						duration(clock.remaining)
 							.subtract(utc().diff(utc(clock.utc)))
 							.asMilliseconds() + (delay ? delay * 1000 : 0),
-				  ).format("HH:mm:ss")
+					).format("HH:mm:ss")
 				: clock.remaining
 			: undefined;
 
 	return (
-		<div className="flex flex-auto items-center gap-3">
-			<Flag countryCode={session?.countryCode} />
+		<div className="flex items-center gap-2">
+			<Flag countryCode={session?.meeting.country.code} />
 
-			<div className="flex flex-grow flex-col justify-center">
+			<div className="flex flex-col justify-center">
 				{session ? (
-					<h1 className="truncate text-sm font-medium text-gray-500">
-						{session.name}: {session.typeName ?? "unknown"}
-						{!!session.number ? ` Q${session.number}` : ""}
+					<h1 className="truncate text-sm font-medium leading-none text-white">
+						{session.meeting.name}: {session.name ?? "Unknown"}
+						{timingData?.sessionPart ? ` ${sessionPartPrefix(session.name)}${timingData.sessionPart}` : ""}
 					</h1>
 				) : (
-					<div className="h-4 w-2/3 animate-pulse rounded-md bg-gray-700" />
+					<div className="h-4 w-[250px] animate-pulse rounded-md bg-zinc-800" />
 				)}
 
 				{timeRemaining !== undefined ? (
-					<p className="text-2xl font-extrabold">{timeRemaining}</p>
+					<p className="text-2xl font-extrabold leading-none">{timeRemaining}</p>
 				) : (
-					<div className="mt-1 h-6 w-2/5 animate-pulse rounded-md bg-gray-700 font-semibold" />
+					<div className="mt-1 h-6 w-[150px] animate-pulse rounded-md bg-zinc-800 font-semibold" />
 				)}
 			</div>
 		</div>

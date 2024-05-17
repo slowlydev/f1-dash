@@ -1,30 +1,24 @@
-import { Inter } from "next/font/google";
 import { type ReactNode } from "react";
-import { cookies } from "next/headers";
 import Script from "next/script";
 
 import "@/styles/globals.css";
 
 import { env } from "@/env.mjs";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+import { GeistMono } from "geist/font/mono";
+import { GeistSans } from "geist/font/sans";
 
 export { metadata } from "@/metadata";
 export { viewport } from "@/viewport";
 
-import InfoBanner from "@/components/InfoBanner";
-
 export default function RootLayout({ children }: { children: ReactNode }) {
-	const disableTracking = !!env.NEXT_PUBLIC_DISABLE_TRACKING;
-
-	const cookiesStore = cookies();
-	const showBanner = cookiesStore.get("v2-banner")?.value !== "hidden";
+	const enableTracking = !!env.NEXT_PUBLIC_ENABLE_TRACKING;
 
 	return (
-		<html lang="en" className={`${inter.variable} bg-zinc-900 font-sans text-white`}>
+		<html lang="en" className={`${GeistSans.variable} ${GeistMono.variable} bg-zinc-950 font-sans text-white`}>
 			<head />
 
-			{!disableTracking && (
+			{enableTracking && (
 				<Script
 					async
 					defer
@@ -33,11 +27,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 				/>
 			)}
 
-			<body>
-				{showBanner && <InfoBanner />}
-
-				<div className="p-3">{children}</div>
-			</body>
+			<body>{children}</body>
 		</html>
 	);
 }

@@ -1,25 +1,26 @@
 import { useEffect, useState } from "react";
-import { DriverPositionBatch } from "../types/positions.type";
-import { SessionInfo } from "../types/session.type";
 import { utc } from "moment";
 import clsx from "clsx";
 
-import { sortPos } from "../lib/sortPos";
-import { fetchMap } from "../lib/fetchMap";
+import { DriverList, TimingData, TrackStatus, Message as RaceControlMessage, Positions } from "@/types/state.type";
+
+import { objectEntries } from "@/lib/driverHelper";
+import { fetchMap } from "@/lib/fetchMap";
 import { MapType, TrackPosition } from "@/types/map.type";
-import {RaceControlMessageType} from "@/types/race-control-message.type";
-import {sortUtc} from "@/lib/sortUtc";
-import {TrackStatus} from "@/types/track-status.type";
-import {getTrackStatusMessage} from "@/lib/getTrackStatusMessage";
+import { sortUtc } from "@/lib/sorting/sortUtc";
+import { getTrackStatusMessage } from "@/lib/getTrackStatusMessage";
 
 // This is basically fearlessly copied from
 // https://github.com/tdjsnelling/monaco
 
 type Props = {
-	circuitKey: SessionInfo["circuitKey"] | undefined;
-	positionBatches: DriverPositionBatch[] | undefined;
+	circuitKey: number | undefined;
+	drivers: DriverList | undefined;
+	timingDrivers: TimingData | undefined;
+	positions: Positions | null;
+
 	trackStatus: TrackStatus | undefined;
-	raceControlMessages: RaceControlMessageType[] | undefined;
+	raceControlMessages: RaceControlMessage[] | undefined;
 };
 
 const space = 1000;
@@ -40,15 +41,15 @@ const rotate = (x: number, y: number, a: number, px: number, py: number) => {
 };
 
 type Sector = {
-	"number": number,
-	"start": TrackPosition,
-	"end": TrackPosition,
-	"points": TrackPosition[],
-}
+	number: number;
+	start: TrackPosition;
+	end: TrackPosition;
+	points: TrackPosition[];
+};
 
 const calculateDistance = (x1: number, y1: number, x2: number, y2: number) => {
 	return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
-}
+};
 
 const findMinDistance = (point: TrackPosition, points: TrackPosition[]) => {
 	let min = Infinity;
@@ -61,7 +62,7 @@ const findMinDistance = (point: TrackPosition, points: TrackPosition[]) => {
 		}
 	}
 	return minIndex;
-}
+};
 
 const createSectors = (map: MapType) => {
 	const sectors: Sector[] = [];
@@ -72,11 +73,11 @@ const createSectors = (map: MapType) => {
 			number: i + 1,
 			start: map.marshalSectors[i].trackPosition,
 			end: map.marshalSectors[i + 1] ? map.marshalSectors[i + 1].trackPosition : map.marshalSectors[0].trackPosition,
-			points: []
+			points: [],
 		});
 	}
 
-	let dividers: number[] = sectors.map(s => findMinDistance(s.start, points));
+	let dividers: number[] = sectors.map((s) => findMinDistance(s.start, points));
 	for (let i = 0; i < dividers.length; i++) {
 		let start = dividers[i];
 		let end = dividers[i + 1] ? dividers[i + 1] : dividers[0];
@@ -88,9 +89,9 @@ const createSectors = (map: MapType) => {
 	}
 
 	return sectors;
-}
+};
 
-const findYellowSectors = (messages: RaceControlMessageType[] | undefined): Set<number> => {
+const findYellowSectors = (messages: RaceControlMessage[] | undefined): Set<number> => {
 	const msgs = messages?.sort(sortUtc).filter((msg) => {
 		return msg.flag === "YELLOW" || msg.flag === "DOUBLE YELLOW" || msg.flag === "CLEAR";
 	});
@@ -123,15 +124,15 @@ const findYellowSectors = (messages: RaceControlMessageType[] | undefined): Set<
 		}
 	}
 	return sectors;
-}
+};
 
 type RenderedSector = {
-	number: number,
-	d: string,
-	color: string,
-	stroke_width: number,
-	pulse?: number,
-}
+	number: number;
+	d: string;
+	color: string;
+	stroke_width: number;
+	pulse?: number;
+};
 
 const priorizeColoredSectors = (a: RenderedSector, b: RenderedSector) => {
 	if (a.color === "stroke-white" && b.color !== "stroke-white") {
@@ -141,20 +142,25 @@ const priorizeColoredSectors = (a: RenderedSector, b: RenderedSector) => {
 		return 1;
 	}
 	return a.number - b.number;
-}
+};
 
 const rotationFIX = 90;
 
-export default function Map({ circuitKey, trackStatus, raceControlMessages, positionBatches }: Props) {
+export default function Map({
+	circuitKey,
+	drivers,
+	timingDrivers,
+	trackStatus,
+	raceControlMessages,
+	positions,
+}: Props) {
 	const [points, setPoints] = useState<null | { x: number; y: number }[]>(null);
 	const [sectors, setSectors] = useState<Sector[]>([]);
 
 	const [rotation, setRotation] = useState<number>(0);
-	const [ogPoints, setOgPoints] = useState<null | { x: number; y: number }[]>(null);
 
 	const [[minX, minY, widthX, widthY], setBounds] = useState<(null | number)[]>([null, null, null, null]);
-
-	const positions = positionBatches ? positionBatches.sort((a, b) => utc(b.utc).diff(utc(a.utc)))[0].positions : null;
+	const [[centerX, centerY], setCenter] = useState<(null | number)[]>([null, null]);
 
 	useEffect(() => {
 		(async () => {
@@ -176,7 +182,7 @@ export default function Map({ circuitKey, trackStatus, raceControlMessages, posi
 					end,
 					points,
 				};
-			})
+			});
 
 			const rotatedPoints = mapJson.x.map((x, index) => rotate(x, mapJson.y[index], fixedRotation, centerX, centerY));
 
@@ -188,17 +194,17 @@ export default function Map({ circuitKey, trackStatus, raceControlMessages, posi
 			const cWidthX = Math.max(...pointsX) - cMinX + space * 2;
 			const cWidthY = Math.max(...pointsY) - cMinY + space * 2;
 
+			setCenter([centerX, centerY]);
 			setBounds([cMinX, cMinY, cWidthX, cWidthY]);
 			setSectors(sectors);
 			setPoints(rotatedPoints);
 			setRotation(fixedRotation);
-			setOgPoints(mapJson.x.map((xItem, index) => ({ x: xItem, y: mapJson.y[index] })));
 		})();
 	}, [circuitKey]);
 
 	const [renderedSectors, setRenderedSectors] = useState<RenderedSector[]>([]);
 	useEffect(() => {
-		const status = getTrackStatusMessage(trackStatus?.status);
+		const status = getTrackStatusMessage(trackStatus?.status ? parseInt(trackStatus?.status) : undefined);
 		let color: (sector: Sector) => string;
 		if (status?.bySector) {
 			const yellowSectors = findYellowSectors(raceControlMessages);
@@ -208,33 +214,34 @@ export default function Map({ circuitKey, trackStatus, raceControlMessages, posi
 				} else {
 					return "stroke-white";
 				}
-			}
+			};
 		} else {
-			color = (_) => status?.trackColor || "stroke-white"
+			color = (_) => status?.trackColor || "stroke-white";
 		}
 
-		const newSectors: RenderedSector[] = sectors.map((sector) => {
-			const start = `M${sector.points[0].x},${sector.points[0].y}`;
-			const rest = sector.points.map((point) => `L${point.x},${point.y}`).join(" ");
+		const newSectors: RenderedSector[] = sectors
+			.map((sector) => {
+				const start = `M${sector.points[0].x},${sector.points[0].y}`;
+				const rest = sector.points.map((point) => `L${point.x},${point.y}`).join(" ");
 
-			const c = color(sector)
-			return {
-				number: sector.number,
-				d: `${start} ${rest}`,
-				color: c,
-				stroke_width: c === "stroke-white" ? 60 : 120,
-				pulse: status?.pulse
-			}
-		}).sort(priorizeColoredSectors);
+				const c = color(sector);
+				return {
+					number: sector.number,
+					d: `${start} ${rest}`,
+					color: c,
+					stroke_width: c === "stroke-white" ? 60 : 120,
+					pulse: status?.pulse,
+				};
+			})
+			.sort(priorizeColoredSectors);
 
 		setRenderedSectors(newSectors);
-	}, [trackStatus, raceControlMessages, sectors])
-
+	}, [trackStatus, raceControlMessages, sectors]);
 
 	if (!points || !minX || !minY || !widthX || !widthY)
 		return (
-			<div className="flex h-full w-full items-center justify-center">
-				<div className="h-5/6 w-5/6 animate-pulse rounded-lg bg-gray-700" />
+			<div className="h-full w-full p-2" style={{ minHeight: "35rem" }}>
+				<div className="h-full w-full animate-pulse rounded-lg bg-zinc-800" />
 			</div>
 		);
 
@@ -245,7 +252,7 @@ export default function Map({ circuitKey, trackStatus, raceControlMessages, posi
 			xmlns="http://www.w3.org/2000/svg"
 		>
 			<path
-				className="stroke-slate-700"
+				className="stroke-gray-800"
 				strokeWidth={300}
 				strokeLinejoin="round"
 				fill="transparent"
@@ -253,9 +260,11 @@ export default function Map({ circuitKey, trackStatus, raceControlMessages, posi
 			/>
 
 			{renderedSectors.map((sector) => {
-				const style = sector.pulse ? {
-					animation: `${sector.pulse * 100}ms linear infinite pulse`,
-				} : {};
+				const style = sector.pulse
+					? {
+							animation: `${sector.pulse * 100}ms linear infinite pulse`,
+						}
+					: {};
 				return (
 					<path
 						key={`map.sector.${sector.number}`}
@@ -270,49 +279,43 @@ export default function Map({ circuitKey, trackStatus, raceControlMessages, posi
 				);
 			})}
 
-			{ogPoints && positions && (
+			{centerX && centerY && positions && drivers && (
 				<>
-					{positions
-						.sort(sortPos)
+					{objectEntries(drivers)
 						.reverse()
-						.map((pos) => {
-							// TODO move to backend
-							const xS = ogPoints.map((item) => item.x);
-							const yS = ogPoints.map((item) => item.y);
+						.filter((driver) => !!positions[driver.racingNumber].X && !!positions[driver.racingNumber].Y)
+						.map((driver) => {
+							const pos = positions[driver.racingNumber];
+							const timingDriver = timingDrivers?.lines[driver.racingNumber];
+							const hidden = timingDriver
+								? timingDriver.knockedOut || timingDriver.stopped || timingDriver.retired
+								: false;
+							const pit = timingDriver ? timingDriver.inPit || timingDriver.pitOut : false;
 
-							const rotatedPos = rotate(
-								pos.x,
-								pos.y,
-								rotation,
-								(Math.max(...xS) - Math.min(...xS)) / 2,
-								(Math.max(...yS) - Math.min(...yS)) / 2,
-							);
-
-							const out = pos.status === "OUT" || pos.status === "RETIRED" || pos.status === "STOPPED";
-
+							const rotatedPos = rotate(pos.X, pos.Y, rotation, centerX, centerY);
 							const transform = [`translateX(${rotatedPos.x}px)`, `translateY(${rotatedPos.y}px)`].join(" ");
 
 							return (
 								<g
-									key={`map.driver.${pos.driverNr}`}
-									id={`map.driver.${pos.driverNr}`}
-									className={clsx("fill-zinc-700", {"opacity-30": out})}
+									key={`map.driver.${driver.racingNumber}`}
+									id={`map.driver.${driver.racingNumber}`}
+									className={clsx("fill-zinc-700", { "opacity-30": pit }, { "!opacity-0": hidden })}
 									style={{
 										transition: "all 1s linear",
 										transform,
-										...(pos.teamColor && { fill: `#${pos.teamColor}` }),
+										...(driver.teamColour && { fill: `#${driver.teamColour}` }),
 									}}
 								>
-									<circle id={`map.driver.${pos.driverNr}.circle`} r={120} />
+									<circle id={`map.driver.${driver.racingNumber}.circle`} r={120} />
 									<text
-										id={`map.driver.${pos.driverNr}.text`}
+										id={`map.driver.${driver.racingNumber}.text`}
 										fontWeight="bold"
 										fontSize={120 * 3}
 										style={{
 											transform: "translateX(150px) translateY(-120px)",
 										}}
 									>
-										{pos.short}
+										{driver.tla}
 									</text>
 								</g>
 							);
