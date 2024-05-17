@@ -76,14 +76,14 @@ export function SocketProvider({ children }: { children: ReactNode }) {
 		if (message.carDataZ) {
 			const carData = inflate<CarData>(message.carDataZ);
 			carDataEngine.addFramesWithTimestamp(
-				carData.Entries.map((e) => ({ data: e.Cars, timestamp: utc(e.Utc).local().milliseconds() })),
+				carData.Entries.map((e) => ({ data: e.Cars, timestamp: utc(e.Utc).local().valueOf() })),
 			);
 		}
 
 		if (message.positionZ) {
 			const position = inflate<Position>(message.positionZ);
 			positionEngine.addFramesWithTimestamp(
-				position.Position.map((p) => ({ data: p.Entries, timestamp: utc(p.Timestamp).local().milliseconds() })),
+				position.Position.map((p) => ({ data: p.Entries, timestamp: utc(p.Timestamp).local().valueOf() })),
 			);
 		}
 	};

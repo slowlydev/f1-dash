@@ -5,8 +5,6 @@ type Frame<T> = {
 	timestamp: number;
 };
 
-const sortFrames = <T>(a: Frame<T>, b: Frame<T>) => a.timestamp - b.timestamp;
-
 const MAX_BUFFER = 1000;
 
 export const useStateEngine = <T>(name?: string) => {
@@ -21,7 +19,6 @@ export const useStateEngine = <T>(name?: string) => {
 
 	const addFrame = (data: T) => {
 		bufferRef.current.push({ data, timestamp: Date.now() });
-		bufferRef.current.sort(sortFrames);
 
 		if (bufferRef.current.length > MAX_BUFFER) {
 			bufferRef.current.splice(0, bufferRef.current.length - MAX_BUFFER);
@@ -30,7 +27,6 @@ export const useStateEngine = <T>(name?: string) => {
 
 	const addFramesWithTimestamp = (data: { data: T; timestamp: number }[]) => {
 		bufferRef.current.push(...data);
-		bufferRef.current.sort(sortFrames);
 
 		if (bufferRef.current.length > MAX_BUFFER) {
 			bufferRef.current.splice(0, bufferRef.current.length - MAX_BUFFER);
