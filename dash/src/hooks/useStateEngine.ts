@@ -5,6 +5,8 @@ type Frame<T> = {
 	timestamp: number;
 };
 
+const MAX_BUFFER = 1000;
+
 export const useStateEngine = <T>(name?: string) => {
 	const [state, setState] = useState<T | null>(null);
 	const [maxDelay, setMaxDelay] = useState<number>(0);
@@ -16,15 +18,19 @@ export const useStateEngine = <T>(name?: string) => {
 	const requestRef = useRef<number | null>(null);
 
 	const addFrame = (data: T) => {
-		const newBuffer = [...bufferRef.current, { data, timestamp: Date.now() }];
-		if (newBuffer.length > 1000) newBuffer.shift();
-		bufferRef.current = newBuffer;
+		bufferRef.current.push({ data, timestamp: Date.now() });
+
+		if (bufferRef.current.length > MAX_BUFFER) {
+			bufferRef.current.splice(0, bufferRef.current.length - MAX_BUFFER);
+		}
 	};
 
 	const addFramesWithTimestamp = (data: { data: T; timestamp: number }[]) => {
-		const newBuffer = [...bufferRef.current, ...data];
-		if (newBuffer.length > 1000) newBuffer.shift();
-		bufferRef.current = newBuffer;
+		bufferRef.current.push(...data);
+
+		if (bufferRef.current.length > MAX_BUFFER) {
+			bufferRef.current.splice(0, bufferRef.current.length - MAX_BUFFER);
+		}
 	};
 
 	const animateNextFrame = () => {
@@ -43,16 +49,11 @@ export const useStateEngine = <T>(name?: string) => {
 		}
 
 		setMaxDelay(bufferRef.current.length > 0 ? Math.floor((Date.now() - bufferRef.current[0].timestamp) / 1000) : 0);
-
-		// requestRef.current = requestAnimationFrame(animateNextFrame);
 	};
 
 	useEffect(() => {
 		requestRef.current = setInterval(animateNextFrame, 20) as unknown as number;
 		return () => (requestRef.current ? clearInterval(requestRef.current) : void 0);
-
-		// requestRef.current = requestAnimationFrame(animateNextFrame);
-		// return () => (requestRef.current ? cancelAnimationFrame(requestRef.current) : void 0);
 	}, []);
 
 	const setDelay = (delay: number) => {
