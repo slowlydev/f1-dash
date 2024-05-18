@@ -1,6 +1,15 @@
 "use client";
 
-import { type Dispatch, type ReactNode, type SetStateAction, createContext, useState, useContext, useRef } from "react";
+import {
+	type Dispatch,
+	type ReactNode,
+	type SetStateAction,
+	createContext,
+	useState,
+	useContext,
+	useRef,
+	useEffect,
+} from "react";
 import { utc } from "moment";
 
 import { merge } from "@/lib/merge";
@@ -106,6 +115,13 @@ export function SocketProvider({ children }: { children: ReactNode }) {
 		carDataEngine.resume();
 		positionEngine.resume();
 	};
+
+	useEffect(() => {
+		if (typeof window != undefined) {
+			const localStorageDelay = localStorage.getItem("delay");
+			if (localStorageDelay) setDelay(parseInt(localStorageDelay));
+		}
+	}, []);
 
 	// todo ? handle pausing
 
