@@ -81,9 +81,9 @@ pub async fn handle_stream(tx: Sender<LiveEvent>, mut stream: Stream, state: Liv
                         for update in updates.iter_mut() {
                             let update = transformer::transform_map(update);
 
-                            if let Some(new_session_name) = update.pointer("sessionInfo/name") {
+                            if let Some(new_session_name) = update.pointer("/sessionInfo/name") {
                                 let current_session_name = state
-                                    .pointer("sessionInfo/name")
+                                    .pointer("/sessionInfo/name")
                                     .expect("we always should have a session name");
 
                                 if new_session_name != current_session_name {
