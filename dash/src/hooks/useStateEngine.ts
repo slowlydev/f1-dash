@@ -53,11 +53,12 @@ export const useStateEngine = <T>(name?: string) => {
 		}
 
 		setMaxDelay(bufferRef.current.length > 0 ? Math.floor((Date.now() - bufferRef.current[0].timestamp) / 1000) : 0);
+		requestRef.current = requestAnimationFrame(animateNextFrame);
 	};
 
 	useEffect(() => {
-		requestRef.current = setInterval(animateNextFrame, 20) as unknown as number;
-		return () => (requestRef.current ? clearInterval(requestRef.current) : void 0);
+		requestRef.current = requestAnimationFrame(animateNextFrame);
+		return () => (requestRef.current ? cancelAnimationFrame(requestRef.current) : void 0);
 	}, []);
 
 	const setDelay = (delay: number) => {
