@@ -290,7 +290,7 @@ export default function Map({
 							const hidden = timingDriver
 								? timingDriver.knockedOut || timingDriver.stopped || timingDriver.retired
 								: false;
-							const pit = timingDriver ? timingDriver.inPit || timingDriver.pitOut : false;
+							const pit = timingDriver ? timingDriver.inPit : false;
 
 							const rotatedPos = rotate(pos.X, pos.Y, rotation, centerX, centerY);
 							const transform = [`translateX(${rotatedPos.x}px)`, `translateY(${rotatedPos.y}px)`].join(" ");
