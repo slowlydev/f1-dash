@@ -31,7 +31,7 @@ export const metadata: Metadata = {
 	},
 
 	twitter: {
-		site: "@f1_dash",
+		site: "@Slowlydev",
 		title,
 		description,
 		creator: "@Slowlydev",
@@ -50,7 +50,7 @@ export const metadata: Metadata = {
 
 	referrer: "strict-origin-when-cross-origin",
 
-	keywords: ["Formula 1", "F1", "dashboard", "realtime telemetry", "timing", "live updates"],
+	keywords: ["Formula 1", "f1 dashboard", "realtime telemetry", "f1 timing", "live updates"],
 
 	creator: "Slowlydev",
 	publisher: "Slowlydev",
@@ -79,4 +79,6 @@ export const metadata: Metadata = {
 	verification: {
 		google: "hKv0h7XtWgQ-pVNVKpwwb2wcCC2f0tBQ1X1IcDX50hg",
 	},
+
+	manifest: "/manifest.json",
 };
