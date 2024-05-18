@@ -7,19 +7,19 @@ edition = "2021"
 
 [dependencies]
 
-tokio = { version = "1", features = ["full"] }
-tokio-stream = { version = "0.1.14", features = ["full"] }
+tokio = { version = "1.37.0", features = ["full"] }
+tokio-stream = { version = "0.1.15", features = ["full"] }
 
-tracing = "0.1"
-tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+tracing = "0.1.40"
+tracing-subscriber = { version = "0.3.18", features = ["env-filter"] }
 
 axum = { version = "0.7.5", features = ["http2"] }
-tower-http = { version = "0.5", features = ["cors"] }
+tower-http = { version = "0.5.2", features = ["cors"] }
 
-tokio-tungstenite = { version = "0.21", features = ["native-tls"] }
-reqwest = { version = "0.12", features = ["native-tls"] }
+tokio-tungstenite = { version = "0.21.0", features = ["native-tls"] }
+reqwest = { version = "0.12.4", features = ["native-tls"] }
 
-sqlx = { version = "0.7", features = [
+sqlx = { version = "0.7.4", features = [
     "postgres",
     "runtime-tokio",
     "tls-native-tls",
@@ -33,10 +33,9 @@ heck = "0.5.0"
 regex = "1.10.4"
 
 base64 = "0.22.1"
-flate2 = "1.0.20"
+flate2 = "1.0.30"
 
-async-stream = "0.3.5"
-futures = "0.3"
+futures = "0.3.30"
 
 dotenvy = "0.15.7"
 chrono = { version = "0.4.38", features = ["serde"] }
