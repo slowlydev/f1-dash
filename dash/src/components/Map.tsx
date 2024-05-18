@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { utc } from "moment";
 import clsx from "clsx";
 
 import { DriverList, TimingData, TrackStatus, Message as RaceControlMessage, Positions } from "@/types/state.type";

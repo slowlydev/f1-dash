@@ -24,6 +24,7 @@ export default function LeaderBoard({ drivers, driversTiming, driversTimingStats
 	return (
 		<div className="flex w-fit flex-col divide-y divide-zinc-800">
 			{uiElements.tableHeaders && <TableHeaders />}
+
 			{(!drivers || !driversTiming) &&
 				new Array(20).fill("").map((_, index) => <SkeletonDriver key={`driver.loading.${index}`} />)}
 
@@ -54,18 +55,18 @@ export default function LeaderBoard({ drivers, driversTiming, driversTimingStats
 const TableHeaders = () => {
 	return (
 		<div
-			className="h-18 grid items-center gap-1 px-2 py-1"
+			className="grid items-center gap-2 p-1 px-2 text-sm font-medium text-zinc-500"
 			style={{
-				gridTemplateColumns: "6rem 4rem 5.5rem 4rem 5rem 5rem auto auto",
+				gridTemplateColumns: "5.5rem 4rem 5.5rem 4rem 5rem 5.5rem auto auto",
 			}}
 		>
-			<p className="px-2">Driver</p>
-			<p className="px-2">Status</p>
-			<p className="px-2">Tire</p>
-			<p className="px-2">Laps</p>
-			<p className="px-2">Gap</p>
-			<p className="px-2">LapTime</p>
-			<p className="px-2">Sector Times & Segments</p>
+			<p>Position</p>
+			<p>DRS</p>
+			<p>Tire</p>
+			<p>Lap</p>
+			<p>Gap</p>
+			<p>LapTime</p>
+			<p>Sectors</p>
 		</div>
 	);
 };

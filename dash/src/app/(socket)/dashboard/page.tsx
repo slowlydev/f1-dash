@@ -28,8 +28,6 @@ export default function Page() {
 					</div>
 
 					<WeatherInfo weather={state?.weatherData} />
-
-					<LapCount lapCount={state?.lapCount} />
 				</div>
 
 				<TrackInfo track={state?.trackStatus} lapCount={state?.lapCount} />
