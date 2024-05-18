@@ -7,9 +7,7 @@ import Round from "@/components/schedule/Round";
 const getSchedule = async () => {
 	try {
 		const scheduleReq = await fetch(`${env.NEXT_PUBLIC_API_URL}/api/schedule`, {
-			next: {
-				revalidate: 3600,
-			},
+			next: { revalidate: 60 * 60 * 4 },
 		});
 		const schedule: RoundType[] = await scheduleReq.json();
 		return schedule;
