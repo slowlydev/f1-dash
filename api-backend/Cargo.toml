@@ -4,21 +4,24 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-tracing = "0.1"
-tracing-subscriber = "0.3"
 
-tokio = { version = "1", features = ["full", "sync"] }
+tokio = { version = "1.37.0", features = ["full"] }
+
+tracing = "0.1.40"
+tracing-subscriber = { version = "0.3.18" }
+
+axum = { version = "0.7.5", features = ["json", "http2"] }
 
 reqwest = { version = "0.12", features = ["native-tls"] }
 
 ical = "0.11"
 anyhow = "1.0.79"
-axum = { version = "0.7.5", features = ["json"] }
-dotenvy = "0.15.7"
 
 chrono = { version = "0.4", features = ["serde"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 regex = "1.10.4"
+
+dotenvy = "0.15.7"
 
 cached = { version = "0.50.0", features = ["disk_store", "async"] }
