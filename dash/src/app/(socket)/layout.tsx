@@ -115,7 +115,7 @@ const SubLayout = ({ children }: Props) => {
 							{ label: "Custom", value: "custom" },
 						]}
 					/>
-					<DelayInput className="hidden md:flex" delay={delay} setDebouncedDelay={setDelay} />
+					<DelayInput className="hidden md:flex" delay={delay} setDebouncedDelay={setDelayProxy} />
 					<PlayControls className="hidden md:flex" playing={playback} onClick={() => togglePlayback()} />
 				</div>
 			</div>
