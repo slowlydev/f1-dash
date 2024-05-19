@@ -1,0 +1,55 @@
+version: "3"
+
+services:
+  dash:
+    build: ./dash/
+    ports:
+      - 3000:3000
+    restart: always
+    profiles:
+      - full
+    depends_on:
+      - api-backend
+      - live-backend
+    environment:
+      - NEXT_PUBLIC_LIVE_SOCKET_URL=http://live-backend:4000
+      - NEXT_PUBLIC_API_URL=http://api-backend:4001
+
+  api-backend:
+    build: ./api-backend/
+    ports:
+      - 4001:4001
+    restart: always
+    profiles:
+      - full
+      - backends
+    environment:
+      - BACKEND_ADDRESS=127.0.0.1:4001
+      - LOG_LEVEL=info
+
+  live-backend:
+    build: ./live-backend/
+    ports:
+      - 4000:4000
+    restart: always
+    profiles:
+      - full
+      - backends
+    depends_on:
+      - timescaledb
+    environment:
+      - DATABASE_URL=postgres://postgres:password@timescaledb:5432/postgres
+      - RUST_LOG="live_backend=trace,debug,info"
+      - BACKEND_ADDRESS=0.0.0.0:4000
+      - ORIGIN=http://localhost:3000
+
+  timescaledb:
+    image: timescale/timescaledb:latest-pg16
+    ports:
+      - 5432:5432
+    restart: always
+    profiles:
+      - full
+      - backends
+    environment:
+      - POSTGRES_PASSWORD=password
