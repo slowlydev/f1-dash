@@ -63,8 +63,8 @@ start() {
     return
   fi
 
-  log "debug" "setting ulimit to 2048"
   ulimit -n 2048
+  log "debug" "current ulimit $(ulimit -n)"
   log "info" "starting server..."
   screen -dmSL "${app}" -Logfile "screen.log" ./target/release/live-backend
 
