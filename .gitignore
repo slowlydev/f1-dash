@@ -7,3 +7,6 @@
 # compiled
 target/
 *.data.*
+
+# logs
+*.log
