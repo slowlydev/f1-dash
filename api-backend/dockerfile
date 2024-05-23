@@ -2,10 +2,8 @@ FROM rust:1-alpine as build
 
 WORKDIR /usr/src/app
 COPY . .
-COPY ./.sqlx .
 
 RUN apk add --no-cache musl-dev pkgconfig openssl libressl-dev
-ENV SQLX_OFFLINE true
 RUN cargo build --release
 
 FROM alpine
