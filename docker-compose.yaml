@@ -24,7 +24,7 @@ services:
       - full
       - backends
     environment:
-      - BACKEND_ADDRESS=127.0.0.1:4001
+      - BACKEND_ADDRESS=0.0.0.0:4001
       - LOG_LEVEL=info
 
   live-backend:
