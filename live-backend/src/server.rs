@@ -3,7 +3,9 @@ use std::{error::Error, net::SocketAddr, sync::Arc, thread, time::Duration};
 use axum::{routing::get, Router};
 use sqlx::PgPool;
 use tokio::sync::broadcast;
-use tower_governor::{governor::GovernorConfigBuilder, GovernorLayer};
+use tower_governor::{
+    governor::GovernorConfigBuilder, key_extractor::SmartIpKeyExtractor, GovernorLayer,
+};
 
 use crate::LiveState;
 
@@ -36,6 +38,7 @@ pub async fn init(
         GovernorConfigBuilder::default()
             .per_second(2)
             .burst_size(8)
+            .key_extractor(SmartIpKeyExtractor)
             .finish()
             .unwrap(),
     );
