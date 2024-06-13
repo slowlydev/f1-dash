@@ -49,6 +49,12 @@ cargo build --release
 ./target/release/live-backend
 ```
 
+or just
+
+```bash
+cargo run
+```
+
 ## modules
 
 `main.rs` - init all modules, create current state, start client, keeper and server.

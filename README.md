@@ -33,6 +33,7 @@ Other tools used during development or testing are:
 
 - `data-simulator`
   Reads a txt from the `data-saver` and simulates the f1 websocket. The websocket gets started on port 8000.
+  If you need some data recordings created during races to test the dashboard check out https://github.com/slowlydev/f1-dash-data-parser/releases/tag/data
   Start it like this `cargo run some-name.data.txt`
 
 ## setup
@@ -53,6 +54,7 @@ yarn dev
 cd api-backend/
 cargo run
 
+# Before running this command please setup the live-backend as described in the live-backend readme
 cd live-backend/
 cargo run
 ```
