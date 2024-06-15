@@ -20,15 +20,6 @@ and more... I suggest check `Cargo.toml`
 
 You will need a timescale db to install timescale db you can follow the instructions on their website https://docs.timescale.com/latest/getting-started/installation
 
-After finishing the instalation of the timescale db extension on your postgres database you will need to run the following sql commands to finish the setup of the timescale db extension
-
-```sql
-CREATE EXTENSION IF NOT EXISTS timescaledb CASCADE;
-```
-
-If you have any trouble installing timescale db you can have a look at this tutorial by techexpert.tips
-https://techexpert.tips/windows/installing-timescaledb-windows/
-
 When you have to connect to the database and run the following sql command to create the table you can use a tool like pgadmin to connect to the database and run the sql command
 
 ```sql

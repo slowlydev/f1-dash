@@ -2,6 +2,5 @@
 .backend.sh
 /target
 readme.md
-example.env
 .env.example
 dockerfile
