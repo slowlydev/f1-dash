@@ -18,21 +18,32 @@ and more... I suggest check `Cargo.toml`
 
 ## setup
 
-you will need a timescale db
+You will need a timescale db to install timescale db you can follow the instructions on their website https://docs.timescale.com/latest/getting-started/installation
 
-you will need cargo, you can install it with for example cargo.
+When you have to connect to the database and run the following sql command to create the table you can use a tool like pgadmin to connect to the database and run the sql command
 
-you will need to copy the env example and adjust it when needed
-
-```bash
-cp example.env .env
+```sql
+create table if not exists state(
+    time timestamptz not null,
+    state jsonb NOT NULL
+);
 ```
+
+you will need cargo and rust installed on your machine, you can follow the instructions on their website https://www.rust-lang.org/tools/install
+
+you will need to copy the .env.example file to .env and fill in the values for your database connection
 
 to build and then run
 
 ```bash
 cargo build --release
 ./target/release/live-backend
+```
+
+or just
+
+```bash
+cargo run
 ```
 
 ## modules
