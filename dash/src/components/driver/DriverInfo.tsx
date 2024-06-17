@@ -1,10 +1,17 @@
-import { TimingAppDataDriver, TimingDataDriver } from "@/types/state.type";
+import clsx from "clsx";
+
+import { TimingDataDriver } from "@/types/state.type";
 
 type Props = {
 	timingDriver: TimingDataDriver;
+	gridPos: number;
 };
 
-export default function DriverInfo({ timingDriver }: Props) {
+export default function DriverInfo({ timingDriver, gridPos }: Props) {
+	const positionChange = gridPos - parseInt(timingDriver.position);
+	const gain = positionChange > 0;
+	const loss = positionChange < 0;
+
 	const status = timingDriver.knockedOut
 		? "OUT"
 		: !!timingDriver.cutoff
@@ -21,7 +28,16 @@ export default function DriverInfo({ timingDriver }: Props) {
 
 	return (
 		<div className="place-self-start text-lg font-semibold" id="walkthrough-driver-info">
-			<p className="leading-none">L {timingDriver.numberOfLaps ?? 0}</p>
+			<p
+				className={clsx("leading-none", {
+					"text-emerald-500": gain,
+					"text-red-500": loss,
+					"text-gray-700": !gain && !loss,
+				})}
+			>
+				{gain ? `+${positionChange}` : loss ? positionChange : "-"}
+			</p>
+
 			<p className="text-sm font-medium leading-none text-zinc-600">{status ?? "-"}</p>
 		</div>
 	);

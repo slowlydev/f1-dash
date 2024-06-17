@@ -41,7 +41,7 @@ export const features = [
 				<div className="w-[4rem]">
 					<DriverDRS on={false} possible={false} inPit={true} pitOut={false} />
 				</div>
-				<DriverInfo timingDriver={timingDriver} />
+				<DriverInfo gridPos={2} timingDriver={timingDriver} />
 			</div>
 		),
 	},
