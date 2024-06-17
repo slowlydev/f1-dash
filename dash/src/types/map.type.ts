@@ -21,7 +21,7 @@ export type MapType = {
 	year: number;
 };
 
-type CandidateLap = {
+export type CandidateLap = {
 	driverNumber: string;
 	lapNumber: number;
 	lapStartDate: string;
@@ -31,14 +31,14 @@ type CandidateLap = {
 	sessionStartTime: number;
 };
 
-type Corner = {
+export type Corner = {
 	angle: number;
 	length: number;
 	number: number;
 	trackPosition: TrackPosition;
 };
 
-type TrackPosition = {
+export type TrackPosition = {
 	x: number;
 	y: number;
 };

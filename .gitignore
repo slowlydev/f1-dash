@@ -6,4 +6,4 @@
 
 # compiled
 target/
-*data.*
+*.data.*

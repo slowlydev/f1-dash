@@ -4,7 +4,7 @@ const title = "f1-dash | Formula 1 live timing";
 const description =
 	"Experience live telemetry and timing data from Formula 1 races. Get insights into leaderboards, tire choices, gaps, lap times, sector times, team radios, and more.";
 
-const url = "https://f1-dash.vercel.app";
+const url = "https://f1-dash.com";
 
 export const metadata: Metadata = {
 	generator: "Next.js",
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
 	},
 
 	twitter: {
-		site: "@f1_dash",
+		site: "@Slowlydev",
 		title,
 		description,
 		creator: "@Slowlydev",
@@ -50,11 +50,11 @@ export const metadata: Metadata = {
 
 	referrer: "strict-origin-when-cross-origin",
 
-	keywords: ["Formula 1", "F1", "dashboard", "realtime telemetry", "timing", "live updates"],
+	keywords: ["Formula 1", "f1 dashboard", "realtime telemetry", "f1 timing", "live updates"],
 
 	creator: "Slowlydev",
 	publisher: "Slowlydev",
-	authors: [{ name: "Slowlydev", url: "https://slowlydev.vercel.app" }],
+	authors: [{ name: "Slowlydev", url: "https://slowly.dev" }],
 
 	appleWebApp: {
 		capable: true,
@@ -79,4 +79,6 @@ export const metadata: Metadata = {
 	verification: {
 		google: "hKv0h7XtWgQ-pVNVKpwwb2wcCC2f0tBQ1X1IcDX50hg",
 	},
+
+	manifest: "/manifest.json",
 };

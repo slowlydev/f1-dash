@@ -24,6 +24,8 @@ type Tx = UnboundedSender<Message>;
 type PeerMap = Arc<Mutex<HashMap<SocketAddr, Tx>>>;
 
 fn random_duration() -> Duration {
+    // Duration::from_millis(10)
+
     let mut durations = vec![
         Duration::from_millis(10),
         Duration::from_millis(50),
@@ -76,7 +78,7 @@ async fn handle_connection(peer_map: PeerMap, raw_stream: TcpStream, addr: Socke
 async fn main() -> Result<(), IoError> {
     tracing_subscriber::fmt::init();
 
-    let addr = "127.0.0.1:8000".to_string();
+    let addr = "localhost:8000".to_string();
 
     let state = PeerMap::new(Mutex::new(HashMap::new()));
 

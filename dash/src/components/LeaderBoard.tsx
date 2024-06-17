@@ -1,44 +1,87 @@
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, LayoutGroup } from "framer-motion";
 import clsx from "clsx";
 
-import { DriverType } from "@/types/driver.type";
+import { sortPos } from "@/lib/sorting/sortPos";
+import { objectEntries } from "@/lib/driverHelper";
 
-import Driver from "./Driver";
-import { sortPos } from "../lib/sortPos";
+import { useMode } from "@/context/ModeContext";
+
+import { CarsData, DriverList, TimingAppData, TimingData, TimingStats } from "@/types/state.type";
+
+import Driver from "@/components/driver/Driver";
 
 type Props = {
-	drivers: DriverType[] | undefined;
+	drivers: DriverList | undefined;
+	driversTiming: TimingData | undefined;
+	driversTimingStats: TimingStats | undefined;
+	driversAppTiming: TimingAppData | undefined;
+	carsData: CarsData | null;
 };
 
-export default function LeaderBoard({ drivers }: Props) {
-	return (
-		<div className="mt-2 flex w-fit flex-col divide-y divide-gray-500">
-			{!drivers && new Array(20).fill("").map((_, index) => <SkeletonDriver key={`driver.loading.${index}`} />)}
+export default function LeaderBoard({ drivers, driversTiming, driversTimingStats, driversAppTiming, carsData }: Props) {
+	const { uiElements } = useMode();
 
-			{drivers && (
-				<AnimatePresence>
-					{drivers.sort(sortPos).map((driver, index) => (
-						<Driver key={`leaderBoard.driver.${driver.short}`} driver={driver} position={index + 1} />
-					))}
-				</AnimatePresence>
-			)}
+	return (
+		<div className="flex w-fit flex-col divide-y divide-zinc-800">
+			{uiElements.tableHeaders && <TableHeaders />}
+
+			{(!drivers || !driversTiming) &&
+				new Array(20).fill("").map((_, index) => <SkeletonDriver key={`driver.loading.${index}`} />)}
+
+			<LayoutGroup key="drivers">
+				{drivers && driversTiming && (
+					<AnimatePresence>
+						{objectEntries(driversTiming.lines)
+							.sort(sortPos)
+							.map((timingDriver, index) => (
+								<Driver
+									key={`leaderBoard.driver.${timingDriver.racingNumber}`}
+									driver={drivers[timingDriver.racingNumber]}
+									timingDriver={timingDriver}
+									appTimingDriver={driversAppTiming?.lines[timingDriver.racingNumber]}
+									timingStatsDriver={driversTimingStats?.lines[timingDriver.racingNumber]}
+									position={index + 1}
+									sessionPart={driversTiming.sessionPart}
+									carData={carsData ? carsData[timingDriver.racingNumber].Channels : undefined}
+								/>
+							))}
+					</AnimatePresence>
+				)}
+			</LayoutGroup>
 		</div>
 	);
 }
 
+const TableHeaders = () => {
+	return (
+		<div
+			className="grid items-center gap-2 p-1 px-2 text-sm font-medium text-zinc-500"
+			style={{
+				gridTemplateColumns: "5.5rem 4rem 5.5rem 4rem 5rem 5.5rem auto auto",
+			}}
+		>
+			<p>Position</p>
+			<p>DRS</p>
+			<p>Tire</p>
+			<p>Lap</p>
+			<p>Gap</p>
+			<p>LapTime</p>
+			<p>Sectors</p>
+		</div>
+	);
+};
+
 const SkeletonDriver = () => {
-	const animateClass = "h-8 animate-pulse rounded-md bg-gray-700";
+	const animateClass = "h-8 animate-pulse rounded-md bg-zinc-800";
 
 	return (
 		<div
-			className="h-18 grid place-items-center items-center gap-1 py-1"
+			className="h-18 grid place-items-center items-center gap-1 px-2 py-1"
 			style={{
-				gridTemplateColumns: "1rem 6rem 4rem 5rem 4rem 5rem 5rem 19.5rem",
+				gridTemplateColumns: "6rem 4rem 5rem 4rem 5rem 5rem 19.5rem",
 			}}
 		>
-			<div className={animateClass} style={{ width: "95%" }} />
-
-			<div className={animateClass} style={{ width: "95%" }} />
+			<div className={animateClass} style={{ width: "100%" }} />
 
 			<div className={animateClass} style={{ width: "90%" }} />
 

@@ -1,27 +1,41 @@
 import { AnimatePresence } from "framer-motion";
 import { utc } from "moment";
-
-import { sortUtc } from "../lib/sortUtc";
-
-import { TeamRadioType } from "../types/team-radio.type";
-
-import TeamRadioMessage from "./TeamRadioMessage";
 import clsx from "clsx";
 
+import { sortUtc } from "@/lib/sorting/sortUtc";
+
+import { DriverList, TeamRadio } from "@/types/state.type";
+
+import TeamRadioMessage from "@/components/TeamRadioMessage";
+
 type Props = {
-	teamRadios: TeamRadioType[] | undefined;
+	sessionPath: string | undefined;
+	drivers: DriverList | undefined;
+	teamRadios: TeamRadio | undefined;
 };
 
-export default function TeamRadios({ teamRadios }: Props) {
+export default function TeamRadios({ sessionPath, drivers, teamRadios }: Props) {
+	const basePath = `https://livetiming.formula1.com/static/${sessionPath}`;
+
+	// TODO add notice that we only show 20
+
 	return (
 		<ul className="flex flex-col gap-2">
 			{!teamRadios && new Array(6).fill("").map((_, index) => <SkeletonMessage key={`radio.loading.${index}`} />)}
 
-			{teamRadios && (
+			{teamRadios && drivers && teamRadios.captures && (
 				<AnimatePresence>
-					{teamRadios.sort(sortUtc).map((teamRadio, i) => (
-						<TeamRadioMessage key={`radio.${utc(teamRadio.utc).unix()}.${i}`} teamRadio={teamRadio} />
-					))}
+					{teamRadios.captures
+						.sort(sortUtc)
+						.slice(0, 20)
+						.map((teamRadio, i) => (
+							<TeamRadioMessage
+								key={`radio.${utc(teamRadio.utc).unix()}.${i}`}
+								driver={drivers[teamRadio.racingNumber]}
+								capture={teamRadio}
+								basePath={basePath}
+							/>
+						))}
 				</AnimatePresence>
 			)}
 		</ul>
@@ -29,7 +43,7 @@ export default function TeamRadios({ teamRadios }: Props) {
 }
 
 const SkeletonMessage = () => {
-	const animateClass = "h-6 animate-pulse rounded-md bg-gray-700";
+	const animateClass = "h-6 animate-pulse rounded-md bg-zinc-800";
 
 	return (
 		<li className="flex flex-col gap-1">

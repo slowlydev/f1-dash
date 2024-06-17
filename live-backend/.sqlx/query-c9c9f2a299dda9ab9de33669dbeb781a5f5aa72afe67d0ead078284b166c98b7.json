@@ -1,0 +1,28 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select state, time from state where time >= $1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "state",
+        "type_info": "Jsonb"
+      },
+      {
+        "ordinal": 1,
+        "name": "time",
+        "type_info": "Timestamptz"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Timestamptz"
+      ]
+    },
+    "nullable": [
+      false,
+      false
+    ]
+  },
+  "hash": "c9c9f2a299dda9ab9de33669dbeb781a5f5aa72afe67d0ead078284b166c98b7"
+}

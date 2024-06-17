@@ -1,18 +1,18 @@
 import { AnimatePresence } from "framer-motion";
-import { utc } from "moment";
-
-import { sortUtc } from "../lib/sortUtc";
-
-import { RaceControlMessageType } from "../types/race-control-message.type";
-
-import { RaceControlMessage } from "./RaceControlMessage";
 import clsx from "clsx";
 
+import { sortUtc } from "@/lib/sorting/sortUtc";
+
+import { RaceControlMessage } from "@/components/RaceControlMessage";
+
+import { RaceControlMessages } from "@/types/state.type";
+
 type Props = {
-	messages: RaceControlMessageType[] | undefined;
+	messages: RaceControlMessages | undefined;
+	utcOffset: string;
 };
 
-export default function RaceControl({ messages }: Props) {
+export default function RaceControl({ messages, utcOffset }: Props) {
 	return (
 		<ul className="flex flex-col gap-2">
 			{!messages &&
@@ -20,9 +20,12 @@ export default function RaceControl({ messages }: Props) {
 
 			{messages && (
 				<AnimatePresence>
-					{messages.sort(sortUtc).map((msg) => (
-						<RaceControlMessage key={`msg.${utc(msg.utc).unix()}.${msg.message.toLocaleLowerCase()}`} msg={msg} />
-					))}
+					{messages.messages
+						.sort(sortUtc)
+						.filter((msg) => (msg.flag ? msg.flag.toLowerCase() !== "blue" : true))
+						.map((msg, i) => (
+							<RaceControlMessage key={`msg.${i}`} msg={msg} utcOffset={utcOffset} />
+						))}
 				</AnimatePresence>
 			)}
 		</ul>
@@ -30,7 +33,7 @@ export default function RaceControl({ messages }: Props) {
 }
 
 const SkeletonMessage = ({ index }: { index: number }) => {
-	const animateClass = "h-6 animate-pulse rounded-md bg-gray-700";
+	const animateClass = "h-6 animate-pulse rounded-md bg-zinc-800";
 
 	const flag = index % 4 === 0;
 	const long = index % 5 === 0;

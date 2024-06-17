@@ -1,22 +1,24 @@
 "use client";
 
 import { ReactNode, useEffect, useState } from "react";
-import { SocketProvider, useSocket } from "@/context/SocketContext";
+import { clsx } from "clsx";
 
 import { env } from "@/env.mjs";
+
+import { inflate } from "@/lib/inflate";
+
+import { MessageData } from "@/types/message.type";
 import { State } from "@/types/state.type";
 
-import Navbar from "@/components/Navbar";
-import DelayInput from "@/components/DelayInput";
-import SessionInfo from "@/components/SessionInfo";
-import TrackInfo from "@/components/TrackInfo";
-import ConnectionStatus from "@/components/ConnectionStatus";
+import { SocketProvider, useSocket } from "@/context/SocketContext";
+import { ModeProvider, useMode } from "@/context/ModeContext";
+import { WindowsProvider } from "@/context/WindowsContext";
 
-type BufferFrame = {
-	timestamp: number;
-	state: State;
-	used: boolean;
-};
+import Menubar from "@/components/Menubar";
+import DelayInput from "@/components/DelayInput";
+import PlayControls from "@/components/PlayControls";
+import StreamStatus from "@/components/StreamStatus";
+import SegmentedControls from "@/components/SegmentedControls";
 
 type Props = {
 	children: ReactNode;
@@ -25,103 +27,108 @@ type Props = {
 export default function SocketLayout({ children }: Props) {
 	return (
 		<SocketProvider>
-			<SubLayout>{children}</SubLayout>
+			<ModeProvider>
+				<WindowsProvider>
+					<SubLayout>{children}</SubLayout>
+				</WindowsProvider>
+			</ModeProvider>
 		</SocketProvider>
 	);
 }
 
 const SubLayout = ({ children }: Props) => {
-	const { state, setState, setConnected, delay, setDelay, connected } = useSocket();
-
-	const MAX_STATE_TRACKER = 1000; // 500
-	const [buffer, setBuffer] = useState<BufferFrame[]>([]);
-
-	const addStateToBuffer = (state: State) => {
-		setBuffer((prevBuffer) => {
-			const newBuffer = [...prevBuffer, { state, timestamp: Date.now(), used: false }];
-			if (newBuffer.length > MAX_STATE_TRACKER) {
-				newBuffer.shift();
-			}
-			return newBuffer;
-		});
-	};
-
-	const getNextFrame = (buffer: BufferFrame[], delay: number): BufferFrame | null => {
-		if (buffer.length < 1) return null;
-		if (delay < 1) return buffer[buffer.length - 1];
-
-		const timeOffset = Date.now() - delay * 1000;
-		const frame = buffer.find((frame) => frame.timestamp >= timeOffset);
-
-		return frame ?? null;
-	};
+	const { handleMessage, handleInitial, setConnected, setDelay, delay, maxDelay, pause, resume } = useSocket();
+	const { mode, setMode } = useMode();
 
 	useEffect(() => {
-		setBuffer([]);
-		const socket = new WebSocket(`${env.NEXT_PUBLIC_SOCKET_SERVER_URL}`);
+		const sse = new EventSource(`${env.NEXT_PUBLIC_LIVE_SOCKET_URL}/api/sse`);
 
-		socket.onclose = () => setConnected(false);
-		socket.onopen = () => setConnected(true);
+		sse.onerror = () => setConnected(false);
+		sse.onopen = () => setConnected(true);
 
-		socket.onmessage = (event) => {
-			const state: State = JSON.parse(event.data);
+		sse.addEventListener("initial", (message) => {
+			const decompressed = inflate<State>(message.data);
+			handleInitial(decompressed);
+		});
 
-			if (Object.keys(state).length === 0) return;
+		sse.addEventListener("update", (message) => {
+			const decompressed = inflate<MessageData>(message.data);
+			handleMessage(decompressed);
+		});
 
-			addStateToBuffer(state);
-		};
-
-		return () => socket.close();
+		return () => sse.close();
 	}, []);
 
-	const [refresher, setRefresher] = useState<number>(0);
-	useEffect(() => {
-		const refresherLoop = setTimeout(() => {
-			setRefresher((prev) => {
-				return prev > 100 ? 0 : prev + 1;
-			});
-		}, 10);
+	const [pausedTime, setPausedTime] = useState<number>(0);
+	const [playback, setPlayback] = useState<boolean>(true);
 
-		setState((oldFrame) => {
-			const frame = getNextFrame(buffer, delay);
-			return frame?.state ?? oldFrame;
+	const togglePlayback = () => {
+		setPlayback((old) => {
+			if (old) {
+				setPausedTime(Date.now());
+				pause();
+			} else {
+				setDelay(Math.round((Date.now() - pausedTime) / 1000) + delay);
+				resume();
+			}
+
+			return !old;
 		});
+	};
 
-		return () => clearTimeout(refresherLoop);
-	}, [refresher]);
+	const setDelayProxy = (newDelay: number) => {
+		if (newDelay === 0) {
+			resume();
+			setPausedTime(0);
+		}
 
-	const maxDelay = buffer.length > 0 ? Math.floor((Date.now() - buffer[0].timestamp) / 1000) : 0;
+		setDelay(newDelay);
+
+		if (typeof window != undefined) {
+			localStorage.setItem("delay", `${newDelay}`);
+		}
+	};
+
+	const syncing = maxDelay < delay;
 
 	return (
 		<div className="w-full">
-			<div className="mb-2 flex flex-wrap items-center gap-2">
-				<Navbar />
+			<div className="grid grid-cols-1 items-center gap-4 border-b border-zinc-800 bg-black p-2 md:grid-cols-2">
+				<Menubar />
 
-				<div className="flex items-center gap-2">
-					<DelayInput setDebouncedDelay={setDelay} maxDelay={maxDelay} />
+				<div className="flex items-center gap-2 sm:hidden">
+					{/* <Timeline setTime={setTime} time={time} playing={delay.current > 0} maxDelay={maxDelay} /> */}
+					<DelayInput className="flex md:hidden" delay={delay} setDebouncedDelay={setDelayProxy} />
+					<PlayControls className="flex md:hidden" playing={playback} onClick={() => togglePlayback()} />
+					<StreamStatus live={delay == 0} />
+				</div>
 
-					<ConnectionStatus connected={connected} />
+				<div className="flex flex-row-reverse flex-wrap-reverse items-center gap-1">
+					<SegmentedControls
+						className="w-full md:w-auto"
+						selected={mode}
+						onSelect={setMode}
+						options={[
+							{ label: "Simple", value: "simple" },
+							{ label: "Advanced", value: "advanced" },
+							{ label: "Expert", value: "expert" },
+							{ label: "Custom", value: "custom" },
+						]}
+					/>
+					<DelayInput className="hidden md:flex" delay={delay} setDebouncedDelay={setDelayProxy} />
+					<PlayControls className="hidden md:flex" playing={playback} onClick={() => togglePlayback()} />
 				</div>
 			</div>
 
-			<div className="flex flex-row flex-wrap gap-2">
-				<SessionInfo session={state?.session} clock={state?.extrapolatedClock} />
+			{syncing && (
+				<div className="flex w-full flex-col items-center justify-center">
+					<h1 className="my-20 text-center text-5xl font-bold">Syncing...</h1>
+					<p>Please wait for {delay - maxDelay} seconds.</p>
+					<p>Or make your delay smaller.</p>
+				</div>
+			)}
 
-				<TrackInfo track={state?.trackStatus} lapCount={state?.lapCount} />
-			</div>
-
-			<div className="h-max w-full">
-				{delay > maxDelay && (
-					<div className="absolute z-10 h-full w-full">
-						<div className="flex h-full w-full flex-col items-center justify-center backdrop-blur-lg">
-							<p className="text-3xl font-medium">Syncing, wait for {delay - maxDelay}s</p>
-							<p>Or make your delay smaller</p>
-						</div>
-					</div>
-				)}
-
-				{children}
-			</div>
+			<div className={clsx("h-max w-full", syncing && "hidden")}>{children}</div>
 		</div>
 	);
 };

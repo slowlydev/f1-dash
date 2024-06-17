@@ -2,10 +2,9 @@
 
 import clsx from "clsx";
 
-import { getTrackStatusMessage } from "../lib/getTrackStatusMessage";
+import { getTrackStatusMessage } from "@/lib/getTrackStatusMessage";
 
-import { LapCount } from "../types/lap-count.type";
-import { TrackStatus } from "../types/track-status.type";
+import { LapCount, TrackStatus } from "@/types/state.type";
 
 type Props = {
 	track: TrackStatus | undefined;
@@ -13,38 +12,27 @@ type Props = {
 };
 
 export default function TrackInfo({ track, lapCount }: Props) {
-	const currentTrackStatus = getTrackStatusMessage(track?.status);
+	const currentTrackStatus = getTrackStatusMessage(track?.status ? parseInt(track?.status) : undefined);
 
 	return (
-		<div
-			className={clsx("itenms-ceter flex w-full flex-row-reverse justify-between gap-4 sm:w-auto sm:flex-row", {
-				"!flex-row": !!!lapCount,
-			})}
-		>
+		<div className="flex w-fit flex-row items-center gap-4">
 			{!!lapCount && (
-				<p className="whitespace-nowrap text-3xl font-extrabold">
-					{lapCount?.current} / {lapCount?.total}
+				<p className="hidden whitespace-nowrap text-3xl font-extrabold sm:block">
+					{lapCount?.currentLap} / {lapCount?.totalLaps}
 				</p>
 			)}
 
 			{!!currentTrackStatus ? (
-				<div className={clsx("flex h-8 items-center truncate rounded-md px-2", currentTrackStatus.color)}>
+				<div
+					className={clsx("flex h-8 items-center truncate rounded-md px-2", currentTrackStatus.color)}
+					style={{
+						boxShadow: `0 0 60px 10px ${currentTrackStatus.hex}`,
+					}}
+				>
 					<p className="text-xl font-semibold">{currentTrackStatus.message}</p>
 				</div>
 			) : (
-				<div className="relative h-8 w-28 animate-pulse overflow-hidden rounded-lg bg-gray-700" />
-			)}
-
-			{!!currentTrackStatus && (
-				<div
-					className={clsx(
-						currentTrackStatus.color,
-						"absolute right-0 top-0 z-[-10] h-[2rem] w-2/5 sm:w-[15rem]",
-						"invisible sm:visible",
-					)}
-				>
-					<div className={clsx("absolute right-0 top-0 z-[-10] h-[8rem] w-[25rem] backdrop-blur-[40px]")} />
-				</div>
+				<div className="relative h-8 w-28 animate-pulse overflow-hidden rounded-lg bg-zinc-800" />
 			)}
 		</div>
 	);
