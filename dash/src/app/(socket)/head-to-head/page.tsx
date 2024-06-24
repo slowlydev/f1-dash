@@ -1,21 +1,20 @@
 "use client";
 
 import { useState } from "react";
-import DriverTag from "../../../components/DriverTag";
-import HeadToHeadDriver from "../../../components/HeadToHeadDriver";
-import { useSocket } from "../../../context/SocketContext";
-import { DriverType } from "../../../types/driver.type";
+import { useSocket } from "@/context/SocketContext";
+
+import DriverTag from "@/components/driver/DriverTag";
+import HeadToHeadDriver from "@/components/HeadToHeadDriver";
+
+import { objectEntries } from "@/lib/driverHelper";
 
 export default function HeadToHeadPage() {
-	const { state } = useSocket();
+	const { state, carsData } = useSocket();
 
-	const [selectedDriverNumbers, setSelectedDriverNumbers] = useState<DriverType["nr"][]>([]);
-	const selectedDrivers: DriverType[] = state?.drivers
-		? state.drivers.filter((driver) => selectedDriverNumbers.find((driverNr) => driverNr === driver.nr))
-		: [];
+	const [selectedNrs, setSelectedNrs] = useState<string[]>([]);
 
-	const toggleDriver = (nr: DriverType["nr"]) => {
-		setSelectedDriverNumbers((old) => {
+	const toggleDriver = (nr: string) => {
+		setSelectedNrs((old) => {
 			if (old.find((dNr) => dNr === nr)) {
 				return old.filter((dNr) => dNr !== nr);
 			} else {
@@ -25,25 +24,37 @@ export default function HeadToHeadPage() {
 	};
 
 	return (
-		<div className="mt-2 w-full">
-			{state && state.drivers && (
+		<div className="m-2 w-full">
+			{state && state.driverList && (
 				<div className="flex gap-2">
-					{state.drivers.map((driver) => (
+					{objectEntries(state.driverList).map((driver) => (
 						<div
-							key={`driver.selector.${driver.short}`}
-							onClick={() => toggleDriver(driver.nr)}
+							key={`driver.selector.${driver.racingNumber}`}
+							onClick={() => toggleDriver(driver.racingNumber)}
 							className="cursor-pointer"
 						>
-							<DriverTag teamColor={driver.teamColor} short={driver.short} />
+							<DriverTag teamColor={driver.teamColour} short={driver.tla} />
 						</div>
 					))}
 				</div>
 			)}
 
-			{selectedDrivers.length > 1 && (
-				<div className="grid grid-cols-2">
-					<HeadToHeadDriver driver={selectedDrivers[0]} />
-					<HeadToHeadDriver driver={selectedDrivers[1]} />
+			{selectedNrs.length > 1 && state?.driverList && state?.timingData && (
+				<div className="grid grid-cols-2 gap-2">
+					<HeadToHeadDriver
+						driver={state.driverList[selectedNrs[0]]}
+						timingDriver={state.timingData.lines[selectedNrs[0]]}
+						timingStatsDriver={state.timingStats?.lines[selectedNrs[0]]}
+						appTimingDriver={state.timingAppData?.lines[selectedNrs[0]]}
+						carData={carsData ? carsData[selectedNrs[0]].Channels : undefined}
+					/>
+					<HeadToHeadDriver
+						driver={state.driverList[selectedNrs[1]]}
+						timingDriver={state.timingData.lines[selectedNrs[1]]}
+						timingStatsDriver={state.timingStats?.lines[selectedNrs[1]]}
+						appTimingDriver={state.timingAppData?.lines[selectedNrs[1]]}
+						carData={carsData ? carsData[selectedNrs[1]].Channels : undefined}
+					/>
 				</div>
 			)}
 		</div>
