@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "select state, time from state where time >= $1",
+  "query": "select state, time as timestamp from state where time >= $1",
   "describe": {
     "columns": [
       {
@@ -10,7 +10,7 @@
       },
       {
         "ordinal": 1,
-        "name": "time",
+        "name": "timestamp",
         "type_info": "Timestamptz"
       }
     ],
@@ -24,5 +24,5 @@
       false
     ]
   },
-  "hash": "c9c9f2a299dda9ab9de33669dbeb781a5f5aa72afe67d0ead078284b166c98b7"
+  "hash": "3a6c432004f05e2ee31b5b0e7d578893b32a1c47978b673ed56da152f6ee5e12"
 }
