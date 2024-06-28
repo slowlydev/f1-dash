@@ -60,8 +60,6 @@ pub async fn init(
 
     let app = Router::new()
         .route("/api/sse", get(live::sse_handler))
-        .route("/api/range-buffer", get(recap::range))
-        .route("/api/history/driver/:id", get(history::get_driver))
         .route("/api/health", get(health::check))
         .layer(cors)
         .layer(governor)

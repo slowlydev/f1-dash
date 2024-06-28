@@ -129,21 +129,6 @@ export function SocketProvider({ children }: { children: ReactNode }) {
 		stateEngine.setDelay(delay);
 		carDataEngine.setDelay(delay);
 		positionEngine.setDelay(delay);
-
-		if (delay > maxDelay) {
-			// run a fetch on a separate thread
-			setTimeout(() => {
-				(async () => {
-					try {
-						const res = await fetch(`${env.NEXT_PUBLIC_LIVE_SOCKET_URL}/api/range-buffer?delay=${delay}`);
-						const snapshots: Snapshot[] = await res.json();
-						handleSnapshots(snapshots);
-					} catch (error) {
-						console.log(error);
-					}
-				})();
-			}, 0);
-		}
 	};
 
 	const pause = () => {
