@@ -11,9 +11,7 @@ use crate::LiveState;
 
 mod cors;
 mod health;
-mod history;
 pub mod live;
-mod recap;
 
 pub struct AppState {
     tx: broadcast::Sender<live::LiveEvent>,
