@@ -35,7 +35,7 @@ export default function DriverInfo({ timingDriver, gridPos }: Props) {
 					"text-gray-700": !gain && !loss,
 				})}
 			>
-				{gain ? `+${positionChange}` : loss ? positionChange : "-"}
+				{gain ? `+${positionChange}` : loss ? positionChange : `${timingDriver.numberOfLaps}L`}
 			</p>
 
 			<p className="text-sm font-medium leading-none text-zinc-600">{status ?? "-"}</p>
