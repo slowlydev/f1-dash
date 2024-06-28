@@ -19,7 +19,7 @@ pub struct DelayQuery {
 #[derive(serde::Serialize)]
 pub struct StateSnapshot {
     pub state: Value,
-    pub time: DateTime<Utc>,
+    pub timestamp: DateTime<Utc>,
 }
 
 pub async fn range(
@@ -28,7 +28,7 @@ pub async fn range(
 ) -> Result<impl IntoResponse, StatusCode> {
     let snapshots = sqlx::query_as!(
         StateSnapshot,
-        r#"select state, time from state where time >= $1"#,
+        r#"select state, time as timestamp from state where time >= $1"#,
         Utc::now() - Duration::from_secs(query.delay)
     )
     .fetch_all(&state.db)

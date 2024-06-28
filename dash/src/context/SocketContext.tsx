@@ -15,11 +15,14 @@ import { utc } from "moment";
 import { merge } from "@/lib/merge";
 import { inflate } from "@/lib/inflate";
 
+import { env } from "@/env.mjs";
+
 import { useStateEngine } from "@/hooks/useStateEngine";
+import { useDevMode } from "@/hooks/useDevMode";
 
 import { CarData, CarsData, Position, Positions, State } from "@/types/state.type";
 import { MessageData } from "@/types/message.type";
-import { useDevMode } from "@/hooks/useDevMode";
+import { Snapshot } from "@/types/recap.type";
 
 type Values = {
 	connected: boolean;
@@ -97,11 +100,50 @@ export function SocketProvider({ children }: { children: ReactNode }) {
 		}
 	};
 
+	const handleSnapshots = (snapshots: Snapshot[]) => {
+		stateEngine.addFramesWithTimestamp(
+			snapshots.map((ss) => ({ data: ss.state, timestamp: utc(ss.timestamp).local().valueOf() })),
+		);
+
+		for (const snapshot of snapshots) {
+			if (snapshot.state.carDataZ) {
+				const carData = inflate<CarData>(snapshot.state.carDataZ);
+				carDataEngine.addFramesWithTimestamp(
+					carData.Entries.map((e) => ({ data: e.Cars, timestamp: utc(e.Utc).local().valueOf() })),
+				);
+			}
+
+			if (snapshot.state.positionZ) {
+				const position = inflate<Position>(snapshot.state.positionZ);
+				positionEngine.addFramesWithTimestamp(
+					position.Position.map((p) => ({ data: p.Entries, timestamp: utc(p.Timestamp).local().valueOf() })),
+				);
+			}
+		}
+	};
+
+	const maxDelay = Math.min(stateEngine.maxDelay, carDataEngine.maxDelay, positionEngine.maxDelay);
+
 	const setDelay = (delay: number) => {
 		setDelayI(delay);
 		stateEngine.setDelay(delay);
 		carDataEngine.setDelay(delay);
 		positionEngine.setDelay(delay);
+
+		if (delay > maxDelay) {
+			// run a fetch on a separate thread
+			setTimeout(() => {
+				(async () => {
+					try {
+						const res = await fetch(`${env.NEXT_PUBLIC_LIVE_SOCKET_URL}/api/range-buffer?delay=${delay}`);
+						const snapshots: Snapshot[] = await res.json();
+						handleSnapshots(snapshots);
+					} catch (error) {
+						console.log(error);
+					}
+				})();
+			}, 0);
+		}
 	};
 
 	const pause = () => {
@@ -124,8 +166,6 @@ export function SocketProvider({ children }: { children: ReactNode }) {
 	}, []);
 
 	// todo ? handle pausing
-
-	const maxDelay = Math.min(stateEngine.maxDelay, carDataEngine.maxDelay, positionEngine.maxDelay);
 
 	return (
 		<SocketContext.Provider

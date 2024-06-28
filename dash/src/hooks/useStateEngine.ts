@@ -7,12 +7,12 @@ type Frame<T> = {
 
 const sortFrames = <T>(a: Frame<T>, b: Frame<T>) => a.timestamp - b.timestamp;
 
-const MAX_BUFFER = 1000;
+const BUFFER_LOW = 800;
+const BUFFER_HIGH = 1000;
 const UPDATE_MS = 30;
 
 export const useStateEngine = <T>(name?: string) => {
 	const [state, setState] = useState<T | null>(null);
-	const [maxDelay, setMaxDelay] = useState<number>(0);
 
 	const broadcastRef = useRef<BroadcastChannel>(name ? new BroadcastChannel(name) : null);
 
@@ -40,7 +40,6 @@ export const useStateEngine = <T>(name?: string) => {
 			}
 
 			lastRef.current = time;
-			setMaxDelay(bufferRef.current.length > 0 ? Math.floor((Date.now() - bufferRef.current[0].timestamp) / 1000) : 0);
 		}
 
 		requestRef.current = requestAnimationFrame(animateNextFrame);
@@ -48,41 +47,41 @@ export const useStateEngine = <T>(name?: string) => {
 
 	useEffect(() => {
 		requestRef.current = requestAnimationFrame(animateNextFrame);
-		return () => (requestRef.current ? cancelAnimationFrame(requestRef.current) : void 0);
+		return () => {
+			requestRef.current ? cancelAnimationFrame(requestRef.current) : void 0;
+			broadcastRef.current?.close();
+		};
 	}, []);
 
 	const addFrame = (data: T) => {
 		bufferRef.current.push({ data, timestamp: Date.now() });
-		bufferRef.current.sort(sortFrames);
 
-		if (bufferRef.current.length > MAX_BUFFER) {
-			bufferRef.current.splice(0, bufferRef.current.length - MAX_BUFFER);
+		if (bufferRef.current.length > BUFFER_HIGH) {
+			bufferRef.current.splice(0, bufferRef.current.length - BUFFER_LOW);
+
+			// let's only sort when we have to cut, to save some mutations on the buffer
+			bufferRef.current.sort(sortFrames);
 		}
 	};
 
 	const addFramesWithTimestamp = (data: Frame<T>[]) => {
-		bufferRef.current.push(...data);
-		bufferRef.current.sort(sortFrames);
+		const incoming = data.sort(sortFrames);
+		bufferRef.current.push(...incoming);
 
-		if (bufferRef.current.length > MAX_BUFFER) {
-			bufferRef.current.splice(0, bufferRef.current.length - MAX_BUFFER);
+		if (bufferRef.current.length > BUFFER_HIGH) {
+			bufferRef.current.splice(0, bufferRef.current.length - BUFFER_LOW);
 		}
 	};
-
-	const setDelay = (delay: number) => (delayRef.current = delay);
-
-	const pause = () => (runningRef.current = false);
-	const resume = () => (runningRef.current = true);
 
 	return {
 		state,
 		setState,
 		addFrame,
 		addFramesWithTimestamp,
-		setDelay,
-		maxDelay,
-		pause,
-		resume,
+		setDelay: (delay: number) => (delayRef.current = delay),
+		maxDelay: bufferRef.current.length > 0 ? Math.floor((Date.now() - bufferRef.current[0].timestamp) / 1000) : 0,
+		pause: () => (runningRef.current = false),
+		resume: () => (runningRef.current = true),
 		metrics: {
 			bufferLength: bufferRef.current.length,
 			running: runningRef.current,
