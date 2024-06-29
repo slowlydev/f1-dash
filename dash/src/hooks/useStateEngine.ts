@@ -7,8 +7,8 @@ type Frame<T> = {
 
 const sortFrames = <T>(a: Frame<T>, b: Frame<T>) => a.timestamp - b.timestamp;
 
-const BUFFER_LOW = 800;
-const BUFFER_HIGH = 1000;
+const BUFFER_LOW = 1000;
+const BUFFER_HIGH = 1200;
 const UPDATE_MS = 30;
 
 export const useStateEngine = <T>(name?: string) => {
