@@ -1,7 +1,6 @@
 use std::{error::Error, net::SocketAddr, sync::Arc, thread, time::Duration};
 
 use axum::{routing::get, Router};
-use sqlx::PgPool;
 use tokio::sync::broadcast;
 use tower_governor::{
     governor::GovernorConfigBuilder, key_extractor::SmartIpKeyExtractor, GovernorLayer,
@@ -16,7 +15,6 @@ pub mod live;
 pub struct AppState {
     tx: broadcast::Sender<live::LiveEvent>,
     state: LiveState,
-    db: PgPool,
 }
 
 fn addr() -> String {
@@ -26,7 +24,6 @@ fn addr() -> String {
 const CLEANUP_INTERVAL: u64 = 60;
 
 pub async fn init(
-    db: PgPool,
     tx: broadcast::Sender<live::LiveEvent>,
     state: LiveState,
 ) -> Result<(), Box<dyn Error>> {
@@ -54,7 +51,7 @@ pub async fn init(
         config: governor_conf,
     };
 
-    let app_state = Arc::new(AppState { tx, state, db });
+    let app_state = Arc::new(AppState { tx, state });
 
     let app = Router::new()
         .route("/api/sse", get(live::sse_handler))

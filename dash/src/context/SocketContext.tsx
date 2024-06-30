@@ -22,7 +22,6 @@ import { useDevMode } from "@/hooks/useDevMode";
 
 import { CarData, CarsData, Position, Positions, State } from "@/types/state.type";
 import { MessageData } from "@/types/message.type";
-import { Snapshot } from "@/types/recap.type";
 
 type Values = {
 	connected: boolean;
@@ -97,28 +96,6 @@ export function SocketProvider({ children }: { children: ReactNode }) {
 			positionEngine.addFramesWithTimestamp(
 				position.Position.map((p) => ({ data: p.Entries, timestamp: utc(p.Timestamp).local().valueOf() })),
 			);
-		}
-	};
-
-	const handleSnapshots = (snapshots: Snapshot[]) => {
-		stateEngine.addFramesWithTimestamp(
-			snapshots.map((ss) => ({ data: ss.state, timestamp: utc(ss.timestamp).local().valueOf() })),
-		);
-
-		for (const snapshot of snapshots) {
-			if (snapshot.state.carDataZ) {
-				const carData = inflate<CarData>(snapshot.state.carDataZ);
-				carDataEngine.addFramesWithTimestamp(
-					carData.Entries.map((e) => ({ data: e.Cars, timestamp: utc(e.Utc).local().valueOf() })),
-				);
-			}
-
-			if (snapshot.state.positionZ) {
-				const position = inflate<Position>(snapshot.state.positionZ);
-				positionEngine.addFramesWithTimestamp(
-					position.Position.map((p) => ({ data: p.Entries, timestamp: utc(p.Timestamp).local().valueOf() })),
-				);
-			}
 		}
 	};
 

@@ -35,21 +35,7 @@ services:
     profiles:
       - full
       - backends
-    depends_on:
-      - timescaledb
     environment:
-      - DATABASE_URL=postgres://postgres:password@timescaledb:5432/postgres
       - RUST_LOG="live_backend=trace,debug,info"
       - BACKEND_ADDRESS=0.0.0.0:4000
       - ORIGIN=http://localhost:3000
-
-  timescaledb:
-    image: timescale/timescaledb:latest-pg16
-    ports:
-      - 5432:5432
-    restart: always
-    profiles:
-      - full
-      - backends
-    environment:
-      - POSTGRES_PASSWORD=password
