@@ -12,9 +12,13 @@ pub fn merge(base: &mut Value, update: Value) {
         }
         (Value::Array(ref mut prev), Value::Object(update)) => {
             for (k, v) in update {
-                k.parse::<usize>()
-                    .ok()
-                    .and_then(|index| prev.get_mut(index).map(|item| merge(item, v)));
+                if let Some(index) = k.parse::<usize>().ok() {
+                    if let Some(item) = prev.get_mut(index) {
+                        merge(item, v);
+                    } else {
+                        prev.push(v);
+                    }
+                }
             }
         }
         (a, b) => *a = b,
