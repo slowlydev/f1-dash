@@ -1,6 +1,7 @@
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { utc } from "moment";
+import clsx from "clsx";
 
 import DriverTag from "./driver/DriverTag";
 import PlayControls from "./PlayControls";
@@ -12,15 +13,29 @@ type Props = {
 	driver: Driver;
 	capture: RadioCapture;
 	basePath: string;
+    transcription?: string;
 };
 
-export default function TeamRadioMessage({ driver, capture, basePath }: Props) {
+export default function TeamRadioMessage({ driver, capture, basePath, transcription }: Props) {
 	const audioRef = useRef<HTMLAudioElement | null>(null);
 	const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
 	const [playing, setPlaying] = useState<boolean>(false);
 	const [duration, setDuration] = useState<number>(10);
 	const [progress, setProgress] = useState<number>(0);
+
+	const transcriptionElement = useMemo(() => {
+		if (transcription === undefined) {
+			return <></>;
+		}
+		else if (transcription === "") {
+			return <SkeletonTranscription />;
+		} else {
+			return (
+				<p className="text-sm font-small" style={{whiteSpace: "pre-wrap"}}>{transcription}</p>
+			);
+		}
+	}, [transcription]);
 
 	const loadMeta = () => {
 		if (!audioRef.current) return;
@@ -97,6 +112,15 @@ export default function TeamRadioMessage({ driver, capture, basePath }: Props) {
 					/>
 				</div>
 			</div>
+			<div className="gap-1">
+				{transcriptionElement}
+			</div>
 		</motion.li>
 	);
+}
+
+const SkeletonTranscription = () => {
+	const animateClass = "h-6 animate-pulse rounded-md bg-zinc-800";
+
+	return <div className={clsx(animateClass, "!h-8 w-80")} />;
 }
