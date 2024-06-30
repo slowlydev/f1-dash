@@ -11,6 +11,7 @@ use crate::LiveState;
 
 mod cors;
 mod health;
+mod audio;
 pub mod live;
 
 pub struct AppState {
@@ -59,8 +60,9 @@ pub async fn init(
     let app = Router::new()
         .route("/api/sse", get(live::sse_handler))
         .route("/api/health", get(health::check))
-        .layer(cors)
+        .route("/api/audio", get(audio::get_audio))
         .layer(governor)
+        .layer(cors)
         .with_state(app_state)
         .into_make_service_with_connect_info::<SocketAddr>();
 

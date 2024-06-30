@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
-import { modes, type UiElements } from "@/context/ModeContext";
+import { modes, type UiElements, type TranscriptionSettings } from "@/context/ModeContext";
 
 import DelayInput from "@/components/DelayInput";
 import Button from "@/components/Button";
@@ -20,6 +20,9 @@ export default function SettingsPage() {
 
 	const [delay, setDelay] = useState<number>(0);
 
+	const [enableTranscription, setEnableTranscription] = useState<boolean>(false);
+	const [transcriptionModel, setTranscriptionModel] = useState<string>("");
+
 	useEffect(() => {
 		if (typeof window != undefined) {
 			const delayStorage = localStorage.getItem("delay");
@@ -33,6 +36,12 @@ export default function SettingsPage() {
 			setTableHeaders(customSettings.tableHeaders);
 			setSectorFastest(customSettings.sectorFastest);
 			setCarMetrics(customSettings.carMetrics);
+
+			const transcriptionStorage = localStorage.getItem("transcription");
+			const transcriptionSettings: TranscriptionSettings = transcriptionStorage ? JSON.parse(transcriptionStorage) : { enableTranscription: false, whisperModel: "" };
+
+			setEnableTranscription(transcriptionSettings.enableTranscription);
+			setTranscriptionModel(transcriptionSettings.whisperModel);		
 		}
 	}, []);
 
@@ -59,6 +68,26 @@ export default function SettingsPage() {
 			localStorage.setItem("custom", JSON.stringify(customSettings));
 		}
 	};
+
+	const handleTranscriptionSettingUpdate = (type: "transcription" | "model", newValue: string | boolean) => {
+		if (typeof window != undefined) {
+			const transcriptionStorage = localStorage.getItem("transcription");
+			const transcriptionSettings: TranscriptionSettings = transcriptionStorage ? JSON.parse(transcriptionStorage) : modes.custom;
+
+			switch (type) {
+				case "transcription": {
+					transcriptionSettings.enableTranscription = newValue as boolean;
+					break;
+				}
+				case "model": {
+					transcriptionSettings.whisperModel = newValue as string;
+					break;
+				}
+			}
+
+			localStorage.setItem("transcription", JSON.stringify(transcriptionSettings));
+		}
+	}
 
 	const updateDelay = (newDelay: number) => {
 		setDelay(newDelay);
@@ -136,6 +165,35 @@ export default function SettingsPage() {
 			<Button className="mt-2 !bg-red-500" onClick={() => updateDelay(0)}>
 				Reset delay
 			</Button>
+
+			<h2 className="my-4 text-2xl">Enable Radio Transcription</h2>
+
+			<p className="mb-4">
+				Only available when the corresponding feature is enabled from server.
+			</p>
+
+			<div className="flex gap-2">
+				<Toggle
+					enabled={enableTranscription}
+					setEnabled={(v) => {
+						setEnableTranscription(v);
+						handleTranscriptionSettingUpdate("transcription", v);
+					}}
+				/>
+				<p className="text-zinc-500">Enable Radio Transcription</p>
+			</div>
+
+			<div className="flex gap-2">
+				<select value={transcriptionModel} onChange={(s) => {
+					setTranscriptionModel(s.target.value);
+					handleTranscriptionSettingUpdate("model", s.target.value);
+				}}>
+					<option value="distil-whisper/distil-small.en">High Quality</option>
+					<option value="Xenova/whisper-base">Balanced</option>
+					<option value="Xenova/whisper-tiny">Low Latency</option>
+				</select>
+				<p className="text-zinc-500">Transcription Mode</p>
+			</div>
 
 			{/* <h2 className="my-4 text-2xl">Walkthrough</h2>
 

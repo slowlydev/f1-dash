@@ -7,5 +7,15 @@ await import("./src/env.mjs");
 /** @type {import("next").NextConfig} */
 const config = {
 	reactStrictMode: false,
+	webpack: (
+		config,
+	) => {
+        config.resolve.alias = {
+            ...config.resolve.alias,
+            "sharp$": false,
+            "onnxruntime-node$": false,
+        }
+		return config
+	 },	
 };
 export default config;
