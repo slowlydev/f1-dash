@@ -16,6 +16,6 @@ const config = {
             "onnxruntime-node$": false,
         }
 		return config
-	 },	
+	},	
 };
 export default config;
