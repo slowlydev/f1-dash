@@ -18,7 +18,7 @@ export default function Menubar() {
 
 	const [[liveWarning, nextRoute], setLiveWarning] = useState<[boolean, string | null]>([false, null]);
 
-	const liveRoutes = ["/dashboard"]; // adjust this when adding head-to-head or track map
+	const liveRoutes = ["/dashboard", "/head-to-head"]; // adjust this when adding head-to-head or track map
 	const onLiveRoute = liveRoutes.includes(pathname);
 
 	const liveTimingGuard = (to: string) => {
@@ -74,6 +74,10 @@ export default function Menubar() {
 					<Windows />
 
 					{/* TODO streams o.o */}
+
+					<motion.a className="cursor-pointer" whileTap={{ scale: 0.95 }} onClick={() => router.push("/head-to-head")}>
+						Head-to-Head
+					</motion.a>
 
 					<ConnectionStatus />
 				</div>
