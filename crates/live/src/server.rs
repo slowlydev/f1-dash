@@ -6,14 +6,14 @@ use tower_governor::{
     governor::GovernorConfigBuilder, key_extractor::SmartIpKeyExtractor, GovernorLayer,
 };
 
-use crate::LiveState;
+use crate::{LiveEvent, LiveState};
 
 mod cors;
 mod health;
 pub mod live;
 
 pub struct AppState {
-    tx: broadcast::Sender<live::LiveEvent>,
+    tx: broadcast::Sender<LiveEvent>,
     state: LiveState,
 }
 
@@ -24,7 +24,7 @@ fn addr() -> String {
 const CLEANUP_INTERVAL: u64 = 60;
 
 pub async fn init(
-    tx: broadcast::Sender<live::LiveEvent>,
+    tx: broadcast::Sender<LiveEvent>,
     state: LiveState,
 ) -> Result<(), Box<dyn Error>> {
     let cors = cors::init();

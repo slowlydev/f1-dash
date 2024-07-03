@@ -8,31 +8,9 @@ use futures::Stream;
 use tokio_stream::{wrappers::BroadcastStream, StreamExt};
 use tracing::{debug, info};
 
-use crate::data::compression;
+use data::compression;
 
 use super::AppState;
-
-#[derive(Clone)]
-pub enum LiveEvent {
-    Initial(String),
-    Update(String),
-}
-
-impl LiveEvent {
-    pub fn name(&self) -> &str {
-        match self {
-            LiveEvent::Initial(_) => "initial",
-            LiveEvent::Update(_) => "update",
-        }
-    }
-
-    pub fn inner(self) -> String {
-        match self {
-            LiveEvent::Initial(v) => v,
-            LiveEvent::Update(v) => v,
-        }
-    }
-}
 
 pub async fn sse_handler(
     State(state): State<Arc<AppState>>,
