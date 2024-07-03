@@ -18,7 +18,7 @@ pub struct AppState {
 }
 
 fn addr() -> String {
-    std::env::var("BACKEND_ADDRESS").unwrap_or("0.0.0.0:4000".to_string())
+    std::env::var("LIVE_BACKEND_ADDRESS").unwrap_or("0.0.0.0:4000".to_string())
 }
 
 const CLEANUP_INTERVAL: u64 = 60;

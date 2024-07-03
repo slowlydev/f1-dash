@@ -3,10 +3,10 @@ use std::sync::{Arc, Mutex};
 use serde_json::{json, Value};
 use tokio::sync::broadcast;
 
-mod env;
 mod server;
 mod state;
 
+use env;
 use log;
 
 type LiveState = Arc<Mutex<Value>>;

@@ -25,7 +25,7 @@ pub async fn sse_handler(
         mem::drop(state);
         let initial = compression::deflate(initial_state).unwrap();
 
-        debug!("streaming current");
+        debug!("streaming current initial");
 
         Ok(sse::Event::default().event("initial").data(initial))
     });

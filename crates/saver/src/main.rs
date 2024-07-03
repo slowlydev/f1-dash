@@ -63,7 +63,7 @@ async fn main() {
                 error!("connection got closed by server");
                 break;
             }
-            _ => warn!("unhandled message, probaly binary, ping or pong"),
+            _ => warn!("unhandled message, probably binary, ping or pong"),
         }
     }
 

@@ -85,10 +85,8 @@ async fn handle_stream(
                     trace!("update compressed='{}'", update_compressed);
 
                     match tx.send(LiveEvent::Update(update_compressed)) {
-                        Ok(_) => debug!("update sent"),
-                        Err(e) => {
-                            error!("failed sending update: {}", e)
-                        }
+                        Ok(_) => trace!("update sent"),
+                        Err(e) => error!("failed sending update: {}", e),
                     };
 
                     merge(&mut state, update)
@@ -101,10 +99,9 @@ async fn handle_stream(
 
                 transformer::transform(&mut initial);
 
-                {
-                    let mut state = state.lock().unwrap();
-                    *state = initial.clone();
-                }
+                let mut state = state.lock().unwrap();
+                *state = initial.clone();
+                mem::drop(state);
 
                 let Some(initial) = compression::deflate(initial.to_string()) else {
                     error!("failed compressing update");
@@ -114,7 +111,7 @@ async fn handle_stream(
                 trace!("initial compressed='{}'", initial);
 
                 match tx.send(LiveEvent::Initial(initial)) {
-                    Ok(_) => debug!("initial sent"),
+                    Ok(_) => trace!("initial sent"),
                     Err(e) => error!("failed sending initial: {}", e),
                 };
             }

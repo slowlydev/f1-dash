@@ -3,11 +3,13 @@ use std::{
     fs::File,
     io::{self, BufRead},
     path::Path,
-    thread,
     time::Duration,
 };
 
-use tokio::sync::broadcast;
+use tokio::{
+    sync::{broadcast, mpsc},
+    time::sleep,
+};
 use tracing::{error, info};
 
 use log;
@@ -29,7 +31,7 @@ async fn main() {
     let path = std::path::Path::new(&path);
 
     if !path.exists() {
-        error!("file does not exisit at path {}", path.display());
+        error!("file does not exist at path {}", path.display());
         return;
     }
 
@@ -44,14 +46,19 @@ async fn main() {
     };
 
     let (tx, _rx) = broadcast::channel::<String>(10);
+    let (mpsc_tx, mut mpsc_rx) = mpsc::channel::<()>(10);
 
     let reader_tx = tx.clone();
 
     info!("starting reader thread");
 
-    thread::spawn(move || {
+    tokio::task::spawn(async move {
+        mpsc_rx.recv().await;
+
+        info!("reader has started broadcasting lines");
+
         for line in lines {
-            thread::sleep(Duration::from_millis(100));
+            sleep(Duration::from_millis(100)).await;
 
             match line {
                 Ok(txt) => {
@@ -64,7 +71,7 @@ async fn main() {
         }
     });
 
-    server::init(tx).await;
+    server::init(tx, mpsc_tx).await;
 }
 
 fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>>

@@ -2,11 +2,12 @@ use axum::{routing::get, Router};
 use tokio::net::TcpListener;
 use tracing::info;
 
-mod env;
-mod log;
+use env;
+use log;
+
 mod endpoints {
-    pub mod health;
-    pub mod schedule;
+    pub(crate) mod health;
+    pub(crate) mod schedule;
 }
 
 #[tokio::main]
@@ -19,8 +20,7 @@ async fn main() {
         .route("/api/schedule/next", get(endpoints::schedule::get_next))
         .route("/api/health", get(endpoints::health::check));
 
-    let default_addr = "0.0.0.0:5000".to_string();
-    let addr = std::env::var("BACKEND_ADDRESS").unwrap_or(default_addr);
+    let addr = addr();
 
     info!("running on {}", addr);
 
@@ -29,4 +29,8 @@ async fn main() {
     axum::serve(listener, app)
         .await
         .expect("failed to setup server");
+}
+
+fn addr() -> String {
+    std::env::var("API_BACKEND_ADDRESS").unwrap_or("0.0.0.0:5000".to_string())
 }
