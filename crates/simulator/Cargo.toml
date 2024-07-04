@@ -1,0 +1,18 @@
+[package]
+name = "simulator"
+version = "0.2.0"
+edition = "2021"
+publish = false
+authors = ["slowlydev"]
+
+[[bin]]
+name = "simulator"
+path = "src/main.rs"
+
+[dependencies]
+tokio.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+futures.workspace = true
+
+axum = { workspace = true, features = ["ws"] }
