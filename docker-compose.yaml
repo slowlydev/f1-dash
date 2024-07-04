@@ -1,0 +1,39 @@
+services:
+  live:
+    build:
+      context: .
+      target: live
+    restart: always
+    ports:
+      - 4000:4000
+    environment:
+      - LIVE_BACKEND_ADDRESS=0.0.0.0:4000
+      - ORIGIN=http://localhost:3000
+      - RUST_LOG=live=trace
+
+  api:
+    build:
+      context: .
+      target: api
+    restart: always
+    ports:
+      - 4001:4001
+    environment:
+      - API_BACKEND_ADDRESS=0.0.0.0:4001
+      - RUST_LOG=api=debug
+
+  frontend:
+    build:
+      context: ./dash/
+      args:
+        - NEXT_PUBLIC_LIVE_SOCKET_URL=http://localhost:4000
+        - NEXT_PUBLIC_API_URL=http://localhost:4001
+    restart: always
+    ports:
+      - 3000:3000
+    depends_on:
+      - api
+      - live
+    environment:
+      - NEXT_PUBLIC_LIVE_SOCKET_URL=http://localhost:4000
+      - NEXT_PUBLIC_API_URL=http://localhost:4001

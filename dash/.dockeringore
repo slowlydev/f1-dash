@@ -1,6 +1,0 @@
-.env
-.backend.sh
-/target
-readme.md
-.env.example
-dockerfile
