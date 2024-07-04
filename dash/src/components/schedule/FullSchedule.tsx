@@ -22,7 +22,7 @@ export default async function FullSchedule() {
 	if (!schedule) {
 		return (
 			<div className="flex h-44 flex-col items-center justify-center">
-				<p>Schedule not found</p>
+				<p>No upcomming weekend found</p>
 			</div>
 		);
 	}

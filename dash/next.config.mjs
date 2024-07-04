@@ -1,9 +1,11 @@
+/**
+ * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially useful
+ * for Docker builds.
+ */
 await import("./src/env.mjs");
 
 /** @type {import("next").NextConfig} */
 const config = {
 	reactStrictMode: false,
-	output: process.env.BUILD_STANDALONE === "1" ? "standalone" : undefined,
 };
-
 export default config;

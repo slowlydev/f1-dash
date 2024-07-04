@@ -4,23 +4,10 @@ WORKDIR /app
 COPY package*.json ./
 COPY yarn.lock ./
 
+
+RUN corepack enable yarn
+
 RUN yarn install --frozen-lockfile
-
-FROM base as builder
-
-ARG NODE_ENV
-ARG NEXT_PUBLIC_ENABLE_TRACKING
-ARG NEXT_PUBLIC_LIVE_SOCKET_URL
-ARG NEXT_PUBLIC_API_URL
-
-ENV NODE_ENV $NODE_ENV
-ENV NEXT_PUBLIC_ENABLE_TRACKING $NEXT_PUBLIC_ENABLE_TRACKING
-ENV NEXT_PUBLIC_LIVE_SOCKET_URL $NEXT_PUBLIC_LIVE_SOCKET_URL
-ENV NEXT_PUBLIC_API_URL $NEXT_PUBLIC_API_URL
-
-ENV NEXT_TELEMETRY_DISABLED=1
-ENV SKIP_ENV_VALIDATION=1
-ENV BUILD_STANDALONE=1
 
 COPY . .
 
@@ -30,14 +17,13 @@ FROM node:20-alpine AS runtime
 
 WORKDIR /app
 
-COPY --from=builder /app/.next/standalone ./
-COPY --from=builder /app/.next/static ./.next/static
-
-ENV NEXT_TELEMETRY_DISABLED=1
-ENV BUILD_STANDALONE=1
+COPY --from=base /app/.next ./.next
+COPY --from=base /app/node_modules ./node_modules
+COPY --from=base /app/package.json ./package.json
+COPY --from=base /app/public ./public
 
 ENV NODE_ENV=production
 
 EXPOSE 3000
 
-CMD HOSTNAME="0.0.0.0" node server.js
+CMD ["yarn", "start"]
