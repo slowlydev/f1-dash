@@ -10,12 +10,12 @@ name = "api"
 path = "src/main.rs"
 
 [dependencies]
-log.workspace = true
 env.workspace = true
 
 axum.workspace = true
 tokio.workspace = true
 tracing.workspace = true
+tracing-subscriber.workspace = true
 
 serde.workspace = true
 regex.workspace = true

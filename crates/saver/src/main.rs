@@ -5,14 +5,13 @@ use std::{
 };
 
 use tokio_stream::StreamExt;
-use tracing::{debug, error, info, warn};
+use tracing::{debug, error, info, level_filters::LevelFilter, warn};
 
 use client;
-use log;
 
 #[tokio::main]
 async fn main() {
-    log::init();
+    init_logs();
 
     let path = match env::args().nth(1) {
         Some(path) => path,
@@ -73,4 +72,13 @@ async fn main() {
     }
 
     info!("done");
+}
+
+fn init_logs() {
+    let env_filter = tracing_subscriber::EnvFilter::builder()
+        .with_default_directive(LevelFilter::INFO.into())
+        .with_env_var("RUST_LOG")
+        .from_env_lossy();
+
+    tracing_subscriber::fmt().with_env_filter(env_filter).init();
 }

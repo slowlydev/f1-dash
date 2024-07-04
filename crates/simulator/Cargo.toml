@@ -10,10 +10,9 @@ name = "simulator"
 path = "src/main.rs"
 
 [dependencies]
-log.workspace = true
-
 tokio.workspace = true
 tracing.workspace = true
+tracing-subscriber.workspace = true
 futures.workspace = true
 
 axum = { workspace = true, features = ["ws"] }

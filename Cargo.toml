@@ -2,20 +2,18 @@
 members = [
     "crates/data",      # lib
     "crates/client",    # lib
-    "crates/log",       # lib
     "crates/env",       # lib
     "crates/api",       # bin
     "crates/live",      # bin
     "crates/saver",     # bin
     "crates/simulator", # bin
 ]
-default-members = ["crates/live"]
+default-members = ["crates/live", "crates/api"]
 resolver = "2"
 
 [workspace.dependencies]
 data = { path = "crates/data" }
 client = { path = "crates/client" }
-log = { path = "crates/log" }
 env = { path = "crates/env" }
 
 tokio = { version = "1.37.0", features = ["full"] }

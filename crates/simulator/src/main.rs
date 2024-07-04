@@ -10,15 +10,13 @@ use tokio::{
     sync::{broadcast, mpsc},
     time::sleep,
 };
-use tracing::{error, info};
-
-use log;
+use tracing::{error, info, level_filters::LevelFilter};
 
 mod server;
 
 #[tokio::main]
 async fn main() {
-    log::init();
+    init_logs();
 
     let path = match env::args().nth(1) {
         Some(path) => path,
@@ -72,6 +70,15 @@ async fn main() {
     });
 
     server::init(tx, mpsc_tx).await;
+}
+
+fn init_logs() {
+    let env_filter = tracing_subscriber::EnvFilter::builder()
+        .with_default_directive(LevelFilter::INFO.into())
+        .with_env_var("RUST_LOG")
+        .from_env_lossy();
+
+    tracing_subscriber::fmt().with_env_filter(env_filter).init();
 }
 
 fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>>

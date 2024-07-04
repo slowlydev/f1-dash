@@ -5,6 +5,7 @@ use tokio::sync::broadcast;
 use tower_governor::{
     governor::GovernorConfigBuilder, key_extractor::SmartIpKeyExtractor, GovernorLayer,
 };
+use tracing::info;
 
 use crate::{LiveEvent, LiveState};
 
@@ -61,7 +62,11 @@ pub async fn init(
         .with_state(app_state)
         .into_make_service_with_connect_info::<SocketAddr>();
 
-    let listener = tokio::net::TcpListener::bind(addr())
+    let addr = addr();
+
+    info!("running on {}", addr);
+
+    let listener = tokio::net::TcpListener::bind(addr)
         .await
         .expect("failed to bind to port");
 

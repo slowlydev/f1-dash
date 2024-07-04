@@ -7,7 +7,7 @@ mod server;
 mod state;
 
 use env;
-use log;
+use tracing::level_filters::LevelFilter;
 
 type LiveState = Arc<Mutex<Value>>;
 
@@ -36,7 +36,7 @@ impl LiveEvent {
 #[tokio::main]
 async fn main() {
     env::init();
-    log::init();
+    init_logs();
 
     let (tx, _rx) = broadcast::channel::<LiveEvent>(10);
     let state = Arc::new(Mutex::new(json!({})));
@@ -46,4 +46,13 @@ async fn main() {
     server::init(tx, state)
         .await
         .expect("http server setup failed");
+}
+
+fn init_logs() {
+    let env_filter = tracing_subscriber::EnvFilter::builder()
+        .with_default_directive(LevelFilter::INFO.into())
+        .with_env_var("RUST_LOG")
+        .from_env_lossy();
+
+    tracing_subscriber::fmt().with_env_filter(env_filter).init();
 }

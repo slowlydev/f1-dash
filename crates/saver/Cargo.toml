@@ -11,9 +11,9 @@ path = "src/main.rs"
 
 [dependencies]
 client.workspace = true
-log.workspace = true
 
 tokio.workspace = true
 tracing.workspace = true
+tracing-subscriber.workspace = true
 
 tokio-stream.workspace = true
