@@ -63,7 +63,7 @@ const TableHeaders = () => {
 			<p>Position</p>
 			<p>DRS</p>
 			<p>Tire</p>
-			<p>Lap</p>
+			<p>Info</p>
 			<p>Gap</p>
 			<p>LapTime</p>
 			<p>Sectors</p>

@@ -4,13 +4,13 @@ import { TimingDataDriver } from "@/types/state.type";
 
 type Props = {
 	timingDriver: TimingDataDriver;
-	gridPos: number;
+	gridPos?: number;
 };
 
 export default function DriverInfo({ timingDriver, gridPos }: Props) {
-	const positionChange = gridPos - parseInt(timingDriver.position);
-	const gain = positionChange > 0;
-	const loss = positionChange < 0;
+	const positionChange = gridPos && gridPos - parseInt(timingDriver.position);
+	const gain = positionChange && positionChange > 0;
+	const loss = positionChange && positionChange < 0;
 
 	const status = timingDriver.knockedOut
 		? "OUT"
@@ -35,7 +35,13 @@ export default function DriverInfo({ timingDriver, gridPos }: Props) {
 					"text-gray-700": !gain && !loss,
 				})}
 			>
-				{gain ? `+${positionChange}` : loss ? positionChange : "-"}
+				{positionChange !== undefined
+					? gain
+						? `+${positionChange}`
+						: loss
+							? positionChange
+							: "-"
+					: `${timingDriver.numberOfLaps}L`}
 			</p>
 
 			<p className="text-sm font-medium leading-none text-zinc-600">{status ?? "-"}</p>

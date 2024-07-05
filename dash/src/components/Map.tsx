@@ -1,7 +1,14 @@
 import { useEffect, useState } from "react";
 import clsx from "clsx";
 
-import { DriverList, TimingData, TrackStatus, Message as RaceControlMessage, Positions } from "@/types/state.type";
+import {
+	DriverList,
+	TimingData,
+	TrackStatus,
+	Message as RaceControlMessage,
+	Positions,
+	PositionCar,
+} from "@/types/state.type";
 
 import { objectEntries } from "@/lib/driverHelper";
 import { fetchMap } from "@/lib/fetchMap";
@@ -280,43 +287,44 @@ export default function Map({
 
 			{centerX && centerY && positions && drivers && (
 				<>
+					{/* 241 is safty car */}
+					{/* theres also 242 and 243 which might be medical car and something else  */}
+					{positions["241"] && (
+						<CarDot
+							key={`map.car.241`}
+							name="Safety Car"
+							pit={false}
+							hidden={false}
+							pos={positions["241"]}
+							color={undefined}
+							rotation={rotation}
+							centerX={centerX}
+							centerY={centerY}
+						/>
+					)}
+
 					{objectEntries(drivers)
 						.reverse()
 						.filter((driver) => !!positions[driver.racingNumber].X && !!positions[driver.racingNumber].Y)
 						.map((driver) => {
-							const pos = positions[driver.racingNumber];
 							const timingDriver = timingDrivers?.lines[driver.racingNumber];
 							const hidden = timingDriver
 								? timingDriver.knockedOut || timingDriver.stopped || timingDriver.retired
 								: false;
 							const pit = timingDriver ? timingDriver.inPit : false;
 
-							const rotatedPos = rotate(pos.X, pos.Y, rotation, centerX, centerY);
-							const transform = [`translateX(${rotatedPos.x}px)`, `translateY(${rotatedPos.y}px)`].join(" ");
-
 							return (
-								<g
+								<CarDot
 									key={`map.driver.${driver.racingNumber}`}
-									id={`map.driver.${driver.racingNumber}`}
-									className={clsx("fill-zinc-700", { "opacity-30": pit }, { "!opacity-0": hidden })}
-									style={{
-										transition: "all 1s linear",
-										transform,
-										...(driver.teamColour && { fill: `#${driver.teamColour}` }),
-									}}
-								>
-									<circle id={`map.driver.${driver.racingNumber}.circle`} r={120} />
-									<text
-										id={`map.driver.${driver.racingNumber}.text`}
-										fontWeight="bold"
-										fontSize={120 * 3}
-										style={{
-											transform: "translateX(150px) translateY(-120px)",
-										}}
-									>
-										{driver.tla}
-									</text>
-								</g>
+									name={driver.tla}
+									color={driver.teamColour}
+									pit={pit}
+									hidden={hidden}
+									pos={positions[driver.racingNumber]}
+									rotation={rotation}
+									centerX={centerX}
+									centerY={centerY}
+								/>
 							);
 						})}
 				</>
@@ -324,3 +332,45 @@ export default function Map({
 		</svg>
 	);
 }
+
+type CarDotProps = {
+	name: string;
+	color: string | undefined;
+
+	pit: boolean;
+	hidden: boolean;
+
+	pos: PositionCar;
+	rotation: number;
+
+	centerX: number;
+	centerY: number;
+};
+
+const CarDot = ({ pos, name, color, pit, hidden, rotation, centerX, centerY }: CarDotProps) => {
+	const rotatedPos = rotate(pos.X, pos.Y, rotation, centerX, centerY);
+	const transform = [`translateX(${rotatedPos.x}px)`, `translateY(${rotatedPos.y}px)`].join(" ");
+
+	return (
+		<g
+			className={clsx("fill-zinc-700", { "opacity-30": pit }, { "!opacity-0": hidden })}
+			style={{
+				transition: "all 1s linear",
+				transform,
+				...(color && { fill: `#${color}` }),
+			}}
+		>
+			<circle id={`map.driver.circle`} r={120} />
+			<text
+				id={`map.driver.text`}
+				fontWeight="bold"
+				fontSize={120 * 3}
+				style={{
+					transform: "translateX(150px) translateY(-120px)",
+				}}
+			>
+				{name}
+			</text>
+		</g>
+	);
+};

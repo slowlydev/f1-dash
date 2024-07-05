@@ -15,11 +15,13 @@ import { utc } from "moment";
 import { merge } from "@/lib/merge";
 import { inflate } from "@/lib/inflate";
 
+import { env } from "@/env.mjs";
+
 import { useStateEngine } from "@/hooks/useStateEngine";
+import { useDevMode } from "@/hooks/useDevMode";
 
 import { CarData, CarsData, Position, Positions, State } from "@/types/state.type";
 import { MessageData } from "@/types/message.type";
-import { useDevMode } from "@/hooks/useDevMode";
 
 type Values = {
 	connected: boolean;
@@ -97,6 +99,8 @@ export function SocketProvider({ children }: { children: ReactNode }) {
 		}
 	};
 
+	const maxDelay = Math.min(stateEngine.maxDelay, carDataEngine.maxDelay, positionEngine.maxDelay);
+
 	const setDelay = (delay: number) => {
 		setDelayI(delay);
 		stateEngine.setDelay(delay);
@@ -124,8 +128,6 @@ export function SocketProvider({ children }: { children: ReactNode }) {
 	}, []);
 
 	// todo ? handle pausing
-
-	const maxDelay = Math.min(stateEngine.maxDelay, carDataEngine.maxDelay, positionEngine.maxDelay);
 
 	return (
 		<SocketContext.Provider
