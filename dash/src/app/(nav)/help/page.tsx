@@ -299,31 +299,41 @@ export default function HelpPage() {
 				Currently this does not do a lot, but in the future you can customize the UI to your liking and save it as a
 				mode.
 			</Note>
+
+			<h2 className="my-4 text-2xl">Driver Pedals</h2>
+
 			<div className="mb-4 flex flex-col gap-4">
 				<div className="flex items-center gap-6">
 					<div className="w-[4rem]">
 						<DriverPedals className="bg-red-500" value={1} maxValue={3} />
 					</div>
 
-					<p>Shows how much the driver is pressing the brake pedal.</p>
+					<p>
+						Shows if the driver is breaking <span className="text-zinc-500">(on / off)</span>
+					</p>
 				</div>
 
 				<div className="flex items-center gap-6">
 					<div className="w-[4rem]">
-						<DriverPedals className="bg-emerald-500" value={1} maxValue={3} />
+						<DriverPedals className="bg-emerald-500" value={3} maxValue={4} />
 					</div>
 
-					<p>Shows how much the driver is pressing the throttle pedal.</p>
+					<p>
+						Shows how much the driver is pressing the throttle pedal <span className="text-zinc-500">(0-100%)</span>
+					</p>
 				</div>
 
 				<div className="flex items-center gap-6">
 					<div className="w-[4rem]">
-						<DriverPedals className="bg-blue-500" value={1} maxValue={3} />
+						<DriverPedals className="bg-blue-500" value={2} maxValue={3} />
 					</div>
 
-					<p>Shows the engine's RPM.</p>
+					<p>
+						Shows the engine's RPM <span className="text-zinc-500">(0 - 15'000)</span>
+					</p>
 				</div>
 			</div>
+
 			<Footer />
 		</div>
 	);
