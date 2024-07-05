@@ -1,6 +1,7 @@
 import Image from "next/image";
 
 import { CarDataChannels, Driver, TimingAppDataDriver, TimingDataDriver, TimingStatsDriver } from "@/types/state.type";
+import DriverSpeedometer from "./driver/DriverSpeedometer";
 
 type Props = {
 	driver: Driver;
@@ -12,7 +13,7 @@ type Props = {
 
 export default function HeadToHeadDriver({ driver, carData }: Props) {
 	return (
-		<div>
+		<div className="p-2">
 			<div>
 				<Image src={driver.headshotUrl} alt={driver.firstName} width={100} height={100} />
 
@@ -23,14 +24,7 @@ export default function HeadToHeadDriver({ driver, carData }: Props) {
 				</div>
 			</div>
 
-			<div>
-				{carData && (
-					<div>
-						<p>{carData[45]}</p>
-						<p>{carData[2]}</p>
-					</div>
-				)}
-			</div>
+			<div>{carData && <DriverSpeedometer carData={carData} />}</div>
 		</div>
 	);
 }

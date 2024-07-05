@@ -3,60 +3,74 @@
 import { useState } from "react";
 import { useSocket } from "@/context/SocketContext";
 
-import DriverTag from "@/components/driver/DriverTag";
+import Select from "@/components/Select";
 import HeadToHeadDriver from "@/components/HeadToHeadDriver";
-
 import { objectEntries } from "@/lib/driverHelper";
 
 export default function HeadToHeadPage() {
 	const { state, carsData } = useSocket();
 
-	const [selectedNrs, setSelectedNrs] = useState<string[]>([]);
+	const [[first, second], setSelected] = useState<[string | null, string | null]>([null, null]);
 
-	const toggleDriver = (nr: string) => {
-		setSelectedNrs((old) => {
-			if (old.find((dNr) => dNr === nr)) {
-				return old.filter((dNr) => dNr !== nr);
-			} else {
-				return [...old, nr];
-			}
-		});
-	};
+	if (!state?.driverList || !state?.timingData) {
+		return (
+			<div className="flex h-96 items-center justify-center">
+				<p className="text-2xl text-zinc-500">Loading...</p>
+			</div>
+		);
+	}
 
 	return (
-		<div className="m-2 w-full">
-			{state && state.driverList && (
-				<div className="flex gap-2">
-					{objectEntries(state.driverList).map((driver) => (
-						<div
-							key={`driver.selector.${driver.racingNumber}`}
-							onClick={() => toggleDriver(driver.racingNumber)}
-							className="cursor-pointer"
-						>
-							<DriverTag teamColor={driver.teamColour} short={driver.tla} />
-						</div>
-					))}
-				</div>
-			)}
+		<div className="flex w-full flex-col">
+			<div className="grid grid-cols-2 divide-x divide-zinc-800">
+				{first ? (
+					<HeadToHeadDriver
+						driver={state.driverList[first]}
+						timingDriver={state.timingData.lines[first]}
+						timingStatsDriver={state.timingStats?.lines[first]}
+						appTimingDriver={state.timingAppData?.lines[first]}
+						carData={carsData ? carsData[first].Channels : undefined}
+					/>
+				) : (
+					<div className="flex h-96 flex-col items-center justify-center">
+						<Select
+							placeholder={`Search & Select a driver`}
+							options={objectEntries(state.driverList)
+								.map((driver) => ({
+									value: driver.racingNumber,
+									label: driver.fullName,
+								}))
+								.filter((driver) => driver.value !== second)}
+							selected={first}
+							setSelected={(v) => setSelected(([_, second]) => [v, second])}
+						/>
+					</div>
+				)}
 
-			{selectedNrs.length > 1 && state?.driverList && state?.timingData && (
-				<div className="grid grid-cols-2 gap-2">
+				{second ? (
 					<HeadToHeadDriver
-						driver={state.driverList[selectedNrs[0]]}
-						timingDriver={state.timingData.lines[selectedNrs[0]]}
-						timingStatsDriver={state.timingStats?.lines[selectedNrs[0]]}
-						appTimingDriver={state.timingAppData?.lines[selectedNrs[0]]}
-						carData={carsData ? carsData[selectedNrs[0]].Channels : undefined}
+						driver={state.driverList[second]}
+						timingDriver={state.timingData.lines[second]}
+						timingStatsDriver={state.timingStats?.lines[second]}
+						appTimingDriver={state.timingAppData?.lines[second]}
+						carData={carsData ? carsData[second].Channels : undefined}
 					/>
-					<HeadToHeadDriver
-						driver={state.driverList[selectedNrs[1]]}
-						timingDriver={state.timingData.lines[selectedNrs[1]]}
-						timingStatsDriver={state.timingStats?.lines[selectedNrs[1]]}
-						appTimingDriver={state.timingAppData?.lines[selectedNrs[1]]}
-						carData={carsData ? carsData[selectedNrs[1]].Channels : undefined}
-					/>
-				</div>
-			)}
+				) : (
+					<div className="flex h-96 flex-col items-center justify-center">
+						<Select
+							placeholder={`Search & Select a driver`}
+							options={objectEntries(state.driverList)
+								.map((driver) => ({
+									value: driver.racingNumber,
+									label: driver.fullName,
+								}))
+								.filter((driver) => driver.value !== first)}
+							selected={second}
+							setSelected={(v) => setSelected(([first, _]) => [first, v])}
+						/>
+					</div>
+				)}
+			</div>
 		</div>
 	);
 }
