@@ -4,6 +4,7 @@ import Note from "@/components/Note";
 import Footer from "@/components/Footer";
 import DriverDRS from "@/components/driver/DriverDRS";
 import DriverTire from "@/components/driver/DriverTire";
+import DriverPedals from "@/components/driver/DriverPedals";
 
 import unknownTireIcon from "public/tires/unknown.svg";
 import mediumTireIcon from "public/tires/medium.svg";
@@ -298,7 +299,31 @@ export default function HelpPage() {
 				Currently this does not do a lot, but in the future you can customize the UI to your liking and save it as a
 				mode.
 			</Note>
+			<div className="mb-4 flex flex-col gap-4">
+				<div className="flex items-center gap-6">
+					<div className="w-[4rem]">
+						<DriverPedals className="bg-red-500" value={1} maxValue={3} />
+					</div>
 
+					<p>Shows how much the driver is pressing the brake pedal.</p>
+				</div>
+
+				<div className="flex items-center gap-6">
+					<div className="w-[4rem]">
+						<DriverPedals className="bg-emerald-500" value={1} maxValue={3} />
+					</div>
+
+					<p>Shows how much the driver is pressing the throttle pedal.</p>
+				</div>
+
+				<div className="flex items-center gap-6">
+					<div className="w-[4rem]">
+						<DriverPedals className="bg-blue-500" value={1} maxValue={3} />
+					</div>
+
+					<p>Shows the engine's RPM.</p>
+				</div>
+			</div>
 			<Footer />
 		</div>
 	);
