@@ -8,7 +8,7 @@ const config = {
 		remotePatterns: [
 			{
 				protocol: "https",
-				hostname: "www.formula1.com",
+				hostname: "**formula1.com",
 				port: "",
 			},
 		],
