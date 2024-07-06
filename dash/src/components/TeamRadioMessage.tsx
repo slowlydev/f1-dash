@@ -13,7 +13,7 @@ type Props = {
 	driver: Driver;
 	capture: RadioCapture;
 	basePath: string;
-    transcription?: string;
+  transcription?: string;
 };
 
 export default function TeamRadioMessage({ driver, capture, basePath, transcription }: Props) {
