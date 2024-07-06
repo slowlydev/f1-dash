@@ -68,7 +68,6 @@ export default function TeamRadios({ sessionPath, drivers, teamRadios }: Props) 
 						[path]: completeMessage.data.chunks.map((c) => c.text).join("\n"),
 					}));
 				}
-				console.log("Transcription completed: " + path);
 				break;
 		}
 	};
@@ -80,7 +79,6 @@ export default function TeamRadios({ sessionPath, drivers, teamRadios }: Props) 
 
 		for (const teamRadio of teamRadios) {
 			const audio = await loadAudioFromRadioCapture(audioContext, `${sessionPath}${teamRadio.path}`);
-			console.log("Requesting worker to transcript " + `${sessionPath}${teamRadio.path}`);
 			workerRef.current?.postMessage({
 				key: teamRadio.path,
 				audio,
