@@ -19,7 +19,5 @@ function mobileTabletCheck() {
 	return check;
 }
 const isMobileOrTablet = mobileTabletCheck();
-export default {
-	SAMPLING_RATE: 16000,
-	DEFAULT_QUANTIZED: isMobileOrTablet,
-};
+export const SAMPLING_RATE = 16000;
+export const DEFAULT_QUANTIZED = isMobileOrTablet;

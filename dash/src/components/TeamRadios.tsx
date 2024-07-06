@@ -9,7 +9,7 @@ import { DriverList, RadioCapture, TeamRadio } from "@/types/state.type";
 
 import TeamRadioMessage from "@/components/TeamRadioMessage";
 import { TranscriptionSettings } from "@/context/ModeContext";
-import Constants from "@/lib/constants";
+import { SAMPLING_RATE, DEFAULT_QUANTIZED } from "@/lib/constants";
 import { env } from "@/env.mjs";
 
 type Props = {
@@ -74,7 +74,7 @@ export default function TeamRadios({ sessionPath, drivers, teamRadios }: Props) 
 
 	const beginTranscripting = async (teamRadios: RadioCapture[]) => {
 		const audioContext = new window.AudioContext({
-			sampleRate: Constants.SAMPLING_RATE,
+			sampleRate: SAMPLING_RATE,
 		});
 
 		for (const teamRadio of teamRadios) {
@@ -84,7 +84,7 @@ export default function TeamRadios({ sessionPath, drivers, teamRadios }: Props) 
 				audio,
 				model: transcriptionModel,
 				multilingual: false,
-				quantized: Constants.DEFAULT_QUANTIZED,
+				quantized: DEFAULT_QUANTIZED,
 				subtask: null,
 				language: null,
 			});
