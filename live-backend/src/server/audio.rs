@@ -9,7 +9,7 @@ pub struct Params {
 }
 
 pub async fn get_audio(Query(params): Query<Params>) -> Result<impl IntoResponse, axum::http::StatusCode> {
-    let Ok(_) = std::env::var("ENABLE_AUDIO_FETCH") else { return Err(axum::http::StatusCode::NOT_FOUND) };
+    let Ok(_) = std::env::var("ENABLE_AUDIO_FETCH") else { return Err(axum::http::StatusCode::NOT_IMPLEMENTED) };
 
     let audio_url = format!("https://livetiming.formula1.com/static/{}", params.path);
     match reqwest::get(&audio_url).await {
