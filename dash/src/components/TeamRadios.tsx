@@ -73,7 +73,7 @@ export default function TeamRadios({ sessionPath, drivers, teamRadios }: Props) 
 	};
 
 	const beginTranscripting = async (teamRadios: RadioCapture[]) => {
-		const audioContext = new (window.AudioContext || window.webkitAudioContext)({
+		const audioContext = new window.AudioContext({
 			sampleRate: Constants.SAMPLING_RATE,
 		});
 
