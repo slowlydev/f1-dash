@@ -13,7 +13,7 @@ type Props = {
 	driver: Driver;
 	capture: RadioCapture;
 	basePath: string;
-  transcription?: string;
+	transcription?: string;
 };
 
 export default function TeamRadioMessage({ driver, capture, basePath, transcription }: Props) {
@@ -27,12 +27,13 @@ export default function TeamRadioMessage({ driver, capture, basePath, transcript
 	const transcriptionElement = useMemo(() => {
 		if (transcription === undefined) {
 			return <></>;
-		}
-		else if (transcription === "") {
+		} else if (transcription === "") {
 			return <SkeletonTranscription />;
 		} else {
 			return (
-				<p className="text-sm font-small" style={{whiteSpace: "pre-wrap"}}>{transcription}</p>
+				<p className="font-small text-sm" style={{ whiteSpace: "pre-wrap" }}>
+					{transcription}
+				</p>
 			);
 		}
 	}, [transcription]);
@@ -112,9 +113,7 @@ export default function TeamRadioMessage({ driver, capture, basePath, transcript
 					/>
 				</div>
 			</div>
-			<div className="gap-1">
-				{transcriptionElement}
-			</div>
+			<div className="gap-1">{transcriptionElement}</div>
 		</motion.li>
 	);
 }
@@ -123,4 +122,4 @@ const SkeletonTranscription = () => {
 	const animateClass = "h-6 animate-pulse rounded-md bg-zinc-800";
 
 	return <div className={clsx(animateClass, "!h-8 w-80")} />;
-}
+};

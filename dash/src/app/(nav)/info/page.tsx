@@ -1,6 +1,6 @@
 export default function Page() {
 	return (
-		<div className="mt-4 ">
+		<div className="mt-4">
 			<h1 className="mb-2 text-3xl font-extrabold">Infos about issues and v2 beta</h1>
 
 			<div className="my-2 rounded-lg bg-blue-600 p-4">

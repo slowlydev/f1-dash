@@ -9,7 +9,7 @@ import { DriverList, RadioCapture, TeamRadio } from "@/types/state.type";
 
 import TeamRadioMessage from "@/components/TeamRadioMessage";
 import { TranscriptionSettings } from "@/context/ModeContext";
-import Constants from '@/lib/constants';
+import Constants from "@/lib/constants";
 import { env } from "@/env.mjs";
 
 type Props = {
@@ -19,27 +19,31 @@ type Props = {
 };
 
 type TranscriberCompleteData = {
-    key: string;
-    data: {
-        text: string;
-        chunks: { text: string; timestamp: [number, number | null] }[];
-    };
-}
+	key: string;
+	data: {
+		text: string;
+		chunks: { text: string; timestamp: [number, number | null] }[];
+	};
+};
 
-const loadAudioFromRadioCapture = async (audioContext: AudioContext, path: string, retries = 0): Promise<Float32Array> => {
-    const queryString = new URLSearchParams({path}).toString();
-    try {
-        const response = await fetch(`${env.NEXT_PUBLIC_LIVE_SOCKET_URL}/api/audio?${queryString}`);
-        if (response.status === 429) throw new Error("met rate limiter") ;
-        const abuf = await response.arrayBuffer(); 
-        const audioData = await audioContext.decodeAudioData(abuf);
-        return audioData.getChannelData(0);
-    } catch (e) {
-        console.warn(e);
-        await new Promise<void>((res) => setTimeout(res, 500 * Math.pow(2, (retries + 1))));  // to deal with possible rate limit violation
-        return await loadAudioFromRadioCapture(audioContext, path, retries + 1);
-    }
-}
+const loadAudioFromRadioCapture = async (
+	audioContext: AudioContext,
+	path: string,
+	retries = 0,
+): Promise<Float32Array> => {
+	const queryString = new URLSearchParams({ path }).toString();
+	try {
+		const response = await fetch(`${env.NEXT_PUBLIC_LIVE_SOCKET_URL}/api/audio?${queryString}`);
+		if (response.status === 429) throw new Error("met rate limiter");
+		const abuf = await response.arrayBuffer();
+		const audioData = await audioContext.decodeAudioData(abuf);
+		return audioData.getChannelData(0);
+	} catch (e) {
+		console.warn(e);
+		await new Promise<void>((res) => setTimeout(res, 500 * Math.pow(2, retries + 1))); // to deal with possible rate limit violation
+		return await loadAudioFromRadioCapture(audioContext, path, retries + 1);
+	}
+};
 
 export default function TeamRadios({ sessionPath, drivers, teamRadios }: Props) {
 	const basePath = `https://livetiming.formula1.com/static/${sessionPath}`;
@@ -48,7 +52,7 @@ export default function TeamRadios({ sessionPath, drivers, teamRadios }: Props) 
 	const workerRef = useRef<Worker | null>(null);
 
 	const [enableTranscription, setEnableTranscription] = useState<boolean>(false);
-	const [transcriptions, setTranscriptions] = useState<{[key: string]: string}>({});
+	const [transcriptions, setTranscriptions] = useState<{ [key: string]: string }>({});
 	const [transcriptionModel, setTranscriptionModel] = useState<string>("");
 
 	const workerEventHandler = (event: MessageEvent) => {
@@ -59,9 +63,10 @@ export default function TeamRadios({ sessionPath, drivers, teamRadios }: Props) 
 				const completeMessage = message as TranscriberCompleteData;
 				const path = message.key;
 				if (path) {
-					setTranscriptions((oldTranscription) => (
-						{...oldTranscription, [path]: completeMessage.data.chunks.map((c) => c.text).join("\n")}
-					))
+					setTranscriptions((oldTranscription) => ({
+						...oldTranscription,
+						[path]: completeMessage.data.chunks.map((c) => c.text).join("\n"),
+					}));
 				}
 				console.log("Transcription completed: " + path);
 				break;
@@ -85,11 +90,11 @@ export default function TeamRadios({ sessionPath, drivers, teamRadios }: Props) 
 				subtask: null,
 				language: null,
 			});
-			await new Promise((res) => setTimeout(res, 1000));  // To avoid rate limit
+			await new Promise((res) => setTimeout(res, 1000)); // To avoid rate limit
 		}
 	};
 
-    useEffect(() => {
+	useEffect(() => {
 		if (typeof window != undefined) {
 			const worker = new Worker(new URL("../asr-worker.js", import.meta.url), {
 				type: "module",
@@ -97,9 +102,11 @@ export default function TeamRadios({ sessionPath, drivers, teamRadios }: Props) 
 			// Listen for messages from the Web Worker
 			worker.addEventListener("message", workerEventHandler);
 			workerRef.current = worker;
-		
+
 			const transcriptionStorage = localStorage.getItem("transcription");
-			const transcriptionSettings: TranscriptionSettings = transcriptionStorage ? JSON.parse(transcriptionStorage) : { enableTranscription: false, whisperModel: "" };
+			const transcriptionSettings: TranscriptionSettings = transcriptionStorage
+				? JSON.parse(transcriptionStorage)
+				: { enableTranscription: false, whisperModel: "" };
 
 			setEnableTranscription(transcriptionSettings.enableTranscription);
 			setTranscriptionModel(transcriptionSettings.whisperModel);
@@ -108,14 +115,12 @@ export default function TeamRadios({ sessionPath, drivers, teamRadios }: Props) 
 
 	useEffect(() => {
 		if (teamRadios && drivers && teamRadios.captures && enableTranscription && transcriptionModel) {
-			const targetRadios = teamRadios.captures
-				.sort(sortUtc)
-				.slice(0, 20);
+			const targetRadios = teamRadios.captures.sort(sortUtc).slice(0, 20);
 
 			setTranscriptions((oldTranscriptions) => {
 				const newRadios = targetRadios.filter((c) => oldTranscriptions[c.path] === undefined);
-				const newTranscriptions = {...oldTranscriptions};
-				newRadios.forEach((c) => newTranscriptions[c.path] = "");
+				const newTranscriptions = { ...oldTranscriptions };
+				newRadios.forEach((c) => (newTranscriptions[c.path] = ""));
 
 				beginTranscripting(newRadios);
 				return newTranscriptions;

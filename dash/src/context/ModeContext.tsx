@@ -18,7 +18,7 @@ export type UiElements = {
 export type TranscriptionSettings = {
 	enableTranscription: boolean;
 	whisperModel: string;
-}
+};
 
 type Mode = "simple" | "advanced" | "expert" | "custom";
 

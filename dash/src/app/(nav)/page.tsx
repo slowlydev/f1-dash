@@ -49,7 +49,7 @@ export default function Home() {
 			<section className="mb-10 flex w-full flex-col gap-2">
 				<h2 className="mb-4 text-2xl">What are our Features?</h2>
 
-				<div className="grid grid-flow-row  grid-cols-1 gap-2 sm:grid-cols-2">
+				<div className="grid grid-flow-row grid-cols-1 gap-2 sm:grid-cols-2">
 					{features.map((feature, i) => (
 						<FeatureCard key={`feature.${i}`} {...feature} />
 					))}

@@ -38,10 +38,12 @@ export default function SettingsPage() {
 			setCarMetrics(customSettings.carMetrics);
 
 			const transcriptionStorage = localStorage.getItem("transcription");
-			const transcriptionSettings: TranscriptionSettings = transcriptionStorage ? JSON.parse(transcriptionStorage) : { enableTranscription: false, whisperModel: "" };
+			const transcriptionSettings: TranscriptionSettings = transcriptionStorage
+				? JSON.parse(transcriptionStorage)
+				: { enableTranscription: false, whisperModel: "" };
 
 			setEnableTranscription(transcriptionSettings.enableTranscription);
-			setTranscriptionModel(transcriptionSettings.whisperModel);		
+			setTranscriptionModel(transcriptionSettings.whisperModel);
 		}
 	}, []);
 
@@ -72,7 +74,9 @@ export default function SettingsPage() {
 	const handleTranscriptionSettingUpdate = (type: "transcription" | "model", newValue: string | boolean) => {
 		if (typeof window != undefined) {
 			const transcriptionStorage = localStorage.getItem("transcription");
-			const transcriptionSettings: TranscriptionSettings = transcriptionStorage ? JSON.parse(transcriptionStorage) : modes.custom;
+			const transcriptionSettings: TranscriptionSettings = transcriptionStorage
+				? JSON.parse(transcriptionStorage)
+				: modes.custom;
 
 			switch (type) {
 				case "transcription": {
@@ -87,7 +91,7 @@ export default function SettingsPage() {
 
 			localStorage.setItem("transcription", JSON.stringify(transcriptionSettings));
 		}
-	}
+	};
 
 	const updateDelay = (newDelay: number) => {
 		setDelay(newDelay);
@@ -168,9 +172,7 @@ export default function SettingsPage() {
 
 			<h2 className="my-4 text-2xl">Enable Radio Transcription</h2>
 
-			<p className="mb-4">
-				Only available when the corresponding feature is enabled from server.
-			</p>
+			<p className="mb-4">Only available when the corresponding feature is enabled from server.</p>
 
 			<div className="flex gap-2">
 				<Toggle
@@ -184,10 +186,13 @@ export default function SettingsPage() {
 			</div>
 
 			<div className="flex gap-2">
-				<select value={transcriptionModel} onChange={(s) => {
-					setTranscriptionModel(s.target.value);
-					handleTranscriptionSettingUpdate("model", s.target.value);
-				}}>
+				<select
+					value={transcriptionModel}
+					onChange={(s) => {
+						setTranscriptionModel(s.target.value);
+						handleTranscriptionSettingUpdate("model", s.target.value);
+					}}
+				>
 					<option value="distil-whisper/distil-small.en">High Quality</option>
 					<option value="Xenova/whisper-base">Balanced</option>
 					<option value="Xenova/whisper-tiny">Low Latency</option>
