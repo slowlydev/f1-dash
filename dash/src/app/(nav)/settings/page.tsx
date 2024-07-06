@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { Select } from "@headlessui/react";
 
 import { modes, type UiElements, type TranscriptionSettings } from "@/context/ModeContext";
 
@@ -186,7 +187,7 @@ export default function SettingsPage() {
 			</div>
 
 			<div className="flex gap-2">
-				<select
+				<Select
 					value={transcriptionModel}
 					onChange={(s) => {
 						setTranscriptionModel(s.target.value);
@@ -196,7 +197,7 @@ export default function SettingsPage() {
 					<option value="distil-whisper/distil-small.en">High Quality</option>
 					<option value="Xenova/whisper-base">Balanced</option>
 					<option value="Xenova/whisper-tiny">Low Latency</option>
-				</select>
+				</Select>
 				<p className="text-zinc-500">Transcription Mode</p>
 			</div>
 
