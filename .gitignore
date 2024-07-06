@@ -5,5 +5,7 @@
 .env
 
 # compiled
-target/
+**/target
+
+# data
 *.data.*

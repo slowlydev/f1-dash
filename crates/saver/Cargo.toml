@@ -1,0 +1,19 @@
+[package]
+name = "saver"
+version = "0.2.0"
+edition = "2021"
+publish = false
+authors = ["slowlydev"]
+
+[[bin]]
+name = "saver"
+path = "src/main.rs"
+
+[dependencies]
+client.workspace = true
+
+tokio.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+
+tokio-stream.workspace = true
