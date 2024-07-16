@@ -44,7 +44,7 @@ function LoadingTire() {
 	return (
 		<div className="flex flex-col items-center gap-1">
 			<div className="h-8 w-8 animate-pulse rounded-full bg-zinc-800" />
-			<div className="h-4 w-8 animate-pulse rounded-md  bg-zinc-800" />
+			<div className="h-4 w-8 animate-pulse rounded-md bg-zinc-800" />
 		</div>
 	);
 }

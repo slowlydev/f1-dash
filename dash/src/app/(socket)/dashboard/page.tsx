@@ -51,7 +51,7 @@ export default function Page() {
 
 			<div className={clsx("flex w-full flex-col divide-y divide-zinc-800")}>
 				<div className={clsx("flex w-full flex-col divide-y divide-zinc-800", "xl:flex-row xl:divide-x xl:divide-y-0")}>
-					<div className={clsx("mb-2 overflow-x-auto md:overflow-visible", " xl:flex-[0,0,auto]")}>
+					<div className={clsx("mb-2 overflow-x-auto md:overflow-visible", "xl:flex-[0,0,auto]")}>
 						<LeaderBoard
 							drivers={state?.driverList}
 							driversTiming={state?.timingData}
