@@ -7,12 +7,12 @@ type Frame<T> = {
 
 const sortFrames = <T>(a: Frame<T>, b: Frame<T>) => a.timestamp - b.timestamp;
 
-const BUFFER_LOW = 1000;
-const BUFFER_HIGH = 1200;
 const UPDATE_MS = 30;
+const KEEP_BUFFER_SECS = 5;
 
 export const useStateEngine = <T>(name?: string) => {
 	const [state, setState] = useState<T | null>(null);
+	const [maxDelay, setMaxDelay] = useState<number>(0);
 
 	const broadcastRef = useRef<BroadcastChannel>(name ? new BroadcastChannel(name) : null);
 
@@ -24,24 +24,40 @@ export const useStateEngine = <T>(name?: string) => {
 	const lastRef = useRef<number>(0);
 
 	const animateNextFrame = (time: number) => {
-		if (time - lastRef.current > UPDATE_MS) {
-			if (runningRef.current) {
-				const buffer = bufferRef.current;
-
-				const lastFrame =
-					delayRef.current === 0
-						? buffer[buffer.length - 1]
-						: buffer.find((frame) => frame.timestamp > Date.now() - delayRef.current * 1000);
-
-				if (lastFrame) {
-					setState(lastFrame.data);
-					broadcastRef.current?.postMessage(lastFrame.data);
-				}
-			}
-
-			lastRef.current = time;
+		if (time - lastRef.current <= UPDATE_MS) {
+			requestRef.current = requestAnimationFrame(animateNextFrame);
+			return;
 		}
 
+		if (!runningRef.current) {
+			requestRef.current = requestAnimationFrame(animateNextFrame);
+			return;
+		}
+
+		const buffer = bufferRef.current;
+		const delay = delayRef.current;
+
+		if (delay === 0) {
+			const lastFrame = buffer[buffer.length - 1];
+			if (lastFrame) {
+				setState(lastFrame.data);
+				broadcastRef.current?.postMessage(lastFrame.data);
+			}
+		} else {
+			const delayedTimestamp = Date.now() - delay * 1000;
+			const lastFrame = buffer.find((frame) => frame.timestamp > delayedTimestamp);
+
+			if (lastFrame) {
+				setState(lastFrame.data);
+				broadcastRef.current?.postMessage(lastFrame.data);
+
+				bufferRef.current = buffer.filter((frame) => frame.timestamp >= lastFrame.timestamp - KEEP_BUFFER_SECS * 1000);
+			}
+		}
+
+		setMaxDelay(bufferRef.current.length > 0 ? Math.floor((Date.now() - bufferRef.current[0].timestamp) / 1000) : 0);
+
+		lastRef.current = time;
 		requestRef.current = requestAnimationFrame(animateNextFrame);
 	};
 
@@ -55,22 +71,11 @@ export const useStateEngine = <T>(name?: string) => {
 
 	const addFrame = (data: T) => {
 		bufferRef.current.push({ data, timestamp: Date.now() });
-
-		if (bufferRef.current.length > BUFFER_HIGH) {
-			bufferRef.current.splice(0, bufferRef.current.length - BUFFER_LOW);
-
-			// let's only sort when we have to cut, to save some mutations on the buffer
-			bufferRef.current.sort(sortFrames);
-		}
 	};
 
 	const addFramesWithTimestamp = (data: Frame<T>[]) => {
 		const incoming = data.sort(sortFrames);
 		bufferRef.current.push(...incoming);
-
-		if (bufferRef.current.length > BUFFER_HIGH) {
-			bufferRef.current.splice(0, bufferRef.current.length - BUFFER_LOW);
-		}
 	};
 
 	return {
@@ -79,7 +84,7 @@ export const useStateEngine = <T>(name?: string) => {
 		addFrame,
 		addFramesWithTimestamp,
 		setDelay: (delay: number) => (delayRef.current = delay),
-		maxDelay: bufferRef.current.length > 0 ? Math.floor((Date.now() - bufferRef.current[0].timestamp) / 1000) : 0,
+		maxDelay,
 		pause: () => (runningRef.current = false),
 		resume: () => (runningRef.current = true),
 		metrics: {

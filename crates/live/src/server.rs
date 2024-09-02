@@ -33,7 +33,7 @@ pub async fn init(
 
     let governor_conf = Arc::new(
         GovernorConfigBuilder::default()
-            .per_second(2)
+            .per_second(4)
             .burst_size(8)
             .key_extractor(SmartIpKeyExtractor)
             .finish()

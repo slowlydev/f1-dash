@@ -18,6 +18,7 @@ export default function SettingsPage() {
 	const [tableHeaders, setTableHeaders] = useState<boolean>(false);
 	const [sectorFastest, setSectorFastest] = useState<boolean>(false);
 	const [carMetrics, setCarMetrics] = useState<boolean>(false);
+	const [showCornerNumbers, setShowCornerNumbers] = useState<boolean>(false);
 
 	const [delay, setDelay] = useState<number>(0);
 
@@ -37,7 +38,7 @@ export default function SettingsPage() {
 			setTableHeaders(customSettings.tableHeaders);
 			setSectorFastest(customSettings.sectorFastest);
 			setCarMetrics(customSettings.carMetrics);
-
+      setShowCornerNumbers(customSettings.showCornerNumbers);
 			const transcriptionStorage = localStorage.getItem("transcription");
 			const transcriptionSettings: TranscriptionSettings = transcriptionStorage
 				? JSON.parse(transcriptionStorage)
@@ -48,7 +49,7 @@ export default function SettingsPage() {
 		}
 	}, []);
 
-	const handleUpdate = (type: "sector" | "table" | "car", newValue: boolean) => {
+	const handleUpdate = (type: "sector" | "table" | "car" | "corner", newValue: boolean) => {
 		if (typeof window != undefined) {
 			const customStorage = localStorage.getItem("custom");
 			const customSettings: UiElements = customStorage ? JSON.parse(customStorage) : modes.custom;
@@ -64,6 +65,10 @@ export default function SettingsPage() {
 				}
 				case "sector": {
 					customSettings.sectorFastest = newValue;
+					break;
+				}
+				case "corner": {
+					customSettings.showCornerNumbers = newValue;
 					break;
 				}
 			}
@@ -152,6 +157,17 @@ export default function SettingsPage() {
 					}}
 				/>
 				<p className="text-zinc-500">Show Car Metrics (RPM, Gear, Speed)</p>
+			</div>
+
+			<div className="flex gap-2">
+				<Toggle
+					enabled={showCornerNumbers}
+					setEnabled={(v) => {
+						setShowCornerNumbers(v);
+						handleUpdate("corner", v);
+					}}
+				/>
+				<p className="text-zinc-500">Show Corner Numbers on Track Map</p>
 			</div>
 
 			<h2 className="my-4 text-2xl">Delay</h2>

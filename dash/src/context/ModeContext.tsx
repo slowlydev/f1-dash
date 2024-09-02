@@ -14,6 +14,7 @@ export type UiElements = {
 	tableHeaders: boolean;
 	sectorFastest: boolean;
 	carMetrics: boolean;
+	showCornerNumbers: boolean;
 };
 export type TranscriptionSettings = {
 	enableTranscription: boolean;
@@ -31,22 +32,26 @@ export const modes: Modes = {
 		tableHeaders: false,
 		sectorFastest: false,
 		carMetrics: false,
+		showCornerNumbers: false,
 	},
 	advanced: {
 		tableHeaders: true,
 		sectorFastest: true,
 		carMetrics: false,
+		showCornerNumbers: true,
 	},
 	expert: {
 		tableHeaders: false,
 		sectorFastest: false,
 		carMetrics: true,
+		showCornerNumbers: true,
 	},
 	// custom is used as default values
 	custom: {
 		tableHeaders: false,
 		sectorFastest: false,
 		carMetrics: false,
+		showCornerNumbers: false,
 	},
 };
 
