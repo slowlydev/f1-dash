@@ -29,7 +29,6 @@ type Props = {
 
 	trackStatus: TrackStatus | undefined;
 	raceControlMessages: RaceControlMessage[] | undefined;
-	showCornerNumbers?: boolean;
 };
 
 const space = 1000;
@@ -157,16 +156,8 @@ const rotationFIX = 90;
 
 type Corner = {
 	number: number;
-	position: TrackPosition;
-	transformedCorner: TrackPosition;
-	transformedLabel: TrackPosition;
-};
-
-type TrackBounds = {
-	minX: number;
-	minY: number;
-	maxX: number;
-	maxY: number;
+	pos: TrackPosition;
+	labelPos: TrackPosition;
 };
 
 export default function Map({
@@ -176,22 +167,18 @@ export default function Map({
 	trackStatus,
 	raceControlMessages,
 	positions,
-	showCornerNumbers = true,
 }: Props) {
 	const { uiElements } = useMode();
-	const showCorners = uiElements.showCornerNumbers;
 
 	const [points, setPoints] = useState<null | { x: number; y: number }[]>(null);
 	const [sectors, setSectors] = useState<Sector[]>([]);
 
 	const [corners, setCorners] = useState<Corner[]>([]);
-	const [trackBounds, setTrackBounds] = useState<TrackBounds>({ minX: 0, minY: 0, maxX: 0, maxY: 0 });
 
 	const [rotation, setRotation] = useState<number>(0);
 
 	const [[minX, minY, widthX, widthY], setBounds] = useState<(null | number)[]>([null, null, null, null]);
 	const [[centerX, centerY], setCenter] = useState<(null | number)[]>([null, null]);
-	const [stroke, setStroke] = useState(0);
 
 	useEffect(() => {
 		(async () => {
@@ -215,30 +202,19 @@ export default function Map({
 				};
 			});
 
-			const cStroke =
-				(Math.max(...mapJson.x) - Math.min(...mapJson.x) + (Math.max(...mapJson.y) - Math.min(...mapJson.y))) / 225;
-			setStroke(cStroke);
-
 			const cornerPositions: Corner[] = mapJson.corners.map((corner) => {
-				const transformedCorner = rotate(
-					corner.trackPosition.x,
-					corner.trackPosition.y,
-					fixedRotation,
-					centerX,
-					centerY,
-				);
-				const transformedLabel = rotate(
-					corner.trackPosition.x + 4 * cStroke * Math.cos(rad(corner.angle)),
-					corner.trackPosition.y + 4 * cStroke * Math.sin(rad(corner.angle)),
+				const pos = rotate(corner.trackPosition.x, corner.trackPosition.y, fixedRotation, centerX, centerY);
+				const labelPos = rotate(
+					corner.trackPosition.x + 540 * Math.cos(rad(corner.angle)),
+					corner.trackPosition.y + 540 * Math.sin(rad(corner.angle)),
 					fixedRotation,
 					centerX,
 					centerY,
 				);
 				return {
 					number: corner.number,
-					position: corner.trackPosition,
-					transformedCorner,
-					transformedLabel,
+					pos,
+					labelPos,
 				};
 			});
 
@@ -257,8 +233,6 @@ export default function Map({
 			setSectors(sectors);
 			setPoints(rotatedPoints);
 			setRotation(fixedRotation);
-
-			setTrackBounds({ minX: cMinX, minY: cMinY, maxX: cMinX + cWidthX, maxY: cMinY + cWidthY });
 			setCorners(cornerPositions);
 		})();
 	}, [circuitKey]);
@@ -340,14 +314,13 @@ export default function Map({
 				);
 			})}
 
-			{showCorners &&
+			{uiElements.showCornerNumbers &&
 				corners.map((corner) => (
 					<CornerNumber
 						key={`corner-${corner.number}`}
 						number={corner.number}
-						transformedCorner={corner.transformedCorner}
-						transformedLabel={corner.transformedLabel}
-						stroke={stroke}
+						x={corner.labelPos.x}
+						y={corner.labelPos.y}
 					/>
 				))}
 
@@ -401,25 +374,15 @@ export default function Map({
 
 type CornerNumberProps = {
 	number: number;
-	transformedCorner: TrackPosition;
-	transformedLabel: TrackPosition;
-	stroke: number;
+	x: number;
+	y: number;
 };
 
-const CornerNumber: React.FC<CornerNumberProps> = ({ number, transformedCorner, transformedLabel, stroke }) => {
-	const fontSize = stroke * 2;
-	const [cornerX, cornerY] = [transformedCorner.x, transformedCorner.y];
-	const [labelX, labelY] = [transformedLabel.x, transformedLabel.y];
-
-	const lineX = labelX + fontSize * 0.5;
-	const lineY = labelY - fontSize * 0.5;
-
+const CornerNumber: React.FC<CornerNumberProps> = ({ number, x, y }) => {
 	return (
-		<g>
-			<text x={labelX} y={labelY} fontSize={fontSize} fontWeight="bold" fill="white" strokeWidth={fontSize / 40}>
-				{number}
-			</text>
-		</g>
+		<text x={x} y={y} className="fill-zinc-700" fontSize={300} fontWeight="semibold">
+			{number}
+		</text>
 	);
 };
 
