@@ -317,7 +317,7 @@ export default function Map({
 			{uiElements.showCornerNumbers &&
 				corners.map((corner) => (
 					<CornerNumber
-						key={`corner-${corner.number}`}
+						key={`corner.${corner.number}`}
 						number={corner.number}
 						x={corner.labelPos.x}
 						y={corner.labelPos.y}
