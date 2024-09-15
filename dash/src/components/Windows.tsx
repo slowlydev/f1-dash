@@ -41,7 +41,7 @@ export default function Windows() {
 								whileFocus={{ scale: 1.05 }}
 								whileTap={{ scale: 0.95 }}
 								key={`window.option.${i}`}
-								className=" flex size-40 cursor-pointer flex-col items-start justify-end rounded-lg bg-zinc-800 p-4 text-left"
+								className="flex size-40 cursor-pointer flex-col items-start justify-end rounded-lg bg-zinc-800 p-4 text-left"
 							>
 								<p>{windowOption.label}</p>
 							</motion.button>

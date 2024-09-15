@@ -122,7 +122,7 @@ export default function Timeline({ playing, maxDelay, time, setTime }: Props) {
 					<div className="bg- absolute inset-0 h-[3px] rounded-full bg-slate-500"></div>
 				</motion.div> */}
 
-				<div className="absolute inset-0 " ref={constraintsRef}>
+				<div className="absolute inset-0" ref={constraintsRef}>
 					<motion.button
 						className="absolute flex cursor-ew-resize items-center justify-center rounded-full active:cursor-grabbing"
 						ref={scrubberRef}

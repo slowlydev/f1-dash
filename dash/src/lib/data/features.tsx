@@ -51,7 +51,7 @@ export const features = [
 			"Monitor tire usage and pit stop strategies throughout the race. Keep track of when drivers make their crucial pit stops, switch tire compounds, and manage their tire wear to optimize race performance.",
 		children: (
 			<div className="flex gap-2">
-				<div className="flex space-x-[-1rem] ">
+				<div className="flex space-x-[-1rem]">
 					<Image src={softTireIcon} alt="soft" className="h-8 w-8" />
 					<Image src={mediumTireIcon} alt="medium" className="h-8 w-8" />
 					<Image src={hardTireIcon} alt="hard" className="h-8 w-8" />

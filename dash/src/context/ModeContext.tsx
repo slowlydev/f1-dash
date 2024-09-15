@@ -16,6 +16,10 @@ export type UiElements = {
 	carMetrics: boolean;
 	showCornerNumbers: boolean;
 };
+export type TranscriptionSettings = {
+	enableTranscription: boolean;
+	whisperModel: string;
+};
 
 type Mode = "simple" | "advanced" | "expert" | "custom";
 
