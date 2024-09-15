@@ -34,7 +34,7 @@ export default function DriverMiniSectors({ sectors = [], bestSectors, tla, show
 						</p>
 
 						{showFastest && (
-							<p className={clsx("text-sm font-semibold leading-none text-violet-600")}>
+							<p className={clsx("text-sm font-semibold leading-none text-emerald-500")}>
 								{bestSectors && bestSectors[i].value ? bestSectors[i].value : "-- ---"}
 							</p>
 						)}
