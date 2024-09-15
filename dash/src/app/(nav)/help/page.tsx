@@ -89,7 +89,7 @@ export default function HelpPage() {
 			<h2 className="my-4 text-2xl">DRS & PIT Status</h2>
 
 			<p className="mb-4">
-				Each driver in the leader board has this DRS and PIT Status indicator, it shows weather a driver has no DRS, was{" "}
+				Each driver in the leader board has this DRS and PIT Status indicator, it shows whether a driver has no DRS, was{" "}
 				{"<"}1s behind the driver ahead and got DRS in the detection zone, has DRS active or is in the pit lane or
 				leaving the pit lane.
 			</p>
