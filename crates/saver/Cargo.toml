@@ -17,3 +17,4 @@ tracing.workspace = true
 tracing-subscriber.workspace = true
 
 tokio-stream.workspace = true
+rocket = "0.5.1"
