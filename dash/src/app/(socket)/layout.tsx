@@ -20,7 +20,6 @@ import PlayControls from "@/components/PlayControls";
 import StreamStatus from "@/components/StreamStatus";
 import SegmentedControls from "@/components/SegmentedControls";
 import { SpeedPreferenceProvider, useSpeedPreference } from "@/context/SpeedPreferenceContext";
-import Toggle from "@/components/Toggle";
 
 type Props = {
 	children: ReactNode;
