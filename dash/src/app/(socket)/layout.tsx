@@ -19,6 +19,8 @@ import DelayInput from "@/components/DelayInput";
 import PlayControls from "@/components/PlayControls";
 import StreamStatus from "@/components/StreamStatus";
 import SegmentedControls from "@/components/SegmentedControls";
+import { SpeedPreferenceProvider, useSpeedPreference } from "@/context/SpeedPreferenceContext";
+import Toggle from "@/components/Toggle";
 
 type Props = {
 	children: ReactNode;
@@ -29,7 +31,9 @@ export default function SocketLayout({ children }: Props) {
 		<SocketProvider>
 			<ModeProvider>
 				<WindowsProvider>
-					<SubLayout>{children}</SubLayout>
+					<SpeedPreferenceProvider>
+						<SubLayout>{children}</SubLayout>
+					</SpeedPreferenceProvider>
 				</WindowsProvider>
 			</ModeProvider>
 		</SocketProvider>
@@ -39,6 +43,7 @@ export default function SocketLayout({ children }: Props) {
 const SubLayout = ({ children }: Props) => {
 	const { handleMessage, handleInitial, setConnected, setDelay, delay, maxDelay, pause, resume } = useSocket();
 	const { mode, setMode } = useMode();
+	const { speedPreference, setSpeedPreference } = useSpeedPreference();
 
 	useEffect(() => {
 		const sse = new EventSource(`${env.NEXT_PUBLIC_LIVE_SOCKET_URL}/api/sse`);
@@ -105,6 +110,7 @@ const SubLayout = ({ children }: Props) => {
 
 				<div className="flex flex-row-reverse flex-wrap-reverse items-center gap-1">
 					<SegmentedControls
+						id="mode"
 						className="w-full md:w-auto"
 						selected={mode}
 						onSelect={setMode}
@@ -117,6 +123,15 @@ const SubLayout = ({ children }: Props) => {
 					/>
 					<DelayInput className="hidden md:flex" delay={delay} setDebouncedDelay={setDelayProxy} />
 					<PlayControls className="hidden md:flex" playing={playback} onClick={() => togglePlayback()} />
+					<SegmentedControls
+						id="speed"
+						selected={speedPreference}
+						options={[
+							{ label: "km/h", value: "km/h" },
+							{ label: "mp/h", value: "mp/h" },
+						]}
+						onSelect={setSpeedPreference}
+					/>
 				</div>
 			</div>
 
