@@ -19,7 +19,9 @@ pub struct AppState {
 }
 
 fn addr() -> String {
-    let port = std::env::var("PORT").unwrap_or("4000".to_string());
+    let port = std::env::var("PORT").unwrap_or_else(|_| {
+        std::env::var("LIVE_BACKEND_ADDRESS").unwrap_or("0.0.0.0:4000".to_string())
+    });
     format!("0.0.0.0:{}", port)
 }
 
