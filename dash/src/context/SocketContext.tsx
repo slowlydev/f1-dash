@@ -57,11 +57,13 @@ export function SocketProvider({ children }: { children: ReactNode }) {
 	const positionEngine = useStateEngine<Positions>("position");
 
 	const handleInitial = (message: State) => {
+		console.log("Initial State", message);
 		stateEngine.setState(message);
 		liveStateRef.current = message;
 
 		if (message.carDataZ) {
 			const carData = inflate<CarData>(message.carDataZ);
+			console.log("Car Data", carData);
 			carDataEngine.setState(carData.Entries[0].Cars);
 			carDataEngine.addFramesWithTimestamp(
 				carData.Entries.map((e) => ({ data: e.Cars, timestamp: utc(e.Utc).local().milliseconds() })),
@@ -70,6 +72,8 @@ export function SocketProvider({ children }: { children: ReactNode }) {
 
 		if (message.positionZ) {
 			const position = inflate<Position>(message.positionZ);
+			console.log("Position", position);
+
 			positionEngine.setState(position.Position[0].Entries);
 			positionEngine.addFramesWithTimestamp(
 				position.Position.map((p) => ({ data: p.Entries, timestamp: utc(p.Timestamp).local().milliseconds() })),
@@ -78,6 +82,7 @@ export function SocketProvider({ children }: { children: ReactNode }) {
 	};
 
 	const handleMessage = (message: MessageData) => {
+		console.log("Message", message);
 		liveStateRef.current = merge(liveStateRef.current ?? {}, message);
 
 		if (liveStateRef.current) {
@@ -93,6 +98,7 @@ export function SocketProvider({ children }: { children: ReactNode }) {
 
 		if (message.positionZ) {
 			const position = inflate<Position>(message.positionZ);
+			console.log("Position", position);
 			positionEngine.addFramesWithTimestamp(
 				position.Position.map((p) => ({ data: p.Entries, timestamp: utc(p.Timestamp).local().valueOf() })),
 			);

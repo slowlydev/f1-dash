@@ -4,7 +4,7 @@
 	"private": true,
 	"scripts": {
 		"build": "next build",
-		"dev": "next dev",
+		"dev": "NODE_OPTIONS='--inspect' next dev",
 		"lint": "next lint",
 		"start": "next start",
 		"prettier": "prettier --write src"
