@@ -2,7 +2,7 @@ import { createContext, Dispatch, ReactNode, useContext, useEffect, useState, ty
 
 const speedPreferences = ["km/h", "mp/h"] as const;
 
-type SpeedPreference = (typeof speedPreferences)[number];
+export type SpeedPreference = (typeof speedPreferences)[number];
 
 type Values = {
 	speedPreference: SpeedPreference;
