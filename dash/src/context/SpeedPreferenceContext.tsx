@@ -6,13 +6,14 @@ export type SpeedPreference = (typeof speedPreferences)[number];
 
 type Values = {
 	speedPreference: SpeedPreference;
-	setSpeedPreference: Dispatch<SetStateAction<Values["speedPreference"]>>;
+	setSpeedPreference: (speedPref: SpeedPreference) => void;
 };
 
 const SpeedPreferenceContext = createContext<Values | undefined>(undefined);
 
 export function SpeedPreferenceProvider({ children }: { children: ReactNode }) {
 	const [speedPref, setSpeedPreference] = useState<SpeedPreference>("km/h");
+
 	useEffect(() => {
 		if (typeof window != undefined) {
 			const localStorageSpeedPreference = localStorage.getItem("speedPreference");
@@ -23,17 +24,19 @@ export function SpeedPreferenceProvider({ children }: { children: ReactNode }) {
 		}
 	}, []);
 
-	useEffect(() => {
+	const handleSetSpeedPreference = (speedPref: SpeedPreference) => {
+		setSpeedPreference(speedPref);
+
 		if (typeof window != undefined) {
 			localStorage.setItem("speedPreference", speedPref);
 		}
-	}, [speedPref]);
+	};
 
 	return (
 		<SpeedPreferenceContext.Provider
 			value={{
 				speedPreference: speedPref,
-				setSpeedPreference,
+				setSpeedPreference: handleSetSpeedPreference,
 			}}
 		>
 			{children}
