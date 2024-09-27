@@ -32,7 +32,7 @@ export default function SegmentedControls<T>({ id, className, options, selected,
 							>
 								{isActive && (
 									<motion.div
-										layoutId="segment"
+										layoutId={`segment-${id}`}
 										className="absolute bottom-0 left-0 right-0 top-0 z-[1] rounded-md bg-zinc-600"
 									/>
 								)}

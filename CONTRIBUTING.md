@@ -97,6 +97,6 @@ https://www.conventionalcommits.org/en/v1.0.0/
 
 ## Before opening a Pull Request
 
-Please test your code, build the parts of the application you touched, for example if you made changes in the frontend made sure to run `yarn build` and see if the build succeeds and maybe check out how it will look in prod via `yarn start` sometimes theres a difference between running `dev` and `start & build`.
+Please test your code, build the parts of the application you touched, for example if you made changes in the frontend, make sure to run `yarn build` and see if the build succeeds and maybe check out how it will look in prod via `yarn start` sometimes there is a difference between running `dev` and `start & build`.
 
 Make sure you format the files you created or touched, we use prettier for formatting so either run the command `yarn run prettier` or install the fitting extension for your preferred IDE.
