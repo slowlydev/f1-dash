@@ -19,6 +19,7 @@ import DelayInput from "@/components/DelayInput";
 import PlayControls from "@/components/PlayControls";
 import StreamStatus from "@/components/StreamStatus";
 import SegmentedControls from "@/components/SegmentedControls";
+import { SpeedPreferenceProvider, useSpeedPreference } from "@/context/SpeedPreferenceContext";
 
 type Props = {
 	children: ReactNode;
@@ -29,7 +30,9 @@ export default function SocketLayout({ children }: Props) {
 		<SocketProvider>
 			<ModeProvider>
 				<WindowsProvider>
-					<SubLayout>{children}</SubLayout>
+					<SpeedPreferenceProvider>
+						<SubLayout>{children}</SubLayout>
+					</SpeedPreferenceProvider>
 				</WindowsProvider>
 			</ModeProvider>
 		</SocketProvider>
@@ -105,6 +108,7 @@ const SubLayout = ({ children }: Props) => {
 
 				<div className="flex flex-row-reverse flex-wrap-reverse items-center gap-1">
 					<SegmentedControls
+						id="mode"
 						className="w-full md:w-auto"
 						selected={mode}
 						onSelect={setMode}
