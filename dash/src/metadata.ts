@@ -68,8 +68,6 @@ export const metadata: Metadata = {
 		telephone: false,
 	},
 
-	assets: [`${url}/fonts`, `${url}/tires`, `${url}/icons`, `${url}/flags`, `${url}/country-flags`],
-
 	metadataBase: new URL(url),
 
 	alternates: {
@@ -80,5 +78,5 @@ export const metadata: Metadata = {
 		google: "hKv0h7XtWgQ-pVNVKpwwb2wcCC2f0tBQ1X1IcDX50hg",
 	},
 
-	manifest: "/manifest.json",
+	manifest: "manifest.json",
 };

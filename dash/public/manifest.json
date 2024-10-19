@@ -3,8 +3,8 @@
 	"short_name": "f1-dash",
 	"start_url": "/",
 	"display": "standalone",
-	"background_color": "#000",
-	"theme_color": "#000",
+	"background_color": "#000000",
+	"theme_color": "#000000",
 	"description": "Realtime Formula 1 Dashboard",
 	"icons": []
 }
