@@ -9,6 +9,12 @@ type SettingsStore = {
 
 	speedUnit: SpeedUnit;
 	setSpeedUnit: (speedUnit: SpeedUnit) => void;
+
+	showCornerNumbers: boolean;
+	setShowCornerNumbers: (showCornerNumbers: boolean) => void;
+
+	carMetrics: boolean;
+	setCarMetrics: (carMetrics: boolean) => void;
 };
 
 export const useSettingsStore = create(
@@ -19,6 +25,12 @@ export const useSettingsStore = create(
 
 			speedUnit: "metric",
 			setSpeedUnit: (speedUnit: SpeedUnit) => set({ speedUnit }),
+
+			showCornerNumbers: false,
+			setShowCornerNumbers: (showCornerNumbers: boolean) => set({ showCornerNumbers }),
+
+			carMetrics: false,
+			setCarMetrics: (carMetrics: boolean) => set({ carMetrics }),
 		}),
 		{
 			name: "settings-storage",
