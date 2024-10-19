@@ -15,6 +15,8 @@ export default function SettingsPage() {
 		<div className="container mx-auto max-w-screen-lg px-4">
 			<h1 className="my-4 text-3xl">Settings</h1>
 
+			<h2 className="my-4 text-2xl">Visual</h2>
+
 			<div className="flex gap-2">
 				<Toggle enabled={settings.carMetrics} setEnabled={(v) => settings.setCarMetrics(v)} />
 				<p className="text-zinc-500">Show Car Metrics (RPM, Gear, Speed)</p>
@@ -30,13 +32,13 @@ export default function SettingsPage() {
 			<p className="mb-4">Choose the unit in which you want to display speeds.</p>
 
 			<SegmentedControls
-				id="speed"
+				id="speed-unit"
 				selected={settings.speedUnit}
+				onSelect={settings.setSpeedUnit}
 				options={[
 					{ label: "km/h", value: "metric" },
 					{ label: "mp/h", value: "imperial" },
 				]}
-				onSelect={settings.setSpeedUnit}
 			/>
 
 			<h2 className="my-4 text-2xl">Delay</h2>
