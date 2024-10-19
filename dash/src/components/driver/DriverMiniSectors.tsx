@@ -4,13 +4,11 @@ import { getTimeColor } from "@/lib/getTimeColor";
 import { TimingDataDriver, TimingStatsDriver } from "@/types/state.type";
 
 type Props = {
-	sectors: TimingDataDriver["sectors"];
-	bestSectors: TimingStatsDriver["bestSectors"] | undefined;
 	tla: string;
-	showFastest: boolean;
+	sectors: TimingDataDriver["sectors"];
 };
 
-export default function DriverMiniSectors({ sectors = [], bestSectors, tla, showFastest }: Props) {
+export default function DriverMiniSectors({ sectors = [], tla }: Props) {
 	return (
 		<div className="flex gap-2" id="walkthrough-driver-sectors">
 			{sectors.map((sector, i) => (
@@ -27,17 +25,10 @@ export default function DriverMiniSectors({ sectors = [], bestSectors, tla, show
 								"text-lg font-semibold leading-none",
 								getTimeColor(sector.overallFastest, sector.personalFastest),
 								!sector.value ? "text-zinc-600" : "",
-								showFastest ? "!text-sm" : "",
 							)}
 						>
 							{!!sector.value ? sector.value : !!sector.previousValue ? sector.previousValue : "-- ---"}
 						</p>
-
-						{showFastest && (
-							<p className={clsx("text-sm font-semibold leading-none text-violet-600")}>
-								{bestSectors && bestSectors[i].value ? bestSectors[i].value : "-- ---"}
-							</p>
-						)}
 					</div>
 				</div>
 			))}

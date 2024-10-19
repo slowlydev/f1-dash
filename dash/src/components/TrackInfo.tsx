@@ -4,14 +4,12 @@ import clsx from "clsx";
 
 import { getTrackStatusMessage } from "@/lib/getTrackStatusMessage";
 
-import { LapCount, TrackStatus } from "@/types/state.type";
+import { useDataStore } from "@/stores/useDataStore";
 
-type Props = {
-	track: TrackStatus | undefined;
-	lapCount: LapCount | undefined;
-};
+export default function TrackInfo() {
+	const lapCount = useDataStore((state) => state.state?.lapCount);
+	const track = useDataStore((state) => state.state?.trackStatus);
 
-export default function TrackInfo({ track, lapCount }: Props) {
 	const currentTrackStatus = getTrackStatusMessage(track?.status ? parseInt(track?.status) : undefined);
 
 	return (

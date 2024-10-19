@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { CarsData, Positions, State } from "@/types/state.type";
 import { WindowKey } from "@/lib/data/windows";
 
+import ChampionshipPrediction from "@/components/championship/ChampionshipPrediction";
 import TrackViolations from "@/components/TrackViolations";
 import RaceControl from "@/components/RaceControl";
 import TeamRadios from "@/components/TeamRadios";
@@ -36,6 +37,12 @@ export default function SubWindow({ params: { key } }: Props) {
 
 			const positionChannel = new BroadcastChannel("position");
 			positionChannel.onmessage = (msg) => setPositions(msg.data);
+
+			return () => {
+				stateChannel.close();
+				carDataChannel.close();
+				positionChannel.close();
+			};
 		}
 	}, []);
 
@@ -66,6 +73,10 @@ export default function SubWindow({ params: { key } }: Props) {
 					drivers={state?.driverList}
 					driversTiming={state?.timingData}
 				/>
+			)}
+
+			{key === "championship" && (
+				<ChampionshipPrediction drivers={state?.driverList} championshipPrediction={state?.championshipPrediction} />
 			)}
 		</div>
 	);

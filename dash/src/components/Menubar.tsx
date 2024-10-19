@@ -73,8 +73,6 @@ export default function Menubar() {
 				<div className="flex select-none items-center gap-4">
 					<Windows />
 
-					{/* TODO streams o.o */}
-
 					<ConnectionStatus />
 				</div>
 			)}

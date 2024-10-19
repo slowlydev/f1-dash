@@ -4,27 +4,16 @@ import clsx from "clsx";
 import { sortPos } from "@/lib/sorting/sortPos";
 import { objectEntries } from "@/lib/driverHelper";
 
-import { useMode } from "@/context/ModeContext";
-
-import { CarsData, DriverList, TimingAppData, TimingData, TimingStats } from "@/types/state.type";
+import { useDataStore } from "@/stores/useDataStore";
 
 import Driver from "@/components/driver/Driver";
 
-type Props = {
-	drivers: DriverList | undefined;
-	driversTiming: TimingData | undefined;
-	driversTimingStats: TimingStats | undefined;
-	driversAppTiming: TimingAppData | undefined;
-	carsData: CarsData | null;
-};
-
-export default function LeaderBoard({ drivers, driversTiming, driversTimingStats, driversAppTiming, carsData }: Props) {
-	const { uiElements } = useMode();
+export default function LeaderBoard() {
+	const drivers = useDataStore((state) => state.state?.driverList);
+	const driversTiming = useDataStore((state) => state.state?.timingData);
 
 	return (
 		<div className="flex w-fit flex-col divide-y divide-zinc-800">
-			{uiElements.tableHeaders && <TableHeaders />}
-
 			{(!drivers || !driversTiming) &&
 				new Array(20).fill("").map((_, index) => <SkeletonDriver key={`driver.loading.${index}`} />)}
 
@@ -36,13 +25,9 @@ export default function LeaderBoard({ drivers, driversTiming, driversTimingStats
 							.map((timingDriver, index) => (
 								<Driver
 									key={`leaderBoard.driver.${timingDriver.racingNumber}`}
+									position={index + 1}
 									driver={drivers[timingDriver.racingNumber]}
 									timingDriver={timingDriver}
-									appTimingDriver={driversAppTiming?.lines[timingDriver.racingNumber]}
-									timingStatsDriver={driversTimingStats?.lines[timingDriver.racingNumber]}
-									position={index + 1}
-									sessionPart={driversTiming.sessionPart}
-									carData={carsData ? carsData[timingDriver.racingNumber].Channels : undefined}
 								/>
 							))}
 					</AnimatePresence>
@@ -51,25 +36,6 @@ export default function LeaderBoard({ drivers, driversTiming, driversTimingStats
 		</div>
 	);
 }
-
-const TableHeaders = () => {
-	return (
-		<div
-			className="grid items-center gap-2 p-1 px-2 text-sm font-medium text-zinc-500"
-			style={{
-				gridTemplateColumns: "5.5rem 4rem 5.5rem 4rem 5rem 5.5rem auto auto",
-			}}
-		>
-			<p>Position</p>
-			<p>DRS</p>
-			<p>Tire</p>
-			<p>Info</p>
-			<p>Gap</p>
-			<p>LapTime</p>
-			<p>Sectors</p>
-		</div>
-	);
-};
 
 const SkeletonDriver = () => {
 	const animateClass = "h-8 animate-pulse rounded-md bg-zinc-800";

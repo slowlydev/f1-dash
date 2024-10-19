@@ -4,15 +4,7 @@ import { utc, duration } from "moment";
 
 import Flag from "@/components/Flag";
 
-import { useSocket } from "@/context/SocketContext";
-
-import { ExtrapolatedClock, SessionInfo as SessionInfoType, TimingData } from "@/types/state.type";
-
-type Props = {
-	session: SessionInfoType | undefined;
-	clock: ExtrapolatedClock | undefined;
-	timingData: TimingData | undefined;
-};
+import { useDataStore } from "@/stores/useDataStore";
 
 const sessionPartPrefix = (name: string) => {
 	switch (name) {
@@ -25,8 +17,13 @@ const sessionPartPrefix = (name: string) => {
 	}
 };
 
-export default function SessionInfo({ session, clock, timingData }: Props) {
-	const { delay } = useSocket();
+export default function SessionInfo() {
+	const clock = useDataStore((state) => state.state?.extrapolatedClock);
+	const session = useDataStore((state) => state.state?.sessionInfo);
+	const timingData = useDataStore((state) => state.state?.timingData);
+
+	// todo remove
+	const delay = 0;
 
 	const timeRemaining =
 		!!clock && !!clock.remaining

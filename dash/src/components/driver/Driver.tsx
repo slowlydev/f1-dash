@@ -1,17 +1,11 @@
 "use client";
 
-import clsx from "clsx";
 import { motion } from "framer-motion";
+import clsx from "clsx";
 
-import { useMode } from "@/context/ModeContext";
+import type { Driver, TimingDataDriver } from "@/types/state.type";
 
-import {
-	Driver as DriverType,
-	TimingDataDriver,
-	TimingAppDataDriver,
-	CarDataChannels,
-	TimingStatsDriver,
-} from "@/types/state.type";
+import { useDataStore } from "@/stores/useDataStore";
 
 import DriverTag from "./DriverTag";
 import DriverDRS from "./DriverDRS";
@@ -20,16 +14,12 @@ import DriverTire from "./DriverTire";
 import DriverMiniSectors from "./DriverMiniSectors";
 import DriverLapTime from "./DriverLapTime";
 import DriverInfo from "./DriverInfo";
-import DriverCarMetrics from "./DriverCarMetrics";
+// import DriverCarMetrics from "./DriverCarMetrics";
 
 type Props = {
 	position: number;
-	sessionPart: number | undefined;
-	driver: DriverType;
+	driver: Driver;
 	timingDriver: TimingDataDriver;
-	timingStatsDriver: TimingStatsDriver | undefined;
-	appTimingDriver: TimingAppDataDriver | undefined;
-	carData: CarDataChannels | undefined;
 };
 
 const hasDRS = (drs: number) => {
@@ -40,25 +30,29 @@ const possibleDRS = (drs: number) => {
 	return drs === 8;
 };
 
-export default function Driver({
-	driver,
-	timingDriver,
-	timingStatsDriver,
-	appTimingDriver,
-	position,
-	sessionPart,
-	carData,
-}: Props) {
-	const { uiElements } = useMode();
+const inDangerZone = (position: number, sessionPart: number) => {
+	switch (sessionPart) {
+		case 1:
+			return position > 15;
+		case 2:
+			return position > 10;
+		case 3:
+		default:
+			return false;
+	}
+};
 
-	// const [open, setOpen] = useState<boolean>(false);
+export default function Driver({ position, driver, timingDriver }: Props) {
+	const sessionPart = useDataStore((state) => state.state?.timingData?.sessionPart);
+	const timingStatsDriver = useDataStore((state) => state.state?.timingStats?.lines[driver.racingNumber]);
+	const appTimingDriver = useDataStore((state) => state.state?.timingAppData?.lines[driver.racingNumber]);
+	const carData = useDataStore((state) => (state.carsData ? state.carsData[driver.racingNumber].Channels : undefined));
 
 	const hasFastest = timingStatsDriver?.personalBestLapTime.position == 1;
 
 	return (
 		<motion.div
 			layout="position"
-			// onClick={() => setOpen((old) => !old)}
 			className={clsx("flex select-none flex-col gap-1 p-1.5", {
 				"opacity-50": timingDriver.knockedOut || timingDriver.retired || timingDriver.stopped,
 				"bg-violet-800 bg-opacity-30": hasFastest,
@@ -68,9 +62,7 @@ export default function Driver({
 			<div
 				className={clsx("grid items-center gap-2")}
 				style={{
-					gridTemplateColumns: uiElements.carMetrics
-						? "5.5rem 4rem 5.5rem 4rem 5rem 5.5rem auto auto"
-						: "5.5rem 4rem 5.5rem 4rem 5rem 5.5rem auto",
+					gridTemplateColumns: "5.5rem 4rem 5.5rem 4rem 5rem 5.5rem auto",
 				}}
 			>
 				<DriverTag className="!min-w-full" short={driver.tla} teamColor={driver.teamColour} position={position} />
@@ -88,34 +80,10 @@ export default function Driver({
 					sectors={timingDriver.sectors}
 					bestSectors={timingStatsDriver?.bestSectors}
 					tla={driver.tla}
-					showFastest={uiElements.sectorFastest}
 				/>
 
-				{uiElements.carMetrics && carData && <DriverCarMetrics carData={carData} />}
+				{/* <DriverCarMetrics carData={carData} /> */}
 			</div>
-
-			{/* <AnimatePresence>
-				{open && appTimingDriver && (
-					<DriverDetailed
-						racingNumber={driver.racingNumber}
-						timingDriver={timingDriver}
-						history={history}
-						appTimingDriver={appTimingDriver}
-					/>
-				)}
-			</AnimatePresence> */}
 		</motion.div>
 	);
 }
-
-const inDangerZone = (position: number, sessionPart: number) => {
-	switch (sessionPart) {
-		case 1:
-			return position > 15;
-		case 2:
-			return position > 10;
-		case 3:
-		default:
-			return false;
-	}
-};
