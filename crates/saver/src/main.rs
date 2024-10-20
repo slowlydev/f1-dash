@@ -51,7 +51,7 @@ async fn main() {
     while let Some(Ok(msg)) = stream.next().await {
         match msg {
             client::tungstenite::Message::Text(txt) => {
-                debug!("received message: {}", txt);
+                info!("received message: {}", txt);
 
                 match writeln!(file, "{}", txt) {
                     Ok(_) => {}

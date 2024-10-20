@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "eventsource": "^2.0.2",
+    "express": "^4.21.1"
+  }
+}

@@ -297,8 +297,8 @@ export default function Map({
 			{renderedSectors.map((sector) => {
 				const style = sector.pulse
 					? {
-							animation: `${sector.pulse * 100}ms linear infinite pulse`,
-						}
+						animation: `${sector.pulse * 100}ms linear infinite pulse`,
+					}
 					: {};
 				return (
 					<path
