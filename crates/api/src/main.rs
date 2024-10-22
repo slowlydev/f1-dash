@@ -6,6 +6,7 @@ use tracing::level_filters::LevelFilter;
 use env;
 
 mod endpoints {
+    pub(crate) mod archive;
     pub(crate) mod health;
     pub(crate) mod schedule;
 }
@@ -18,7 +19,11 @@ async fn main() {
     let app = Router::new()
         .route("/api/schedule", get(endpoints::schedule::get))
         .route("/api/schedule/next", get(endpoints::schedule::get_next))
-        .route("/api/health", get(endpoints::health::check));
+        .route("/api/health", get(endpoints::health::check))
+        .route(
+            "/api/archive/:year",
+            get(endpoints::archive::get_sessions_for_year),
+        );
 
     let addr = addr();
 
