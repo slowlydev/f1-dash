@@ -1,14 +1,7 @@
-use std::any;
-
-use anyhow::Error;
-use axum::{extract::Path, http::status};
-use chrono::Datelike;
-use reqwest::{get, StatusCode};
+use axum::extract::Path;
 use serde::{Deserialize, Serialize};
 use serde_json;
-use tracing::{debug, error, trace};
-
-use super::schedule::{Round, Session};
+use tracing::error;
 
 // A meeting represents a full race or testing weekend.
 #[derive(Serialize, Deserialize, Debug, Clone)]
