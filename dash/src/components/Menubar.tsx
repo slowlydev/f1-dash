@@ -46,6 +46,8 @@ export default function Menubar() {
 		router.prefetch("/");
 		router.prefetch("/dashboard");
 		router.prefetch("/schedule");
+		// should we prefetch archive?
+		router.prefetch("/archive");
 		router.prefetch("/settings");
 		router.prefetch("/help");
 	}, []);
@@ -61,6 +63,9 @@ export default function Menubar() {
 			</motion.a>
 			<motion.a className="cursor-pointer" whileTap={{ scale: 0.95 }} onClick={() => liveTimingGuard("/schedule")}>
 				Schedule
+			</motion.a>
+			<motion.a className="cursor-pointer" whileTap={{ scale: 0.95 }} onClick={() => liveTimingGuard("/archive")}>
+				Archive
 			</motion.a>
 			<motion.a className="cursor-pointer" whileTap={{ scale: 0.95 }} onClick={() => liveTimingGuard("/settings")}>
 				Settings
