@@ -328,19 +328,6 @@ export default function Map({
 				<>
 					{/* 241 is safty car */}
 					{/* theres also 242 and 243 which might be medical car and something else  */}
-					{positions["241"] && (
-						<CarDot
-							key={`map.car.241`}
-							name="Safety Car"
-							pit={false}
-							hidden={false}
-							pos={positions["241"]}
-							color={undefined}
-							rotation={rotation}
-							centerX={centerX}
-							centerY={centerY}
-						/>
-					)}
 
 					{objectEntries(drivers)
 						.reverse()
