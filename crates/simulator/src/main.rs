@@ -18,6 +18,17 @@ mod server;
 async fn main() {
     init_logs();
 
+    let interval_ms: u64 = match env::args().nth(2) {
+        Some(interval_str) => match interval_str.parse() {
+            Ok(interval) => interval,
+            Err(_) => {
+                error!("failed to parse interval, using default of 100ms");
+                100
+            }
+        },
+        None => 100,
+    };
+
     let path = match env::args().nth(1) {
         Some(path) => path,
         None => {
@@ -56,7 +67,7 @@ async fn main() {
         info!("reader has started broadcasting lines");
 
         for line in lines {
-            sleep(Duration::from_millis(100)).await;
+            sleep(Duration::from_millis(interval_ms)).await;
 
             match line {
                 Ok(txt) => {
@@ -67,6 +78,8 @@ async fn main() {
                 }
             };
         }
+
+        info!("reader has finished broadcasting lines")
     });
 
     server::init(tx, mpsc_tx).await;
