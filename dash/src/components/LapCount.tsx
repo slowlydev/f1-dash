@@ -1,17 +1,13 @@
-import { LapCount as LapCountType } from "@/types/state.type";
+import { useDataStore } from "@/stores/useDataStore";
 
-type Props = {
-	lapCount: LapCountType | undefined;
-};
+export default function LapCount() {
+	const lapCount = useDataStore((state) => state?.lapCount);
 
-export default function LapCount({ lapCount }: Props) {
+	if (!lapCount) return null;
+
 	return (
-		<>
-			{!!lapCount && (
-				<p className="whitespace-nowrap text-3xl font-extrabold sm:hidden">
-					{lapCount?.currentLap} / {lapCount?.totalLaps}
-				</p>
-			)}
-		</>
+		<p className="whitespace-nowrap text-lg">
+			{lapCount?.currentLap} / {lapCount?.totalLaps}
+		</p>
 	);
 }

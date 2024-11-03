@@ -27,6 +27,15 @@ export default function SettingsPage() {
 				<p className="text-zinc-500">Show Corner Numbers on Track Map</p>
 			</div>
 
+			<div className="flex gap-2">
+				<Toggle enabled={settings.tableHeaders} setEnabled={(v) => settings.setTableHeaders(v)} />
+				<p className="text-zinc-500">Show Driver Table Header</p>
+			</div>
+
+			<h2 className="my-4 text-2xl">Favorite Drivers</h2>
+
+			<p className="mb-4">Choose your favorite drivers to highlight them on the dashboard.</p>
+
 			<h2 className="my-4 text-2xl">Speed Metric</h2>
 
 			<p className="mb-4">Choose the unit in which you want to display speeds.</p>

@@ -27,9 +27,9 @@ export default function DriverInfo({ timingDriver, gridPos }: Props) {
 							: null;
 
 	return (
-		<div className="place-self-start text-lg font-semibold" id="walkthrough-driver-info">
+		<div className="flex flex-col place-self-start">
 			<p
-				className={clsx("leading-none", {
+				className={clsx("font-semibold leading-none", {
 					"text-emerald-500": gain,
 					"text-red-500": loss,
 					"text-gray-700": !gain && !loss,
@@ -44,7 +44,7 @@ export default function DriverInfo({ timingDriver, gridPos }: Props) {
 					: `${timingDriver.numberOfLaps}L`}
 			</p>
 
-			<p className="text-sm font-medium leading-none text-zinc-600">{status ?? "-"}</p>
+			<p className="text-sm leading-none text-zinc-500">{status ?? "-"}</p>
 		</div>
 	);
 }

@@ -12,9 +12,8 @@ export default function DriverDRS({ on, possible, inPit, pitOut }: Props) {
 
 	return (
 		<span
-			id="walkthrough-driver-drs"
 			className={clsx(
-				"text-md inline-flex h-8 w-full items-center justify-center rounded-md border-2 font-mono font-black",
+				"text-md inline-flex h-8 w-12 items-center justify-center rounded-md border-2 font-mono font-bold",
 				{
 					"border-zinc-700 text-zinc-700": !pit && !on && !possible,
 					"border-zinc-400 text-zinc-400": !pit && !on && possible,

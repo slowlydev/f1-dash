@@ -13,6 +13,7 @@ export default {
 			},
 			colors: {
 				popover: "rgba(37, 37, 37, 0.9)",
+				"f1-dark": "#0E0E10",
 			},
 		},
 	},

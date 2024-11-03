@@ -1,31 +1,25 @@
 "use client";
 
-import SessionInfo from "@/components/SessionInfo";
-import WeatherInfo from "@/components/WeatherInfo";
 import LeaderBoard from "@/components/LeaderBoard";
-import TrackInfo from "@/components/TrackInfo";
+import RaceControl from "@/components/RaceControl";
+import TeamRadios from "@/components/TeamRadios";
+import TrackMap from "@/components/TrackMap";
 
 export default function Page() {
 	return (
-		<div className="flex w-full flex-col">
-			<div className="hidden grid-cols-3 overflow-hidden border-b border-zinc-800 p-1.5 md:grid">
-				<div className="flex items-center">
-					<SessionInfo />
+		<div className="flex w-full gap-2">
+			<LeaderBoard />
+
+			<div className="flex flex-1 flex-col gap-2">
+				<div className="rounded-lg border border-zinc-900 bg-zinc-950 p-2">
+					<TrackMap />
 				</div>
 
-				<div className="flex items-center">
-					<WeatherInfo />
+				<div className="grid h-96 flex-1 grid-cols-2 gap-2">
+					<div className="rounded-lg border border-zinc-900 bg-zinc-950 p-2">{/* <RaceControl /> */}</div>
+
+					<div className="rounded-lg border border-zinc-900 bg-zinc-950 p-2">{/* <TeamRadios /> */}</div>
 				</div>
-
-				<div className="flex flex-row-reverse items-center">
-					<TrackInfo />
-				</div>
-			</div>
-
-			<div>
-				<LeaderBoard />
-
-				<div></div>
 			</div>
 		</div>
 	);

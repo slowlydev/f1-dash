@@ -75,9 +75,9 @@ export default function TeamRadioMessage({ driver, capture, basePath }: Props) {
 			</time>
 
 			<div
-				className="grid place-items-center items-center gap-1"
+				className="grid items-center gap-4"
 				style={{
-					gridTemplateColumns: "2rem 20rem",
+					gridTemplateColumns: "2rem auto",
 				}}
 			>
 				<div className="w-10 place-self-start">

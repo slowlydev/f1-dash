@@ -4,38 +4,32 @@ import clsx from "clsx";
 
 import { sortUtc } from "@/lib/sorting/sortUtc";
 
-import { DriverList, TeamRadio } from "@/types/state.type";
+import { useDataStore } from "@/stores/useDataStore";
 
 import TeamRadioMessage from "@/components/TeamRadioMessage";
 
-type Props = {
-	sessionPath: string | undefined;
-	drivers: DriverList | undefined;
-	teamRadios: TeamRadio | undefined;
-};
+export default function TeamRadios() {
+	const drivers = useDataStore((state) => state.driverList);
+	const teamRadios = useDataStore((state) => state.teamRadio);
+	const sessionPath = useDataStore((state) => state.sessionInfo?.path);
 
-export default function TeamRadios({ sessionPath, drivers, teamRadios }: Props) {
 	const basePath = `https://livetiming.formula1.com/static/${sessionPath}`;
-
-	// TODO add notice that we only show 20
 
 	return (
 		<ul className="flex flex-col gap-2">
-			{!teamRadios && new Array(6).fill("").map((_, index) => <SkeletonMessage key={`radio.loading.${index}`} />)}
+			{(!teamRadios || !drivers) &&
+				new Array(6).fill("").map((_, index) => <SkeletonMessage key={`radio.loading.${index}`} />)}
 
 			{teamRadios && drivers && teamRadios.captures && (
 				<AnimatePresence>
-					{teamRadios.captures
-						.sort(sortUtc)
-						.slice(0, 20)
-						.map((teamRadio, i) => (
-							<TeamRadioMessage
-								key={`radio.${utc(teamRadio.utc).unix()}.${i}`}
-								driver={drivers[teamRadio.racingNumber]}
-								capture={teamRadio}
-								basePath={basePath}
-							/>
-						))}
+					{teamRadios.captures.sort(sortUtc).map((teamRadio, i) => (
+						<TeamRadioMessage
+							key={`radio.${utc(teamRadio.utc).unix()}.${i}`}
+							driver={drivers[teamRadio.racingNumber]}
+							capture={teamRadio}
+							basePath={basePath}
+						/>
+					))}
 				</AnimatePresence>
 			)}
 		</ul>

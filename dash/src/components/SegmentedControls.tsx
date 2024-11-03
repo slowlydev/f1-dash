@@ -4,25 +4,25 @@ import clsx from "clsx";
 import { LayoutGroup, motion } from "framer-motion";
 
 type Props<T> = {
-	id?: string;
+	id: string;
 	className?: string;
+	selected: T;
+	onSelect?: (val: T) => void;
 	options: {
 		label: string;
 		value: T;
 	}[];
-	selected: T;
-	onSelect?: (val: T) => void;
 };
 
 export default function SegmentedControls<T>({ id, className, options, selected, onSelect }: Props<T>) {
 	return (
 		<LayoutGroup>
-			<div id={id} className={clsx("m-0 inline-flex h-fit justify-between rounded-lg bg-zinc-800 p-0.5", className)}>
+			<div className={clsx("m-0 inline-flex h-fit justify-between rounded-lg bg-zinc-800 p-0.5", className)}>
 				{options.map((option, i) => {
 					const isActive = option.value === selected;
 					return (
 						<motion.div
-							className="relative mb-0 leading-none"
+							className="relative leading-none"
 							whileTap={isActive ? { scale: 0.95 } : { opacity: 0.6 }}
 							key={option.label}
 						>

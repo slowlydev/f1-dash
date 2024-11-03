@@ -22,16 +22,16 @@ export default function DriverGap({ timingDriver, sessionPart }: Props) {
 	const catching = timingDriver.intervalToPositionAhead?.catching;
 
 	return (
-		<div className="place-self-start text-lg font-semibold" id="walkthrough-driver-gap">
+		<div className="flex flex-col place-self-start">
 			<p
-				className={clsx("leading-none", {
+				className={clsx("text-lg font-semibold leading-none", {
 					"text-emerald-500": catching,
 					"text-zinc-600": !gapToFront,
 				})}
 			>
 				{!!gapToFront ? gapToFront : "-- ---"}
 			</p>
-			<p className="text-sm font-medium leading-none text-zinc-600">{!!gapToLeader ? gapToLeader : "-- ---"}</p>
+			<p className="text-sm leading-none text-zinc-500">{!!gapToLeader ? gapToLeader : "-- ---"}</p>
 		</div>
 	);
 }

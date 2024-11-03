@@ -15,7 +15,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 	const enableTracking = !!env.NEXT_PUBLIC_ENABLE_TRACKING;
 
 	return (
-		<html lang="en" className={`${GeistSans.variable} ${GeistMono.variable} bg-zinc-950 font-sans text-white`}>
+		<html lang="en" className={`${GeistSans.variable} ${GeistMono.variable} bg-black font-sans text-white`}>
 			<head />
 
 			{enableTracking && (

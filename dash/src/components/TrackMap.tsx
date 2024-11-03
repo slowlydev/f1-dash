@@ -6,7 +6,7 @@ import type { Map, TrackPosition } from "@/types/map.type";
 
 import { fetchMap } from "@/lib/fetchMap";
 import { objectEntries } from "@/lib/driverHelper";
-import { useDataStore } from "@/stores/useDataStore";
+import { useDataStore, usePositionStore } from "@/stores/useDataStore";
 import { useSettingsStore } from "@/stores/useSettingsStore";
 import { getTrackStatusMessage } from "@/lib/getTrackStatusMessage";
 import {
@@ -31,15 +31,15 @@ type Corner = {
 	labelPos: TrackPosition;
 };
 
-export default function Map() {
+export default function TrackMap() {
 	const showCornerNumbers = useSettingsStore((state) => state.showCornerNumbers);
 
-	const positions = useDataStore((state) => state.positions);
-	const drivers = useDataStore((state) => state.state?.driverList);
-	const trackStatus = useDataStore((state) => state.state?.trackStatus);
-	const timingDrivers = useDataStore((state) => state.state?.timingData);
-	const raceControlMessages = useDataStore((state) => state.state?.raceControlMessages?.messages);
-	const circuitKey = useDataStore((state) => state.state?.sessionInfo?.meeting.circuit.key);
+	const positions = usePositionStore((state) => state.positions);
+	const drivers = useDataStore((state) => state?.driverList);
+	const trackStatus = useDataStore((state) => state?.trackStatus);
+	const timingDrivers = useDataStore((state) => state?.timingData);
+	const raceControlMessages = useDataStore((state) => state?.raceControlMessages?.messages);
+	const circuitKey = useDataStore((state) => state?.sessionInfo?.meeting.circuit.key);
 
 	const [[minX, minY, widthX, widthY], setBounds] = useState<(null | number)[]>([null, null, null, null]);
 	const [[centerX, centerY], setCenter] = useState<(null | number)[]>([null, null]);
@@ -125,11 +125,7 @@ export default function Map() {
 	}
 
 	return (
-		<svg
-			viewBox={`${minX} ${minY} ${widthX} ${widthY}`}
-			className="h-full w-full xl:max-h-screen"
-			xmlns="http://www.w3.org/2000/svg"
-		>
+		<svg viewBox={`${minX} ${minY} ${widthX} ${widthY}`} className="h-96" xmlns="http://www.w3.org/2000/svg">
 			<path
 				className="stroke-gray-800"
 				strokeWidth={300}

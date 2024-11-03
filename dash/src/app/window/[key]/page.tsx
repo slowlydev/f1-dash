@@ -17,7 +17,7 @@ type Props = {
 	};
 };
 
-export default function SubWindow({ params: { key } }: Props) {
+export default function SubWindow() {
 	// note, we can not use the context here we use on the dashboard page, as this is a complete new instance of the website
 	// thats why we use broadcast channels to get the state updates from the main window
 	// main disadvantages are that we use requestAnimation frame which stops if the main window is not the active tab
@@ -56,7 +56,7 @@ export default function SubWindow({ params: { key } }: Props) {
 				<TeamRadios sessionPath={state?.sessionInfo?.path} drivers={state?.driverList} teamRadios={state?.teamRadio} />
 			)}
 
-			{key === "track-map" && (
+			{/* {key === "track-map" && (
 				<Map
 					circuitKey={state?.sessionInfo?.meeting.circuit.key}
 					drivers={state?.driverList}
@@ -65,7 +65,7 @@ export default function SubWindow({ params: { key } }: Props) {
 					trackStatus={state?.trackStatus}
 					raceControlMessages={state?.raceControlMessages?.messages}
 				/>
-			)}
+			)} */}
 
 			{key === "track-limits" && (
 				<TrackViolations
@@ -75,9 +75,9 @@ export default function SubWindow({ params: { key } }: Props) {
 				/>
 			)}
 
-			{key === "championship" && (
+			{/* {key === "championship" && (
 				<ChampionshipPrediction drivers={state?.driverList} championshipPrediction={state?.championshipPrediction} />
-			)}
+			)} */}
 		</div>
 	);
 }

@@ -4,16 +4,21 @@ import clsx from "clsx";
 import { sortPos } from "@/lib/sorting/sortPos";
 import { objectEntries } from "@/lib/driverHelper";
 
+import { useSettingsStore } from "@/stores/useSettingsStore";
 import { useDataStore } from "@/stores/useDataStore";
 
 import Driver from "@/components/driver/Driver";
 
 export default function LeaderBoard() {
-	const drivers = useDataStore((state) => state.state?.driverList);
-	const driversTiming = useDataStore((state) => state.state?.timingData);
+	const drivers = useDataStore((state) => state?.driverList);
+	const driversTiming = useDataStore((state) => state?.timingData);
+
+	const showTableHeader = useSettingsStore((state) => state.tableHeaders);
 
 	return (
-		<div className="flex w-fit flex-col divide-y divide-zinc-800">
+		<div className="flex w-fit flex-col gap-1">
+			{showTableHeader && <TableHeaders />}
+
 			{(!drivers || !driversTiming) &&
 				new Array(20).fill("").map((_, index) => <SkeletonDriver key={`driver.loading.${index}`} />)}
 
@@ -37,14 +42,33 @@ export default function LeaderBoard() {
 	);
 }
 
+const TableHeaders = () => {
+	return (
+		<div
+			className="grid place-items-start gap-2 rounded-lg border border-zinc-900 bg-zinc-950 p-1 px-2"
+			style={{
+				gridTemplateColumns: "5rem 3rem 5.5rem 4rem 5rem 5.5rem auto",
+			}}
+		>
+			<p>Pos</p>
+			<p>DRS</p>
+			<p>Tire</p>
+			<p>Info</p>
+			<p>Gap</p>
+			<p>Laptime</p>
+			<p>Sectors</p>
+		</div>
+	);
+};
+
 const SkeletonDriver = () => {
 	const animateClass = "h-8 animate-pulse rounded-md bg-zinc-800";
 
 	return (
 		<div
-			className="h-18 grid place-items-center items-center gap-1 px-2 py-1"
+			className="h-18 grid place-items-center items-center gap-2 rounded-lg border border-zinc-900 p-2"
 			style={{
-				gridTemplateColumns: "6rem 4rem 5rem 4rem 5rem 5rem 19.5rem",
+				gridTemplateColumns: "5rem 3rem 5.5rem 4rem 5rem 5.5rem 20rem",
 			}}
 		>
 			<div className={animateClass} style={{ width: "100%" }} />

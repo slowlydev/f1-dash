@@ -5,26 +5,24 @@ import { sortUtc } from "@/lib/sorting/sortUtc";
 
 import { RaceControlMessage } from "@/components/RaceControlMessage";
 
-import { RaceControlMessages } from "@/types/state.type";
+import { useDataStore } from "@/stores/useDataStore";
 
-type Props = {
-	messages: RaceControlMessages | undefined;
-	utcOffset: string;
-};
+export default function RaceControl() {
+	const messages = useDataStore((state) => state.raceControlMessages);
+	const gmtOffset = useDataStore((state) => state.sessionInfo?.gmtOffset);
 
-export default function RaceControl({ messages, utcOffset }: Props) {
 	return (
 		<ul className="flex flex-col gap-2">
-			{!messages &&
+			{(!messages || !gmtOffset) &&
 				new Array(7).fill("").map((_, index) => <SkeletonMessage key={`msg.loading.${index}`} index={index} />)}
 
-			{messages && (
+			{messages && gmtOffset && (
 				<AnimatePresence>
 					{messages.messages
 						.sort(sortUtc)
 						.filter((msg) => (msg.flag ? msg.flag.toLowerCase() !== "blue" : true))
 						.map((msg, i) => (
-							<RaceControlMessage key={`msg.${i}`} msg={msg} utcOffset={utcOffset} />
+							<RaceControlMessage key={`msg.${i}`} msg={msg} gmtOffset={gmtOffset} />
 						))}
 				</AnimatePresence>
 			)}
