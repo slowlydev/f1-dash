@@ -1,7 +1,14 @@
 import { env } from "@/env.mjs";
 
 type Meeting = {
+	key: number;
+	location: string;
 	officialName: string;
+	name: string;
+	country: {
+		name: string;
+	};
+	sessions: {};
 };
 const getArchiveForYear = async (year: string): Promise<Meeting[] | null> => {
 	try {
@@ -31,7 +38,16 @@ export default async function ArchivePage({
 	return (
 		<div>
 			<h1>{archive?.length}</h1>
-			<ul>{archive?.map((meet) => <li key={meet.officialName}>{meet.officialName}</li>)}</ul>
+			<ul>
+				{archive?.map((meet) => (
+					<li className="border" key={meet.key}>
+						<div className="flex flex-col">
+							<div>{meet.officialName}</div>
+							<div>{meet.country.name}</div>
+						</div>
+					</li>
+				))}
+			</ul>
 		</div>
 	);
 }
