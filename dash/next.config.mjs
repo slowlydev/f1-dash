@@ -4,6 +4,15 @@ await import("./src/env.mjs");
 const config = {
 	reactStrictMode: false,
 	output: process.env.BUILD_STANDALONE === "1" ? "standalone" : undefined,
+	images: {
+		remotePatterns: [
+			{
+				protocol: "https",
+				hostname: "**formula1.com",
+				port: "",
+			},
+		],
+	},
 };
 
 export default config;
