@@ -27,7 +27,7 @@ export default function DriverInfo({ timingDriver, gridPos }: Props) {
 							: null;
 
 	return (
-		<div className="flex flex-col place-self-start">
+		<div className="flex flex-col place-self-start tabular-nums">
 			<p
 				className={clsx("font-semibold leading-none", {
 					"text-emerald-500": gain,

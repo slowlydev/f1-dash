@@ -11,14 +11,18 @@ export default function Page() {
 			<LeaderBoard />
 
 			<div className="flex flex-1 flex-col gap-2">
-				<div className="rounded-lg border border-zinc-900 bg-zinc-950 p-2">
+				<div className="flex items-center justify-center rounded-lg border border-zinc-900 bg-zinc-950 p-2">
 					<TrackMap />
 				</div>
 
-				<div className="grid h-96 flex-1 grid-cols-2 gap-2">
-					<div className="rounded-lg border border-zinc-900 bg-zinc-950 p-2">{/* <RaceControl /> */}</div>
+				<div className="grid flex-1 grid-cols-2 gap-2">
+					<div className="h-96 overflow-scroll rounded-lg border border-zinc-900 bg-zinc-950 p-2">
+						<RaceControl />
+					</div>
 
-					<div className="rounded-lg border border-zinc-900 bg-zinc-950 p-2">{/* <TeamRadios /> */}</div>
+					<div className="h-96 overflow-scroll rounded-lg border border-zinc-900 bg-zinc-950 p-2">
+						<TeamRadios />
+					</div>
 				</div>
 			</div>
 		</div>

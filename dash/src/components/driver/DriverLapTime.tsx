@@ -11,7 +11,7 @@ type Props = {
 
 export default function DriverLapTime({ last, best, hasFastest }: Props) {
 	return (
-		<div className="flex flex-col place-self-start">
+		<div className="flex flex-col place-self-start tabular-nums">
 			<p
 				className={clsx(
 					"text-lg font-semibold leading-none",

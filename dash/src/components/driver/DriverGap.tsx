@@ -22,7 +22,7 @@ export default function DriverGap({ timingDriver, sessionPart }: Props) {
 	const catching = timingDriver.intervalToPositionAhead?.catching;
 
 	return (
-		<div className="flex flex-col place-self-start">
+		<div className="flex flex-col place-self-start tabular-nums">
 			<p
 				className={clsx("text-lg font-semibold leading-none", {
 					"text-emerald-500": catching,

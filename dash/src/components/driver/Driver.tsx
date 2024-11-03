@@ -53,7 +53,7 @@ export default function Driver({ position, driver, timingDriver }: Props) {
 	return (
 		<motion.div
 			layout="position"
-			className={clsx("grid select-none items-center gap-2 rounded-lg border border-zinc-900 bg-zinc-950 p-2", {
+			className={clsx("grid select-none items-center gap-2 rounded-lg border border-zinc-900 bg-zinc-950 p-1", {
 				"!bg-yellow-700 !bg-opacity-40": favoriteDriver,
 				"opacity-50": timingDriver.knockedOut || timingDriver.retired || timingDriver.stopped,
 				"!bg-violet-800 !bg-opacity-40": hasFastest,

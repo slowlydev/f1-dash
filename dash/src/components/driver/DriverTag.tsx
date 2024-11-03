@@ -16,7 +16,7 @@ export default function DriverTag({ position, teamColor, short, className }: Pro
 			)}
 			style={{ backgroundColor: `#${teamColor}` }}
 		>
-			{position && <p className="px-1 text-xl leading-none">{position}</p>}
+			{position && <p className="px-1 text-xl tabular-nums leading-none">{position}</p>}
 
 			<div className="flex h-min w-min items-center justify-center rounded-md bg-white px-1">
 				<p className="font-mono text-zinc-600" style={{ ...(teamColor && { color: `#${teamColor}` }) }}>

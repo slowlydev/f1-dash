@@ -77,6 +77,7 @@ export const useDataEngine = () => {
 			delayRef.current = delay;
 			console.log(delay);
 		},
+		{ fireImmediately: true },
 	);
 
 	const carBuffer = useRef<Frame<CarsData>[]>([]);
