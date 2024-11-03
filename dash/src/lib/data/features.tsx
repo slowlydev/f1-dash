@@ -21,14 +21,7 @@ export const features = [
 		title: "Sector Times & Mini Sectors",
 		description:
 			"Get all the sector times with colored mini sectors, too see where exactly a driver has improved his lap time.",
-		children: (
-			<DriverMiniSectors
-				sectors={timingDriver.sectors}
-				bestSectors={timingStatsDriver.bestSectors}
-				tla={driver.tla}
-				showFastest={false}
-			/>
-		),
+		children: <DriverMiniSectors sectors={timingDriver.sectors} tla={driver.tla} />,
 	},
 	{
 		title: "Driver Status",
@@ -51,7 +44,7 @@ export const features = [
 			"Monitor tire usage and pit stop strategies throughout the race. Keep track of when drivers make their crucial pit stops, switch tire compounds, and manage their tire wear to optimize race performance.",
 		children: (
 			<div className="flex gap-2">
-				<div className="flex space-x-[-1rem] ">
+				<div className="flex space-x-[-1rem]">
 					<Image src={softTireIcon} alt="soft" className="h-8 w-8" />
 					<Image src={mediumTireIcon} alt="medium" className="h-8 w-8" />
 					<Image src={hardTireIcon} alt="hard" className="h-8 w-8" />

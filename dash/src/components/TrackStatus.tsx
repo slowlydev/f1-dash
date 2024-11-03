@@ -7,7 +7,7 @@ import { getTrackStatusMessage } from "@/lib/getTrackStatusMessage";
 import { useDataStore } from "@/stores/useDataStore";
 
 export default function TrackStatus() {
-	const track = useDataStore((state) => state.state?.trackStatus);
+	const track = useDataStore((state) => state?.trackStatus);
 
 	const currentTrackStatus = getTrackStatusMessage(track?.status ? parseInt(track?.status) : undefined);
 

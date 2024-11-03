@@ -6,7 +6,7 @@ import WindSpeedComplication from "./complications/WindSpeed";
 import RainComplication from "./complications/Rain";
 
 export default function DataWeatherInfo() {
-	const weather = useDataStore((state) => state.state?.weatherData);
+	const weather = useDataStore((state) => state?.weatherData);
 
 	return (
 		<div className="flex gap-2">
