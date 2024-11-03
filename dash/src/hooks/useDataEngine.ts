@@ -12,28 +12,9 @@ import { useSettingsStore } from "@/stores/useSettingsStore";
 import { useDataStore, useCarDataStore, usePositionStore } from "@/stores/useDataStore";
 
 import { useBuffer } from "@/hooks/useBuffer";
+import { useStatefulBuffer } from "./useStatefulBuffer";
 
 const UPDATE_MS = 200;
-const KEEP_BUFFER_SECS = 5;
-
-type Frame<T> = {
-	data: T;
-	timestamp: number;
-};
-
-const maxBufferDelay = (buffer: MutableRefObject<Frame<any>[]>): number => {
-	return buffer.current.length > 0 ? Math.floor((Date.now() - buffer.current[0].timestamp) / 1000) : 0;
-};
-
-const cleanupBuffer = (buffer: MutableRefObject<Frame<any>[]>, frameTimestamp: number) => {
-	const cutoffTime = frameTimestamp - KEEP_BUFFER_SECS * 1000;
-
-	for (let i = 0; i < buffer.current.length; i++) {
-		if (buffer.current[i].timestamp < cutoffTime) {
-			buffer.current.splice(i, 1);
-		}
-	}
-};
 
 const bufferTypes = [
 	"extrapolatedClock",
@@ -52,7 +33,7 @@ const bufferTypes = [
 	"championshipPrediction",
 ];
 
-type Buffers = Record<(typeof bufferTypes)[number], ReturnType<typeof useBuffer>>;
+type Buffers = Record<(typeof bufferTypes)[number], ReturnType<typeof useStatefulBuffer>>;
 
 export const useDataEngine = () => {
 	// const historyStore = useHistoryStore();
@@ -63,9 +44,12 @@ export const useDataEngine = () => {
 	const positionStore = usePositionStore();
 
 	const buffers = bufferTypes.reduce<Buffers>((acc, type) => {
-		acc[type] = useBuffer();
+		acc[type] = useStatefulBuffer();
 		return acc;
 	}, {} as Buffers);
+
+	const carBuffer = useBuffer<CarsData>();
+	const posBuffer = useBuffer<Positions>();
 
 	const [maxDelay, setMaxDelay] = useState<number>(0);
 
@@ -73,15 +57,9 @@ export const useDataEngine = () => {
 
 	useSettingsStore.subscribe(
 		(state) => state.delay,
-		(delay) => {
-			delayRef.current = delay;
-			console.log(delay);
-		},
+		(delay) => (delayRef.current = delay),
 		{ fireImmediately: true },
 	);
-
-	const carBuffer = useRef<Frame<CarsData>[]>([]);
-	const posBuffer = useRef<Frame<Positions>[]>([]);
 
 	const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -99,7 +77,7 @@ export const useDataEngine = () => {
 			carDataStore.set(carData.Entries[0].Cars);
 
 			for (const entry of carData.Entries) {
-				carBuffer.current.push({ data: entry.Cars, timestamp: utcToLocalMs(entry.Utc) });
+				carBuffer.pushTimed(entry.Cars, utcToLocalMs(entry.Utc));
 			}
 		}
 
@@ -108,7 +86,7 @@ export const useDataEngine = () => {
 			positionStore.set(position.Position[0].Entries);
 
 			for (const entry of position.Position) {
-				posBuffer.current.push({ data: entry.Entries, timestamp: utcToLocalMs(entry.Timestamp) });
+				posBuffer.pushTimed(entry.Entries, utcToLocalMs(entry.Timestamp));
 			}
 		}
 	};
@@ -123,14 +101,14 @@ export const useDataEngine = () => {
 		if (carDataZ) {
 			const carData = inflate<CarData>(carDataZ);
 			for (const entry of carData.Entries) {
-				carBuffer.current.push({ data: entry.Cars, timestamp: utcToLocalMs(entry.Utc) });
+				carBuffer.pushTimed(entry.Cars, utcToLocalMs(entry.Utc));
 			}
 		}
 
 		if (positionZ) {
 			const position = inflate<Position>(positionZ);
 			for (const entry of position.Position) {
-				posBuffer.current.push({ data: entry.Entries, timestamp: utcToLocalMs(entry.Timestamp) });
+				posBuffer.pushTimed(entry.Entries, utcToLocalMs(entry.Timestamp));
 			}
 		}
 	};
@@ -145,11 +123,11 @@ export const useDataEngine = () => {
 				if (latest) dataStore.set({ [key]: latest });
 			});
 
-			const carFrame = carBuffer.current[carBuffer.current.length - 1];
-			if (carFrame) carDataStore.set(carFrame.data);
+			const carFrame = carBuffer.latest();
+			if (carFrame) carDataStore.set(carFrame);
 
-			const posFrame = posBuffer.current[posBuffer.current.length - 1];
-			if (posFrame) positionStore.set(posFrame.data);
+			const posFrame = posBuffer.latest();
+			if (posFrame) positionStore.set(posFrame);
 		} else {
 			const delayedTimestamp = Date.now() - delay * 1000;
 
@@ -160,25 +138,23 @@ export const useDataEngine = () => {
 				setTimeout(() => buffer.cleanup(delayedTimestamp), 0);
 			});
 
-			const carFrame = carBuffer.current.find((frame) => frame.timestamp >= delayedTimestamp);
-			console.log("carFrame", carFrame);
+			const carFrame = carBuffer.delayed(delayedTimestamp);
 			if (carFrame) {
-				carDataStore.set(carFrame.data);
-				cleanupBuffer(carBuffer, carFrame.timestamp);
+				carDataStore.set(carFrame);
+				setTimeout(() => carBuffer.cleanup(delayedTimestamp), 0);
 			}
 
-			const posFrame = posBuffer.current.find((frame) => frame.timestamp >= delayedTimestamp);
-			console.log("posFrame", carFrame);
+			const posFrame = posBuffer.delayed(delayedTimestamp);
 			if (posFrame) {
-				positionStore.set(posFrame.data);
-				cleanupBuffer(posBuffer, posFrame.timestamp);
+				positionStore.set(posFrame);
+				setTimeout(() => posBuffer.cleanup(delayedTimestamp), 0);
 			}
 		}
 
 		const maxDelay = Math.max(
 			...Object.values(buffers).map((buffer) => buffer.maxDelay()),
-			maxBufferDelay(carBuffer),
-			maxBufferDelay(posBuffer),
+			carBuffer.maxDelay(),
+			posBuffer.maxDelay(),
 		);
 
 		setMaxDelay(maxDelay);

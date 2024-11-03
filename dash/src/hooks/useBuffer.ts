@@ -1,8 +1,6 @@
 import { useRef } from "react";
 
-import { merge } from "@/lib/merge";
-
-import { RecursivePartial } from "@/types/message.type";
+const KEEP_BUFFER_SECS = 5;
 
 type Frame<T> = {
 	data: T;
@@ -10,20 +8,18 @@ type Frame<T> = {
 };
 
 export const useBuffer = <T>() => {
-	const currentRef = useRef<T | null>(null);
 	const bufferRef = useRef<Frame<T>[]>([]);
 
 	const set = (data: T) => {
-		currentRef.current = data;
 		bufferRef.current = [{ data, timestamp: Date.now() }];
 	};
 
-	const push = (update: RecursivePartial<T>) => {
-		currentRef.current = merge(currentRef.current ?? {}, update);
+	const push = (update: T) => {
+		bufferRef.current.push({ data: update, timestamp: Date.now() });
+	};
 
-		if (currentRef.current) {
-			bufferRef.current.push({ data: currentRef.current, timestamp: Date.now() });
-		}
+	const pushTimed = (update: T, timestamp: number) => {
+		bufferRef.current.push({ data: update, timestamp });
 	};
 
 	const latest = (): T | null => {
@@ -42,8 +38,10 @@ export const useBuffer = <T>() => {
 	};
 
 	const cleanup = (cutoffTime: number) => {
+		const bufferedCutOff = cutoffTime - KEEP_BUFFER_SECS * 1000;
+
 		for (let i = 0; i < bufferRef.current.length; i++) {
-			if (bufferRef.current[i].timestamp < cutoffTime) {
+			if (bufferRef.current[i].timestamp < bufferedCutOff) {
 				bufferRef.current.splice(i, 1);
 			}
 		}
@@ -56,6 +54,7 @@ export const useBuffer = <T>() => {
 	return {
 		set,
 		push,
+		pushTimed,
 		latest,
 		delayed,
 		cleanup,
