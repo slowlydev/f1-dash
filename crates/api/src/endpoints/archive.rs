@@ -44,6 +44,10 @@ pub struct RaceSession {
     name: String,
     #[serde(default)]
     path: String,
+    #[serde(default)]
+    start_date: String,
+    #[serde(default)]
+    end_date: String,
 }
 
 pub async fn get_sessions_for_year(
