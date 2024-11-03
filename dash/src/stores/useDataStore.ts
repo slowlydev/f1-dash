@@ -1,23 +1,95 @@
 import { create } from "zustand";
 
-import type { CarsData, Positions, State } from "@/types/state.type";
+import type {
+	CarsData,
+	ChampionshipPrediction,
+	DriverList,
+	ExtrapolatedClock,
+	Heartbeat,
+	LapCount,
+	Positions,
+	RaceControlMessages,
+	SessionData,
+	SessionInfo,
+	State,
+	TeamRadio,
+	TimingAppData,
+	TimingData,
+	TimingStats,
+	TopThree,
+	TrackStatus,
+	WeatherData,
+} from "@/types/state.type";
+import { RecursivePartial } from "@/types/message.type";
+
+// main store
 
 type DataStore = {
-	state: State | null;
-	carsData: CarsData | null;
-	positions: Positions | null;
+	heartbeat: Heartbeat | null;
+	extrapolatedClock: ExtrapolatedClock | null;
+	topThree: TopThree | null;
+	timingStats: TimingStats | null;
+	timingAppData: TimingAppData | null;
+	weatherData: WeatherData | null;
+	trackStatus: TrackStatus | null;
+	driverList: DriverList | null;
+	raceControlMessages: RaceControlMessages | null;
+	sessionInfo: SessionInfo | null;
+	sessionData: SessionData | null;
+	lapCount: LapCount | null;
+	timingData: TimingData | null;
+	teamRadio: TeamRadio | null;
+	championshipPrediction: ChampionshipPrediction | null;
 
-	setState: (state: State) => void;
-	setCarsData: (carsData: CarsData) => void;
-	setPositions: (positions: Positions) => void;
+	set: (state: State) => void;
+	update: (state: Partial<State>) => void;
 };
 
 export const useDataStore = create<DataStore>((set) => ({
-	state: null,
-	carsData: null,
-	positions: null,
+	heartbeat: null,
+	extrapolatedClock: null,
+	topThree: null,
+	timingStats: null,
+	timingAppData: null,
+	weatherData: null,
+	trackStatus: null,
+	driverList: null,
+	raceControlMessages: null,
+	sessionInfo: null,
+	sessionData: null,
+	lapCount: null,
+	timingData: null,
+	teamRadio: null,
+	championshipPrediction: null,
 
-	setState: (state: State) => set({ state }),
-	setCarsData: (carsData: CarsData) => set({ carsData }),
-	setPositions: (positions: Positions) => set({ positions }),
+	set: (state: State) => {
+		set(state);
+	},
+	update: (state: Partial<State>) => {
+		set(state);
+	},
+}));
+
+// car store
+
+type CarDataStore = {
+	carsData: CarsData | null;
+	set: (carsData: CarsData) => void;
+};
+
+export const useCarDataStore = create<CarDataStore>((set) => ({
+	carsData: null,
+	set: (carsData: CarsData) => set({ carsData }),
+}));
+
+// position store
+
+type PositionStore = {
+	positions: Positions | null;
+	set: (positions: Positions) => void;
+};
+
+export const usePositionStore = create<PositionStore>((set) => ({
+	positions: null,
+	set: (positions: Positions) => set({ positions }),
 }));
