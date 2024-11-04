@@ -36,14 +36,14 @@ export default async function ArchivePage({
 }) {
 	const currentYear = new Date(Date.now()).getFullYear();
 	let year = searchParams["year"];
-	if (year == null || year < "2017" || year > currentYear.toString() || typeof year !== "string") {
+	if (year == null || year < "2018" || year > currentYear.toString() || typeof year !== "string") {
 		year = currentYear.toString();
 	}
 
 	const archive = await getArchiveForYear(year);
 
 	const years = [];
-	for (let i = 2017; i <= currentYear; i++) {
+	for (let i = 2018; i <= currentYear; i++) {
 		years.push({ label: i.toString(), href: `?year=${i.toString()}` });
 	}
 
