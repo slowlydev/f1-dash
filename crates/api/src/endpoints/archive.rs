@@ -1,4 +1,5 @@
 use axum::extract::Path;
+use cached::proc_macro::io_cached;
 use serde::{Deserialize, Serialize};
 use serde_json;
 use tracing::error;
@@ -50,26 +51,22 @@ pub struct RaceSession {
     end_date: String,
 }
 
+#[io_cached(
+    map_error = r##"|e| anyhow::anyhow!(format!("disk cache error {:?}", e))"##,
+    disk = true,
+    time = 1800
+)]
+pub async fn fetch_sessions_for_year(year: u32) -> Result<String, anyhow::Error> {
+    let url = format!("https://livetiming.formula1.com/static/{year}/Index.json");
+    let res = reqwest::get(url).await?;
+    let text = res.text().await?;
+    Ok(text)
+}
+
 pub async fn get_sessions_for_year(
     Path(year): Path<u32>,
 ) -> Result<axum::Json<Vec<Meeting>>, axum::http::StatusCode> {
-    let url = format!("https://livetiming.formula1.com/static/{year}/Index.json");
-
-    let result = reqwest::get(url).await;
-    let res = match result {
-        Ok(res) => res,
-        Err(err) => {
-            error!("Error fetching {} sessions: {}", year, err);
-            return Err(axum::http::StatusCode::BAD_GATEWAY);
-        }
-    };
-
-    let text = match res.status() {
-        axum::http::StatusCode::OK => res.text().await.unwrap_or(String::new()),
-        status => {
-            return Err(status);
-        }
-    };
+    let text = fetch_sessions_for_year(year).await.unwrap();
 
     let json = serde_json::from_str::<MeetingResponse>(&text);
 
