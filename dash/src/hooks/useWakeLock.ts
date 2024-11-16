@@ -1,15 +1,19 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 export const useWakeLock = () => {
 	let wakeLock = useRef<null | WakeLockSentinel>(null);
 
 	useEffect(() => {
 		if (typeof window != undefined) {
-			if ("wakeLock" in navigator) {
-				navigator.wakeLock.request("screen").then((wl) => {
-					wakeLock.current = wl;
-				});
-			}
+			if (!window.isSecureContext) return;
+
+			if (window.location.hostname === "localhost") return;
+
+			if (!("wakeLock" in navigator)) return;
+
+			navigator.wakeLock.request("screen").then((wl) => {
+				wakeLock.current = wl;
+			});
 		}
 
 		return () => {
