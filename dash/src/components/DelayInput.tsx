@@ -14,9 +14,7 @@ export default function DelayInput({ className }: Props) {
 
 	const handleChange = (v: string) => {
 		const delay = v ? parseInt(v) : 0;
-
 		if (delay < 0) return;
-
 		setDelay(delay);
 	};
 
