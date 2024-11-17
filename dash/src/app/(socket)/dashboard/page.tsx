@@ -70,7 +70,7 @@ export default function Page() {
 							className={clsx(
 								"flex w-full flex-col divide-y divide-zinc-800",
 								"md:min-w-0 md:flex-row md:divide-x md:divide-y-0",
-								"xl:flex-1 xl:flex-col xl:divide-x-0 xl:divide-y xl:pl-2",
+								"xl:flex-1 xl:flex-col xl:divide-x-0 xl:divide-y",
 								"2xl:min-w-0 2xl:flex-row 2xl:divide-x 2xl:divide-y-0",
 							)}
 						>
