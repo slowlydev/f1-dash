@@ -3,7 +3,7 @@ import clsx from "clsx";
 
 import { useDataStore } from "@/stores/useDataStore";
 
-import { sortUtc } from "@/lib/sorting/sortUtc";
+import { sortUtc } from "@/lib/sorting";
 
 import { RaceControlMessage } from "@/components/RaceControlMessage";
 
