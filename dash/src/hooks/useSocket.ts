@@ -33,5 +33,5 @@ export const useSocket = ({ handleInitial, handleUpdate }: Props) => {
 		return () => sse.close();
 	}, []);
 
-	return connected;
+	return { connected };
 };
