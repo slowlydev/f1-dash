@@ -2,19 +2,17 @@ import { AnimatePresence } from "framer-motion";
 import { utc } from "moment";
 import clsx from "clsx";
 
-import { sortUtc } from "@/lib/sorting/sortUtc";
+import { useDataStore } from "@/stores/useDataStore";
 
-import { DriverList, TeamRadio } from "@/types/state.type";
+import { sortUtc } from "@/lib/sorting/sortUtc";
 
 import TeamRadioMessage from "@/components/TeamRadioMessage";
 
-type Props = {
-	sessionPath: string | undefined;
-	drivers: DriverList | undefined;
-	teamRadios: TeamRadio | undefined;
-};
+export default function TeamRadios() {
+	const drivers = useDataStore((state) => state.driverList);
+	const teamRadios = useDataStore((state) => state.teamRadio);
+	const sessionPath = useDataStore((state) => state.sessionInfo?.path);
 
-export default function TeamRadios({ sessionPath, drivers, teamRadios }: Props) {
 	const basePath = `https://livetiming.formula1.com/static/${sessionPath}`;
 
 	// TODO add notice that we only show 20

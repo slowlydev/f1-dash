@@ -7,10 +7,10 @@ import { toTrackTime } from "@/lib/toTrackTime";
 
 type Props = {
 	msg: Message;
-	utcOffset: string;
+	gmtOffset: string;
 };
 
-export function RaceControlMessage({ msg, utcOffset }: Props) {
+export function RaceControlMessage({ msg, gmtOffset }: Props) {
 	return (
 		<motion.li animate={{ opacity: 1, y: 0 }} initial={{ opacity: 0, y: -20 }} className="flex flex-col gap-1">
 			<div className="flex items-center gap-1 text-sm font-medium leading-none text-gray-500">
@@ -23,7 +23,7 @@ export function RaceControlMessage({ msg, utcOffset }: Props) {
 				<time dateTime={utc(msg.utc).local().format("HH:mm:ss")}>{utc(msg.utc).local().format("HH:mm:ss")}</time>
 				{"·"}
 				<time className="text-gray-600" dateTime={utc(msg.utc).format("HH:mm")}>
-					{utc(toTrackTime(msg.utc, utcOffset)).format("HH:mm")}
+					{utc(toTrackTime(msg.utc, gmtOffset)).format("HH:mm")}
 				</time>
 			</div>
 

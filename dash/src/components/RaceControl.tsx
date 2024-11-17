@@ -1,30 +1,28 @@
 import { AnimatePresence } from "framer-motion";
 import clsx from "clsx";
 
+import { useDataStore } from "@/stores/useDataStore";
+
 import { sortUtc } from "@/lib/sorting/sortUtc";
 
 import { RaceControlMessage } from "@/components/RaceControlMessage";
 
-import { RaceControlMessages } from "@/types/state.type";
+export default function RaceControl() {
+	const messages = useDataStore((state) => state.raceControlMessages);
+	const gmtOffset = useDataStore((state) => state.sessionInfo?.gmtOffset);
 
-type Props = {
-	messages: RaceControlMessages | undefined;
-	utcOffset: string;
-};
-
-export default function RaceControl({ messages, utcOffset }: Props) {
 	return (
 		<ul className="flex flex-col gap-2">
 			{!messages &&
 				new Array(7).fill("").map((_, index) => <SkeletonMessage key={`msg.loading.${index}`} index={index} />)}
 
-			{messages && (
+			{messages && gmtOffset && (
 				<AnimatePresence>
 					{messages.messages
 						.sort(sortUtc)
 						.filter((msg) => (msg.flag ? msg.flag.toLowerCase() !== "blue" : true))
 						.map((msg, i) => (
-							<RaceControlMessage key={`msg.${i}`} msg={msg} utcOffset={utcOffset} />
+							<RaceControlMessage key={`msg.${i}`} msg={msg} gmtOffset={gmtOffset} />
 						))}
 				</AnimatePresence>
 			)}
