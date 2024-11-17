@@ -5,7 +5,7 @@ import clsx from "clsx";
 
 import { useDataStore } from "@/stores/useDataStore";
 
-import { sortQuali } from "@/lib/sorting/sortQuali";
+import { sortQuali } from "@/lib/sorting";
 import { objectEntries } from "@/lib/driverHelper";
 
 import QualifyingDriver from "@/components/QualifyingDriver";

@@ -4,7 +4,7 @@ import clsx from "clsx";
 import { useSettingsStore } from "@/stores/useSettingsStore";
 import { useDataStore } from "@/stores/useDataStore";
 
-import { sortPos } from "@/lib/sorting/sortPos";
+import { sortPos } from "@/lib/sorting";
 import { objectEntries } from "@/lib/driverHelper";
 
 import Driver from "@/components/driver/Driver";
