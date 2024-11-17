@@ -4,8 +4,9 @@ import { type ReactNode } from "react";
 import { clsx } from "clsx";
 
 import { useDataEngine } from "@/hooks/useDataEngine";
-import { useSocket } from "@/hooks/useSocket";
 import { useWakeLock } from "@/hooks/useWakeLock";
+import { useStores } from "@/hooks/useStores";
+import { useSocket } from "@/hooks/useSocket";
 
 import { useSettingsStore } from "@/stores/useSettingsStore";
 
@@ -14,22 +15,20 @@ import { WindowsProvider } from "@/context/WindowsContext";
 import Menubar from "@/components/Menubar";
 import DelayInput from "@/components/DelayInput";
 import StreamStatus from "@/components/StreamStatus";
-import SegmentedControls from "@/components/SegmentedControls";
 
 type Props = {
 	children: ReactNode;
 };
 
 export default function DashboardLayout({ children }: Props) {
-	const { handleInitial, handleUpdate, maxDelay } = useDataEngine();
-
-	const connected = useSocket({ handleInitial, handleUpdate });
-
-	useWakeLock();
+	const stores = useStores();
+	const { handleInitial, handleUpdate, maxDelay } = useDataEngine(stores);
+	const { connected } = useSocket({ handleInitial, handleUpdate });
 
 	const delay = useSettingsStore((state) => state.delay);
-
 	const syncing = delay > maxDelay;
+
+	useWakeLock();
 
 	return (
 		<WindowsProvider>
@@ -40,13 +39,11 @@ export default function DashboardLayout({ children }: Props) {
 					<div className="flex items-center gap-2 sm:hidden">
 						{/* <Timeline setTime={setTime} time={time} playing={delay.current > 0} maxDelay={maxDelay} /> */}
 						<DelayInput className="flex md:hidden" />
-						{/* <PlayControls className="flex md:hidden" playing={playback} onClick={() => togglePlayback()} /> */}
 						<StreamStatus live={delay == 0} />
 					</div>
 
 					<div className="flex flex-row-reverse flex-wrap-reverse items-center gap-1">
 						<DelayInput className="hidden md:flex" />
-						{/* <PlayControls className="hidden md:flex" playing={playback} onClick={() => togglePlayback()} /> */}
 					</div>
 				</div>
 
