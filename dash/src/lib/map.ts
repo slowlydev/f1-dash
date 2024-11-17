@@ -1,7 +1,7 @@
 import type { Map, TrackPosition } from "@/types/map.type";
 import type { Message } from "@/types/state.type";
 
-import { sortUtc } from "@/lib/sorting/sortUtc";
+import { sortUtc } from "@/lib/sorting";
 
 export const rad = (deg: number) => deg * (Math.PI / 180);
 
