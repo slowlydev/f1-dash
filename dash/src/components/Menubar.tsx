@@ -7,7 +7,6 @@ import Image from "next/image";
 
 import Modal from "@/components/Modal";
 import Button from "@/components/Button";
-import Windows from "@/components/Windows";
 
 import alertIcon from "public/icons/alert-triangle.svg";
 import ConnectionStatus from "./ConnectionStatus";
@@ -75,8 +74,6 @@ export default function Menubar({ connected }: Props) {
 
 			{onLiveRoute && (
 				<div className="flex select-none items-center gap-4">
-					<Windows />
-
 					{/* TODO streams o.o */}
 
 					<ConnectionStatus connected={connected} />
