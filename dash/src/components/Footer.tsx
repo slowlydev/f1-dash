@@ -27,6 +27,8 @@ export default function Footer() {
 					</Link>
 					.
 				</p>
+
+				<p>Version: {process.env.version}</p>
 			</div>
 
 			<p>
