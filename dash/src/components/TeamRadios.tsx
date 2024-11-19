@@ -18,7 +18,7 @@ export default function TeamRadios() {
 	// TODO add notice that we only show 20
 
 	return (
-		<ul className="flex flex-col gap-2">
+		<ul className="flex flex-col">
 			{!teamRadios && new Array(6).fill("").map((_, index) => <SkeletonMessage key={`radio.loading.${index}`} />)}
 
 			{teamRadios && drivers && teamRadios.captures && (

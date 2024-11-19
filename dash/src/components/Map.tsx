@@ -33,6 +33,7 @@ type Corner = {
 
 export default function Map() {
 	const showCornerNumbers = useSettingsStore((state) => state.showCornerNumbers);
+	const favoriteDrivers = useSettingsStore((state) => state.favoriteDrivers);
 
 	const positions = usePositionStore((state) => state.positions);
 	const drivers = useDataStore((state) => state?.driverList);
@@ -166,22 +167,6 @@ export default function Map() {
 
 			{centerX && centerY && positions && drivers && (
 				<>
-					{/* 241 is safty car */}
-					{/* theres also 242 and 243 which might be medical car and something else  */}
-					{positions["241"] && (
-						<CarDot
-							key={`map.car.241`}
-							name="Safety Car"
-							pit={false}
-							hidden={false}
-							pos={positions["241"]}
-							color={undefined}
-							rotation={rotation}
-							centerX={centerX}
-							centerY={centerY}
-						/>
-					)}
-
 					{objectEntries(drivers)
 						.reverse()
 						.filter((driver) => !!positions[driver.racingNumber].X && !!positions[driver.racingNumber].Y)
@@ -195,6 +180,7 @@ export default function Map() {
 							return (
 								<CarDot
 									key={`map.driver.${driver.racingNumber}`}
+									dimmed={favoriteDrivers.length > 0 ? !favoriteDrivers.includes(driver.racingNumber) : false}
 									name={driver.tla}
 									color={driver.teamColour}
 									pit={pit}
@@ -229,6 +215,7 @@ const CornerNumber: React.FC<CornerNumberProps> = ({ number, x, y }) => {
 type CarDotProps = {
 	name: string;
 	color: string | undefined;
+	dimmed: boolean;
 
 	pit: boolean;
 	hidden: boolean;
@@ -240,13 +227,13 @@ type CarDotProps = {
 	centerY: number;
 };
 
-const CarDot = ({ pos, name, color, pit, hidden, rotation, centerX, centerY }: CarDotProps) => {
+const CarDot = ({ pos, name, color, dimmed, pit, hidden, rotation, centerX, centerY }: CarDotProps) => {
 	const rotatedPos = rotate(pos.X, pos.Y, rotation, centerX, centerY);
 	const transform = [`translateX(${rotatedPos.x}px)`, `translateY(${rotatedPos.y}px)`].join(" ");
 
 	return (
 		<g
-			className={clsx("fill-zinc-700", { "opacity-30": pit }, { "!opacity-0": hidden })}
+			className={clsx("fill-zinc-700", { "opacity-60": dimmed }, { "opacity-30": pit }, { "!opacity-0": hidden })}
 			style={{
 				transition: "all 1s linear",
 				transform,
