@@ -10,6 +10,7 @@ use tracing::info;
 use crate::{LiveEvent, LiveState};
 
 mod cors;
+mod drivers;
 mod health;
 pub mod live;
 
@@ -57,6 +58,7 @@ pub async fn init(
     let app = Router::new()
         .route("/api/sse", get(live::sse_handler))
         .route("/api/health", get(health::check))
+        .route("/api/drivers", get(drivers::get_drivers))
         .layer(cors)
         .layer(governor)
         .with_state(app_state)
