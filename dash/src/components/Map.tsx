@@ -180,7 +180,7 @@ export default function Map() {
 							return (
 								<CarDot
 									key={`map.driver.${driver.racingNumber}`}
-									dimmed={favoriteDrivers.length > 0 ? !favoriteDrivers.includes(driver.racingNumber) : false}
+									favoriteDriver={favoriteDrivers.length > 0 ? favoriteDrivers.includes(driver.racingNumber) : false}
 									name={driver.tla}
 									color={driver.teamColour}
 									pit={pit}
@@ -215,7 +215,7 @@ const CornerNumber: React.FC<CornerNumberProps> = ({ number, x, y }) => {
 type CarDotProps = {
 	name: string;
 	color: string | undefined;
-	dimmed: boolean;
+	favoriteDriver: boolean;
 
 	pit: boolean;
 	hidden: boolean;
@@ -227,13 +227,13 @@ type CarDotProps = {
 	centerY: number;
 };
 
-const CarDot = ({ pos, name, color, dimmed, pit, hidden, rotation, centerX, centerY }: CarDotProps) => {
+const CarDot = ({ pos, name, color, favoriteDriver, pit, hidden, rotation, centerX, centerY }: CarDotProps) => {
 	const rotatedPos = rotate(pos.X, pos.Y, rotation, centerX, centerY);
 	const transform = [`translateX(${rotatedPos.x}px)`, `translateY(${rotatedPos.y}px)`].join(" ");
 
 	return (
 		<g
-			className={clsx("fill-zinc-700", { "opacity-60": dimmed }, { "opacity-30": pit }, { "!opacity-0": hidden })}
+			className={clsx("fill-zinc-700", { "opacity-30": pit }, { "!opacity-0": hidden })}
 			style={{
 				transition: "all 1s linear",
 				transform,
@@ -251,6 +251,17 @@ const CarDot = ({ pos, name, color, dimmed, pit, hidden, rotation, centerX, cent
 			>
 				{name}
 			</text>
+
+			{favoriteDriver && (
+				<circle
+					id={`map.driver.favorite`}
+					className="stroke-sky-400"
+					r={180}
+					fill="transparent"
+					strokeWidth={40}
+					style={{ transition: "all 1s linear" }}
+				/>
+			)}
 		</g>
 	);
 };
