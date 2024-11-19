@@ -4,8 +4,7 @@
 
 You will need to install following tools:
 
-- [node](https://nodejs.org/en) (preferably 21) ([nvm](https://github.com/nvm-sh/nvm) is recommended)
-- [yarn](https://yarnpkg.com/getting-started/install) (v1, not the new one) (using [corepack](https://yarnpkg.com/corepack) is recommended)
+- [nvm](https://github.com/nvm-sh/nvm)
 - rust & cargo ([rustup](https://rustup.rs) is highly recommended)
 
 To get started with the frontend do the following
@@ -21,8 +20,14 @@ git clone git@github.com:slowlydev/f1-dash.git
 # go to the frontend
 cd dash/
 
-# if you are using corepack run the following
+# install the correct node version using nvm
+nvm install
+
+# enable corepack
 corepack enable
+
+# install the package manager (yarn) with corepack
+corepack install
 
 # install frontend dependencies
 yarn

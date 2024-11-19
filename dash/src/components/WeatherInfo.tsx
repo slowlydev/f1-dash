@@ -1,15 +1,13 @@
-import { WeatherData } from "@/types/state.type";
-
 import TemperatureComplication from "./complications/Temperature";
 import HumidityComplication from "./complications/Humidity";
 import WindSpeedComplication from "./complications/WindSpeed";
 import RainComplication from "./complications/Rain";
 
-type Props = {
-	weather: WeatherData | undefined;
-};
+import { useDataStore } from "@/stores/useDataStore";
 
-export default function DataWeatherInfo({ weather }: Props) {
+export default function DataWeatherInfo() {
+	const weather = useDataStore((state) => state.weatherData);
+
 	return (
 		<div className="flex gap-2" id="walkthrough-weather">
 			{weather ? (

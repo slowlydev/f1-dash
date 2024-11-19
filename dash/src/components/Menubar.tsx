@@ -7,12 +7,15 @@ import Image from "next/image";
 
 import Modal from "@/components/Modal";
 import Button from "@/components/Button";
-import Windows from "@/components/Windows";
 
 import alertIcon from "public/icons/alert-triangle.svg";
 import ConnectionStatus from "./ConnectionStatus";
 
-export default function Menubar() {
+type Props = {
+	connected?: boolean;
+};
+
+export default function Menubar({ connected }: Props) {
 	const router = useRouter();
 	const pathname = usePathname();
 
@@ -71,11 +74,9 @@ export default function Menubar() {
 
 			{onLiveRoute && (
 				<div className="flex select-none items-center gap-4">
-					<Windows />
-
 					{/* TODO streams o.o */}
 
-					<ConnectionStatus />
+					<ConnectionStatus connected={connected} />
 				</div>
 			)}
 

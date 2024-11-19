@@ -2,11 +2,14 @@ import { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { utc } from "moment";
 
+import { useSettingsStore } from "@/stores/useSettingsStore";
+
 import DriverTag from "./driver/DriverTag";
 import PlayControls from "./PlayControls";
 import AudioProgress from "./AudioProgress";
 
 import { Driver, RadioCapture } from "@/types/state.type";
+import clsx from "clsx";
 
 type Props = {
 	driver: Driver;
@@ -65,8 +68,14 @@ export default function TeamRadioMessage({ driver, capture, basePath }: Props) {
 		});
 	};
 
+	const favoriteDriver = useSettingsStore((state) => state.favoriteDrivers.includes(driver.racingNumber));
+
 	return (
-		<motion.li animate={{ opacity: 1, y: 0 }} initial={{ opacity: 0, y: -20 }} className="flex flex-col gap-1">
+		<motion.li
+			animate={{ opacity: 1, y: 0 }}
+			initial={{ opacity: 0, y: -20 }}
+			className={clsx("flex flex-col gap-1 p-2", { "bg-sky-800 bg-opacity-30": favoriteDriver })}
+		>
 			<time
 				className="text-sm font-medium leading-none text-gray-500"
 				dateTime={utc(capture.utc).local().format("HH:mm:ss")}
