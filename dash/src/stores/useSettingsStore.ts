@@ -18,6 +18,10 @@ type SettingsStore = {
 
 	tableHeaders: boolean;
 	setTableHeaders: (tableHeaders: boolean) => void;
+
+	favoriteDrivers: string[];
+	setFavoriteDrivers: (favoriteDrivers: string[]) => void;
+	removeFavoriteDriver: (driver: string) => void;
 };
 
 export const useSettingsStore = create(
@@ -38,6 +42,11 @@ export const useSettingsStore = create(
 
 				tableHeaders: false,
 				setTableHeaders: (tableHeaders: boolean) => set({ tableHeaders }),
+
+				favoriteDrivers: [],
+				setFavoriteDrivers: (favoriteDrivers: string[]) => set({ favoriteDrivers }),
+				removeFavoriteDriver: (driver: string) =>
+					set((state) => ({ favoriteDrivers: state.favoriteDrivers.filter((d) => d !== driver) })),
 			}),
 			{
 				name: "settings-storage",

@@ -1,12 +1,24 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import Image from "next/image";
+
+import xIcon from "public/icons/xmark.svg";
+
+import type { Driver } from "@/types/state.type";
+
 import SegmentedControls from "@/components/SegmentedControls";
+import SelectMultiple from "@/components/SelectMultiple";
+import DriverTag from "@/components/driver/DriverTag";
 import DelayInput from "@/components/DelayInput";
 import Button from "@/components/Button";
 import Toggle from "@/components/Toggle";
 import Footer from "@/components/Footer";
 
 import { useSettingsStore } from "@/stores/useSettingsStore";
+
+import { env } from "@/env.mjs";
 
 export default function SettingsPage() {
 	const settings = useSettingsStore();
@@ -31,6 +43,12 @@ export default function SettingsPage() {
 				<Toggle enabled={settings.tableHeaders} setEnabled={(v) => settings.setTableHeaders(v)} />
 				<p className="text-zinc-500">Show Driver Table Header</p>
 			</div>
+
+			<h2 className="my-4 text-2xl">Favorite Drivers</h2>
+
+			<p className="mb-4">Select your favorite drivers to highlight them on the dashboard.</p>
+
+			<FavoriteDrivers />
 
 			<h2 className="my-4 text-2xl">Speed Metric</h2>
 
@@ -67,3 +85,57 @@ export default function SettingsPage() {
 		</div>
 	);
 }
+
+const FavoriteDrivers = () => {
+	const [drivers, setDrivers] = useState<Driver[] | null>(null);
+	const [error, setError] = useState<string | null>(null);
+
+	const { favoriteDrivers, setFavoriteDrivers, removeFavoriteDriver } = useSettingsStore();
+
+	useEffect(() => {
+		(async () => {
+			try {
+				const res = await fetch(`${env.NEXT_PUBLIC_LIVE_SOCKET_URL}/api/drivers`);
+				const data = await res.json();
+				setDrivers(data);
+			} catch (e) {
+				setError("failed to fetch favorite drivers");
+			}
+		})();
+	}, []);
+
+	return (
+		<div className="flex flex-col gap-2">
+			<div className="flex gap-2">
+				{favoriteDrivers.map((driverNumber) => {
+					const driver = drivers?.find((d) => d.racingNumber === driverNumber);
+
+					if (!driver) return null;
+
+					return (
+						<div key={driverNumber} className="flex items-center gap-1 rounded-xl border border-zinc-700 p-1">
+							<DriverTag teamColor={driver.teamColour} short={driver.tla} />
+
+							<motion.button
+								whileHover={{ scale: 1.05 }}
+								whileTap={{ scale: 0.95 }}
+								onClick={() => removeFavoriteDriver(driverNumber)}
+							>
+								<Image src={xIcon} alt="x" width={30} />
+							</motion.button>
+						</div>
+					);
+				})}
+			</div>
+
+			<div className="w-80">
+				<SelectMultiple
+					placeholder="Select favorite drivers"
+					options={drivers ? drivers.map((d) => ({ label: d.fullName, value: d.racingNumber })) : []}
+					selected={favoriteDrivers}
+					setSelected={setFavoriteDrivers}
+				/>
+			</div>
+		</div>
+	);
+};

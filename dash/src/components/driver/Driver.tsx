@@ -51,11 +51,14 @@ export default function Driver({ driver, timingDriver, position }: Props) {
 
 	const carMetrics = useSettingsStore((state) => state.carMetrics);
 
+	const favoriteDriver = useSettingsStore((state) => state.favoriteDrivers.includes(driver.racingNumber));
+
 	return (
 		<motion.div
 			layout="position"
 			className={clsx("flex select-none flex-col gap-1 p-1.5", {
 				"opacity-50": timingDriver.knockedOut || timingDriver.retired || timingDriver.stopped,
+				"bg-sky-800 bg-opacity-30": favoriteDriver,
 				"bg-violet-800 bg-opacity-30": hasFastest,
 				"bg-red-800 bg-opacity-30": sessionPart != undefined && inDangerZone(position, sessionPart),
 			})}

@@ -76,7 +76,7 @@ export default function Page() {
 						>
 							<div
 								className={clsx(
-									"h-96 overflow-y-auto p-2",
+									"h-96 overflow-y-auto",
 									"md:w-1/2",
 									"xl:auto xl:mr-0 xl:w-auto xl:flex-grow",
 									"2xl:w-1/2",
@@ -87,7 +87,7 @@ export default function Page() {
 
 							<div
 								className={clsx(
-									"h-96 overflow-y-auto p-2",
+									"h-96 overflow-y-auto",
 									"md:w-1/2",
 									"xl:auto xl:mr-0 xl:w-auto xl:flex-grow",
 									"2xl:w-1/2",
