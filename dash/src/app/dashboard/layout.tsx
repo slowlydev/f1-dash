@@ -1,11 +1,9 @@
 "use client";
 
 import { type ReactNode } from "react";
-import { clsx } from "clsx";
 
 import { useDataEngine } from "@/hooks/useDataEngine";
 import { useWakeLock } from "@/hooks/useWakeLock";
-import { useStores } from "@/hooks/useStores";
 import { useSocket } from "@/hooks/useSocket";
 
 import { useSettingsStore } from "@/stores/useSettingsStore";
@@ -18,8 +16,7 @@ type Props = {
 };
 
 export default function DashboardLayout({ children }: Props) {
-	const stores = useStores();
-	const { handleInitial, handleUpdate, maxDelay } = useDataEngine(stores);
+	const { handleInitial, handleUpdate, maxDelay } = useDataEngine();
 	const { connected } = useSocket({ handleInitial, handleUpdate });
 
 	const delay = useSettingsStore((state) => state.delay);
