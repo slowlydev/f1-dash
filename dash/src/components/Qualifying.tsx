@@ -3,20 +3,18 @@
 import { AnimatePresence } from "framer-motion";
 import clsx from "clsx";
 
-import { sortQuali } from "@/lib/sorting/sortQuali";
-import { objectEntries } from "@/lib/driverHelper";
+import { useDataStore } from "@/stores/useDataStore";
 
-import { DriverList, TimingAppData, TimingData } from "@/types/state.type";
+import { sortQuali } from "@/lib/sorting";
+import { objectEntries } from "@/lib/driverHelper";
 
 import QualifyingDriver from "@/components/QualifyingDriver";
 
-type Props = {
-	drivers: DriverList | undefined;
-	driversTiming: TimingData | undefined;
-	appDriversTiming: TimingAppData | undefined;
-};
+export default function Qualifying() {
+	const driversTiming = useDataStore((state) => state.timingData);
+	const appDriversTiming = useDataStore((state) => state.timingAppData);
+	const drivers = useDataStore((state) => state.driverList);
 
-export default function Qualifying({ drivers, driversTiming, appDriversTiming }: Props) {
 	const qualifyingDrivers =
 		!driversTiming?.lines || !drivers
 			? []

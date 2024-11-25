@@ -23,7 +23,8 @@ pub const SIGNALR_SUBSCRIBE: &str = r#"{
         "LapCount",
         "TimingData",
         "TeamRadio",
-        "PitLaneTimeCollection"
+        "PitLaneTimeCollection",
+        "ChampionshipPrediction"
     ]],
     "I": 1,
 }"#;

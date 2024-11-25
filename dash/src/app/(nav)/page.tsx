@@ -1,24 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import ScrollHint from "@/components/ScrollHint";
 import Button from "@/components/Button";
 import Footer from "@/components/Footer";
 
-import FeatureCard from "@/components/landing/FeatureCard";
-import ScrollHint from "@/components/landing/ScrollHint";
-
-import { features } from "@/lib/data/features";
-
 import icon from "public/tag-logo.svg";
-
-const roadmap = [
-	"Favorite Driver Highlighting & Filtering",
-	"Driver Analytics for Pit Stop",
-	"Driver Head-to-Head Comparison",
-	"Full Race Playback",
-	"Notifications for Race Control Messages",
-	"Tire Lap Times Comparison",
-];
 
 export default function Home() {
 	return (
@@ -46,21 +33,24 @@ export default function Home() {
 				<ScrollHint />
 			</section>
 
-			<section className="mb-10 flex w-full flex-col gap-2">
-				<h2 className="mb-4 text-2xl">What are our Features?</h2>
-
-				<div className="grid grid-flow-row  grid-cols-1 gap-2 sm:grid-cols-2">
-					{features.map((feature, i) => (
-						<FeatureCard key={`feature.${i}`} {...feature} />
-					))}
-				</div>
-			</section>
-
-			<section>
-				<h2 className="mb-4 text-2xl">Whats on our roadmap?</h2>
+			<section className="pb-20">
+				<h2 className="mb-4 text-2xl">Whats f1-dash?</h2>
 
 				<p className="text-md">
-					{roadmap.join(" · ")} {" · "} <span className="text-zinc-600">Your suggestion?</span>
+					f1-dash is a hobby project of mine that I started in 2023. It is a real-time telemetry and timing dashboard
+					for Formula 1. It allows you to see the live telemetry data of the cars on the track and also the live timing.
+					Which includes things like lap times, sector times, the gaps between the drivers, their tire choices and much
+					more.
+				</p>
+			</section>
+
+			<section className="pb-20">
+				<h2 className="mb-4 text-2xl">Whats next?</h2>
+
+				<p className="text-md">
+					I am currently working on v3 of the dashboard. Which will allow more customization and have an updated design.
+					I will also try to improve mobile UI and ship new cool features. If you have any suggestions or feedback, feel
+					free to reach out on GitHub or the Discord.
 				</p>
 			</section>
 
