@@ -30,25 +30,30 @@ export default function SettingsPage() {
 			<h2 className="my-4 text-2xl">Visual</h2>
 
 			<div className="flex gap-2">
-				<Toggle enabled={settings.carMetrics} setEnabled={(v) => settings.setCarMetrics(v)} />
+				<Toggle enabled={settings.carMetrics} setEnabled={(v) => settings.setCarMetrics(v)}/>
 				<p className="text-zinc-500">Show Car Metrics (RPM, Gear, Speed)</p>
 			</div>
 
 			<div className="flex gap-2">
-				<Toggle enabled={settings.showCornerNumbers} setEnabled={(v) => settings.setShowCornerNumbers(v)} />
+				<Toggle enabled={settings.showCornerNumbers} setEnabled={(v) => settings.setShowCornerNumbers(v)}/>
 				<p className="text-zinc-500">Show Corner Numbers on Track Map</p>
 			</div>
 
 			<div className="flex gap-2">
-				<Toggle enabled={settings.tableHeaders} setEnabled={(v) => settings.setTableHeaders(v)} />
+				<Toggle enabled={settings.tableHeaders} setEnabled={(v) => settings.setTableHeaders(v)}/>
 				<p className="text-zinc-500">Show Driver Table Header</p>
+			</div>
+
+			<div className="flex gap-2">
+				<Toggle enabled={settings.raceControlChime} setEnabled={(v) => settings.setRaceControlChime(v)}/>
+				<p className="text-zinc-500">Play Race Control Chime</p>
 			</div>
 
 			<h2 className="my-4 text-2xl">Favorite Drivers</h2>
 
 			<p className="mb-4">Select your favorite drivers to highlight them on the dashboard.</p>
 
-			<FavoriteDrivers />
+			<FavoriteDrivers/>
 
 			<h2 className="my-4 text-2xl">Speed Metric</h2>
 
@@ -59,21 +64,23 @@ export default function SettingsPage() {
 				selected={settings.speedUnit}
 				onSelect={settings.setSpeedUnit}
 				options={[
-					{ label: "km/h", value: "metric" },
-					{ label: "mp/h", value: "imperial" },
+					{label: "km/h", value: "metric"},
+					{label: "mp/h", value: "imperial"},
 				]}
 			/>
 
 			<h2 className="my-4 text-2xl">Delay</h2>
 
 			<p className="mb-4">
-				Here you have to option to set a delay for the data, it will displayed the amount entered in seconds later than
-				on the live edge. On the Dashboard page there is the same delay input field so you can set it without going to
+				Here you have to option to set a delay for the data, it will displayed the amount entered in seconds
+				later than
+				on the live edge. On the Dashboard page there is the same delay input field so you can set it without
+				going to
 				the settings. It can be found in the most top bar on the right side.
 			</p>
 
 			<div className="flex items-center gap-2">
-				<DelayInput />
+				<DelayInput/>
 				<p className="text-zinc-500">Delay in seconds</p>
 			</div>
 
@@ -81,7 +88,7 @@ export default function SettingsPage() {
 				Reset delay
 			</Button>
 
-			<Footer />
+			<Footer/>
 		</div>
 	);
 }
@@ -90,7 +97,7 @@ const FavoriteDrivers = () => {
 	const [drivers, setDrivers] = useState<Driver[] | null>(null);
 	const [error, setError] = useState<string | null>(null);
 
-	const { favoriteDrivers, setFavoriteDrivers, removeFavoriteDriver } = useSettingsStore();
+	const {favoriteDrivers, setFavoriteDrivers, removeFavoriteDriver } = useSettingsStore();
 
 	useEffect(() => {
 		(async () => {
