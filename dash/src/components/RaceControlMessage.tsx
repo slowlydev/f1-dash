@@ -27,10 +27,13 @@ const getDriverNumber = (msg: Message) => {
 };
 
 const loadTime = new Date();
+const chime = new Audio("/sounds/chime.mp3");
 
 export function RaceControlMessage({ msg, gmtOffset }: Props) {
 	const favoriteDriver = useSettingsStore((state) => state.favoriteDrivers.includes(getDriverNumber(msg) ?? ""));
+	const raceControlChime = useSettingsStore((state) => state.raceControlChime);
 	const lastMessageIdRef = useRef<string | null>(null);
+
 	useEffect(() => {
 		const msgTime = new Date(msg.utc)
 
@@ -38,16 +41,9 @@ export function RaceControlMessage({ msg, gmtOffset }: Props) {
 			if (loadTime < msgTime) {
 				if (msg.id !== lastMessageIdRef.current) {
 					lastMessageIdRef.current = msg.id;
-					const customSettings = localStorage.getItem("custom");
-
-				if (customSettings) {
-					const parsedSettings = JSON.parse(customSettings);
-					if (parsedSettings.raceControlChime === true) {
-						const audio = new Audio("/sounds/chime.mp3");
-						audio.play();
-						console.log("played audio")
+					if (raceControlChime == true) {
+						chime.play();
 					}
-				}
 				}
 			}
 		}
