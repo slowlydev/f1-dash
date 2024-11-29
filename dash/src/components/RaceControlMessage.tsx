@@ -9,8 +9,6 @@ import { useSettingsStore } from "@/stores/useSettingsStore";
 
 import { toTrackTime } from "@/lib/toTrackTime";
 
-import { useEffect, useRef } from "react";
-
 type Props = {
 	msg: Message;
 	gmtOffset: string;
@@ -26,27 +24,9 @@ const getDriverNumber = (msg: Message) => {
 	return groups[0];
 };
 
-const loadTime = new Date();
-const chime = new Audio("/sounds/chime.mp3");
-let loadTimeUTC = loadTime.toISOString();
-
 export function RaceControlMessage({ msg, gmtOffset }: Props) {
 	const favoriteDriver = useSettingsStore((state) => state.favoriteDrivers.includes(getDriverNumber(msg) ?? ""));
-	const raceControlChime = useSettingsStore((state) => state.raceControlChime);
-	const lastMessageIdRef = useRef<string | null>(null);
 
-	useEffect(() => {
-		if (typeof window !== "undefined") {
-			if (loadTimeUTC < msg.utc) {
-				if (msg.id !== lastMessageIdRef.current) {
-					lastMessageIdRef.current = msg.id;
-					if (raceControlChime == true) {
-						chime.play();
-					}
-				}
-			}
-		}
-	}, [msg]);
 	return (
 		<motion.li
 			animate={{ opacity: 1, y: 0 }}
