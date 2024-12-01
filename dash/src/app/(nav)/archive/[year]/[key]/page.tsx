@@ -53,12 +53,9 @@ export default async function MeetingDetailsPage({ params }: { params: Promise<{
 						{meeting.sessions.map((session, index) => (
 							<li key={index} className="mb-4">
 								<h3 className="text-xl font-semibold">{session.name}</h3>
+								<p className="text-sm text-zinc-500">{utc(session.startDate).local().format("MMMM D, YYYY")}</p>
 								<p className="text-sm text-zinc-500">
-									{utc(session.startDate).local().format("MMMM D, YYYY")} -{" "}
-									{utc(session.endDate).local().format("MMMM D, YYYY")}
-								</p>
-								<p className="text-sm text-zinc-500">
-									{session.startDate} - {session.endDate}
+									{utc(session.startDate).local().format("HH:mm")} -{utc(session.endDate).local().format("HH:mm")}
 								</p>
 							</li>
 						))}
