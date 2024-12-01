@@ -16,8 +16,8 @@ const getArchiveForYear = async (year: string): Promise<Meeting[] | null> => {
 	}
 };
 
-export default async function MeetingDetailsPage({ params }: { params: { key: string; year: string } }) {
-	const { key, year } = params;
+export default async function MeetingDetailsPage({ params }: { params: Promise<{ key: string; year: string }> }) {
+	const { key, year } = await params;
 	const archive = await getArchiveForYear(year);
 	const meeting = archive?.find((meet) => meet.key.toString() === key);
 
