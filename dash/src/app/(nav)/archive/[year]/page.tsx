@@ -4,6 +4,7 @@ import SegmentedLinks from "@/components/SegmentedLinks";
 import { utc } from "moment";
 import Link from "next/link";
 import { Meeting } from "@/types/archive.type";
+import Dropdown from "@/components/Dropdown";
 
 const getArchiveForYear = async (year: string): Promise<Meeting[] | null> => {
 	try {
@@ -30,11 +31,17 @@ export default async function ArchivePage({ params }: { params: Promise<{ year: 
 		years.push({ label: i.toString(), href: `/archive/${i.toString()}` });
 	}
 
+	const firstThreeYears = years.slice(years.length - 3);
+	const previousYears = years.slice(0, years.length - 3).reverse();
+
 	return (
 		<div className="container mx-auto max-w-screen-lg px-4 pb-8">
 			<div className="my-4 flex items-center justify-between">
 				<h1 className="text-3xl font-bold">Archive for {year}</h1>
-				<SegmentedLinks id="year" selected={`/archive/${year}`} options={years} />
+				<div className="flex items-center space-x-2">
+					<Dropdown options={previousYears} />
+					<SegmentedLinks id="year" selected={`/archive/${year}`} options={firstThreeYears} />
+				</div>
 			</div>
 			{!archive ? (
 				<div className="flex h-44 flex-col items-center justify-center">
