@@ -126,7 +126,11 @@ export default function Map() {
 	}
 
 	return (
-		<svg viewBox={`${minX} ${minY} ${widthX} ${widthY}`} style={{ height: "30rem" }} xmlns="http://www.w3.org/2000/svg">
+		<svg
+			viewBox={`${minX} ${minY} ${widthX} ${widthY}`}
+			className="h-full w-full xl:max-h-screen"
+			xmlns="http://www.w3.org/2000/svg"
+		>
 			<path
 				className="stroke-gray-800"
 				strokeWidth={300}
