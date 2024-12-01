@@ -44,6 +44,16 @@ export default function SettingsPage() {
 				<p className="text-zinc-500">Show Driver Table Header</p>
 			</div>
 
+			<div className="flex gap-2">
+				<Toggle enabled={settings.showBestSectors} setEnabled={(v) => settings.setShowBestSectors(v)} />
+				<p className="text-zinc-500">Show Drivers Best Sectors</p>
+			</div>
+
+			<div className="flex gap-2">
+				<Toggle enabled={settings.showMiniSectors} setEnabled={(v) => settings.setShowMiniSectors(v)} />
+				<p className="text-zinc-500">Show Drivers Mini Sectors</p>
+			</div>
+
 			<h2 className="my-4 text-2xl">Favorite Drivers</h2>
 
 			<p className="mb-4">Select your favorite drivers to highlight them on the dashboard.</p>
