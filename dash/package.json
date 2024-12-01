@@ -1,6 +1,6 @@
 {
 	"name": "f1-dash",
-	"version": "2.2.2",
+	"version": "2.3.0",
 	"private": true,
 	"scripts": {
 		"build": "next build",
