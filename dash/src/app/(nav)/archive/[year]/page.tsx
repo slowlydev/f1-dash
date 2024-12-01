@@ -17,9 +17,9 @@ const getArchiveForYear = async (year: string): Promise<Meeting[] | null> => {
 	}
 };
 
-export default async function ArchivePage({ params }: { params: { year: string } }) {
+export default async function ArchivePage({ params }: { params: Promise<{ year: string }> }) {
 	const currentYear = new Date(Date.now()).getFullYear();
-	let year = params.year;
+	let year = (await params).year;
 	if (year == null || year < "2018" || year > currentYear.toString() || typeof year !== "string") {
 		year = currentYear.toString();
 	}
