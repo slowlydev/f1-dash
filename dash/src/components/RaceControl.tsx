@@ -14,6 +14,7 @@ export default function RaceControl() {
 	const gmtOffset = useDataStore((state) => state.sessionInfo?.gmtOffset);
 
 	const raceControlChime = useSettingsStore((state) => state.raceControlChime);
+	const raceControlChimeVolume = useSettingsStore((state) => state.raceControlChimeVolume);
 
 	const chimeRef = useRef<HTMLAudioElement | null>(null);
 	const pastMessageTimestamps = useRef<string[] | null>(null);
@@ -21,7 +22,7 @@ export default function RaceControl() {
 	useEffect(() => {
 		if (typeof window !== "undefined") {
 			const chime = new Audio("/sounds/chime.mp3");
-			chime.volume = 0.5;
+			chime.volume = raceControlChimeVolume / 100;
 			chimeRef.current = chime;
 
 			return () => {

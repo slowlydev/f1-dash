@@ -25,6 +25,9 @@ type SettingsStore = {
 
 	raceControlChime: boolean;
 	setRaceControlChime: (raceControlChime: boolean) => void;
+
+	raceControlChimeVolume: number;
+	setRaceControlChimeVolume: (raceControlChimeVolume: number) => void;
 };
 
 export const useSettingsStore = create(
@@ -53,6 +56,9 @@ export const useSettingsStore = create(
 
 				raceControlChime: false,
 				setRaceControlChime: (raceControlChime: boolean) => set({ raceControlChime }),
+
+				raceControlChimeVolume: 50,
+				setRaceControlChimeVolume: (raceControlChimeVolume: number) => set({ raceControlChimeVolume }),
 			}),
 			{
 				name: "settings-storage",
