@@ -2,6 +2,7 @@ import clsx from "clsx";
 
 import { getTimeColor } from "@/lib/getTimeColor";
 import { TimingDataDriver, TimingStatsDriver } from "@/types/state.type";
+import { useSettingsStore } from "@/stores/useSettingsStore";
 
 type Props = {
 	sectors: TimingDataDriver["sectors"];
@@ -10,17 +11,26 @@ type Props = {
 };
 
 export default function DriverMiniSectors({ sectors = [], bestSectors, tla }: Props) {
-	return (
-		<div className="flex gap-2" id="walkthrough-driver-sectors">
-			{sectors.map((sector, i) => (
-				<div key={`sector.${tla}.${i}`} className="flex flex-col gap-[0.2rem]">
-					<div className="flex h-[10px] flex-row gap-1">
-						{sector.segments.map((segment, j) => (
-							<MiniSector status={segment.status} key={`sector.mini.${tla}.${j}`} />
-						))}
-					</div>
+	const showMiniSectors = useSettingsStore((state) => state.showMiniSectors);
+	const showBestSectors = useSettingsStore((state) => state.showBestSectors);
 
-					<div>
+	return (
+		<div className="flex gap-2">
+			{sectors.map((sector, i) => (
+				<div key={`sector.${tla}.${i}`} className="flex flex-col gap-1">
+					{showMiniSectors && (
+						<div className="flex flex-row gap-1">
+							{sector.segments.map((segment, j) => (
+								<MiniSector
+									wide={showBestSectors && showMiniSectors}
+									status={segment.status}
+									key={`sector.mini.${tla}.${j}`}
+								/>
+							))}
+						</div>
+					)}
+
+					<div className={clsx("flex", showMiniSectors ? "items-center gap-1" : "flex-col")}>
 						<p
 							className={clsx(
 								"text-lg font-semibold leading-none",
@@ -30,6 +40,12 @@ export default function DriverMiniSectors({ sectors = [], bestSectors, tla }: Pr
 						>
 							{!!sector.value ? sector.value : !!sector.previousValue ? sector.previousValue : "-- ---"}
 						</p>
+
+						{showBestSectors && (
+							<p className="text-sm font-medium leading-none text-zinc-600">
+								{bestSectors && bestSectors[i].value ? bestSectors[i].value : "-- ---"}
+							</p>
+						)}
 					</div>
 				</div>
 			))}
@@ -37,10 +53,11 @@ export default function DriverMiniSectors({ sectors = [], bestSectors, tla }: Pr
 	);
 }
 
-function MiniSector({ status }: { status: number }) {
+function MiniSector({ status, wide }: { status: number; wide: boolean }) {
 	return (
 		<div
-			className={clsx("h-[10px] w-2 rounded-[0.2rem]", {
+			style={wide ? { width: 10, height: 5, borderRadius: 2 } : { height: 10, width: 8, borderRadius: 3.2 }}
+			className={clsx({
 				"bg-yellow-500": status === 2048 || status === 2052, // TODO unsure
 				"bg-emerald-500": status === 2049,
 				"bg-violet-600": status === 2051,
