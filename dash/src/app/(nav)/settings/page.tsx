@@ -15,12 +15,13 @@ import DelayInput from "@/components/DelayInput";
 import Button from "@/components/Button";
 import Toggle from "@/components/Toggle";
 import Footer from "@/components/Footer";
+import Slider from "@/components/Slider";
+import Input from "@/components/Input";
 
 import { useSettingsStore } from "@/stores/useSettingsStore";
 
 import { env } from "@/env.mjs";
-import Slider from "@/components/Slider";
-import Input from "@/components/Input";
+
 
 export default function SettingsPage() {
 	const settings = useSettingsStore();

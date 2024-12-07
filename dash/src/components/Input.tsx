@@ -8,8 +8,7 @@ type Props = {
 };
 
 export default function Input({ value, setValue }: Props) {
-	const handleChange = (v: string) => {
-		const value = v;
+	const handleChange = (value: string) => {
 		if (value === "") {
 			setValue(0);
 		} else {
