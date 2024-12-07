@@ -19,6 +19,12 @@ type SettingsStore = {
 	tableHeaders: boolean;
 	setTableHeaders: (tableHeaders: boolean) => void;
 
+	showBestSectors: boolean;
+	setShowBestSectors: (showBestSectors: boolean) => void;
+
+	showMiniSectors: boolean;
+	setShowMiniSectors: (showMiniSectors: boolean) => void;
+
 	favoriteDrivers: string[];
 	setFavoriteDrivers: (favoriteDrivers: string[]) => void;
 	removeFavoriteDriver: (driver: string) => void;
@@ -48,6 +54,12 @@ export const useSettingsStore = create(
 
 				tableHeaders: false,
 				setTableHeaders: (tableHeaders: boolean) => set({ tableHeaders }),
+
+				showBestSectors: true,
+				setShowBestSectors: (showBestSectors: boolean) => set({ showBestSectors }),
+
+				showMiniSectors: true,
+				setShowMiniSectors: (showMiniSectors: boolean) => set({ showMiniSectors }),
 
 				favoriteDrivers: [],
 				setFavoriteDrivers: (favoriteDrivers: string[]) => set({ favoriteDrivers }),
