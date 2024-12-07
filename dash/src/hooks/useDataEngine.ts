@@ -9,7 +9,6 @@ import { inflate } from "@/lib/inflate";
 import { utcToLocalMs } from "@/lib/utcToLocalMs";
 
 import { useSettingsStore } from "@/stores/useSettingsStore";
-import { useDataStore, useCarDataStore, usePositionStore } from "@/stores/useDataStore";
 
 import { useBuffer } from "@/hooks/useBuffer";
 import { useStatefulBuffer } from "@/hooks/useStatefulBuffer";
@@ -63,7 +62,6 @@ export const useDataEngine = ({ updateState, updatePosition, updateCarData }: Pr
 	const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
 	const handleInitial = ({ carDataZ, positionZ, ...initial }: MessageInitial) => {
-		// dataStore.set(initial);
 		updateState(initial);
 
 		Object.keys(buffers).forEach((key) => {
@@ -74,7 +72,6 @@ export const useDataEngine = ({ updateState, updatePosition, updateCarData }: Pr
 
 		if (carDataZ) {
 			const carData = inflate<CarData>(carDataZ);
-			// carDataStore.set(carData.Entries[0].Cars);
 			updateCarData(carData.Entries[0].Cars);
 
 			for (const entry of carData.Entries) {
@@ -84,7 +81,6 @@ export const useDataEngine = ({ updateState, updatePosition, updateCarData }: Pr
 
 		if (positionZ) {
 			const position = inflate<Position>(positionZ);
-			// positionStore.set(position.Position[0].Entries);
 			updatePosition(position.Position[0].Entries);
 
 			for (const entry of position.Position) {
@@ -124,45 +120,44 @@ export const useDataEngine = ({ updateState, updatePosition, updateCarData }: Pr
 			Object.keys(buffers).forEach((key) => {
 				const buffer = buffers[key as keyof typeof buffers];
 				const latest = buffer.latest();
-				// if (latest) dataStore.set({ [key]: latest });
 				if (latest) newStateFrame[key as keyof typeof newStateFrame] = latest as any;
 			});
 
 			updateState(newStateFrame);
 
 			const carFrame = carBuffer.latest();
-			// if (carFrame) carDataStore.set(carFrame);
 			if (carFrame) updateCarData(carFrame);
 
 			const posFrame = posBuffer.latest();
-			// if (posFrame) positionStore.set(posFrame);
 			if (posFrame) updatePosition(posFrame);
 		} else {
 			const delayedTimestamp = Date.now() - delay * 1000;
+
+			let newStateFrame: State = {} as State;
 
 			Object.keys(buffers).forEach((key) => {
 				const buffer = buffers[key as keyof typeof buffers];
 				const delayed = buffer.delayed(delayedTimestamp);
 
-				// if (delayed) dataStore.set({ [key]: delayed });
-				if (delayed) updateState({ [key]: delayed });
+				if (delayed) newStateFrame[key as keyof State] = delayed as any;
+			});
 
+			updateState(newStateFrame);
+
+			Object.keys(buffers).forEach((key) => {
+				const buffer = buffers[key as keyof typeof buffers];
 				setTimeout(() => buffer.cleanup(delayedTimestamp), 0);
 			});
 
 			const carFrame = carBuffer.delayed(delayedTimestamp);
 			if (carFrame) {
-				// carDataStore.set(carFrame);
 				updateCarData(carFrame);
-
 				setTimeout(() => carBuffer.cleanup(delayedTimestamp), 0);
 			}
 
 			const posFrame = posBuffer.delayed(delayedTimestamp);
 			if (posFrame) {
-				// positionStore.set(posFrame);
 				updatePosition(posFrame);
-
 				setTimeout(() => posBuffer.cleanup(delayedTimestamp), 0);
 			}
 		}
