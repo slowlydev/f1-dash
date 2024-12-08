@@ -28,6 +28,12 @@ type SettingsStore = {
 	favoriteDrivers: string[];
 	setFavoriteDrivers: (favoriteDrivers: string[]) => void;
 	removeFavoriteDriver: (driver: string) => void;
+
+	raceControlChime: boolean;
+	setRaceControlChime: (raceControlChime: boolean) => void;
+
+	raceControlChimeVolume: number;
+	setRaceControlChimeVolume: (raceControlChimeVolume: number) => void;
 };
 
 export const useSettingsStore = create(
@@ -59,6 +65,12 @@ export const useSettingsStore = create(
 				setFavoriteDrivers: (favoriteDrivers: string[]) => set({ favoriteDrivers }),
 				removeFavoriteDriver: (driver: string) =>
 					set((state) => ({ favoriteDrivers: state.favoriteDrivers.filter((d) => d !== driver) })),
+
+				raceControlChime: false,
+				setRaceControlChime: (raceControlChime: boolean) => set({ raceControlChime }),
+
+				raceControlChimeVolume: 50,
+				setRaceControlChimeVolume: (raceControlChimeVolume: number) => set({ raceControlChimeVolume }),
 			}),
 			{
 				name: "settings-storage",
