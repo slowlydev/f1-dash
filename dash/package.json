@@ -10,6 +10,7 @@
 		"prettier": "prettier --write src"
 	},
 	"dependencies": {
+		"@fireworks-js/react": "^2.10.8",
 		"@headlessui/react": "2.2.0",
 		"clsx": "2.1.1",
 		"framer-motion": "11.11.17",

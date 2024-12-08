@@ -102,7 +102,7 @@ export type Message = {
 	lap: number;
 	message: string;
 	category: "Other" | "Sector" | "Flag" | "Drs" | "SafetyCar" | string;
-	flag?: "BLACK AND WHITE" | "BLUE" | "CLEAR" | "YELLOW" | "GREEN" | "DOUBLE YELLOW" | "RED";
+	flag?: "BLACK AND WHITE" | "BLUE" | "CLEAR" | "YELLOW" | "GREEN" | "DOUBLE YELLOW" | "RED" | "CHEQUERED";
 	scope?: "Driver" | "Track" | "Sector";
 	sector?: number;
 	status?: "ENABLED" | "DISABLED";
