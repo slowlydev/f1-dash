@@ -1,6 +1,9 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import clsx from "clsx";
+
+import Fireworks, { FireworksHandlers } from "@fireworks-js/react";
 
 import { useDataStore } from "@/stores/useDataStore";
 
@@ -16,7 +19,25 @@ import Map from "@/components/Map";
 import LapCount from "@/components/LapCount";
 
 export default function Page() {
+	const fireworksRef = useRef<FireworksHandlers>(null);
+	const fireworksPlayed = useRef<boolean>(false);
+
 	const sessionType = useDataStore((state) => state.sessionInfo?.type);
+
+	const raceControlMessages = useDataStore((state) => state.raceControlMessages?.messages);
+
+	useEffect(() => {
+		if (sessionType === "Race") {
+			const chequeredFlagMsg = raceControlMessages?.find((message) => message.flag === "CHEQUERED");
+			if (chequeredFlagMsg !== undefined && !fireworksPlayed.current) {
+				fireworksRef.current?.start();
+				setTimeout(() => {
+					fireworksPlayed.current = true;
+					fireworksRef.current?.stop();
+				}, 30 * 1000);
+			}
+		}
+	}, [raceControlMessages]);
 
 	return (
 		<div className="flex w-full flex-col">
@@ -107,6 +128,22 @@ export default function Page() {
 			<div className="px-2">
 				<Footer />
 			</div>
+
+			<Fireworks
+				ref={fireworksRef}
+				autostart={false}
+				options={{
+					rocketsPoint: { max: 60, min: 40 },
+				}}
+				style={{
+					top: 0,
+					left: 0,
+					width: "100%",
+					height: "100%",
+					position: "fixed",
+					background: "#00000000",
+				}}
+			/>
 		</div>
 	);
 }
