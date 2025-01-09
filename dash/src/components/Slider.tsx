@@ -15,7 +15,7 @@ export default function Slider({ value, setValue }: Props) {
 			<input
 				type="range"
 				value={value}
-				className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-gray-200 dark:bg-gray-700"
+				className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-gray-700 accent-indigo-500"
 				onChange={handleChange}
 			></input>
 	);

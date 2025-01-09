@@ -22,7 +22,6 @@ import { useSettingsStore } from "@/stores/useSettingsStore";
 
 import { env } from "@/env.mjs";
 
-
 export default function SettingsPage() {
 	const settings = useSettingsStore();
 	return (
@@ -47,31 +46,33 @@ export default function SettingsPage() {
 			</div>
 
 			<div className="flex gap-2">
-        <Toggle enabled={settings.showBestSectors} setEnabled={(v) => settings.setShowBestSectors(v)} />
+				<Toggle enabled={settings.showBestSectors} setEnabled={(v) => settings.setShowBestSectors(v)} />
 				<p className="text-zinc-500">Show Drivers Best Sectors</p>
 			</div>
-      
-      <div className="flex gap-2">
+
+			<div className="flex gap-2">
 				<Toggle enabled={settings.showMiniSectors} setEnabled={(v) => settings.setShowMiniSectors(v)} />
 				<p className="text-zinc-500">Show Drivers Mini Sectors</p>
 			</div>
-      
-      <div className="flex gap-2">
-        <Toggle enabled={settings.raceControlChime} setEnabled={(v) => settings.setRaceControlChime(v)} />
+
+			<div className="flex gap-2">
+				<Toggle enabled={settings.raceControlChime} setEnabled={(v) => settings.setRaceControlChime(v)} />
 				<p className="text-zinc-500">Play Race Control Chime</p>
 			</div>
-      
-      {settings.raceControlChime && (
+
+			{settings.raceControlChime && (
 				<div className="flex max-w-52 flex-col gap-2">
 					<p>Race Control Chime Volume</p>
-					<div className="flex gap-2 flex-row items-center">
-						<Slider
-							value={settings.raceControlChimeVolume}
-							setValue={(v) => settings.setRaceControlChimeVolume(v)}
-						/>
+					<div className="flex flex-row items-center gap-2">
+						<Slider value={settings.raceControlChimeVolume} setValue={(v) => settings.setRaceControlChimeVolume(v)} />
 						<Input
-							value={settings.raceControlChimeVolume}
-							setValue={(v) => settings.setRaceControlChimeVolume(v)}
+							value={String(settings.raceControlChimeVolume)}
+							setValue={(v) => {
+								const numericValue = Number(v);
+								if (!isNaN(numericValue)) {
+									settings.setRaceControlChimeVolume(numericValue);
+								}
+							}}
 						/>
 					</div>
 				</div>
