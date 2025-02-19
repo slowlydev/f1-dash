@@ -24,7 +24,7 @@ export default function Countdown({ next, type }: Props) {
 		const diff = duration(nextMoment.diff(now()));
 
 		if (diff.asSeconds() > 0) {
-			setDuration([diff.days(), diff.hours(), diff.minutes(), diff.seconds()]);
+			setDuration([diff.asDays(), diff.hours(), diff.minutes(), diff.seconds()]);
 		} else {
 			setDuration([0, 0, 0, 0]);
 		}
