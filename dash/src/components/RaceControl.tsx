@@ -1,4 +1,4 @@
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "motion/react";
 import clsx from "clsx";
 
 import { useDataStore } from "@/stores/useDataStore";
@@ -12,21 +12,23 @@ export default function RaceControl() {
 	const gmtOffset = useDataStore((state) => state.sessionInfo?.gmtOffset);
 
 	return (
-		<ul className="flex flex-col">
-			{!messages &&
-				new Array(7).fill("").map((_, index) => <SkeletonMessage key={`msg.loading.${index}`} index={index} />)}
+		<div className="h-full overflow-y-auto">
+			<ul className="flex flex-col">
+				{!messages &&
+					new Array(7).fill("").map((_, index) => <SkeletonMessage key={`msg.loading.${index}`} index={index} />)}
 
-			{messages && gmtOffset && (
-				<AnimatePresence>
-					{messages.messages
-						.sort(sortUtc)
-						.filter((msg) => (msg.flag ? msg.flag.toLowerCase() !== "blue" : true))
-						.map((msg, i) => (
-							<RaceControlMessage key={`msg.${i}`} msg={msg} gmtOffset={gmtOffset} />
-						))}
-				</AnimatePresence>
-			)}
-		</ul>
+				{messages && gmtOffset && (
+					<AnimatePresence>
+						{messages.messages
+							.sort(sortUtc)
+							.filter((msg) => (msg.flag ? msg.flag.toLowerCase() !== "blue" : true))
+							.map((msg, i) => (
+								<RaceControlMessage key={`msg.${i}`} msg={msg} gmtOffset={gmtOffset} />
+							))}
+					</AnimatePresence>
+				)}
+			</ul>
+		</div>
 	);
 }
 

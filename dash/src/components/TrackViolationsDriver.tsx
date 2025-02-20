@@ -20,7 +20,12 @@ export default function TrackViolationsDriver({ driver, driverViolations, driver
 			<DriverTag className="h-fit" teamColor={driver.teamColour} short={driver.tla} />
 			<div className="flex items-center gap-2">
 				{new Array(driverViolations).fill("").map((_, i) => (
-					<Image src={octagonX} className="size-6" alt="x in octagon" />
+					<Image
+						key={`driver.${driver.racingNumber}.violation.${i}`}
+						src={octagonX}
+						className="size-6"
+						alt="x in octagon"
+					/>
 				))}
 			</div>
 			<div className="flex flex-col justify-center text-sm text-zinc-600">

@@ -30,7 +30,7 @@ export default function TrackViolations() {
 	const trackLimits =
 		messages?.messages
 			.filter((rcm) => rcm.category == "Other")
-			.filter((rcm) => rcm.message.includes("TRACK LIMITS"))
+			.filter((rcm) => rcm.message.includes("TRACK LIMITS") || rcm.message.includes("REINSTATED"))
 			.reduce((acc: DriverViolations, violations) => {
 				const carNr = findCarNumber(violations.message);
 				if (!carNr) return acc;
@@ -38,8 +38,13 @@ export default function TrackViolations() {
 				if (acc[carNr] === undefined) {
 					acc[carNr] = 1;
 				} else {
-					const newValue = acc[carNr] + 1;
-					acc[carNr] = newValue;
+					if (violations.message.includes("REINSTATED")) {
+						const newValue = acc[carNr] - 1;
+						acc[carNr] = newValue;
+					} else {
+						const newValue = acc[carNr] + 1;
+						acc[carNr] = newValue;
+					}
 				}
 
 				return acc;

@@ -31,7 +31,7 @@ type Corner = {
 	labelPos: TrackPosition;
 };
 
-export default function Map() {
+export default function TrackMap() {
 	const showCornerNumbers = useSettingsStore((state) => state.showCornerNumbers);
 	const favoriteDrivers = useSettingsStore((state) => state.favoriteDrivers);
 
@@ -126,7 +126,7 @@ export default function Map() {
 	}
 
 	return (
-		<svg viewBox={`${minX} ${minY} ${widthX} ${widthY}`} style={{ height: "30rem" }} xmlns="http://www.w3.org/2000/svg">
+		<svg viewBox={`${minX} ${minY} ${widthX} ${widthY}`} className="h-full w-full" xmlns="http://www.w3.org/2000/svg">
 			<path
 				className="stroke-gray-800"
 				strokeWidth={300}

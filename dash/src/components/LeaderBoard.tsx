@@ -1,4 +1,4 @@
-import { AnimatePresence, LayoutGroup } from "framer-motion";
+import { AnimatePresence, LayoutGroup } from "motion/react";
 import clsx from "clsx";
 
 import { useSettingsStore } from "@/stores/useSettingsStore";

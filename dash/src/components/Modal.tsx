@@ -1,4 +1,4 @@
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion } from "motion/react";
 import { type MouseEvent, type ReactNode } from "react";
 
 type Props = {

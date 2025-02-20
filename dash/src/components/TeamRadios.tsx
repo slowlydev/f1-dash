@@ -1,4 +1,4 @@
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "motion/react";
 import { utc } from "moment";
 import clsx from "clsx";
 
@@ -18,25 +18,27 @@ export default function TeamRadios() {
 	// TODO add notice that we only show 20
 
 	return (
-		<ul className="flex flex-col">
-			{!teamRadios && new Array(6).fill("").map((_, index) => <SkeletonMessage key={`radio.loading.${index}`} />)}
+		<div className="h-full overflow-y-auto">
+			<ul className="flex flex-col">
+				{!teamRadios && new Array(6).fill("").map((_, index) => <SkeletonMessage key={`radio.loading.${index}`} />)}
 
-			{teamRadios && drivers && teamRadios.captures && (
-				<AnimatePresence>
-					{teamRadios.captures
-						.sort(sortUtc)
-						.slice(0, 20)
-						.map((teamRadio, i) => (
-							<TeamRadioMessage
-								key={`radio.${utc(teamRadio.utc).unix()}.${i}`}
-								driver={drivers[teamRadio.racingNumber]}
-								capture={teamRadio}
-								basePath={basePath}
-							/>
-						))}
-				</AnimatePresence>
-			)}
-		</ul>
+				{teamRadios && drivers && teamRadios.captures && (
+					<AnimatePresence>
+						{teamRadios.captures
+							.sort(sortUtc)
+							.slice(0, 20)
+							.map((teamRadio, i) => (
+								<TeamRadioMessage
+									key={`radio.${utc(teamRadio.utc).unix()}.${i}`}
+									driver={drivers[teamRadio.racingNumber]}
+									capture={teamRadio}
+									basePath={basePath}
+								/>
+							))}
+					</AnimatePresence>
+				)}
+			</ul>
+		</div>
 	);
 }
 

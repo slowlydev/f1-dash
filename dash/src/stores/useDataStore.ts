@@ -61,12 +61,8 @@ export const useDataStore = create<DataStore>((set) => ({
 	teamRadio: null,
 	championshipPrediction: null,
 
-	set: (state: State) => {
-		set(state);
-	},
-	update: (state: Partial<State>) => {
-		set(state);
-	},
+	set: (state: State) => set(state),
+	update: (state: Partial<State>) => set(state),
 }));
 
 // car store
