@@ -18,7 +18,17 @@ const DEFAULT: GridStack = {
 					component: "leaderboard",
 				},
 				{
-					component: "trackviolations",
+					direction: "row",
+					children: [
+						{
+							component: "trackviolations",
+							style: { width: "50%" },
+						},
+						{
+							component: "teamradios",
+							style: { height: "40rem", width: "50%" },
+						},
+					],
 				},
 			],
 		},
@@ -29,17 +39,8 @@ const DEFAULT: GridStack = {
 					component: "trackmap",
 				},
 				{
-					direction: "row",
-					children: [
-						{
-							component: "racecontrol",
-							style: { height: "40rem", width: "50%" },
-						},
-						{
-							component: "teamradios",
-							style: { height: "40rem", width: "50%" },
-						},
-					],
+					component: "racecontrol",
+					style: { height: "20rem" },
 				},
 			],
 		},

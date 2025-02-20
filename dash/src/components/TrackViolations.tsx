@@ -55,7 +55,7 @@ export default function TrackViolations() {
 		: undefined;
 
 	return (
-		<div className="flex flex-col gap-2">
+		<div className="flex flex-col gap-2 p-2">
 			{violationDrivers && violationDrivers.length < 1 && (
 				<div className="flex h-96 w-full flex-col items-center justify-center">
 					<p className="text-gray-500">No violations yet</p>

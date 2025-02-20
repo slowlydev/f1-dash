@@ -65,7 +65,7 @@ const GridRenderer = ({ stack }: GridRendererProps) => {
 				if ("component" in child) {
 					const Component = map[child.component];
 					return (
-						<div key={index} className="border border-zinc-600" style={child.style}>
+						<div key={index} className="m-0.5 rounded-md border border-zinc-600" style={child.style}>
 							<Component key={index} />
 						</div>
 					);

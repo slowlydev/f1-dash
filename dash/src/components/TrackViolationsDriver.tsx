@@ -6,7 +6,7 @@ import { calculatePosition } from "@/lib/calculatePosition";
 
 import DriverTag from "@/components/driver/DriverTag";
 
-import octagonX from "public/icons/x-octagon.svg";
+// import octagonX from "public/icons/x-octagon.svg";
 
 type Props = {
 	driver: Driver;
@@ -18,19 +18,19 @@ export default function TrackViolationsDriver({ driver, driverViolations, driver
 	return (
 		<div className="flex gap-2" key={`violation.${driver.racingNumber}`}>
 			<DriverTag className="h-fit" teamColor={driver.teamColour} short={driver.tla} />
-			<div className="flex items-center gap-2">
+			{/* <div className="flex flex-wrap items-center gap-1">
 				{new Array(driverViolations).fill("").map((_, i) => (
 					<Image
 						key={`driver.${driver.racingNumber}.violation.${i}`}
 						src={octagonX}
-						className="size-6"
+						className="size-5"
 						alt="x in octagon"
 					/>
 				))}
-			</div>
-			<div className="flex flex-col justify-center text-sm text-zinc-600">
+			</div> */}
+			<div className="flex flex-col justify-center text-sm leading-none text-zinc-600">
 				<p>
-					{driverViolations} Violations
+					{driverViolations} Violation{driverViolations > 1 && "s"}
 					{driverViolations > 4 && <span> - {Math.round(driverViolations / 5) * 5}s Penalty</span>}
 				</p>
 				{driverViolations > 4 && driversTiming && (
