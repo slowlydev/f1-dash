@@ -136,6 +136,7 @@ export default function Page() {
 					rocketsPoint: { max: 60, min: 40 },
 				}}
 				style={{
+					pointerEvents: "none",
 					top: 0,
 					left: 0,
 					width: "100%",
