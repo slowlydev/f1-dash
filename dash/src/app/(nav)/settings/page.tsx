@@ -15,6 +15,8 @@ import DelayInput from "@/components/DelayInput";
 import Button from "@/components/Button";
 import Toggle from "@/components/Toggle";
 import Footer from "@/components/Footer";
+import Slider from "@/components/Slider";
+import Input from "@/components/Input";
 
 import { useSettingsStore } from "@/stores/useSettingsStore";
 
@@ -22,7 +24,6 @@ import { env } from "@/env.mjs";
 
 export default function SettingsPage() {
 	const settings = useSettingsStore();
-
 	return (
 		<div className="container mx-auto max-w-screen-lg px-4">
 			<h1 className="my-4 text-3xl">Settings</h1>
@@ -53,6 +54,29 @@ export default function SettingsPage() {
 				<Toggle enabled={settings.showMiniSectors} setEnabled={(v) => settings.setShowMiniSectors(v)} />
 				<p className="text-zinc-500">Show Drivers Mini Sectors</p>
 			</div>
+
+			<div className="flex gap-2">
+				<Toggle enabled={settings.raceControlChime} setEnabled={(v) => settings.setRaceControlChime(v)} />
+				<p className="text-zinc-500">Play Race Control Chime</p>
+			</div>
+
+			{settings.raceControlChime && (
+				<div className="flex max-w-52 flex-col gap-2">
+					<p>Race Control Chime Volume</p>
+					<div className="flex flex-row items-center gap-2">
+						<Slider value={settings.raceControlChimeVolume} setValue={(v) => settings.setRaceControlChimeVolume(v)} />
+						<Input
+							value={String(settings.raceControlChimeVolume)}
+							setValue={(v) => {
+								const numericValue = Number(v);
+								if (!isNaN(numericValue)) {
+									settings.setRaceControlChimeVolume(numericValue);
+								}
+							}}
+						/>
+					</div>
+				</div>
+			)}
 
 			<h2 className="my-4 text-2xl">Favorite Drivers</h2>
 
