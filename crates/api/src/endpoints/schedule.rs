@@ -27,22 +27,25 @@ pub struct Round {
     over: bool,
 }
 
-fn parse_ical_utc(date_string: &str) -> Option<DateTime<Utc>> {
-    // Attempt to parse the date string
-    match NaiveDateTime::parse_from_str(date_string, "%Y%m%dT%H%M%SZ") {
-        Ok(naive_datetime) => Some(Utc.from_utc_datetime(&naive_datetime)),
-        Err(_) => None,
-    }
+fn parse_ical_utc(date_string: &str) -> Result<DateTime<Utc>, anyhow::Error> {
+    let naive_datetime = NaiveDateTime::parse_from_str(date_string, "%Y%m%dT%H%M%SZ")?;
+    Ok(Utc.from_utc_datetime(&naive_datetime))
 }
 
-fn get_property(event: &IcalEvent, name: &str) -> Option<String> {
+fn get_property(event: &IcalEvent, name: &str) -> Result<String, anyhow::Error> {
     for property in &event.properties {
         if property.name == name {
-            return property.value.clone();
+            if let Some(value) = &property.value {
+                return Ok(value.clone());
+            }
         }
     }
 
-    None
+    Err(anyhow::format_err!(
+        "failed to find property {} on event {:?}",
+        name,
+        event
+    ))
 }
 
 fn find_round_mut<'a>(rounds: &'a mut Vec<Round>, name: &str) -> Option<&'a mut Round> {
@@ -55,7 +58,7 @@ fn parse_name(full_name: &str) -> Option<(String, String)> {
     Some((captures["name"].to_owned(), captures["kind"].to_owned()))
 }
 
-fn new_round(event: IcalEvent, name: &str, kind: &str) -> Option<Round> {
+fn new_round(event: IcalEvent, name: &str, kind: &str) -> Result<Round, anyhow::Error> {
     let country = get_property(&event, "LOCATION")?;
     let start_str = get_property(&event, "DTSTART")?;
     let end_str = get_property(&event, "DTEND")?;
@@ -79,10 +82,10 @@ fn new_round(event: IcalEvent, name: &str, kind: &str) -> Option<Round> {
         over: false,
     };
 
-    Some(round)
+    Ok(round)
 }
 
-fn update_round(event: IcalEvent, round: &mut Round, kind: &str) -> Option<()> {
+fn update_round(event: IcalEvent, round: &mut Round, kind: &str) -> Result<(), anyhow::Error> {
     let start_str = get_property(&event, "DTSTART")?;
     let end_str = get_property(&event, "DTEND")?;
 
@@ -105,7 +108,7 @@ fn update_round(event: IcalEvent, round: &mut Round, kind: &str) -> Option<()> {
         round.end = end;
     }
 
-    Some(())
+    Ok(())
 }
 
 #[io_cached(
@@ -130,22 +133,30 @@ async fn get_schedule(year: i32) -> Result<Vec<Round>, anyhow::Error> {
         for event in calendar.events {
             let full_name = get_property(&event, "SUMMARY");
 
-            let Some(full_name) = full_name else {
+            let Ok(full_name) = full_name else {
+                error!("failed to get full name for event: {:?}", event);
                 continue;
             };
 
             let Some((name, kind)) = parse_name(&full_name) else {
+                error!("failed to parse name for event: {}", full_name);
                 continue;
             };
 
             match find_round_mut(&mut rounds, &name) {
-                Some(round) => {
-                    let _ = update_round(event, round, &kind);
-                }
+                Some(round) => match update_round(event, round, &kind) {
+                    Ok(_) => {}
+                    Err(e) => {
+                        warn!("failed to update round: {}", e);
+                    }
+                },
                 None => {
-                    let Some(new_round) = new_round(event, &name, &kind) else {
-                        warn!("failed to create round with name: {}", name);
-                        continue;
+                    let new_round = match new_round(event, &name, &kind) {
+                        Ok(new_round) => new_round,
+                        Err(err) => {
+                            error!(?name, ?err, "failed to create round");
+                            continue;
+                        }
                     };
 
                     if new_round.start.year() != year {
