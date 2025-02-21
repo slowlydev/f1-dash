@@ -9,6 +9,7 @@ use tracing::info;
 
 use crate::{LiveEvent, LiveState};
 
+mod connections;
 mod cors;
 mod drivers;
 mod health;
@@ -59,6 +60,7 @@ pub async fn init(
         .route("/api/sse", get(live::sse_handler))
         .route("/api/health", get(health::check))
         .route("/api/drivers", get(drivers::get_drivers))
+        .route("/api/connections", get(connections::get_connections))
         .layer(cors)
         .layer(governor)
         .with_state(app_state)
