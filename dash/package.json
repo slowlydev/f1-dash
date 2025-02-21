@@ -1,6 +1,6 @@
 {
 	"name": "f1-dash",
-	"version": "2.2.2",
+	"version": "2.5.0",
 	"private": true,
 	"scripts": {
 		"build": "next build",
@@ -10,6 +10,7 @@
 		"prettier": "prettier --write src"
 	},
 	"dependencies": {
+		"@fireworks-js/react": "^2.10.8",
 		"@headlessui/react": "2.2.0",
 		"clsx": "2.1.1",
 		"geist": "1.3.1",

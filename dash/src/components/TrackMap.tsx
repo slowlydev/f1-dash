@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import clsx from "clsx";
 
 import type { PositionCar } from "@/types/state.type";
-import type { Map, TrackPosition } from "@/types/map.type";
+import type { TrackPosition } from "@/types/map.type";
 
 import { fetchMap } from "@/lib/fetchMap";
 import { objectEntries } from "@/lib/driverHelper";
