@@ -66,7 +66,7 @@ const SkeletonDriver = () => {
 
 	return (
 		<div
-			className="h-18 grid place-items-center items-center gap-1 px-2 py-1"
+			className="grid place-items-center items-center gap-1 p-1"
 			style={{
 				gridTemplateColumns: "6rem 4rem 5rem 4rem 5rem 5rem 19.5rem",
 			}}
