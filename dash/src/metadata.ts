@@ -78,5 +78,5 @@ export const metadata: Metadata = {
 		google: "hKv0h7XtWgQ-pVNVKpwwb2wcCC2f0tBQ1X1IcDX50hg",
 	},
 
-	manifest: "manifest.json",
+	manifest: "/manifest.json",
 };
