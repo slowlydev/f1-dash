@@ -88,14 +88,14 @@ export default function DriverQuali({
 							className={clsx(
 								"h-4 rounded-md",
 								getSectorColorBG(sector.overallFastest, sector.personalFastest),
-								!sector.value ? "!bg-gray-500" : "",
+								!sector.value ? "bg-gray-500!" : "",
 							)}
 						/>
 						<p
 							className={clsx(
 								"text-center text-lg font-semibold leading-none",
 								getSectorColorText(sector.overallFastest, sector.personalFastest),
-								!sector.value ? "!text-gray-500" : "",
+								!sector.value ? "text-gray-500!" : "",
 							)}
 						>
 							{!!sector.value ? sector.value : "-- ---"}

@@ -56,11 +56,11 @@ export default function Driver({ driver, timingDriver, position }: Props) {
 	return (
 		<motion.div
 			layout="position"
-			className={clsx("flex select-none flex-col gap-1 p-1.5", {
+			className={clsx("flex flex-col gap-1 p-1.5 select-none", {
 				"opacity-50": timingDriver.knockedOut || timingDriver.retired || timingDriver.stopped,
-				"bg-sky-800 bg-opacity-30": favoriteDriver,
-				"bg-violet-800 bg-opacity-30": hasFastest,
-				"bg-red-800 bg-opacity-30": sessionPart != undefined && inDangerZone(position, sessionPart),
+				"bg-sky-800/30": favoriteDriver,
+				"bg-violet-800/30": hasFastest,
+				"bg-red-800/30": sessionPart != undefined && inDangerZone(position, sessionPart),
 			})}
 		>
 			<div
@@ -71,7 +71,7 @@ export default function Driver({ driver, timingDriver, position }: Props) {
 						: "5.5rem 4rem 5.5rem 4rem 5rem 5.5rem auto",
 				}}
 			>
-				<DriverTag className="!min-w-full" short={driver.tla} teamColor={driver.teamColour} position={position} />
+				<DriverTag className="min-w-full!" short={driver.tla} teamColor={driver.teamColour} position={position} />
 				<DriverDRS
 					on={carData ? hasDRS(carData[45]) : false}
 					possible={carData ? possibleDRS(carData[45]) : false}

@@ -25,7 +25,7 @@ import { env } from "@/env.mjs";
 export default function SettingsPage() {
 	const settings = useSettingsStore();
 	return (
-		<div className="container mx-auto max-w-screen-lg px-4">
+		<div className="container mx-auto max-w-(--breakpoint-lg) px-4">
 			<h1 className="my-4 text-3xl">Settings</h1>
 
 			<h2 className="my-4 text-2xl">Visual</h2>
@@ -111,7 +111,7 @@ export default function SettingsPage() {
 				<p className="text-zinc-500">Delay in seconds</p>
 			</div>
 
-			<Button className="mt-2 !bg-red-500" onClick={() => settings.setDelay(0)}>
+			<Button className="mt-2 bg-red-500!" onClick={() => settings.setDelay(0)}>
 				Reset delay
 			</Button>
 

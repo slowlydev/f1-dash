@@ -90,7 +90,7 @@ export default function Menubar({ connected }: Props) {
 						<Button onClick={cancelLeaveLive} className="w-24">
 							Cancel
 						</Button>
-						<Button onClick={confirmLeaveLive} className="w-24 !bg-red-500">
+						<Button onClick={confirmLeaveLive} className="w-24 bg-red-500!">
 							Confirm
 						</Button>
 					</div>

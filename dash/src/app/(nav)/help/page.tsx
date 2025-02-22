@@ -15,7 +15,7 @@ import wetTireIcon from "public/tires/wet.svg";
 
 export default function HelpPage() {
 	return (
-		<div className="container mx-auto mb-10 max-w-screen-lg px-4">
+		<div className="container mx-auto mb-10 max-w-(--breakpoint-lg) px-4">
 			<h1 className="my-4 text-3xl">Help Page</h1>
 
 			<p>This page explains some core features and UI elements of f1-dash.</p>
@@ -65,20 +65,20 @@ export default function HelpPage() {
 			</div>
 
 			<Note>
-				Only mini sectors use the yellow color as it would make the UI look bad if a lot of drivers are not
-				improving their lap times, and all text in the UI would be yellow.
+				Only mini sectors use the yellow color as it would make the UI look bad if a lot of drivers are not improving
+				their lap times, and all text in the UI would be yellow.
 			</Note>
 
 			<h2 className="my-4 text-2xl">Leader board</h2>
 
 			<p className="mb-4">
-				The leader board shows all the drivers of the ongoing session. Depending on the driver's status and the session's progression, 
-				some drivers may have a colored background.
+				The leader board shows all the drivers of the ongoing session. Depending on the driver's status and the
+				session's progression, some drivers may have a colored background.
 			</p>
 
 			<div className="grid grid-cols-1 gap-x-4 divide-y divide-zinc-800 sm:grid-cols-3 sm:divide-y-0">
 				<div>
-					<p className="rounded-md bg-violet-800 bg-opacity-30 p-2">Driver has purple background</p>
+					<p className="rounded-md bg-violet-800/30 p-2">Driver has purple background</p>
 					<p className="p-2">Driver has the fastest overall lap time.</p>
 				</div>
 
@@ -88,7 +88,7 @@ export default function HelpPage() {
 				</div>
 
 				<div className="pt-4 sm:pt-0">
-					<p className="rounded-md bg-red-800 bg-opacity-30 p-2">Red background.</p>
+					<p className="rounded-md bg-red-800/30 p-2">Red background.</p>
 					<p className="p-2">Driver is in the danger zone during qualifying.</p>
 				</div>
 			</div>
@@ -96,7 +96,9 @@ export default function HelpPage() {
 			<h2 className="my-4 text-2xl">DRS & PIT Status</h2>
 
 			<p className="mb-4">
-			Each driver in the leaderboard has a DRS and PIT status indicator. It shows whether a driver has no DRS, is less than 1 second behind the driver ahead (and has DRS from the detection zone), has DRS active, or is in the pit lane or leaving it.
+				Each driver in the leaderboard has a DRS and PIT status indicator. It shows whether a driver has no DRS, is less
+				than 1 second behind the driver ahead (and has DRS from the detection zone), has DRS active, or is in the pit
+				lane or leaving it.
 			</p>
 
 			<p className="mb-4">
@@ -195,9 +197,9 @@ export default function HelpPage() {
 			<h2 className="my-4 text-2xl">Delay Control</h2>
 
 			<p className="mb-4">
-			When using f1-dash while watching on TV, F1TV, or your favorite streaming platform, you may notice that f1-dash updates much earlier than your stream. 
-			This can make exciting race events less interesting, as you see them on f1-dash before experiencing them on your stream. 
-			This is where the delay control comes in.
+				When using f1-dash while watching on TV, F1TV, or your favorite streaming platform, you may notice that f1-dash
+				updates much earlier than your stream. This can make exciting race events less interesting, as you see them on
+				f1-dash before experiencing them on your stream. This is where the delay control comes in.
 			</p>
 
 			<p className="mb-4">

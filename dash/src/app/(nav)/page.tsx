@@ -9,7 +9,7 @@ import icon from "public/tag-logo.svg";
 
 export default function Home() {
 	return (
-		<div className="container mx-auto max-w-screen-lg px-4">
+		<div className="container mx-auto max-w-(--breakpoint-lg) px-4">
 			<section className="flex h-screen w-full flex-col items-center pt-20 sm:justify-center sm:pt-0">
 				<Image src={icon} alt="f1-dash tag logo" width={200} />
 
@@ -20,11 +20,11 @@ export default function Home() {
 
 				<div className="flex flex-wrap gap-4">
 					<Link href="/dashboard">
-						<Button className="!rounded-xl border-2 border-transparent p-4 font-medium">Go to Dashboard</Button>
+						<Button className="rounded-xl! border-2 border-transparent p-4 font-medium">Go to Dashboard</Button>
 					</Link>
 
 					<Link href="/schedule">
-						<Button className="!rounded-xl border-2 border-zinc-700 !bg-transparent p-4 font-medium">
+						<Button className="rounded-xl! border-2 border-zinc-700 bg-transparent! p-4 font-medium">
 							Check Schedule
 						</Button>
 					</Link>

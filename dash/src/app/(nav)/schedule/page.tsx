@@ -7,7 +7,7 @@ import FullSchedule from "@/components/schedule/FullSchedule";
 
 export default async function SchedulePage() {
 	return (
-		<div className="container mx-auto max-w-screen-lg px-4">
+		<div className="container mx-auto max-w-(--breakpoint-lg) px-4">
 			<div className="my-4">
 				<h1 className="text-3xl">Up Next</h1>
 				<p className="text-zinc-600">All times are local time</p>

@@ -9,7 +9,7 @@ export default function AudioProgress({ duration, progress }: Props) {
 	const percent = progress / duration;
 
 	return (
-		<div className="h-2 w-60 overflow-hidden rounded-xl bg-white bg-opacity-50">
+		<div className="h-2 w-60 overflow-hidden rounded-xl bg-white/50">
 			<motion.div
 				className="h-2 bg-white"
 				style={{ width: `${percent * 100}%` }}

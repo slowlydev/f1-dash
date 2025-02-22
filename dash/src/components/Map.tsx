@@ -237,7 +237,7 @@ const CarDot = ({ pos, name, color, favoriteDriver, pit, hidden, rotation, cente
 
 	return (
 		<g
-			className={clsx("fill-zinc-700", { "opacity-30": pit }, { "!opacity-0": hidden })}
+			className={clsx("fill-zinc-700", { "opacity-30": pit }, { "opacity-0!": hidden })}
 			style={{
 				transition: "all 1s linear",
 				transform,

@@ -74,10 +74,10 @@ export default function TeamRadioMessage({ driver, capture, basePath }: Props) {
 		<motion.li
 			animate={{ opacity: 1, y: 0 }}
 			initial={{ opacity: 0, y: -20 }}
-			className={clsx("flex flex-col gap-1 p-2", { "bg-sky-800 bg-opacity-30": favoriteDriver })}
+			className={clsx("flex flex-col gap-1 p-2", { "bg-sky-800/30": favoriteDriver })}
 		>
 			<time
-				className="text-sm font-medium leading-none text-gray-500"
+				className="text-sm leading-none font-medium text-gray-500"
 				dateTime={utc(capture.utc).local().format("HH:mm:ss")}
 			>
 				{utc(capture.utc).local().format("HH:mm:ss")}

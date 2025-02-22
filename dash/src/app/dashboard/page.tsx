@@ -70,13 +70,13 @@ export default function Page() {
 				</div>
 			</div>
 
-			<div className={clsx("flex w-full flex-col divide-y divide-zinc-800")}>
+			<div className={clsx("flex w-full flex-col divide-y divide-zinc-800 xl:divide-none")}>
 				<div className={clsx("flex w-full flex-col divide-y divide-zinc-800", "xl:flex-row xl:divide-x xl:divide-y-0")}>
 					<div className={clsx("mb-2 overflow-x-auto md:overflow-visible", "xl:flex-[0,0,auto]")}>
 						<LeaderBoard />
 					</div>
 
-					<div className={clsx("flex flex-col divide-y divide-zinc-800", "xl:min-w-0 xl:flex-grow")}>
+					<div className={clsx("flex flex-col divide-y divide-zinc-800", "xl:min-w-0 xl:grow")}>
 						{sessionType === "Qualifying" && (
 							<div className="overflow-x-auto">
 								<Qualifying />
@@ -96,23 +96,13 @@ export default function Page() {
 							)}
 						>
 							<div
-								className={clsx(
-									"h-96 overflow-y-auto",
-									"md:w-1/2",
-									"xl:auto xl:mr-0 xl:w-auto xl:flex-grow",
-									"2xl:w-1/2",
-								)}
+								className={clsx("h-96 overflow-y-auto", "md:w-1/2", "xl:auto xl:mr-0 xl:w-auto xl:grow", "2xl:w-1/2")}
 							>
 								<RaceControl />
 							</div>
 
 							<div
-								className={clsx(
-									"h-96 overflow-y-auto",
-									"md:w-1/2",
-									"xl:auto xl:mr-0 xl:w-auto xl:flex-grow",
-									"2xl:w-1/2",
-								)}
+								className={clsx("h-96 overflow-y-auto", "md:w-1/2", "xl:auto xl:mr-0 xl:w-auto xl:grow", "2xl:w-1/2")}
 							>
 								<TeamRadios />
 							</div>

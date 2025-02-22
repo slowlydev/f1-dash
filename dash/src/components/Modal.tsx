@@ -19,7 +19,7 @@ export default function Modal({ children, open }: Props) {
 					role="dialog"
 					aria-modal
 				>
-					<div className="fixed inset-0 backdrop-blur-sm transition-opacity" />
+					<div className="fixed inset-0 backdrop-blur-xs transition-opacity" />
 
 					<div className="fixed inset-0 z-40 w-screen overflow-y-auto">
 						<div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">

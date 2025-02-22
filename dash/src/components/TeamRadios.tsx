@@ -45,7 +45,7 @@ const SkeletonMessage = () => {
 
 	return (
 		<li className="flex flex-col gap-1">
-			<div className={clsx(animateClass, "!h-4 w-16")} />
+			<div className={clsx(animateClass, "h-4! w-16")} />
 
 			<div
 				className="grid place-items-center items-center gap-4"
@@ -54,12 +54,12 @@ const SkeletonMessage = () => {
 				}}
 			>
 				<div className="place-self-start">
-					<div className={clsx(animateClass, "!h-8 w-14")} />
+					<div className={clsx(animateClass, "h-8! w-14")} />
 				</div>
 
 				<div className="flex items-center gap-4">
 					<div className={clsx(animateClass, "h-6 w-6")} />
-					<div className={clsx(animateClass, "!h-2 w-60")} />
+					<div className={clsx(animateClass, "h-2! w-60")} />
 				</div>
 			</div>
 		</li>
