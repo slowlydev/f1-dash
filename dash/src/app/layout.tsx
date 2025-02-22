@@ -3,7 +3,7 @@ import Script from "next/script";
 
 import "@/styles/globals.css";
 
-import { env } from "@/env.mjs";
+import { env } from "@/env";
 
 import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";

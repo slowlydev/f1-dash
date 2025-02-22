@@ -20,7 +20,7 @@ import Input from "@/components/Input";
 
 import { useSettingsStore } from "@/stores/useSettingsStore";
 
-import { env } from "@/env.mjs";
+import { env } from "@/env";
 
 export default function SettingsPage() {
 	const settings = useSettingsStore();
