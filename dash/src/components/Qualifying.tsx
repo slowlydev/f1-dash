@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "motion/react";
 import clsx from "clsx";
 
 import { useDataStore } from "@/stores/useDataStore";

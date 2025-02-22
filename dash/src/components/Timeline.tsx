@@ -7,7 +7,7 @@ import {
 	AnimatePresence,
 	useTransform,
 	useMotionTemplate,
-} from "framer-motion";
+} from "motion/react";
 
 import { useState, useRef, useEffect, MutableRefObject, Dispatch, SetStateAction } from "react";
 

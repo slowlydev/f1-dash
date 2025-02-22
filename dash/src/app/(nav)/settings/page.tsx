@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import Image from "next/image";
 
 import xIcon from "public/icons/xmark.svg";

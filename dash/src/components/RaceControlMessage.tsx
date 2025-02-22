@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { utc } from "moment";
 import Image from "next/image";
 import clsx from "clsx";

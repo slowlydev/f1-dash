@@ -1,7 +1,7 @@
 "use client";
 
 import clsx from "clsx";
-import { LayoutGroup, motion } from "framer-motion";
+import { LayoutGroup, motion } from "motion/react";
 
 type Props<T> = {
 	id?: string;
