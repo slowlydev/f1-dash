@@ -55,6 +55,8 @@ export default function Map() {
 			if (!circuitKey) return;
 			const mapJson = await fetchMap(circuitKey);
 
+			if (!mapJson) return;
+
 			const centerX = (Math.max(...mapJson.x) - Math.min(...mapJson.x)) / 2;
 			const centerY = (Math.max(...mapJson.y) - Math.min(...mapJson.y)) / 2;
 
