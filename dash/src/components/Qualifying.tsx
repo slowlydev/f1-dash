@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "motion/react";
 import clsx from "clsx";
 
 import { useDataStore } from "@/stores/useDataStore";
@@ -72,16 +72,16 @@ const SkeletonQualifyingDriver = () => {
 				<div className={clsx(animateClass, "w-8")} />
 
 				<div className="flex flex-col items-end gap-1">
-					<div className={clsx(animateClass, "!h-4 w-10")} />
-					<div className={clsx(animateClass, "!h-3 w-14")} />
+					<div className={clsx(animateClass, "h-4! w-10")} />
+					<div className={clsx(animateClass, "h-3! w-14")} />
 				</div>
 			</div>
 
 			<div className="flex w-full gap-1">
 				{new Array(3).fill(null).map((_, index) => (
 					<div className="flex w-full flex-col gap-1" key={`skeleton.sector.${index}`}>
-						<div className={clsx(animateClass, "!h-4")} />
-						<div className={clsx(animateClass, "!h-3")} />
+						<div className={clsx(animateClass, "h-4!")} />
+						<div className={clsx(animateClass, "h-3!")} />
 					</div>
 				))}
 			</div>

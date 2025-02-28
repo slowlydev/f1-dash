@@ -20,11 +20,12 @@ const processEnv = {
 // Don't touch the part below
 // --------------------------
 const merged = server.merge(client);
-/** @typedef {z.input<typeof merged>} MergedInput */
-/** @typedef {z.infer<typeof merged>} MergedOutput */
-/** @typedef {z.SafeParseReturnType<MergedInput, MergedOutput>} MergedSafeParseReturn */
 
-let env = /** @type {MergedOutput} */ (process.env);
+type MergedInput = z.input<typeof merged>;
+type MergedOutput = z.infer<typeof merged>;
+type MergedSafeParseReturn = z.SafeParseReturnType<MergedInput, MergedOutput>;
+
+let env = process.env as unknown as MergedOutput;
 
 const skip =
 	!!process.env.SKIP_ENV_VALIDATION &&
@@ -34,11 +35,9 @@ const skip =
 if (!skip) {
 	const isServer = typeof window === "undefined";
 
-	const parsed = /** @type {MergedSafeParseReturn} */ (
-		isServer
-			? merged.safeParse(processEnv) // on server we can validate all env vars
-			: client.safeParse(processEnv) // on client we can only validate the ones that are exposed
-	);
+	const parsed = isServer
+		? (merged.safeParse(processEnv) as MergedSafeParseReturn) // on server we can validate all env vars
+		: (client.safeParse(processEnv) as MergedSafeParseReturn); // on client we can only validate the ones that are exposed
 
 	if (parsed.success === false) {
 		console.error("❌ Invalid environment variables:", parsed.error.flatten().fieldErrors);
@@ -57,7 +56,7 @@ if (!skip) {
 						: `❌ Attempted to access server-side environment variable '${prop}' on the client`,
 				);
 
-			return target[/** @type {keyof typeof target} */ (prop)];
+			return target[prop as keyof typeof target];
 		},
 	});
 }

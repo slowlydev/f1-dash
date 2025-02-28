@@ -1,4 +1,4 @@
-import { env } from "@/env.mjs";
+import { env } from "@/env";
 
 import { Round as RoundType } from "@/types/schedule.type";
 
@@ -16,7 +16,7 @@ const getSchedule = async () => {
 	}
 };
 
-export default async function FullSchedule() {
+export default async function Schedule() {
 	const schedule = await getSchedule();
 
 	if (!schedule) {

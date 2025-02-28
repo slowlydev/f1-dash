@@ -9,7 +9,7 @@ export default function DataWeatherInfo() {
 	const weather = useDataStore((state) => state.weatherData);
 
 	return (
-		<div className="flex gap-2" id="walkthrough-weather">
+		<div className="flex gap-4 justify-self-center">
 			{weather ? (
 				<>
 					<TemperatureComplication value={Math.round(parseFloat(weather.trackTemp))} label="TRC" />

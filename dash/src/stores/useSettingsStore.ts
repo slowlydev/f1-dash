@@ -36,9 +36,9 @@ type SettingsStore = {
 	setRaceControlChimeVolume: (raceControlChimeVolume: number) => void;
 };
 
-export const useSettingsStore = create(
+export const useSettingsStore = create<SettingsStore>()(
 	subscribeWithSelector(
-		persist<SettingsStore>(
+		persist(
 			(set) => ({
 				delay: 0,
 				setDelay: (delay: number) => set({ delay }),

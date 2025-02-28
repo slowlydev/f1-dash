@@ -4,7 +4,7 @@ import type { MessageInitial, MessageUpdate } from "@/types/message.type";
 
 import { inflate } from "@/lib/inflate";
 
-import { env } from "@/env.mjs";
+import { env } from "@/env";
 
 type Props = {
 	handleInitial: (data: MessageInitial) => void;

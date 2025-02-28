@@ -7,15 +7,15 @@ type Props = {
 
 export default function WindSpeedComplication({ speed, directionDeg }: Props) {
 	return (
-		<div className="flex h-[55px] w-[55px] items-center justify-center rounded-full bg-black">
+		<div className="relative flex h-[55px] w-[55px] items-center justify-center rounded-full bg-black">
 			<div className="flex flex-col items-center">
-				<p className="text-center text-[10px] font-medium leading-none text-blue-400">
+				<p className="text-center text-[10px] leading-none font-medium text-blue-400">
 					{getWindDirection(directionDeg)}
 				</p>
 
-				<p className="text-xl font-medium leading-none text-white">{speed}</p>
+				<p className="text-xl leading-none font-medium text-white">{speed}</p>
 
-				<p className="text-center text-[10px] font-medium leading-none text-white">m/s</p>
+				<p className="text-center text-[10px] leading-none font-medium text-white">m/s</p>
 			</div>
 		</div>
 	);

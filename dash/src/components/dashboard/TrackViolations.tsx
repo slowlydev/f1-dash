@@ -4,7 +4,7 @@ import { useDataStore } from "@/stores/useDataStore";
 
 import { objectEntries } from "@/lib/driverHelper";
 
-import TrackViolationsDriver from "./TrackViolationsDriver";
+import DriverViolations from "./DriverViolations";
 
 type DriverViolations = {
 	[key: string]: number;
@@ -62,7 +62,7 @@ export default function TrackViolations() {
 				violationDrivers
 					.sort((a, b) => sortViolations(a, b, trackLimits))
 					.map((driver) => (
-						<TrackViolationsDriver
+						<DriverViolations
 							key={`violation.driver.${driver.racingNumber}`}
 							driver={driver}
 							driversTiming={driversTiming ?? undefined}

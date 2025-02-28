@@ -1,4 +1,4 @@
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "motion/react";
 import { utc } from "moment";
 import clsx from "clsx";
 
@@ -6,7 +6,7 @@ import { useDataStore } from "@/stores/useDataStore";
 
 import { sortUtc } from "@/lib/sorting";
 
-import TeamRadioMessage from "@/components/TeamRadioMessage";
+import RadioMessage from "@/components/dashboard/RadioMessage";
 
 export default function TeamRadios() {
 	const drivers = useDataStore((state) => state.driverList);
@@ -27,7 +27,7 @@ export default function TeamRadios() {
 						.sort(sortUtc)
 						.slice(0, 20)
 						.map((teamRadio, i) => (
-							<TeamRadioMessage
+							<RadioMessage
 								key={`radio.${utc(teamRadio.utc).unix()}.${i}`}
 								driver={drivers[teamRadio.racingNumber]}
 								capture={teamRadio}
@@ -44,8 +44,8 @@ const SkeletonMessage = () => {
 	const animateClass = "h-6 animate-pulse rounded-md bg-zinc-800";
 
 	return (
-		<li className="flex flex-col gap-1">
-			<div className={clsx(animateClass, "!h-4 w-16")} />
+		<li className="flex flex-col gap-1 p-2">
+			<div className={clsx(animateClass, "h-4! w-16")} />
 
 			<div
 				className="grid place-items-center items-center gap-4"
@@ -54,12 +54,12 @@ const SkeletonMessage = () => {
 				}}
 			>
 				<div className="place-self-start">
-					<div className={clsx(animateClass, "!h-8 w-14")} />
+					<div className={clsx(animateClass, "h-8! w-14")} />
 				</div>
 
 				<div className="flex items-center gap-4">
 					<div className={clsx(animateClass, "h-6 w-6")} />
-					<div className={clsx(animateClass, "!h-2 w-60")} />
+					<div className={clsx(animateClass, "h-2! w-60")} />
 				</div>
 			</div>
 		</li>

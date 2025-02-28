@@ -1,13 +1,11 @@
 import { Suspense } from "react";
 
-import Footer from "@/components/Footer";
-
 import NextRound from "@/components/schedule/NextRound";
-import FullSchedule from "@/components/schedule/FullSchedule";
+import Schedule from "@/components/schedule/Schedule";
 
 export default async function SchedulePage() {
 	return (
-		<div className="container mx-auto max-w-screen-lg px-4">
+		<div>
 			<div className="my-4">
 				<h1 className="text-3xl">Up Next</h1>
 				<p className="text-zinc-600">All times are local time</p>
@@ -23,10 +21,8 @@ export default async function SchedulePage() {
 			</div>
 
 			<Suspense fallback={<FullScheduleLoading />}>
-				<FullSchedule />
+				<Schedule />
 			</Suspense>
-
-			<Footer />
 		</div>
 	);
 }
