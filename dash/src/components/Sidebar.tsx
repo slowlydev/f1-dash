@@ -59,11 +59,6 @@ export default function Sidebar({ connected }: Props) {
 		<div>
 			<motion.div style={{ width: 216 }} animate={{ width: pinned ? 216 : 8 }} />
 
-			<p className="fixed top-0 right-0 z-50">
-				{pinned ? "pinned" : "not pinned"}
-				{opened ? "opened" : "closed"}
-			</p>
-
 			<motion.div
 				className="fixed top-0 bottom-0 left-0 z-40 flex"
 				//
