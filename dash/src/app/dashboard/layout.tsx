@@ -29,7 +29,7 @@ export default function DashboardLayout({ children }: Props) {
 	const { connected } = useSocket({ handleInitial, handleUpdate });
 
 	const sidebarStore = useSidebarStore();
-	const [sidebarHover, setSidebarHover] = useState<boolean>(true);
+	const [sidebarHover, setSidebarHover] = useState<boolean>(false);
 
 	useWakeLock();
 
