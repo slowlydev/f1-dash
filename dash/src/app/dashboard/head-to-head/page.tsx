@@ -6,7 +6,7 @@ import { objectEntries } from "@/lib/driverHelper";
 
 import { useDataStore } from "@/stores/useDataStore";
 
-import Select from "@/components/Select";
+import Select from "@/components/ui/Select";
 import HeadToHeadDriver from "@/components/HeadToHeadDriver";
 
 export default function HeadToHeadPage() {
