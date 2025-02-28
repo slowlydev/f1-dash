@@ -80,14 +80,11 @@ export default function Sidebar({ connected }: Props) {
 							<p className={clsx("rounded-lg p-1 px-2 text-sm", delay > 0 ? "bg-gray-600" : "bg-red-700")}>
 								{delay > 0 ? "Delayed" : "Live"}
 							</p>
+
+							<ConnectionStatus connected={connected} />
 						</div>
 
 						<SidenavButton onClick={() => (pinned ? unpin() : pin())} />
-					</div>
-
-					<div className="flex items-center gap-2 p-1">
-						<ConnectionStatus connected={connected} />
-						<p className="text-sm text-zinc-500">3'000 Users</p>
 					</div>
 
 					<p className="p-2 text-sm text-zinc-500">Live Timing</p>
@@ -116,6 +113,7 @@ export default function Sidebar({ connected }: Props) {
 						<Item target="_blank" item={{ href: "/schedule", name: "Schedule" }} />
 						<Item target="_blank" item={{ href: "/settings", name: "Settings" }} />
 						<Item target="_blank" item={{ href: "/help", name: "Help" }} />
+						<Item target="_blank" item={{ href: "/", name: "Home" }} />
 					</div>
 
 					<p className="mt-4 p-2 text-sm text-zinc-500">Links</p>
