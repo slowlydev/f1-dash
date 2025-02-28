@@ -1,3 +1,5 @@
+"use client";
+
 import { motion } from "motion/react";
 
 type Props = {
@@ -5,7 +7,7 @@ type Props = {
 	progress: number;
 };
 
-export default function AudioProgress({ duration, progress }: Props) {
+export default function Progress({ duration, progress }: Props) {
 	const percent = progress / duration;
 
 	return (

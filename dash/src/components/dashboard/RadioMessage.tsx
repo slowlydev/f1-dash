@@ -4,9 +4,9 @@ import { utc } from "moment";
 
 import { useSettingsStore } from "@/stores/useSettingsStore";
 
-import DriverTag from "./driver/DriverTag";
-import PlayControls from "./PlayControls";
-import AudioProgress from "./AudioProgress";
+import DriverTag from "../driver/DriverTag";
+import PlayControls from "../ui/PlayControls";
+import Progress from "../ui/Progress";
 
 import { Driver, RadioCapture } from "@/types/state.type";
 import clsx from "clsx";
@@ -17,7 +17,7 @@ type Props = {
 	basePath: string;
 };
 
-export default function TeamRadioMessage({ driver, capture, basePath }: Props) {
+export default function RadioMessage({ driver, capture, basePath }: Props) {
 	const audioRef = useRef<HTMLAudioElement | null>(null);
 	const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -95,7 +95,7 @@ export default function TeamRadioMessage({ driver, capture, basePath }: Props) {
 
 				<div className="flex items-center gap-1">
 					<PlayControls playing={playing} onClick={togglePlayback} />
-					<AudioProgress duration={duration} progress={progress} />
+					<Progress duration={duration} progress={progress} />
 
 					<audio
 						preload="none"

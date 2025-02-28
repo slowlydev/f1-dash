@@ -16,7 +16,7 @@ const getSchedule = async () => {
 	}
 };
 
-export default async function FullSchedule() {
+export default async function Schedule() {
 	const schedule = await getSchedule();
 
 	if (!schedule) {

@@ -1,7 +1,6 @@
 import Image from "next/image";
 
 import Note from "@/components/Note";
-import Footer from "@/components/Footer";
 import DriverDRS from "@/components/driver/DriverDRS";
 import DriverTire from "@/components/driver/DriverTire";
 import DriverPedals from "@/components/driver/DriverPedals";
@@ -15,7 +14,7 @@ import wetTireIcon from "public/tires/wet.svg";
 
 export default function HelpPage() {
 	return (
-		<div className="container mx-auto mb-10 max-w-(--breakpoint-lg) px-4">
+		<div>
 			<h1 className="my-4 text-3xl">Help Page</h1>
 
 			<p>This page explains some core features and UI elements of f1-dash.</p>
@@ -259,8 +258,6 @@ export default function HelpPage() {
 					</p>
 				</div>
 			</div>
-
-			<Footer />
 		</div>
 	);
 }

@@ -4,11 +4,11 @@ import clsx from "clsx";
 
 import { useDataStore } from "@/stores/useDataStore";
 
-import LeaderBoard from "@/components/LeaderBoard";
+import LeaderBoard from "@/components/dashboard/LeaderBoard";
 import Qualifying from "@/components/Qualifying";
 import RaceControl from "@/components/RaceControl";
-import TeamRadios from "@/components/TeamRadios";
-import Map from "@/components/Map";
+import TeamRadios from "@/components/dashboard/TeamRadios";
+import Map from "@/components/dashboard/Map";
 
 export default function Page() {
 	const sessionType = useDataStore((state) => state.sessionInfo?.type);

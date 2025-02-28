@@ -1,15 +1,14 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import Button from "@/components/ui/Button";
 import ScrollHint from "@/components/ScrollHint";
-import Button from "@/components/Button";
-import Footer from "@/components/Footer";
 
 import icon from "public/tag-logo.svg";
 
 export default function Home() {
 	return (
-		<div className="container mx-auto max-w-(--breakpoint-lg) px-4">
+		<div>
 			<section className="flex h-screen w-full flex-col items-center pt-20 sm:justify-center sm:pt-0">
 				<Image src={icon} alt="f1-dash tag logo" width={200} />
 
@@ -53,8 +52,6 @@ export default function Home() {
 					free to reach out on GitHub or the Discord.
 				</p>
 			</section>
-
-			<Footer />
 		</div>
 	);
 }

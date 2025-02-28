@@ -3,7 +3,7 @@
 import { AnimatePresence, LayoutGroup, motion } from "motion/react";
 import clsx from "clsx";
 
-import Map from "@/components/Map";
+import Map from "@/components/dashboard/Map";
 import DriverTag from "@/components/driver/DriverTag";
 import DriverDRS from "@/components/driver/DriverDRS";
 import DriverInfo from "@/components/driver/DriverInfo";

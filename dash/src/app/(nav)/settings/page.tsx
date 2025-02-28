@@ -1,31 +1,21 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { motion } from "motion/react";
-import Image from "next/image";
+import SegmentedControls from "@/components/ui/SegmentedControls";
+import Button from "@/components/ui/Button";
+import Slider from "@/components/ui/Slider";
+import Input from "@/components/ui/Input";
 
-import xIcon from "public/icons/xmark.svg";
+import FavoriteDrivers from "@/components/settings/FavoriteDrivers";
 
-import type { Driver } from "@/types/state.type";
-
-import SegmentedControls from "@/components/SegmentedControls";
-import SelectMultiple from "@/components/SelectMultiple";
-import DriverTag from "@/components/driver/DriverTag";
 import DelayInput from "@/components/DelayInput";
-import Button from "@/components/Button";
-import Toggle from "@/components/Toggle";
-import Footer from "@/components/Footer";
-import Slider from "@/components/Slider";
-import Input from "@/components/Input";
+import Toggle from "@/components/ui/Toggle";
 
 import { useSettingsStore } from "@/stores/useSettingsStore";
-
-import { env } from "@/env";
 
 export default function SettingsPage() {
 	const settings = useSettingsStore();
 	return (
-		<div className="container mx-auto max-w-(--breakpoint-lg) px-4">
+		<div>
 			<h1 className="my-4 text-3xl">Settings</h1>
 
 			<h2 className="my-4 text-2xl">Visual</h2>
@@ -114,62 +104,6 @@ export default function SettingsPage() {
 			<Button className="mt-2 bg-red-500!" onClick={() => settings.setDelay(0)}>
 				Reset delay
 			</Button>
-
-			<Footer />
 		</div>
 	);
 }
-
-const FavoriteDrivers = () => {
-	const [drivers, setDrivers] = useState<Driver[] | null>(null);
-	const [error, setError] = useState<string | null>(null);
-
-	const { favoriteDrivers, setFavoriteDrivers, removeFavoriteDriver } = useSettingsStore();
-
-	useEffect(() => {
-		(async () => {
-			try {
-				const res = await fetch(`${env.NEXT_PUBLIC_LIVE_SOCKET_URL}/api/drivers`);
-				const data = await res.json();
-				setDrivers(data);
-			} catch (e) {
-				setError("failed to fetch favorite drivers");
-			}
-		})();
-	}, []);
-
-	return (
-		<div className="flex flex-col gap-2">
-			<div className="flex gap-2">
-				{favoriteDrivers.map((driverNumber) => {
-					const driver = drivers?.find((d) => d.racingNumber === driverNumber);
-
-					if (!driver) return null;
-
-					return (
-						<div key={driverNumber} className="flex items-center gap-1 rounded-xl border border-zinc-700 p-1">
-							<DriverTag teamColor={driver.teamColour} short={driver.tla} />
-
-							<motion.button
-								whileHover={{ scale: 1.05 }}
-								whileTap={{ scale: 0.95 }}
-								onClick={() => removeFavoriteDriver(driverNumber)}
-							>
-								<Image src={xIcon} alt="x" width={30} />
-							</motion.button>
-						</div>
-					);
-				})}
-			</div>
-
-			<div className="w-80">
-				<SelectMultiple
-					placeholder="Select favorite drivers"
-					options={drivers ? drivers.map((d) => ({ label: d.fullName, value: d.racingNumber })) : []}
-					selected={favoriteDrivers}
-					setSelected={setFavoriteDrivers}
-				/>
-			</div>
-		</div>
-	);
-};
