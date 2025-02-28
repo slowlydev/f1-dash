@@ -1,12 +1,12 @@
 import { useRef, useState } from "react";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { utc } from "moment";
 
 import { useSettingsStore } from "@/stores/useSettingsStore";
 
-import DriverTag from "./driver/DriverTag";
-import PlayControls from "./PlayControls";
-import AudioProgress from "./AudioProgress";
+import DriverTag from "../driver/DriverTag";
+import PlayControls from "../ui/PlayControls";
+import Progress from "../ui/Progress";
 
 import { Driver, RadioCapture } from "@/types/state.type";
 import clsx from "clsx";
@@ -17,7 +17,7 @@ type Props = {
 	basePath: string;
 };
 
-export default function TeamRadioMessage({ driver, capture, basePath }: Props) {
+export default function RadioMessage({ driver, capture, basePath }: Props) {
 	const audioRef = useRef<HTMLAudioElement | null>(null);
 	const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -74,10 +74,10 @@ export default function TeamRadioMessage({ driver, capture, basePath }: Props) {
 		<motion.li
 			animate={{ opacity: 1, y: 0 }}
 			initial={{ opacity: 0, y: -20 }}
-			className={clsx("flex flex-col gap-1 p-2", { "bg-sky-800 bg-opacity-30": favoriteDriver })}
+			className={clsx("flex flex-col gap-1 p-2", { "bg-sky-800/30": favoriteDriver })}
 		>
 			<time
-				className="text-sm font-medium leading-none text-gray-500"
+				className="text-sm leading-none font-medium text-gray-500"
 				dateTime={utc(capture.utc).local().format("HH:mm:ss")}
 			>
 				{utc(capture.utc).local().format("HH:mm:ss")}
@@ -95,7 +95,7 @@ export default function TeamRadioMessage({ driver, capture, basePath }: Props) {
 
 				<div className="flex items-center gap-1">
 					<PlayControls playing={playing} onClick={togglePlayback} />
-					<AudioProgress duration={duration} progress={progress} />
+					<Progress duration={duration} progress={progress} />
 
 					<audio
 						preload="none"

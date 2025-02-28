@@ -1,9 +1,10 @@
+import type { NextConfig } from "next";
+
 import pack from "./package.json" with { type: "json" };
 
-await import("./src/env.mjs");
+import "@/env";
 
-/** @type {import("next").NextConfig} */
-const config = {
+const nextConfig: NextConfig = {
 	reactStrictMode: false,
 	output: process.env.BUILD_STANDALONE === "1" ? "standalone" : undefined,
 	images: {
@@ -20,4 +21,4 @@ const config = {
 	},
 };
 
-export default config;
+export default nextConfig;

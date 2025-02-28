@@ -14,7 +14,7 @@ type Props = {
 	driversTiming: TimingData | undefined;
 };
 
-export default function TrackViolationsDriver({ driver, driverViolations, driversTiming }: Props) {
+export default function DriverViolations({ driver, driverViolations, driversTiming }: Props) {
 	return (
 		<div className="flex gap-2" key={`violation.${driver.racingNumber}`}>
 			<DriverTag className="h-fit" teamColor={driver.teamColour} short={driver.tla} />

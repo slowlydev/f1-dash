@@ -1,4 +1,4 @@
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "motion/react";
 import { useEffect, useRef } from "react";
 import clsx from "clsx";
 
@@ -78,7 +78,7 @@ const SkeletonMessage = ({ index }: { index: number }) => {
 
 	return (
 		<li className="flex flex-col gap-1 p-2">
-			<div className={clsx(animateClass, "!h-4 w-16")} />
+			<div className={clsx(animateClass, "h-4! w-16")} />
 
 			<div className="flex gap-1">
 				{flag && <div className={clsx(animateClass, "w-6")} />}

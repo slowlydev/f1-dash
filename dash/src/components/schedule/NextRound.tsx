@@ -1,6 +1,6 @@
 import { utc } from "moment";
 
-import { env } from "@/env.mjs";
+import { env } from "@/env";
 
 import { Round as RoundType } from "@/types/schedule.type";
 

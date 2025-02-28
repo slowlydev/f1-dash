@@ -11,10 +11,10 @@ type Props = {
 
 export default function DriverLapTime({ last, best, hasFastest }: Props) {
 	return (
-		<div className="place-self-start" id="walkthrough-driver-laptime">
+		<div className="place-self-start">
 			<p
 				className={clsx(
-					"text-lg font-semibold leading-none",
+					"text-lg leading-none font-semibold",
 					getTimeColor(last.overallFastest, last.personalFastest),
 					!last.value ? "text-zinc-600" : "",
 				)}
@@ -23,7 +23,7 @@ export default function DriverLapTime({ last, best, hasFastest }: Props) {
 			</p>
 			<p
 				className={clsx(
-					"text-sm font-medium leading-none text-zinc-600",
+					"text-sm leading-none font-medium text-zinc-600",
 					getTimeColor(hasFastest, true),
 					!best.value ? "text-zinc-600" : "",
 				)}
