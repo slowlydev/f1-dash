@@ -62,11 +62,9 @@ export default function DashboardLayout({ children }: Props) {
 				)}
 
 				{!sidebarStore.visiable && (
-					<motion.div
-						key="sidebar-hover"
-						onHoverStart={() => setSidebarHover(true)}
-						className="fixed top-0 bottom-0 left-0 z-30 h-full w-6"
-					/>
+					<div key="sidebar-hover" className="fixed top-0 bottom-0 left-0 z-40 flex flex-col justify-center">
+						<motion.div onHoverStart={() => setSidebarHover(true)} className="h-6/8 w-4" />
+					</div>
 				)}
 
 				<SyncGuard maxDelay={maxDelay} key="sync-guard">
