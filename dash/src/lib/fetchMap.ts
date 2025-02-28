@@ -8,6 +8,11 @@ export const fetchMap = async (circuitKey: number): Promise<Map | null> => {
 			next: { revalidate: 60 * 60 * 2 },
 		});
 
+		if (!mapRequest.ok) {
+			console.error("Failed to fetch map", mapRequest);
+			return null;
+		}
+
 		return mapRequest.json();
 	} catch (error) {
 		console.error("Failed to fetch map", error);
