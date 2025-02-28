@@ -7,12 +7,15 @@ import Image from "next/image";
 
 import Modal from "@/components/Modal";
 import Button from "@/components/Button";
-import Windows from "@/components/Windows";
 
 import alertIcon from "public/icons/alert-triangle.svg";
 import ConnectionStatus from "./ConnectionStatus";
 
-export default function Menubar() {
+type Props = {
+	connected?: boolean;
+};
+
+export default function Menubar({ connected }: Props) {
 	const router = useRouter();
 	const pathname = usePathname();
 
@@ -51,7 +54,7 @@ export default function Menubar() {
 	}, []);
 
 	return (
-		<div className="flex select-none flex-wrap gap-x-4 gap-y-2 px-2" id="walkthrough-menu">
+		<div className="flex flex-wrap gap-x-4 gap-y-2 px-2 select-none" id="walkthrough-menu">
 			<motion.a className="cursor-pointer" whileTap={{ scale: 0.95 }} onClick={() => liveTimingGuard("/")}>
 				Home
 			</motion.a>
@@ -70,16 +73,14 @@ export default function Menubar() {
 			</motion.a>
 
 			{onLiveRoute && (
-				<div className="flex select-none items-center gap-4">
-					<Windows />
-
+				<div className="flex items-center gap-4 select-none">
 					{/* TODO streams o.o */}
 
 					<motion.a className="cursor-pointer" whileTap={{ scale: 0.95 }} onClick={() => router.push("/head-to-head")}>
 						Head-to-Head
 					</motion.a>
 
-					<ConnectionStatus />
+					<ConnectionStatus connected={connected} />
 				</div>
 			)}
 

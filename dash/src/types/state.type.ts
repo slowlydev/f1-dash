@@ -1,13 +1,3 @@
-export type Update = RecursivePartial<State>;
-
-type RecursivePartial<T> = {
-	[P in keyof T]?: T[P] extends (infer U)[]
-		? RecursivePartial<U>[]
-		: T[P] extends object | undefined
-			? RecursivePartial<T[P]>
-			: T[P];
-};
-
 export type State = {
 	heartbeat?: Heartbeat;
 	extrapolatedClock?: ExtrapolatedClock;
@@ -23,9 +13,7 @@ export type State = {
 	lapCount?: LapCount;
 	timingData?: TimingData;
 	teamRadio?: TeamRadio;
-
-	carDataZ?: string;
-	positionZ?: string;
+	championshipPrediction?: ChampionshipPrediction;
 };
 
 export type Heartbeat = {
@@ -114,7 +102,7 @@ export type Message = {
 	lap: number;
 	message: string;
 	category: "Other" | "Sector" | "Flag" | "Drs" | "SafetyCar" | string;
-	flag?: "BLACK AND WHITE" | "BLUE" | "CLEAR" | "YELLOW" | "GREEN" | "DOUBLE YELLOW" | "RED";
+	flag?: "BLACK AND WHITE" | "BLUE" | "CLEAR" | "YELLOW" | "GREEN" | "DOUBLE YELLOW" | "RED" | "CHEQUERED";
 	scope?: "Driver" | "Track" | "Sector";
 	sector?: number;
 	status?: "ENABLED" | "DISABLED";
@@ -285,6 +273,31 @@ export type RadioCapture = {
 	utc: string;
 	racingNumber: string;
 	path: string;
+};
+
+export type ChampionshipPrediction = {
+	drivers: {
+		[key: string]: ChampionshipDriver;
+	};
+	teams: {
+		[key: string]: ChampionshipTeam;
+	};
+};
+
+export type ChampionshipDriver = {
+	racingNumber: string;
+	currentPosition: number;
+	predictedPosition: number;
+	currentPoints: number;
+	predictedPoints: number;
+};
+
+export type ChampionshipTeam = {
+	teamName: string;
+	currentPosition: number;
+	predictedPosition: number;
+	currentPoints: number;
+	predictedPoints: number;
 };
 
 export type Position = {

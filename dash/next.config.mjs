@@ -1,3 +1,5 @@
+import pack from "./package.json" with { type: "json" };
+
 await import("./src/env.mjs");
 
 /** @type {import("next").NextConfig} */
@@ -12,6 +14,9 @@ const config = {
 				port: "",
 			},
 		],
+	},
+	env: {
+		version: pack.version,
 	},
 };
 

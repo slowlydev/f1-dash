@@ -1,14 +1,10 @@
-import { Driver, DriverList, RaceControlMessages, TimingData } from "@/types/state.type";
+import type { Driver } from "@/types/state.type";
+
+import { useDataStore } from "@/stores/useDataStore";
 
 import { objectEntries } from "@/lib/driverHelper";
 
 import TrackViolationsDriver from "./TrackViolationsDriver";
-
-type Props = {
-	messages: RaceControlMessages | undefined;
-	drivers: DriverList | undefined;
-	driversTiming: TimingData | undefined;
-};
 
 type DriverViolations = {
 	[key: string]: number;
@@ -26,7 +22,11 @@ const sortViolations = (driverA: Driver, driverB: Driver, violations: DriverViol
 	return b - a;
 };
 
-export default function TrackViolations({ messages, drivers, driversTiming }: Props) {
+export default function TrackViolations() {
+	const messages = useDataStore((state) => state.raceControlMessages);
+	const drivers = useDataStore((state) => state.driverList);
+	const driversTiming = useDataStore((state) => state.timingData);
+
 	const trackLimits =
 		messages?.messages
 			.filter((rcm) => rcm.category == "Other")
@@ -65,7 +65,7 @@ export default function TrackViolations({ messages, drivers, driversTiming }: Pr
 						<TrackViolationsDriver
 							key={`violation.driver.${driver.racingNumber}`}
 							driver={driver}
-							driversTiming={driversTiming}
+							driversTiming={driversTiming ?? undefined}
 							driverViolations={trackLimits[driver.racingNumber]}
 						/>
 					))}

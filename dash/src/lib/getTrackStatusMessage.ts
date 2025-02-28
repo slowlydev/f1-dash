@@ -28,5 +28,5 @@ export const getTrackStatusMessage = (statusCode: number | undefined): StatusMes
 		7: { message: "VSC Ending", color: "bg-yellow-500", trackColor: "stroke-yellow-500", hex: "#f59e0c" },
 	};
 
-	return statusCode ? messageMap[statusCode] ?? messageMap[0] : null;
+	return statusCode ? (messageMap[statusCode] ?? messageMap[0]) : null;
 };

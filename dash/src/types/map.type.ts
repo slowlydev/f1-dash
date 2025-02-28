@@ -1,4 +1,4 @@
-export type MapType = {
+export type Map = {
 	corners: Corner[];
 	marshalLights: Corner[];
 	marshalSectors: Corner[];
