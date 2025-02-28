@@ -1,18 +1,21 @@
 "use client";
 
 import { useState } from "react";
-import { useSocket } from "@/context/SocketContext";
+
+import { objectEntries } from "@/lib/driverHelper";
+
+import { useDataStore } from "@/stores/useDataStore";
 
 import Select from "@/components/Select";
 import HeadToHeadDriver from "@/components/HeadToHeadDriver";
-import { objectEntries } from "@/lib/driverHelper";
 
 export default function HeadToHeadPage() {
-	const { state, carsData } = useSocket();
+	const drivers = useDataStore((state) => state?.driverList);
+	const driversTiming = useDataStore((state) => state?.timingData);
 
 	const [[first, second], setSelected] = useState<[string | null, string | null]>([null, null]);
 
-	if (!state?.driverList || !state?.timingData) {
+	if (!drivers || !driversTiming) {
 		return (
 			<div className="flex h-96 items-center justify-center">
 				<p className="text-2xl text-zinc-500">Loading...</p>
@@ -24,18 +27,12 @@ export default function HeadToHeadPage() {
 		<div className="flex w-full flex-col">
 			<div className="grid grid-cols-2 divide-x divide-zinc-800">
 				{first ? (
-					<HeadToHeadDriver
-						driver={state.driverList[first]}
-						timingDriver={state.timingData.lines[first]}
-						timingStatsDriver={state.timingStats?.lines[first]}
-						appTimingDriver={state.timingAppData?.lines[first]}
-						carData={carsData ? carsData[first].Channels : undefined}
-					/>
+					<HeadToHeadDriver driver={drivers[first]} timingDriver={driversTiming.lines[first]} />
 				) : (
 					<div className="flex h-96 flex-col items-center justify-center">
 						<Select
 							placeholder={`Search & Select a driver`}
-							options={objectEntries(state.driverList)
+							options={objectEntries(drivers)
 								.map((driver) => ({
 									value: driver.racingNumber,
 									label: driver.fullName,
@@ -48,18 +45,12 @@ export default function HeadToHeadPage() {
 				)}
 
 				{second ? (
-					<HeadToHeadDriver
-						driver={state.driverList[second]}
-						timingDriver={state.timingData.lines[second]}
-						timingStatsDriver={state.timingStats?.lines[second]}
-						appTimingDriver={state.timingAppData?.lines[second]}
-						carData={carsData ? carsData[second].Channels : undefined}
-					/>
+					<HeadToHeadDriver driver={drivers[second]} timingDriver={driversTiming.lines[second]} />
 				) : (
 					<div className="flex h-96 flex-col items-center justify-center">
 						<Select
 							placeholder={`Search & Select a driver`}
-							options={objectEntries(state.driverList)
+							options={objectEntries(drivers)
 								.map((driver) => ({
 									value: driver.racingNumber,
 									label: driver.fullName,

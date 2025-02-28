@@ -1,17 +1,21 @@
 import Image from "next/image";
 
-import { CarDataChannels, Driver, TimingAppDataDriver, TimingDataDriver, TimingStatsDriver } from "@/types/state.type";
+import type { Driver, TimingDataDriver } from "@/types/state.type";
+
+import { useCarDataStore } from "@/stores/useDataStore";
+
 import DriverSpeedometer from "./driver/DriverSpeedometer";
 
 type Props = {
 	driver: Driver;
 	timingDriver: TimingDataDriver;
-	timingStatsDriver: TimingStatsDriver | undefined;
-	appTimingDriver: TimingAppDataDriver | undefined;
-	carData: CarDataChannels | undefined;
 };
 
-export default function HeadToHeadDriver({ driver, carData }: Props) {
+export default function HeadToHeadDriver({ driver }: Props) {
+	const carData = useCarDataStore((state) =>
+		state?.carsData ? state.carsData[driver.racingNumber].Channels : undefined,
+	);
+
 	return (
 		<div className="p-2">
 			<div>
