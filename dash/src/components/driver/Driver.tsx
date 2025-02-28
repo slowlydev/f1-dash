@@ -64,7 +64,7 @@ export default function Driver({ driver, timingDriver, position }: Props) {
 			})}
 		>
 			<div
-				className={clsx("grid items-center gap-2")}
+				className="grid items-center gap-2"
 				style={{
 					gridTemplateColumns: carMetrics
 						? "5.5rem 4rem 5.5rem 4rem 5rem 5.5rem auto auto"
