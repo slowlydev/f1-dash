@@ -20,7 +20,6 @@ export default function SegmentedControls<T>({ id, className, options, selected,
 			<motion.div
 				id={id}
 				layoutRoot
-				style={{ position: "fixed" }}
 				className={clsx("m-0 inline-flex h-fit justify-between rounded-lg bg-zinc-800 p-0.5", className)}
 			>
 				{options.map((option, i) => {
