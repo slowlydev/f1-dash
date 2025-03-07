@@ -1,6 +1,7 @@
 use std::mem;
 
 use serde_json::{Map, Value};
+use tokio_tungstenite::tungstenite::Utf8Bytes;
 use tracing::trace;
 
 pub enum Message {
@@ -8,7 +9,7 @@ pub enum Message {
     Initial(Value),
 }
 
-pub fn parse(data: String) -> Option<Message> {
+pub fn parse(data: Utf8Bytes) -> Option<Message> {
     trace!("parsing message '{}'", data);
 
     let msg = serde_json::from_str::<Value>(&data).ok()?;
