@@ -3,8 +3,11 @@ FROM node:20-alpine AS base
 WORKDIR /app
 COPY package*.json ./
 COPY yarn.lock ./
+COPY .yarnrc.yml ./
 
-RUN yarn install --frozen-lockfile
+RUN corepack enable
+
+RUN yarn install --immutable
 
 FROM base as builder
 
