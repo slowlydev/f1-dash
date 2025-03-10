@@ -8,6 +8,8 @@ const client = z.object({
 	NEXT_PUBLIC_LIVE_SOCKET_URL: z.string().min(1).includes("http"),
 	NEXT_PUBLIC_API_URL: z.string().min(1).includes("http"),
 	NEXT_PUBLIC_ENABLE_TRACKING: z.string().optional(),
+
+	NEXT_PUBLIC_MAP_KEY: z.string().min(1),
 });
 
 const processEnv = {
@@ -15,6 +17,7 @@ const processEnv = {
 	NEXT_PUBLIC_LIVE_SOCKET_URL: process.env.NEXT_PUBLIC_LIVE_SOCKET_URL,
 	NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
 	NEXT_PUBLIC_ENABLE_TRACKING: process.env.NEXT_PUBLIC_ENABLE_TRACKING,
+	NEXT_PUBLIC_MAP_KEY: process.env.NEXT_PUBLIC_MAP_KEY,
 };
 
 // Don't touch the part below
