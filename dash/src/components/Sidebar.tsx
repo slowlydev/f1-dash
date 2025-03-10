@@ -30,6 +30,10 @@ const liveTimingItems = [
 		href: "/dashboard/standings",
 		name: "Standings",
 	},
+	{
+		href: "/dashboard/weather",
+		name: "Weather",
+	},
 ];
 
 type Props = {
