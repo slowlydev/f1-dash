@@ -7,9 +7,10 @@ services:
     ports:
       - 4000:4000
     environment:
-      - LIVE_BACKEND_ADDRESS=0.0.0.0:4000
+      - LIVE_BACKEND_ADDRESS=4000
       - ORIGIN=http://localhost:3000
       - RUST_LOG=live=trace
+      - RUST_BACKTRACE=FULL
 
   api:
     build:
