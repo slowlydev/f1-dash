@@ -32,7 +32,7 @@ export default function DashboardLayout({ children }: Props) {
 	const syncing = delay > maxDelay;
 
 	return (
-		<div className="flex h-screen w-full pt-2 pr-2 pb-2">
+		<div className="flex h-screen w-full md:pt-2 md:pr-2 md:pb-2">
 			<Sidebar key="sidebar" connected={connected} />
 
 			<motion.div
@@ -48,10 +48,10 @@ export default function DashboardLayout({ children }: Props) {
 				<p>Or make your delay smaller.</p>
 			</motion.div>
 
-			<motion.div layout="size" className={!syncing ? "flex h-full flex-1 flex-col gap-2" : "hidden"}>
+			<motion.div layout="size" className={!syncing ? "flex h-full flex-1 flex-col md:gap-2" : "hidden"}>
 				<HeaderBar />
 
-				<div className="flex-1 overflow-scroll rounded-lg border border-zinc-800">{children}</div>
+				<div className="w-full flex-1 overflow-scroll border-zinc-800 md:rounded-lg md:border">{children}</div>
 			</motion.div>
 		</div>
 	);
@@ -60,12 +60,19 @@ export default function DashboardLayout({ children }: Props) {
 function HeaderBar() {
 	const pinned = useSidebarStore((state) => state.pinned);
 	const pin = useSidebarStore((state) => state.pin);
+	const open = useSidebarStore((state) => state.open);
 
 	return (
-		<div className="grid grid-cols-3 overflow-hidden rounded-lg border border-zinc-800 p-2 px-3">
-			<div className="flex items-center gap-2">
+		<div className="grid w-full grid-cols-1 divide-y divide-zinc-800 overflow-hidden border-zinc-800 md:grid-cols-3 md:divide-y-0 md:rounded-lg md:border md:px-3">
+			<div className="flex items-center justify-between overflow-hidden p-2 md:hidden">
+				{!pinned && <SidenavButton key="mobile" onClick={() => open()} />}
+
+				<TrackInfo />
+			</div>
+
+			<div className="flex items-center gap-2 p-2 md:p-0">
 				<AnimatePresence>
-					{!pinned && <SidenavButton onClick={() => pin()} />}
+					{!pinned && <SidenavButton key="desktop" className="hidden md:flex" onClick={() => pin()} />}
 
 					<motion.div key="session-info" layout="position">
 						<SessionInfo />
@@ -73,9 +80,13 @@ function HeaderBar() {
 				</AnimatePresence>
 			</div>
 
-			<WeatherInfo />
+			<div className="p-2 md:flex md:items-center">
+				<WeatherInfo />
+			</div>
 
-			<TrackInfo />
+			<div className="hidden p-2 md:flex md:justify-end">
+				<TrackInfo />
+			</div>
 		</div>
 	);
 }
