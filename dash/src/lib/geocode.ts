@@ -16,8 +16,6 @@ export const fetchCoords = async (query: string): Promise<Coords | null> => {
 	if (response.ok && data.length > 0) {
 		const sorted = data.sort((a, b) => b.importance - a.importance);
 
-		console.log(sorted);
-
 		const { lon, lat } = sorted[0];
 		return { lon: parseFloat(lon), lat: parseFloat(lat) };
 	}
