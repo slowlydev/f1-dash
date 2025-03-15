@@ -1,3 +1,5 @@
+import clsx from "clsx";
+
 import TemperatureComplication from "./complications/Temperature";
 import HumidityComplication from "./complications/Humidity";
 import WindSpeedComplication from "./complications/WindSpeed";
@@ -9,7 +11,7 @@ export default function DataWeatherInfo() {
 	const weather = useDataStore((state) => state.weatherData);
 
 	return (
-		<div className="flex gap-4 justify-self-center">
+		<div className="flex justify-between gap-4">
 			{weather ? (
 				<>
 					<TemperatureComplication value={Math.round(parseFloat(weather.trackTemp))} label="TRC" />

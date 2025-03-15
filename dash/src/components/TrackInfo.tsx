@@ -13,9 +13,9 @@ export default function TrackInfo() {
 	const currentTrackStatus = getTrackStatusMessage(track?.status ? parseInt(track?.status) : undefined);
 
 	return (
-		<div className="flex w-fit flex-row items-center gap-4 justify-self-end">
+		<div className="flex flex-row items-center gap-4 md:justify-self-end">
 			{!!lapCount && (
-				<p className="hidden text-3xl font-extrabold whitespace-nowrap sm:block">
+				<p className="text-3xl font-extrabold whitespace-nowrap">
 					{lapCount?.currentLap} / {lapCount?.totalLaps}
 				</p>
 			)}

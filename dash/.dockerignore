@@ -1,6 +1,7 @@
 .next/
 .vscode/
 node_modules/
+./.yarn/
 
 .env
 .env.example

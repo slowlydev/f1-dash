@@ -1,7 +1,8 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { motion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
+import { useEffect } from "react";
 import Link from "next/link";
 import clsx from "clsx";
 
@@ -47,7 +48,7 @@ export default function Sidebar({ connected }: Props) {
 
 	const driverItems = drivers
 		? favoriteDrivers.map((nr) => ({
-				href: `dashboard/driver/${nr}`,
+				href: `/dashboard/driver/${nr}`,
 				name: drivers[nr].fullName,
 			}))
 		: null;
@@ -59,9 +60,34 @@ export default function Sidebar({ connected }: Props) {
 	const pin = useSidebarStore((state) => state.pin);
 	const unpin = useSidebarStore((state) => state.unpin);
 
+	useEffect(() => {
+		const handleResize = () => {
+			if (window.innerWidth < 768) {
+				unpin();
+			}
+		};
+
+		window.addEventListener("resize", handleResize);
+		handleResize();
+
+		return () => window.removeEventListener("resize", handleResize, false);
+	}, []);
+
 	return (
 		<div>
-			<motion.div style={{ width: 216 }} animate={{ width: pinned ? 216 : 8 }} />
+			<motion.div className="hidden md:block" style={{ width: 216 }} animate={{ width: pinned ? 216 : 8 }} />
+
+			<AnimatePresence>
+				{opened && (
+					<motion.div
+						onTouchEnd={() => close()}
+						className="fixed top-0 right-0 bottom-0 left-0 z-30 bg-black/20 backdrop-blur-sm md:hidden"
+						initial={{ opacity: 0 }}
+						animate={{ opacity: 1 }}
+						exit={{ opacity: 0 }}
+					/>
+				)}
+			</AnimatePresence>
 
 			<motion.div
 				className="fixed top-0 bottom-0 left-0 z-40 flex"
@@ -88,7 +114,8 @@ export default function Sidebar({ connected }: Props) {
 							<ConnectionStatus connected={connected} />
 						</div>
 
-						<SidenavButton onClick={() => (pinned ? unpin() : pin())} />
+						<SidenavButton className="hidden md:flex" onClick={() => (pinned ? unpin() : pin())} />
+						<SidenavButton className="md:hidden" onClick={() => close()} />
 					</div>
 
 					<p className="p-2 text-sm text-zinc-500">Live Timing</p>
@@ -108,6 +135,7 @@ export default function Sidebar({ connected }: Props) {
 								<div className="h-8 animate-pulse rounded-lg bg-zinc-800" />
 							</>
 						)}
+						{driverItems !== null && driverItems.length === 0 && <div className="p-2">No favorites</div>}
 						{driverItems?.map((item) => <Item key={item.href} item={item} />)}
 					</div>
 

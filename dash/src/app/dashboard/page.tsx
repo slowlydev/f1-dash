@@ -5,7 +5,6 @@ import clsx from "clsx";
 import { useDataStore } from "@/stores/useDataStore";
 
 import LeaderBoard from "@/components/dashboard/LeaderBoard";
-import Qualifying from "@/components/Qualifying";
 import RaceControl from "@/components/RaceControl";
 import TeamRadios from "@/components/dashboard/TeamRadios";
 import Map from "@/components/dashboard/Map";
@@ -21,12 +20,6 @@ export default function Page() {
 				</div>
 
 				<div className={clsx("flex flex-col divide-y divide-zinc-800", "xl:min-w-0 xl:grow")}>
-					{sessionType === "Qualifying" && (
-						<div className="overflow-x-auto">
-							<Qualifying />
-						</div>
-					)}
-
 					<div className="hidden w-full xl:block">
 						<Map />
 					</div>
