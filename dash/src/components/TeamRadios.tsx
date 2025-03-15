@@ -44,7 +44,7 @@ const SkeletonMessage = () => {
 	const animateClass = "h-6 animate-pulse rounded-md bg-zinc-800";
 
 	return (
-		<li className="flex flex-col gap-1">
+		<li className="flex flex-col gap-1 p-2">
 			<div className={clsx(animateClass, "!h-4 w-16")} />
 
 			<div
