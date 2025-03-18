@@ -2,16 +2,12 @@
 
 import clsx from "clsx";
 
-import { useDataStore } from "@/stores/useDataStore";
-
 import LeaderBoard from "@/components/dashboard/LeaderBoard";
 import RaceControl from "@/components/RaceControl";
 import TeamRadios from "@/components/dashboard/TeamRadios";
 import Map from "@/components/dashboard/Map";
 
 export default function Page() {
-	const sessionType = useDataStore((state) => state.sessionInfo?.type);
-
 	return (
 		<div className={clsx("flex w-full flex-col divide-y divide-zinc-800 xl:divide-none")}>
 			<div className={clsx("flex w-full flex-col divide-y divide-zinc-800", "xl:flex-row xl:divide-x xl:divide-y-0")}>
