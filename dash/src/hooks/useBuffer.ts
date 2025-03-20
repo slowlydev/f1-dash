@@ -36,13 +36,13 @@ export const useBuffer = <T>() => {
 		// Handle empty buffer
 		if (length === 0) return null;
 
-		// Handle case where all data is newer than cutoff
+		// Handle case where all data is newer than delayedTime
 		if (buffer[0].timestamp > delayedTime) return null;
 
-		// Handle case where all data is older than cutoff
+		// Handle case where all data is older than delayedTime
 		if (buffer[length - 1].timestamp < delayedTime) return buffer[length - 1].data;
 
-		// binary search for the closest frame before cutoff
+		// binary search for the closest frame before delayedTime
 		let left = 0;
 		let right = length - 1;
 
