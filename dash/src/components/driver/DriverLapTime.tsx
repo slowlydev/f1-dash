@@ -18,6 +18,8 @@ export default function DriverLapTime({ last, best, hasFastest }: Props) {
 					getTimeColor(last.overallFastest, last.personalFastest),
 					!last.value ? "text-zinc-600" : "",
 				)}
+				data-tooltip-id="tooltip"
+				data-tooltip-content="Last lap time"
 			>
 				{!!last.value ? last.value : "-- -- ---"}
 			</p>
@@ -27,6 +29,8 @@ export default function DriverLapTime({ last, best, hasFastest }: Props) {
 					getTimeColor(hasFastest, true),
 					!best.value ? "text-zinc-600" : "",
 				)}
+				data-tooltip-id="tooltip"
+				data-tooltip-content="Best lap time"
 			>
 				{!!best.value ? best.value : "-- -- ---"}
 			</p>
