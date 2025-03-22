@@ -9,7 +9,6 @@ import { inflate } from "@/lib/inflate";
 import { utcToLocalMs } from "@/lib/utcToLocalMs";
 
 import { useSettingsStore } from "@/stores/useSettingsStore";
-import { useDataStore, useCarDataStore, usePositionStore } from "@/stores/useDataStore";
 
 import { useBuffer } from "@/hooks/useBuffer";
 import { useStatefulBuffer } from "@/hooks/useStatefulBuffer";
@@ -158,7 +157,7 @@ export const useDataEngine = ({ updateState, updatePosition, updateCarData }: Pr
 			}
 		}
 
-		const maxDelay = Math.max(
+		const maxDelay = Math.min(
 			...Object.values(buffers).map((buffer) => buffer.maxDelay()),
 			carBuffer.maxDelay(),
 			posBuffer.maxDelay(),

@@ -65,28 +65,25 @@ export const useBuffer = <T>() => {
 
 	const cleanup = (delayedTime: number) => {
 		const buffer = bufferRef.current;
-		const cutoffTime = delayedTime - KEEP_BUFFER_SECS * 1000;
+		const length = buffer.length;
 
-		// if buffer is empty, no cleanup is needed
-		if (buffer.length === 0) return;
+		// Handle empty buffer
+		if (length === 0) return;
 
-		// if all data is newer than the cutoff, no cleanup needed
-		if (buffer[0].timestamp >= cutoffTime) return;
+		// Calculate the threshold time
+		const thresholdTime = delayedTime - KEEP_BUFFER_SECS * 1000;
 
-		// find the index of the first frame to keep
-		let indexToKeep = 0;
-		while (indexToKeep < buffer.length && buffer[indexToKeep].timestamp < cutoffTime) {
-			indexToKeep++;
+		// Find the index of the first frame that is newer than the threshold time
+		let index = 0;
+		while (index < length && buffer[index].timestamp <= thresholdTime) {
+			index++;
 		}
 
-		// keep at least one frame if all frames are older than cutoff
-		if (indexToKeep === buffer.length) {
-			indexToKeep = buffer.length - 1;
-		}
-
-		// remove all obsolete frames at once
-		if (indexToKeep > 0) {
-			bufferRef.current = buffer.slice(indexToKeep);
+		// Ensure at least one frame is kept
+		if (index > 0 && index < length) {
+			bufferRef.current = buffer.slice(index - 1);
+		} else if (index >= length) {
+			bufferRef.current = [buffer[length - 1]];
 		}
 	};
 
