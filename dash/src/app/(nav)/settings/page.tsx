@@ -56,6 +56,11 @@ export default function SettingsPage() {
 			</div>
 
 			<div className="flex gap-2">
+				<Toggle enabled={settings.showTooltips} setEnabled={(v) => settings.setShowTooltips(v)} />
+				<p className="text-zinc-500">Show Tooltips</p>
+			</div>
+
+			<div className="flex gap-2">
 				<Toggle enabled={settings.raceControlChime} setEnabled={(v) => settings.setRaceControlChime(v)} />
 				<p className="text-zinc-500">Play Race Control Chime</p>
 			</div>
@@ -148,7 +153,7 @@ const FavoriteDrivers = () => {
 
 					return (
 						<div key={driverNumber} className="flex items-center gap-1 rounded-xl border border-zinc-700 p-1">
-							<DriverTag teamColor={driver.teamColour} short={driver.tla} />
+							<DriverTag driver={driver} />
 
 							<motion.button
 								whileHover={{ scale: 1.05 }}
