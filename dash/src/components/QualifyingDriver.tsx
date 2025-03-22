@@ -49,7 +49,7 @@ export default function DriverQuali({
 			initial={{ opacity: 0 }}
 		>
 			<div className="flex justify-between">
-				<DriverTag position={parseInt(timingDriver.position)} teamColor={driver.teamColour} short={driver.tla} />
+				<DriverTag position={parseInt(timingDriver.position)} driver={driver} />
 				<div>
 					{currentStint && !unknownCompound && currentStint.compound && (
 						<Image

@@ -17,7 +17,7 @@ type Props = {
 export default function TrackViolationsDriver({ driver, driverViolations, driversTiming }: Props) {
 	return (
 		<div className="flex gap-2" key={`violation.${driver.racingNumber}`}>
-			<DriverTag className="h-fit" teamColor={driver.teamColour} short={driver.tla} />
+			<DriverTag className="h-fit" driver={driver} />
 			<div className="flex items-center gap-2">
 				{new Array(driverViolations).fill("").map((_, i) => (
 					<Image src={octagonX} className="size-6" alt="x in octagon" />

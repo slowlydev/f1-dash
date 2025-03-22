@@ -153,7 +153,7 @@ const FavoriteDrivers = () => {
 
 					return (
 						<div key={driverNumber} className="flex items-center gap-1 rounded-xl border border-zinc-700 p-1">
-							<DriverTag teamColor={driver.teamColour} short={driver.tla} />
+							<DriverTag driver={driver} />
 
 							<motion.button
 								whileHover={{ scale: 1.05 }}
