@@ -34,6 +34,8 @@ export default function DriverInfo({ timingDriver, gridPos }: Props) {
 					"text-red-500": loss,
 					"text-gray-700": !gain && !loss,
 				})}
+				data-tooltip-id="tooltip"
+				data-tooltip-content={positionChange !== undefined ? "Position change" : "Lap count"}
 			>
 				{positionChange !== undefined
 					? gain
@@ -44,7 +46,13 @@ export default function DriverInfo({ timingDriver, gridPos }: Props) {
 					: `${timingDriver.numberOfLaps}L`}
 			</p>
 
-			<p className="text-sm font-medium leading-none text-zinc-600">{status ?? "-"}</p>
+			<p
+				className="text-sm font-medium leading-none text-zinc-600"
+				data-tooltip-id="tooltip"
+				data-tooltip-content="Status"
+			>
+				{status ?? "-"}
+			</p>
 		</div>
 	);
 }
