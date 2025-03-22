@@ -29,6 +29,8 @@ export default function DelayInput({ className }: Props) {
 			placeholder="0s"
 			value={currentDelay}
 			onChange={(e) => handleChange(e.target.value)}
+			data-tooltip-id="tooltip"
+			data-tooltip-content="Delay (seconds)"
 		/>
 	);
 }
