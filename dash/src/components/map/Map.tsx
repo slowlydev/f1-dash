@@ -1,13 +1,11 @@
-import { useEffect, useMemo, useState } from "react";
 import clsx from "clsx";
+import { useEffect, useMemo, useState } from "react";
 
+import type { TrackPosition } from "@/types/map.type";
 import type { PositionCar } from "@/types/state.type";
-import type { Map, TrackPosition } from "@/types/map.type";
 
-import { fetchMap } from "@/lib/fetchMap";
 import { objectEntries } from "@/lib/driverHelper";
-import { useDataStore, usePositionStore } from "@/stores/useDataStore";
-import { useSettingsStore } from "@/stores/useSettingsStore";
+import { fetchMap } from "@/lib/fetchMap";
 import { getTrackStatusMessage } from "@/lib/getTrackStatusMessage";
 import {
 	createSectors,
@@ -18,6 +16,9 @@ import {
 	rad,
 	rotate,
 } from "@/lib/map";
+import { useDataStore, usePositionStore } from "@/stores/useDataStore";
+import { useSettingsStore } from "@/stores/useSettingsStore";
+import MapLoader from "./MapLoader";
 
 // This is basically fearlessly copied from
 // https://github.com/tdjsnelling/monaco
@@ -45,7 +46,7 @@ export default function Map() {
 	const [[minX, minY, widthX, widthY], setBounds] = useState<(null | number)[]>([null, null, null, null]);
 	const [[centerX, centerY], setCenter] = useState<(null | number)[]>([null, null]);
 
-	const [points, setPoints] = useState<null | { x: number; y: number }[]>(null);
+	const [points, setPoints] = useState<null | TrackPosition[]>(null);
 	const [sectors, setSectors] = useState<MapSector[]>([]);
 	const [corners, setCorners] = useState<Corner[]>([]);
 	const [rotation, setRotation] = useState<number>(0);
@@ -111,18 +112,14 @@ export default function Map() {
 					pulse: status?.pulse,
 					number: sector.number,
 					strokeWidth: color === "stroke-white" ? 60 : 120,
-					d: `M${sector.points[0].x},${sector.points[0].y} ${sector.points.map((point) => `L${point.x},${point.y}`).join(" ")}`,
+					d: generateDrawnSVGPath(sector.points),
 				};
 			})
 			.sort(prioritizeColoredSectors);
 	}, [trackStatus, sectors]);
 
 	if (!points || !minX || !minY || !widthX || !widthY) {
-		return (
-			<div className="h-full w-full p-2" style={{ minHeight: "35rem" }}>
-				<div className="h-full w-full animate-pulse rounded-lg bg-zinc-800" />
-			</div>
-		);
+		return <MapLoader />;
 	}
 
 	return (
@@ -136,7 +133,7 @@ export default function Map() {
 				strokeWidth={300}
 				strokeLinejoin="round"
 				fill="transparent"
-				d={`M${points[0].x},${points[0].y} ${points.map((point) => `L${point.x},${point.y}`).join(" ")}`}
+				d={generateDrawnSVGPath(points)}
 			/>
 
 			{renderedSectors.map((sector) => {
@@ -269,3 +266,10 @@ const CarDot = ({ pos, name, color, favoriteDriver, pit, hidden, rotation, cente
 		</g>
 	);
 };
+
+function generateDrawnSVGPath(points: TrackPosition[]) {
+	const formattedCoords = points.map((point) => `${point.x},${point.y}`);
+	const origin = `M${formattedCoords[0]}`;
+	const spline = formattedCoords.map((coord) => `L${coord}`);
+	return `${origin} ${spline.join(" ")}`;
+}
