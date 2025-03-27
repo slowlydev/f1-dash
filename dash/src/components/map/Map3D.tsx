@@ -90,9 +90,7 @@ export default function Map3D() {
 		() => [centerX, defaultCameraDistance, centerY + defaultCameraDistance] as const,
 		[centerX, centerY, defaultCameraDistance],
 	);
-	const yellowSectors = useMemo(() => {
-		findYellowSectors(raceControlMessages);
-	}, [raceControlMessages]);
+	const yellowSectors = useMemo(() => findYellowSectors(raceControlMessages), [raceControlMessages]);
 	const renderedSectors = useMemo(() => {
 		const status = getTrackStatusMessage(trackStatus?.status ? parseInt(trackStatus.status) : undefined);
 		return sectors
