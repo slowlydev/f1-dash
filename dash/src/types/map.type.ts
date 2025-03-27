@@ -42,3 +42,5 @@ export type TrackPosition = {
 	x: number;
 	y: number;
 };
+
+export type TrackColor = "GREEN" | "YELLOW" | "RED";

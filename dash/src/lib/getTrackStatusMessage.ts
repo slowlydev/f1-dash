@@ -1,32 +1,89 @@
+import { TrackColor } from "@/types/map.type";
+
 type StatusMessage = {
 	message: string;
-	color: string;
-	trackColor: string;
-	bySector?: boolean;
+	trackColor: TrackColor;
+	bySector: boolean;
 	pulse?: number;
-	hex: string;
 };
 
 type MessageMap = {
 	[key: string]: StatusMessage;
 };
 
-export const getTrackStatusMessage = (statusCode: number | undefined): StatusMessage | null => {
-	const messageMap: MessageMap = {
-		1: { message: "Track Clear", color: "bg-emerald-500", trackColor: "stroke-white", hex: "#34b981" },
-		2: {
-			message: "Yellow Flag",
-			color: "bg-yellow-500",
-			trackColor: "stroke-yellow-500",
-			bySector: true,
-			hex: "#f59e0c",
-		},
-		3: { message: "Flag", color: "bg-yellow-500", trackColor: "stroke-yellow-500", bySector: true, hex: "#f59e0c" },
-		4: { message: "Safety Car", color: "bg-yellow-500", trackColor: "stroke-yellow-500", hex: "#f59e0c" },
-		5: { message: "Red Flag", color: "bg-red-500", trackColor: "stroke-red-500", hex: "#ef4444" },
-		6: { message: "VSC Deployed", color: "bg-yellow-500", trackColor: "stroke-yellow-500", hex: "#f59e0c" },
-		7: { message: "VSC Ending", color: "bg-yellow-500", trackColor: "stroke-yellow-500", hex: "#f59e0c" },
-	};
-
-	return statusCode ? (messageMap[statusCode] ?? messageMap[0]) : null;
+type ComputedTrackStyle = {
+	trackColor: TrackColor;
+	bg: string;
+	stroke: string;
+	trackHex: string;
+	flagHex: string;
 };
+
+const STROKE_BY_TRACK_COLOR: Record<TrackColor, string> = {
+	GREEN: "stroke-white",
+	YELLOW: "stroke-yellow-500",
+	RED: "stroke-red-500",
+};
+
+const BG_BY_TRACK_COLOR: Record<TrackColor, string> = {
+	GREEN: "bg-emerald-500",
+	YELLOW: "bg-yellow-500",
+	RED: "bg-red-500",
+};
+
+const FLAG_HEX_BY_TRACK_COLOR: Record<TrackColor, string> = {
+	GREEN: "#34b981",
+	YELLOW: "#f59e0c",
+	RED: "#ef4444",
+};
+
+const TRACK_HEX_BY_TRACK_COLOR: Record<TrackColor, string> = {
+	GREEN: "#fafafa",
+	YELLOW: "#f59e0c",
+	RED: "#ef4444",
+};
+
+const MESSAGE_MAP: MessageMap = {
+	1: { message: "Track Clear", trackColor: "GREEN", bySector: false },
+	2: {
+		message: "Yellow Flag",
+		trackColor: "YELLOW",
+		bySector: true,
+	},
+	3: { message: "Flag", trackColor: "YELLOW", bySector: true },
+	4: { message: "Safety Car", trackColor: "YELLOW", bySector: false },
+	5: { message: "Red Flag", trackColor: "RED", bySector: false },
+	6: { message: "VSC Deployed", trackColor: "YELLOW", bySector: false },
+	7: { message: "VSC Ending", trackColor: "YELLOW", bySector: false },
+};
+
+export const getTrackStatusMessage = (statusCode: number | undefined): StatusMessage | null => {
+	if (!statusCode) return null;
+	return MESSAGE_MAP[statusCode] ?? MESSAGE_MAP[0];
+};
+
+export function getTrackColorStroke(color: TrackColor) {
+	return STROKE_BY_TRACK_COLOR[color];
+}
+
+export function getTrackColorBg(color: TrackColor) {
+	return BG_BY_TRACK_COLOR[color];
+}
+
+export function getTrackColorHex(color: TrackColor) {
+	return TRACK_HEX_BY_TRACK_COLOR[color];
+}
+
+export function getTrackColorFlagHex(color: TrackColor) {
+	return FLAG_HEX_BY_TRACK_COLOR[color];
+}
+
+export function getComputedTrackStyle(color: TrackColor): ComputedTrackStyle {
+	return {
+		trackColor: color,
+		bg: getTrackColorBg(color),
+		stroke: getTrackColorStroke(color),
+		trackHex: getTrackColorHex(color),
+		flagHex: getTrackColorFlagHex(color),
+	};
+}

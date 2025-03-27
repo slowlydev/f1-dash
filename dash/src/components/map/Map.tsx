@@ -6,7 +6,7 @@ import type { PositionCar } from "@/types/state.type";
 
 import { objectEntries } from "@/lib/driverHelper";
 import { fetchMap } from "@/lib/fetchMap";
-import { getTrackStatusMessage } from "@/lib/getTrackStatusMessage";
+import { getTrackColorStroke, getTrackStatusMessage } from "@/lib/getTrackStatusMessage";
 import {
 	createSectors,
 	findYellowSectors,
@@ -107,11 +107,12 @@ export default function Map() {
 		return sectors
 			.map((sector) => {
 				const color = getSectorColor(sector, status?.bySector, status?.trackColor, yellowSectors);
+				const stroke = getTrackColorStroke(color);
 				return {
-					color,
+					color: stroke,
 					pulse: status?.pulse,
 					number: sector.number,
-					strokeWidth: color === "stroke-white" ? 60 : 120,
+					strokeWidth: color === "GREEN" ? 60 : 120,
 					d: generateDrawnSVGPath(sector.points),
 				};
 			})

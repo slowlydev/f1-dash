@@ -1,6 +1,7 @@
+import { useLookAt } from "@/hooks/useLookAt";
 import { theme } from "@/styles/tailwindTheme";
 import { Text as Text3D } from "@react-three/drei";
-import { useFrame, useThree } from "@react-three/fiber";
+import { useThree } from "@react-three/fiber";
 import { useRef } from "react";
 
 import { Mesh } from "three";
@@ -16,10 +17,7 @@ export default function CornerNumber({ number, x, y }: CornerNumberProps) {
 
 	const mesh = useRef<Mesh | null>();
 
-	// Make the text face the camera
-	useFrame(() => {
-		mesh.current?.lookAt(camera.position);
-	});
+	useLookAt({ object: mesh.current, target: camera.position });
 
 	return (
 		<Text3D

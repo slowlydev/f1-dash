@@ -1,3 +1,4 @@
+import { useLookAt } from "@/hooks/useLookAt";
 import { rotate } from "@/lib/map";
 import { toVector3 } from "@/lib/r3f";
 import { theme } from "@/styles/tailwindTheme";
@@ -65,9 +66,7 @@ export function DriverIndicator({
 		return m;
 	}, [color, opacity]);
 
-	useFrame(() => {
-		mesh.current?.lookAt(camera.position);
-	});
+	useLookAt({ object: mesh.current, target: camera.position });
 
 	return (
 		<group position={toVector3(rotatedPos)}>

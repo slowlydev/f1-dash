@@ -4,13 +4,21 @@ import clsx from "clsx";
 
 import { useDataStore } from "@/stores/useDataStore";
 
-import { getTrackStatusMessage } from "@/lib/getTrackStatusMessage";
+import { getComputedTrackStyle, getTrackStatusMessage } from "@/lib/getTrackStatusMessage";
+import { useMemo } from "react";
 
 export default function TrackInfo() {
 	const lapCount = useDataStore((state) => state.lapCount);
 	const track = useDataStore((state) => state.trackStatus);
 
-	const currentTrackStatus = getTrackStatusMessage(track?.status ? parseInt(track?.status) : undefined);
+	const currentTrackStatus = useMemo(
+		() => getTrackStatusMessage(track?.status ? parseInt(track?.status) : undefined),
+		[track],
+	);
+	const computedTrackStyle = useMemo(
+		() => (currentTrackStatus ? getComputedTrackStyle(currentTrackStatus.trackColor) : null),
+		[currentTrackStatus],
+	);
 
 	return (
 		<div className="flex w-fit flex-row items-center gap-4">
@@ -22,9 +30,9 @@ export default function TrackInfo() {
 
 			{!!currentTrackStatus ? (
 				<div
-					className={clsx("flex h-8 items-center truncate rounded-md px-2", currentTrackStatus.color)}
+					className={clsx("flex h-8 items-center truncate rounded-md px-2", computedTrackStyle?.bg)}
 					style={{
-						boxShadow: `0 0 60px 10px ${currentTrackStatus.hex}`,
+						boxShadow: `0 0 60px 10px ${computedTrackStyle?.flagHex}`,
 					}}
 				>
 					<p className="text-xl font-semibold">{currentTrackStatus.message}</p>

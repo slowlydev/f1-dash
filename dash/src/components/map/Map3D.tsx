@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 
-import type { TrackPosition } from "@/types/map.type";
+import type { TrackColor, TrackPosition } from "@/types/map.type";
 
 import { objectEntries } from "@/lib/driverHelper";
 import { fetchMap } from "@/lib/fetchMap";
-import { getTrackStatusMessage } from "@/lib/getTrackStatusMessage";
+import { getTrackColorHex, getTrackStatusMessage } from "@/lib/getTrackStatusMessage";
 import { createSectors, findYellowSectors, getSectorColor, MapSector, rad, rotate } from "@/lib/map";
 import { toVector3 } from "@/lib/r3f";
 import { useDataStore, usePositionStore } from "@/stores/useDataStore";
@@ -30,16 +30,17 @@ type Corner = {
 type RenderedSector3D = {
 	number: number;
 	points: TrackPosition[];
-	color: string;
+	trackColor: TrackColor;
+	hex: string;
 	strokeWidth: number;
 	pulse?: number;
 };
 
 function prioritizeColoredSectors3D(a: RenderedSector3D, b: RenderedSector3D) {
-	if (a.color === "stroke-white" && b.color !== "stroke-white") {
+	if (a.trackColor === "GREEN" && b.trackColor !== "GREEN") {
 		return -1;
 	}
-	if (a.color !== "stroke-white" && b.color === "stroke-white") {
+	if (a.trackColor !== "GREEN" && b.trackColor === "GREEN") {
 		return 1;
 	}
 	return a.number - b.number;
@@ -89,17 +90,21 @@ export default function Map3D() {
 		() => [centerX, defaultCameraDistance, centerY + defaultCameraDistance] as const,
 		[centerX, centerY, defaultCameraDistance],
 	);
-	const yellowSectors = useMemo(() => findYellowSectors(raceControlMessages), [raceControlMessages]);
+	const yellowSectors = useMemo(() => {
+		findYellowSectors(raceControlMessages);
+	}, [raceControlMessages]);
 	const renderedSectors = useMemo(() => {
 		const status = getTrackStatusMessage(trackStatus?.status ? parseInt(trackStatus.status) : undefined);
 		return sectors
 			.map<RenderedSector3D>((sector) => {
 				const color = getSectorColor(sector, status?.bySector, status?.trackColor, yellowSectors);
+				const hex = getTrackColorHex(color);
 				return {
-					color,
+					hex,
+					trackColor: color,
 					pulse: status?.pulse,
 					number: sector.number,
-					strokeWidth: color === "stroke-white" ? 2 : 4,
+					strokeWidth: color === "GREEN" ? 2 : 5,
 					points: sector.points,
 				};
 			})
@@ -194,7 +199,7 @@ export default function Map3D() {
 						renderOrder={1}
 						key={sector.number}
 						points={sector.points.map((point) => new Vector3(point.x, 0, point.y))}
-						color={sector.color}
+						color={sector.hex}
 						lineWidth={sector.strokeWidth}
 					/>
 				))}
