@@ -1,27 +1,29 @@
 "use client";
 
-import { useEffect, useRef } from "react";
 import clsx from "clsx";
+import { useEffect, useRef } from "react";
 
 import Fireworks, { FireworksHandlers } from "@fireworks-js/react";
 
 import { useDataStore } from "@/stores/useDataStore";
 
-import SessionInfo from "@/components/SessionInfo";
-import WeatherInfo from "@/components/WeatherInfo";
-import TrackInfo from "@/components/TrackInfo";
+import Footer from "@/components/Footer";
+import LapCount from "@/components/LapCount";
 import LeaderBoard from "@/components/LeaderBoard";
+import Map from "@/components/map/Map";
+import Map3D from "@/components/map/Map3D";
 import Qualifying from "@/components/Qualifying";
 import RaceControl from "@/components/RaceControl";
+import SessionInfo from "@/components/SessionInfo";
 import TeamRadios from "@/components/TeamRadios";
-import Footer from "@/components/Footer";
-import Map from "@/components/Map";
-import LapCount from "@/components/LapCount";
+import TrackInfo from "@/components/TrackInfo";
+import WeatherInfo from "@/components/WeatherInfo";
+import { useSettingsStore } from "@/stores/useSettingsStore";
 
 export default function Page() {
 	const fireworksRef = useRef<FireworksHandlers>(null);
 	const fireworksPlayed = useRef<boolean>(false);
-
+	const settings = useSettingsStore();
 	const sessionType = useDataStore((state) => state.sessionInfo?.type);
 
 	const raceControlMessages = useDataStore((state) => state.raceControlMessages?.messages);
@@ -83,9 +85,7 @@ export default function Page() {
 							</div>
 						)}
 
-						<div className="hidden w-full xl:block">
-							<Map />
-						</div>
+						<div className="hidden w-full xl:block">{settings.use3DMap ? <Map3D /> : <Map />}</div>
 
 						<div
 							className={clsx(

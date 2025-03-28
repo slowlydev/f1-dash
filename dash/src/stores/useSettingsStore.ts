@@ -1,5 +1,5 @@
-import { persist, createJSONStorage, subscribeWithSelector } from "zustand/middleware";
 import { create } from "zustand";
+import { createJSONStorage, persist, subscribeWithSelector } from "zustand/middleware";
 
 type SpeedUnit = "metric" | "imperial";
 
@@ -34,6 +34,9 @@ type SettingsStore = {
 
 	raceControlChimeVolume: number;
 	setRaceControlChimeVolume: (raceControlChimeVolume: number) => void;
+
+	use3DMap: boolean;
+	setUse3DMap: (use3DMap: boolean) => void;
 };
 
 export const useSettingsStore = create(
@@ -71,6 +74,9 @@ export const useSettingsStore = create(
 
 				raceControlChimeVolume: 50,
 				setRaceControlChimeVolume: (raceControlChimeVolume: number) => set({ raceControlChimeVolume }),
+
+				use3DMap: false,
+				setUse3DMap: (use3DMap: boolean) => set({ use3DMap }),
 			}),
 			{
 				name: "settings-storage",

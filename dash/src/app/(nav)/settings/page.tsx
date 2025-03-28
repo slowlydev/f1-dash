@@ -1,22 +1,22 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 
 import xIcon from "public/icons/xmark.svg";
 
 import type { Driver } from "@/types/state.type";
 
+import Button from "@/components/Button";
+import DelayInput from "@/components/DelayInput";
+import Footer from "@/components/Footer";
+import Input from "@/components/Input";
 import SegmentedControls from "@/components/SegmentedControls";
 import SelectMultiple from "@/components/SelectMultiple";
-import DriverTag from "@/components/driver/DriverTag";
-import DelayInput from "@/components/DelayInput";
-import Button from "@/components/Button";
-import Toggle from "@/components/Toggle";
-import Footer from "@/components/Footer";
 import Slider from "@/components/Slider";
-import Input from "@/components/Input";
+import Toggle from "@/components/Toggle";
+import DriverTag from "@/components/driver/DriverTag";
 
 import { useSettingsStore } from "@/stores/useSettingsStore";
 
@@ -77,6 +77,11 @@ export default function SettingsPage() {
 					</div>
 				</div>
 			)}
+
+			<div className="flex gap-2">
+				<Toggle enabled={settings.use3DMap} setEnabled={(v) => settings.setUse3DMap(v)} />
+				<p className="text-zinc-500">(Experimental) Use 3D Map</p>
+			</div>
 
 			<h2 className="my-4 text-2xl">Favorite Drivers</h2>
 

@@ -1,32 +1,51 @@
+import { FlagType } from "@/types/map.type";
+
 type StatusMessage = {
 	message: string;
-	color: string;
-	trackColor: string;
-	bySector?: boolean;
+	flagType: FlagType;
+	bySector: boolean;
 	pulse?: number;
-	hex: string;
 };
 
-type MessageMap = {
-	[key: string]: StatusMessage;
+type MessageMap = Record<string, StatusMessage>;
+
+type FlagStyle = {
+	bg: string;
+	stroke: string;
+	trackHex: string;
+	flagHex: string;
+};
+
+type ComputedFlagStyle = FlagStyle & { flag: FlagType };
+
+const STYLE_BY_FLAG_TYPE: Record<FlagType, FlagStyle> = {
+	GREEN: { stroke: "stroke-white", bg: "bg-emerald-500", flagHex: "#34b981", trackHex: "#fafafa" },
+	YELLOW: { stroke: "stroke-yellow-500", bg: "bg-yellow-500", flagHex: "#f59e0c", trackHex: "#f59e0c" },
+	RED: { stroke: "stroke-red-500", bg: "bg-red-500", flagHex: "#ef4444", trackHex: "#ef4444" },
+};
+
+const MESSAGE_MAP: MessageMap = {
+	1: { message: "Track Clear", flagType: "GREEN", bySector: false },
+	2: {
+		message: "Yellow Flag",
+		flagType: "YELLOW",
+		bySector: true,
+	},
+	3: { message: "Flag", flagType: "YELLOW", bySector: true },
+	4: { message: "Safety Car", flagType: "YELLOW", bySector: false },
+	5: { message: "Red Flag", flagType: "RED", bySector: false },
+	6: { message: "VSC Deployed", flagType: "YELLOW", bySector: false },
+	7: { message: "VSC Ending", flagType: "YELLOW", bySector: false },
 };
 
 export const getTrackStatusMessage = (statusCode: number | undefined): StatusMessage | null => {
-	const messageMap: MessageMap = {
-		1: { message: "Track Clear", color: "bg-emerald-500", trackColor: "stroke-white", hex: "#34b981" },
-		2: {
-			message: "Yellow Flag",
-			color: "bg-yellow-500",
-			trackColor: "stroke-yellow-500",
-			bySector: true,
-			hex: "#f59e0c",
-		},
-		3: { message: "Flag", color: "bg-yellow-500", trackColor: "stroke-yellow-500", bySector: true, hex: "#f59e0c" },
-		4: { message: "Safety Car", color: "bg-yellow-500", trackColor: "stroke-yellow-500", hex: "#f59e0c" },
-		5: { message: "Red Flag", color: "bg-red-500", trackColor: "stroke-red-500", hex: "#ef4444" },
-		6: { message: "VSC Deployed", color: "bg-yellow-500", trackColor: "stroke-yellow-500", hex: "#f59e0c" },
-		7: { message: "VSC Ending", color: "bg-yellow-500", trackColor: "stroke-yellow-500", hex: "#f59e0c" },
-	};
-
-	return statusCode ? (messageMap[statusCode] ?? messageMap[0]) : null;
+	if (!statusCode) return null;
+	return MESSAGE_MAP[statusCode] ?? MESSAGE_MAP[0];
 };
+
+export function getComputedFlagStyle(flag: FlagType): ComputedFlagStyle {
+	return {
+		...STYLE_BY_FLAG_TYPE[flag],
+		flag,
+	};
+}

@@ -1,4 +1,4 @@
-import type { Map, TrackPosition } from "@/types/map.type";
+import type { FlagType, Map, TrackPosition } from "@/types/map.type";
 import type { Message } from "@/types/state.type";
 
 import { sortUtc } from "@/lib/sorting";
@@ -125,6 +125,9 @@ export const prioritizeColoredSectors = (a: RenderedSector, b: RenderedSector) =
 export const getSectorColor = (
 	sector: MapSector,
 	bySector: boolean | undefined,
-	trackColor: string | undefined = "stroke-white",
+	flagType: FlagType | undefined = "GREEN",
 	yellowSectors: Set<number>,
-) => (bySector ? (yellowSectors.has(sector.number) ? trackColor : "stroke-white") : trackColor);
+): FlagType => {
+	if (!bySector) return flagType;
+	return yellowSectors.has(sector.number) ? flagType : "GREEN";
+};
