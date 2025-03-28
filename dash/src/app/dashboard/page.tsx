@@ -17,11 +17,12 @@ import TeamRadios from "@/components/TeamRadios";
 import Footer from "@/components/Footer";
 import Map from "@/components/Map";
 import LapCount from "@/components/LapCount";
+import { useSettingsStore } from "@/stores/useSettingsStore";
 
 export default function Page() {
 	const fireworksRef = useRef<FireworksHandlers>(null);
 	const fireworksPlayed = useRef<boolean>(false);
-
+	const darkMode = useSettingsStore((state) => state.darkMode);
 	const sessionType = useDataStore((state) => state.sessionInfo?.type);
 
 	const raceControlMessages = useDataStore((state) => state.raceControlMessages?.messages);
@@ -40,9 +41,13 @@ export default function Page() {
 	}, [raceControlMessages]);
 
 	return (
-		<div className="flex w-full flex-col">
+		<div
+			className={`flex w-full flex-col ${darkMode ? "bg-background-dark text-white" : "bg-background-light text-black"}`}
+		>
 			{/* md upwards, desktop ipad design */}
-			<div className="hidden flex-wrap items-center justify-between gap-2 overflow-hidden border-b border-zinc-800 p-2 px-2 md:flex">
+			<div
+				className={`hidden flex-wrap items-center justify-between gap-2 overflow-hidden border-b p-2 px-2 md:flex ${darkMode ? "border-primary-dark" : "border-primary-light"}`}
+			>
 				<div className="flex flex-wrap items-center justify-between gap-2">
 					<div className="flex w-full items-center justify-between md:w-auto">
 						<SessionInfo />
@@ -55,7 +60,9 @@ export default function Page() {
 			</div>
 
 			{/* sm, mobile design */}
-			<div className="flex w-full flex-col divide-y divide-zinc-800 border-b border-zinc-800 md:hidden">
+			<div
+				className={`flex w-full flex-col divide-y border-b md:hidden ${darkMode ? "divide-primary-dark border-primary-dark" : "divide-primary-light border-primary-light"}`}
+			>
 				<div className="p-2">
 					<SessionInfo />
 				</div>
@@ -70,13 +77,25 @@ export default function Page() {
 				</div>
 			</div>
 
-			<div className={clsx("flex w-full flex-col divide-y divide-zinc-800")}>
-				<div className={clsx("flex w-full flex-col divide-y divide-zinc-800", "xl:flex-row xl:divide-x xl:divide-y-0")}>
+			<div className={clsx("flex w-full flex-col divide-y", darkMode ? "divide-primary-dark" : "divide-primary-light")}>
+				<div
+					className={clsx(
+						"flex w-full flex-col divide-y",
+						darkMode ? "divide-primary-dark" : "divide-primary-light",
+						"xl:flex-row xl:divide-x xl:divide-y-0",
+					)}
+				>
 					<div className={clsx("mb-2 overflow-x-auto md:overflow-visible", "xl:flex-[0,0,auto]")}>
 						<LeaderBoard />
 					</div>
 
-					<div className={clsx("flex flex-col divide-y divide-zinc-800", "xl:min-w-0 xl:flex-grow")}>
+					<div
+						className={clsx(
+							"flex flex-col divide-y",
+							darkMode ? "divide-primary-dark" : "divide-primary-light",
+							"xl:min-w-0 xl:flex-grow",
+						)}
+					>
 						{sessionType === "Qualifying" && (
 							<div className="overflow-x-auto">
 								<Qualifying />

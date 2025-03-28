@@ -1,3 +1,5 @@
+"use client";
+
 import { AnimatePresence } from "framer-motion";
 import { useEffect, useRef } from "react";
 import clsx from "clsx";
@@ -70,7 +72,8 @@ export default function RaceControl() {
 }
 
 const SkeletonMessage = ({ index }: { index: number }) => {
-	const animateClass = "h-6 animate-pulse rounded-md bg-zinc-800";
+	const darkMode = useSettingsStore((state) => state.darkMode);
+	const animateClass = `h-6 animate-pulse rounded-md ${darkMode ? "bg-primary-dark" : "bg-primary-light"}`;
 
 	const flag = index % 4 === 0;
 	const long = index % 5 === 0;

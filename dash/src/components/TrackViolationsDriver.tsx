@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 
 import { Driver, TimingData } from "@/types/state.type";
@@ -7,6 +9,7 @@ import { calculatePosition } from "@/lib/calculatePosition";
 import DriverTag from "@/components/driver/DriverTag";
 
 import octagonX from "public/icons/x-octagon.svg";
+import { useSettingsStore } from "@/stores/useSettingsStore";
 
 type Props = {
 	driver: Driver;
@@ -15,6 +18,7 @@ type Props = {
 };
 
 export default function TrackViolationsDriver({ driver, driverViolations, driversTiming }: Props) {
+	const darkMode = useSettingsStore((state) => state.darkMode);
 	return (
 		<div className="flex gap-2" key={`violation.${driver.racingNumber}`}>
 			<DriverTag className="h-fit" teamColor={driver.teamColour} short={driver.tla} />
@@ -23,7 +27,9 @@ export default function TrackViolationsDriver({ driver, driverViolations, driver
 					<Image src={octagonX} className="size-6" alt="x in octagon" />
 				))}
 			</div>
-			<div className="flex flex-col justify-center text-sm text-zinc-600">
+			<div
+				className={`flex flex-col justify-center text-sm ${darkMode ? "text-tertiary-dark" : "text-tertiary-light"}`}
+			>
 				<p>
 					{driverViolations} Violations
 					{driverViolations > 4 && <span> - {Math.round(driverViolations / 5) * 5}s Penalty</span>}

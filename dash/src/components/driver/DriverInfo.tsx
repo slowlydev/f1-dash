@@ -1,6 +1,9 @@
+"use client";
+
 import clsx from "clsx";
 
 import { TimingDataDriver } from "@/types/state.type";
+import { useSettingsStore } from "@/stores/useSettingsStore";
 
 type Props = {
 	timingDriver: TimingDataDriver;
@@ -12,6 +15,7 @@ export default function DriverInfo({ timingDriver, gridPos }: Props) {
 	const gain = positionChange && positionChange > 0;
 	const loss = positionChange && positionChange < 0;
 
+	const darkMode = useSettingsStore((state) => state.darkMode);
 	const status = timingDriver.knockedOut
 		? "OUT"
 		: !!timingDriver.cutoff
@@ -44,7 +48,9 @@ export default function DriverInfo({ timingDriver, gridPos }: Props) {
 					: `${timingDriver.numberOfLaps}L`}
 			</p>
 
-			<p className="text-sm font-medium leading-none text-zinc-600">{status ?? "-"}</p>
+			<p className={`text-sm font-medium leading-none ${darkMode ? "text-tertiary-dark" : "text-tertiary-light"}`}>
+				{status ?? "-"}
+			</p>
 		</div>
 	);
 }

@@ -1,8 +1,12 @@
+"use client";
+
+import { useSettingsStore } from "@/stores/useSettingsStore";
 import Link from "next/link";
 
 export default function Footer() {
+	const darkMode = useSettingsStore((state) => state.darkMode);
 	return (
-		<footer className="my-8 text-sm text-zinc-600">
+		<footer className={`py-8 text-sm ${darkMode ? "text-tertiary-dark" : "text-tertiary-light"}`}>
 			<div className="mb-4 flex flex-wrap gap-2">
 				<p>
 					Made with ♥ by <TextLink website="https://slowly.dev">Slowly</TextLink>.
@@ -30,7 +34,6 @@ export default function Footer() {
 
 				<p>Version: {process.env.version}</p>
 			</div>
-
 			<p>
 				This project/website is unofficial and is not associated in any way with the Formula 1 companies. F1, FORMULA
 				ONE, FORMULA 1, FIA FORMULA ONE WORLD CHAMPIONSHIP, GRAND PRIX and related marks are trade marks of Formula One

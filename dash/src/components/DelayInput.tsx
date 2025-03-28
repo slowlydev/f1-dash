@@ -11,6 +11,7 @@ type Props = {
 export default function DelayInput({ className }: Props) {
 	const currentDelay = useSettingsStore((s) => s.delay);
 	const setDelay = useSettingsStore((s) => s.setDelay);
+	const darkMode = useSettingsStore((state) => state.darkMode);
 
 	const handleChange = (v: string) => {
 		const delay = v ? parseInt(v) : 0;
@@ -21,7 +22,8 @@ export default function DelayInput({ className }: Props) {
 	return (
 		<input
 			className={clsx(
-				"w-12 rounded-lg bg-zinc-800 p-1 text-center text-sm [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none",
+				`w-12 rounded-lg p-1 text-center text-sm [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none`,
+				darkMode ? "bg-primary-dark" : "bg-primary-light",
 				className,
 			)}
 			type="number"

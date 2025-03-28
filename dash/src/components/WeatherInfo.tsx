@@ -1,9 +1,12 @@
+"use client";
+
 import TemperatureComplication from "./complications/Temperature";
 import HumidityComplication from "./complications/Humidity";
 import WindSpeedComplication from "./complications/WindSpeed";
 import RainComplication from "./complications/Rain";
 
 import { useDataStore } from "@/stores/useDataStore";
+import { useSettingsStore } from "@/stores/useSettingsStore";
 
 export default function DataWeatherInfo() {
 	const weather = useDataStore((state) => state.weatherData);
@@ -32,5 +35,11 @@ export default function DataWeatherInfo() {
 }
 
 function Loading() {
-	return <div className="h-[55px] w-[55px] animate-pulse rounded-full bg-zinc-800" />;
+	const darkMode = useSettingsStore((state) => state.darkMode);
+
+	return (
+		<div
+			className={`h-[55px] w-[55px] animate-pulse rounded-full ${darkMode ? "bg-primary-dark" : "bg-primary-light"}`}
+		/>
+	);
 }

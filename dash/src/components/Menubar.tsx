@@ -10,6 +10,7 @@ import Button from "@/components/Button";
 
 import alertIcon from "public/icons/alert-triangle.svg";
 import ConnectionStatus from "./ConnectionStatus";
+import { useSettingsStore } from "@/stores/useSettingsStore";
 
 type Props = {
 	connected?: boolean;
@@ -18,7 +19,7 @@ type Props = {
 export default function Menubar({ connected }: Props) {
 	const router = useRouter();
 	const pathname = usePathname();
-
+	const darkMode = useSettingsStore((state) => state.darkMode);
 	const [[liveWarning, nextRoute], setLiveWarning] = useState<[boolean, string | null]>([false, null]);
 
 	const liveRoutes = ["/dashboard"]; // adjust this when adding head-to-head or track map
@@ -81,7 +82,9 @@ export default function Menubar({ connected }: Props) {
 			)}
 
 			<Modal open={liveWarning}>
-				<div className="flex flex-col items-center gap-4">
+				<div
+					className={`flex flex-col items-center gap-4 rounded-lg ${darkMode ? "border-white bg-modal-dark text-white" : "border-black bg-modal-light text-black"}`}
+				>
 					<Image alt="warning icon" src={alertIcon} />
 
 					<p>You are leaving Live-Timing!</p>

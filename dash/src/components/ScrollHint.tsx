@@ -5,7 +5,11 @@ import { motion } from "framer-motion";
 
 import downIcon from "public/icons/chevron-down.svg";
 
+import downIconLight from "public/icons/chevron-down-light.svg";
+import { useSettingsStore } from "@/stores/useSettingsStore";
+
 export default function ScrollHint() {
+	const darkMode = useSettingsStore((state) => state.darkMode);
 	return (
 		<motion.div
 			animate={{
@@ -18,7 +22,7 @@ export default function ScrollHint() {
 			}}
 			className="absolute bottom-20 mx-auto"
 		>
-			<Image alt="down icon" src={downIcon} width={20} height={20} />
+			<Image alt="down icon" src={darkMode ? downIcon : downIconLight} width={20} height={20} />
 		</motion.div>
 	);
 }

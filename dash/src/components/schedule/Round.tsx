@@ -7,6 +7,7 @@ import type { Round as RoundType } from "@/types/schedule.type";
 
 import { groupSessionByDay } from "@/lib/groupSessionByDay";
 import { formatDayRange, formatMonth } from "@/lib/dateFormatter";
+import { useSettingsStore } from "@/stores/useSettingsStore";
 
 type Props = {
 	round: RoundType;
@@ -14,9 +15,12 @@ type Props = {
 };
 
 export default function Round({ round, nextName }: Props) {
+	const darkMode = useSettingsStore((state) => state.darkMode);
 	return (
 		<div className={clsx(round.over && "opacity-50")}>
-			<div className="flex items-center justify-between border-b border-zinc-600 pb-2">
+			<div
+				className={`flex items-center justify-between border-b pb-2 ${darkMode ? "border-tertiary-dark" : "border-tertiary-light"}`}
+			>
 				<div className="flex items-center gap-2">
 					<p className="text-2xl">{round.countryName}</p>
 					{round.name === nextName && (
@@ -33,7 +37,9 @@ export default function Round({ round, nextName }: Props) {
 
 				<div className="flex gap-1">
 					<p className="text-xl">{formatMonth(round.start, round.end)}</p>
-					<p className="text-zinc-600">{formatDayRange(round.start, round.end)}</p>
+					<p className={` ${darkMode ? "text-tertiary-dark" : "text-tertiary-light"}`}>
+						{formatDayRange(round.start, round.end)}
+					</p>
 				</div>
 			</div>
 
@@ -50,7 +56,7 @@ export default function Round({ round, nextName }: Props) {
 								>
 									<p className="w-28 overflow-hidden text-ellipsis whitespace-nowrap sm:w-auto">{session.kind}</p>
 
-									<p className="text-sm leading-none text-zinc-600">
+									<p className={`text-sm leading-none ${darkMode ? "text-tertiary-dark" : "text-tertiary-light"}`}>
 										{utc(session.start).local().format("HH:mm")} - {utc(session.end).local().format("HH:mm")}
 									</p>
 								</div>

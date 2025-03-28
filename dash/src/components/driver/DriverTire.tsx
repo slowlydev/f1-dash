@@ -1,6 +1,9 @@
+"use client";
+
 import Image from "next/image";
 
 import { Stint } from "@/types/state.type";
+import { useSettingsStore } from "@/stores/useSettingsStore";
 
 type Props = {
 	stints: Stint[] | undefined;
@@ -12,7 +15,7 @@ export default function DriverTire({ stints }: Props) {
 	const unknownCompound = !["soft", "medium", "hard", "intermediate", "wet"].includes(
 		currentStint?.compound?.toLowerCase() ?? "",
 	);
-
+	const darkMode = useSettingsStore((state) => state.darkMode);
 	return (
 		<div className="flex flex-row items-center gap-2 place-self-start" id="walkthrough-driver-tire">
 			{currentStint && !unknownCompound && currentStint.compound && (
@@ -30,14 +33,20 @@ export default function DriverTire({ stints }: Props) {
 				</div>
 			)}
 
-			{!currentStint && <div className="h-8 w-8 animate-pulse rounded-full bg-zinc-800 font-semibold" />}
+			{!currentStint && (
+				<div
+					className={`h-8 w-8 animate-pulse rounded-full font-semibold ${darkMode ? "bg-primary-dark" : "bg-primary-light"}`}
+				/>
+			)}
 
 			<div>
 				<p className="font-bold leading-none">
 					L {currentStint?.totalLaps ?? 0}
 					{currentStint?.new ? "" : "*"}
 				</p>
-				<p className="text-sm font-medium leading-none text-zinc-600">PIT {stops}</p>
+				<p className={`text-sm font-medium leading-none ${darkMode ? "text-tertiary-dark" : "text-tertiary-light"}`}>
+					PIT {stops}
+				</p>
 			</div>
 		</div>
 	);

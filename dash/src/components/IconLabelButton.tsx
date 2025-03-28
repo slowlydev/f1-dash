@@ -5,6 +5,9 @@ import Image from "next/image";
 
 import githubIcon from "public/icons/github.svg";
 import coffeeIcon from "public/icons/bmc-logo.svg";
+import coffeeIconLight from "public/icons/bmc-logo-light.svg";
+import githubIconLight from "public/icons/github-light.svg";
+import { useSettingsStore } from "@/stores/useSettingsStore";
 
 type Props = {
 	icon: "github" | "bmc";
@@ -13,6 +16,8 @@ type Props = {
 };
 
 export default function IconLabelButton({ icon, href, children }: Props) {
+	const settings = useSettingsStore();
+
 	return (
 		<a target="_blank" href={href}>
 			<motion.div
@@ -20,7 +25,20 @@ export default function IconLabelButton({ icon, href, children }: Props) {
 				whileTap={{ scale: 0.95 }}
 				className="flex cursor-pointer select-none items-center gap-2"
 			>
-				<Image src={icon === "bmc" ? coffeeIcon : githubIcon} alt={icon} width={20} height={20} />
+				<Image
+					src={
+						icon === "bmc"
+							? settings.darkMode
+								? coffeeIcon
+								: coffeeIconLight
+							: settings.darkMode
+								? githubIcon
+								: githubIconLight
+					}
+					alt={icon}
+					width={20}
+					height={20}
+				/>
 				<p>{children}</p>
 			</motion.div>
 		</a>

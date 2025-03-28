@@ -1,3 +1,5 @@
+"use client";
+
 import { AnimatePresence, LayoutGroup } from "framer-motion";
 import clsx from "clsx";
 
@@ -15,8 +17,9 @@ export default function LeaderBoard() {
 
 	const showTableHeader = useSettingsStore((state) => state.tableHeaders);
 
+	const darkMode = useSettingsStore((state) => state.darkMode);
 	return (
-		<div className="flex w-fit flex-col divide-y divide-zinc-800">
+		<div className={`flex w-fit flex-col divide-y ${darkMode ? "divide-primary-dark" : "divide-primary-light"}`}>
 			{showTableHeader && <TableHeaders />}
 
 			{(!drivers || !driversTiming) &&
@@ -62,7 +65,8 @@ const TableHeaders = () => {
 };
 
 const SkeletonDriver = () => {
-	const animateClass = "h-8 animate-pulse rounded-md bg-zinc-800";
+	const darkMode = useSettingsStore((state) => state.darkMode);
+	const animateClass = `h-8 animate-pulse rounded-md ${darkMode ? "bg-primary-dark" : "bg-primary-light"}`;
 
 	return (
 		<div

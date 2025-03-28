@@ -3,6 +3,7 @@
 import { Combobox, ComboboxButton, ComboboxInput, ComboboxOption, ComboboxOptions } from "@headlessui/react";
 import { useState } from "react";
 import clsx from "clsx";
+import { useSettingsStore } from "@/stores/useSettingsStore";
 
 type Option<T> = {
 	value: T;
@@ -19,6 +20,7 @@ type Props<T> = {
 };
 
 export default function Select<T>({ placeholder, options, selected, setSelected }: Props<T>) {
+	const darkMode = useSettingsStore((state) => state.darkMode);
 	const [query, setQuery] = useState("");
 
 	const filteredOptions =
@@ -30,7 +32,8 @@ export default function Select<T>({ placeholder, options, selected, setSelected 
 				<ComboboxInput
 					placeholder={placeholder}
 					className={clsx(
-						"w-full rounded-lg border-none bg-white/5 py-1.5 pl-3 pr-8 text-sm/6 text-white",
+						"w-full rounded-lg border-none py-1.5 pl-3 pr-8 text-sm/6",
+						darkMode ? "bg-primary-dark text-white" : "bg-primary-light text-black",
 						"focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25",
 					)}
 					displayValue={(option: Option<T> | null) => option?.label ?? ""}
@@ -44,7 +47,8 @@ export default function Select<T>({ placeholder, options, selected, setSelected 
 			<ComboboxOptions
 				anchor="bottom"
 				className={clsx(
-					"w-[var(--input-width)] rounded-xl border border-white/5 bg-white/5 p-1 [--anchor-gap:var(--spacing-1)] empty:invisible",
+					"w-[var(--input-width)] rounded-xl border p-1 [--anchor-gap:var(--spacing-1)] empty:invisible",
+					darkMode ? "bg-primary-dark text-white" : "bg-primary-light text-black",
 					"transition duration-100 ease-in data-[leave]:data-[closed]:opacity-0",
 				)}
 			>
@@ -52,10 +56,15 @@ export default function Select<T>({ placeholder, options, selected, setSelected 
 					<ComboboxOption
 						key={idx}
 						value={option.value}
-						className="group flex cursor-pointer select-none items-center gap-2 rounded-lg px-3 py-1.5 data-[focus]:bg-white/10"
+						className={clsx(
+							"group flex cursor-pointer select-none items-center gap-2 rounded-lg px-3 py-1.5",
+							darkMode
+								? "bg-secondary-dark text-white data-[focus]:bg-white/10"
+								: "bg-secondary-light text-black data-[focus]:bg-white/90",
+						)}
 					>
 						{/* <CheckIcon className="invisible size-4 fill-white group-data-[selected]:visible" /> */}
-						<div className="text-sm/6 text-white">{option.label}</div>
+						<div className="text-sm/6">{option.label}</div>
 					</ComboboxOption>
 				))}
 			</ComboboxOptions>

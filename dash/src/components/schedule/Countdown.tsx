@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import moment, { duration, now, utc } from "moment";
 
 import { Session } from "@/types/schedule.type";
+import { useSettingsStore } from "@/stores/useSettingsStore";
 
 type Props = {
 	next: Session;
@@ -19,7 +20,7 @@ export default function Countdown({ next, type }: Props) {
 	const nextMoment = utc(next.start);
 
 	const requestRef = useRef<number | null>(null);
-
+	const darkMode = useSettingsStore((state) => state.darkMode);
 	const animateNextFrame = () => {
 		const diff = duration(nextMoment.diff(now()));
 
@@ -57,10 +58,12 @@ export default function Countdown({ next, type }: Props) {
 								{days}
 							</motion.p>
 						) : (
-							<div className="h-9 w-12 animate-pulse rounded-md bg-zinc-800" />
+							<div
+								className={`h-9 w-12 animate-pulse rounded-md ${darkMode ? "bg-primary-dark" : "bg-primary-light"}`}
+							/>
 						)}
 
-						<p className="text-base text-zinc-600">days</p>
+						<p className={`text-base ${darkMode ? "text-tertiary-dark" : "text-tertiary-light"}`}>days</p>
 					</div>
 
 					<div>
@@ -75,10 +78,12 @@ export default function Countdown({ next, type }: Props) {
 								{hours}
 							</motion.p>
 						) : (
-							<div className="h-9 w-12 animate-pulse rounded-md bg-zinc-800" />
+							<div
+								className={`h-9 w-12 animate-pulse rounded-md ${darkMode ? "bg-primary-dark" : "bg-primary-light"}`}
+							/>
 						)}
 
-						<p className="text-base text-zinc-600">hours</p>
+						<p className={`text-base ${darkMode ? "text-tertiary-dark" : "text-tertiary-light"}`}>hours</p>
 					</div>
 
 					<div>
@@ -93,10 +98,12 @@ export default function Countdown({ next, type }: Props) {
 								{minutes}
 							</motion.p>
 						) : (
-							<div className="h-9 w-12 animate-pulse rounded-md bg-zinc-800" />
+							<div
+								className={`h-9 w-12 animate-pulse rounded-md ${darkMode ? "bg-primary-dark" : "bg-primary-light"}`}
+							/>
 						)}
 
-						<p className="text-base text-zinc-600">minutes</p>
+						<p className={`text-base ${darkMode ? "text-tertiary-dark" : "text-tertiary-light"}`}>minutes</p>
 					</div>
 
 					<div>
@@ -111,10 +118,12 @@ export default function Countdown({ next, type }: Props) {
 								{seconds}
 							</motion.p>
 						) : (
-							<div className="h-9 w-12 animate-pulse rounded-md bg-zinc-800" />
+							<div
+								className={`h-9 w-12 animate-pulse rounded-md ${darkMode ? "bg-primary-dark" : "bg-primary-light"}`}
+							/>
 						)}
 
-						<p className="text-base text-zinc-600">seconds</p>
+						<p className={`text-base ${darkMode ? "text-tertiary-dark" : "text-tertiary-light"}`}>seconds</p>
 					</div>
 				</div>
 			</AnimatePresence>
