@@ -11,6 +11,7 @@ import type {
 	RaceControlMessages,
 	SessionData,
 	SessionInfo,
+	SessionStatus,
 	State,
 	TeamRadio,
 	TimingAppData,
@@ -31,6 +32,7 @@ type DataStore = {
 	timingAppData: TimingAppData | null;
 	weatherData: WeatherData | null;
 	trackStatus: TrackStatus | null;
+	sessionStatus: SessionStatus | null
 	driverList: DriverList | null;
 	raceControlMessages: RaceControlMessages | null;
 	sessionInfo: SessionInfo | null;
@@ -52,6 +54,7 @@ export const useDataStore = create<DataStore>((set) => ({
 	timingAppData: null,
 	weatherData: null,
 	trackStatus: null,
+	sessionStatus: null,
 	driverList: null,
 	raceControlMessages: null,
 	sessionInfo: null,

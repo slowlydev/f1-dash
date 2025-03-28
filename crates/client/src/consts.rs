@@ -16,6 +16,7 @@ pub const SIGNALR_SUBSCRIBE: &str = r#"{
         "TimingAppData",
         "WeatherData",
         "TrackStatus",
+        "SessionStatus",
         "DriverList",
         "RaceControlMessages",
         "SessionInfo",
