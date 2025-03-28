@@ -235,6 +235,7 @@ export default function Map3D() {
 										rotation={rotation}
 										centerX={centerX}
 										centerY={centerY}
+										racingNumber={driver.racingNumber}
 									/>
 								);
 							})}
