@@ -65,6 +65,21 @@ export function DriverIndicator({
 		return m;
 	}, [color, opacity]);
 
+	const styles = useMemo(
+		() => ({
+			renderPriority: favoriteDriver ? 40 : 20,
+			billboardHeight: favoriteDriver ? 800 : 400,
+			billboardSize: {
+				x: favoriteDriver ? 1050 * 1.5 : 1050,
+				y: favoriteDriver ? 350 * 1.5 : 350,
+			},
+			fontSize: favoriteDriver ? 24000 * 1.5 : 24000,
+			fontWeight: favoriteDriver ? 600 : 500,
+			dotSize: favoriteDriver ? 180 : 120,
+		}),
+		[favoriteDriver],
+	);
+
 	if (hidden) {
 		return null;
 	}
@@ -75,14 +90,19 @@ export function DriverIndicator({
 				<Line
 					points={[
 						[0, 0, 0],
-						[0, 450, 0],
+						[0, styles.billboardHeight, 0],
 					]}
 					transparent={true}
 					opacity={opacity}
 					color={theme.colors.white}
 				/>
-				<group renderOrder={favoriteDriver ? 40 : 20} position={[200, favoriteDriver ? 600 : 450, 0]}>
-					<Root backgroundOpacity={opacity} backgroundColor={theme.colors.zinc[700]} sizeX={1050} sizeY={350}>
+				<group renderOrder={styles.renderPriority} position={[200, styles.billboardHeight, 0]}>
+					<Root
+						backgroundOpacity={opacity}
+						backgroundColor={theme.colors.zinc[700]}
+						sizeX={styles.billboardSize.x}
+						sizeY={styles.billboardSize.y}
+					>
 						<Container
 							alignItems="center"
 							justifyContent="center"
@@ -95,8 +115,8 @@ export function DriverIndicator({
 								verticalAlign="center"
 								color={theme.colors.white}
 								opacity={opacity}
-								fontWeight="bold"
-								fontSize={favoriteDriver ? 32000 : 24000}
+								fontWeight={styles.fontWeight}
+								fontSize={styles.fontSize}
 							>
 								{racingNumber}
 							</TextUI>
@@ -105,10 +125,10 @@ export function DriverIndicator({
 							<TextUI
 								textAlign="center"
 								verticalAlign="center"
-								color={`#${color}`}
+								color={theme.colors.white}
 								opacity={opacity}
-								fontWeight="bold"
-								fontSize={24000}
+								fontWeight={styles.fontWeight}
+								fontSize={styles.fontSize}
 							>
 								{name}
 							</TextUI>
@@ -116,7 +136,7 @@ export function DriverIndicator({
 					</Root>
 				</group>
 			</Billboard>
-			<Sphere renderOrder={2} material={material} scale={favoriteDriver ? 180 : 120} />
+			<Sphere renderOrder={2} material={material} scale={styles.dotSize} />
 		</group>
 	);
 }
