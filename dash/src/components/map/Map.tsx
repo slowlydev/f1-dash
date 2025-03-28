@@ -106,13 +106,13 @@ export default function Map() {
 
 		return sectors
 			.map((sector) => {
-				const color = getSectorColor(sector, status?.bySector, status?.trackColor, yellowSectors);
-				const stroke = getTrackColorStroke(color);
+				const flagType = getSectorColor(sector, status?.bySector, status?.flagType, yellowSectors);
+				const stroke = getTrackColorStroke(flagType);
 				return {
 					color: stroke,
 					pulse: status?.pulse,
 					number: sector.number,
-					strokeWidth: color === "GREEN" ? 60 : 120,
+					strokeWidth: flagType === "GREEN" ? 60 : 120,
 					d: generateDrawnSVGPath(sector.points),
 				};
 			})

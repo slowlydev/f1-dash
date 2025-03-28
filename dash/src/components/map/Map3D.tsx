@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 
-import type { TrackColor, TrackPosition } from "@/types/map.type";
+import type { FlagType, TrackPosition } from "@/types/map.type";
 
 import { objectEntries } from "@/lib/driverHelper";
 import { fetchMap } from "@/lib/fetchMap";
@@ -30,17 +30,17 @@ type Corner = {
 type RenderedSector3D = {
 	number: number;
 	points: TrackPosition[];
-	trackColor: TrackColor;
+	flagType: FlagType;
 	hex: string;
 	strokeWidth: number;
 	pulse?: number;
 };
 
 function prioritizeColoredSectors3D(a: RenderedSector3D, b: RenderedSector3D) {
-	if (a.trackColor === "GREEN" && b.trackColor !== "GREEN") {
+	if (a.flagType === "GREEN" && b.flagType !== "GREEN") {
 		return -1;
 	}
-	if (a.trackColor !== "GREEN" && b.trackColor === "GREEN") {
+	if (a.flagType !== "GREEN" && b.flagType === "GREEN") {
 		return 1;
 	}
 	return a.number - b.number;
@@ -95,14 +95,14 @@ export default function Map3D() {
 		const status = getTrackStatusMessage(trackStatus?.status ? parseInt(trackStatus.status) : undefined);
 		return sectors
 			.map<RenderedSector3D>((sector) => {
-				const color = getSectorColor(sector, status?.bySector, status?.trackColor, yellowSectors);
-				const hex = getTrackColorHex(color);
+				const flagType = getSectorColor(sector, status?.bySector, status?.flagType, yellowSectors);
+				const hex = getTrackColorHex(flagType);
 				return {
 					hex,
-					trackColor: color,
+					flagType: flagType,
 					pulse: status?.pulse,
 					number: sector.number,
-					strokeWidth: color === "GREEN" ? 2 : 5,
+					strokeWidth: flagType === "GREEN" ? 2 : 5,
 					points: sector.points,
 				};
 			})

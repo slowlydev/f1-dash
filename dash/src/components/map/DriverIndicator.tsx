@@ -1,12 +1,11 @@
-import { useLookAt } from "@/hooks/useLookAt";
 import { rotate } from "@/lib/map";
 import { toVector3 } from "@/lib/r3f";
 import { theme } from "@/styles/tailwindTheme";
 import { PositionCar } from "@/types/state.type";
-import { Sphere, Text as Text3D } from "@react-three/drei";
-import { useFrame, useThree } from "@react-three/fiber";
+import { Billboard, Sphere, Text as Text3D } from "@react-three/drei";
+import { useFrame } from "@react-three/fiber";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Color, Mesh, MeshBasicMaterial, Vector3 } from "three";
+import { Color, MeshBasicMaterial, Vector3 } from "three";
 
 function calculateAverageUpdateTime(history: number[]) {
 	if (history.length < 2) return 0;
@@ -49,9 +48,6 @@ export function DriverIndicator({
 	centerY,
 }: DriverIndicatorProps) {
 	const rotatedPos = rotate(pos.X, pos.Y, rotation, centerX, centerY);
-	const { camera } = useThree();
-
-	const mesh = useRef<Mesh | null>();
 
 	const opacity = useMemo(() => {
 		if (pit) return 0.2;
@@ -66,24 +62,23 @@ export function DriverIndicator({
 		return m;
 	}, [color, opacity]);
 
-	useLookAt({ object: mesh.current, target: camera.position });
-
 	return (
 		<group position={toVector3(rotatedPos)}>
-			<Text3D
-				renderOrder={2}
-				ref={mesh}
-				color={`#${color}`}
-				fillOpacity={opacity}
-				strokeOpacity={opacity}
-				fontWeight="bold"
-				fontSize={300}
-				strokeWidth={10}
-				strokeColor={theme.colors.zinc[800]}
-				position={[0, 300, 0]}
-			>
-				{name}
-			</Text3D>
+			<Billboard>
+				<Text3D
+					renderOrder={2}
+					color={`#${color}`}
+					fillOpacity={opacity}
+					strokeOpacity={opacity}
+					fontWeight="bold"
+					fontSize={300}
+					strokeWidth={10}
+					strokeColor={theme.colors.zinc[800]}
+					position={[0, 300, 0]}
+				>
+					{name}
+				</Text3D>
+			</Billboard>
 			<Sphere renderOrder={2} material={material} scale={favoriteDriver ? 180 : 120} />
 		</group>
 	);

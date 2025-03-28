@@ -14,6 +14,7 @@
 		"@headlessui/react": "2.2.0",
 		"@react-three/drei": "^10.0.5",
 		"@react-three/fiber": "^9.1.0",
+		"@react-three/uikit": "^0.8.14",
 		"@types/three": "^0.174.0",
 		"clsx": "2.1.1",
 		"framer-motion": "11.11.17",

@@ -4,7 +4,7 @@ import clsx from "clsx";
 
 import { useDataStore } from "@/stores/useDataStore";
 
-import { getComputedTrackStyle, getTrackStatusMessage } from "@/lib/getTrackStatusMessage";
+import { getComputedFlagStyle, getTrackStatusMessage } from "@/lib/getTrackStatusMessage";
 import { useMemo } from "react";
 
 export default function TrackInfo() {
@@ -16,7 +16,7 @@ export default function TrackInfo() {
 		[track],
 	);
 	const computedTrackStyle = useMemo(
-		() => (currentTrackStatus ? getComputedTrackStyle(currentTrackStatus.trackColor) : null),
+		() => (currentTrackStatus ? getComputedFlagStyle(currentTrackStatus.flagType) : null),
 		[currentTrackStatus],
 	);
 

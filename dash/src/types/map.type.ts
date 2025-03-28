@@ -43,4 +43,4 @@ export type TrackPosition = {
 	y: number;
 };
 
-export type TrackColor = "GREEN" | "YELLOW" | "RED";
+export type FlagType = "GREEN" | "YELLOW" | "RED";
