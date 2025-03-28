@@ -6,6 +6,7 @@ export type State = {
 	timingAppData?: TimingAppData;
 	weatherData?: WeatherData;
 	trackStatus?: TrackStatus;
+	sessionStatus?: SessionStatus;
 	driverList?: DriverList;
 	raceControlMessages?: RaceControlMessages;
 	sessionInfo?: SessionInfo;
@@ -73,6 +74,10 @@ export type TrackStatus = {
 	status: string;
 	message: string;
 };
+
+export type SessionStatus = {
+	status: "Started" | "Finished" | "Finalised" | "Ends";
+}
 
 export type DriverList = {
 	[key: string]: Driver;
@@ -152,7 +157,8 @@ export type SessionData = {
 
 export type StatusSeries = {
 	utc: string;
-	trackStatus: string;
+	trackStatus?: string;
+	sesionStatus?: "Started" | "Finished" | "Finalised" | "Ends"
 };
 
 export type Series = {

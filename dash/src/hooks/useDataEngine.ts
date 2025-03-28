@@ -22,6 +22,7 @@ const bufferTypes = [
 	"timingAppData",
 	"weatherData",
 	"trackStatus",
+	"sessionStatus",
 	"driverList",
 	"raceControlMessages",
 	"sessionInfo",
