@@ -4,7 +4,7 @@ import type { FlagType, TrackPosition } from "@/types/map.type";
 
 import { objectEntries } from "@/lib/driverHelper";
 import { fetchMap } from "@/lib/fetchMap";
-import { getTrackColorHex, getTrackStatusMessage } from "@/lib/getTrackStatusMessage";
+import { getComputedFlagStyle, getTrackStatusMessage } from "@/lib/getTrackStatusMessage";
 import { createSectors, findYellowSectors, getSectorColor, MapSector, rad, rotate } from "@/lib/map";
 import { toVector3 } from "@/lib/r3f";
 import { useDataStore, usePositionStore } from "@/stores/useDataStore";
@@ -96,9 +96,9 @@ export default function Map3D() {
 		return sectors
 			.map<RenderedSector3D>((sector) => {
 				const flagType = getSectorColor(sector, status?.bySector, status?.flagType, yellowSectors);
-				const hex = getTrackColorHex(flagType);
+				const { trackHex } = getComputedFlagStyle(flagType);
 				return {
-					hex,
+					hex: trackHex,
 					flagType: flagType,
 					pulse: status?.pulse,
 					number: sector.number,

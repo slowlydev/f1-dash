@@ -43,22 +43,6 @@ export const getTrackStatusMessage = (statusCode: number | undefined): StatusMes
 	return MESSAGE_MAP[statusCode] ?? MESSAGE_MAP[0];
 };
 
-export function getTrackColorStroke(flag: FlagType) {
-	return STYLE_BY_FLAG_TYPE[flag].stroke;
-}
-
-export function getTrackColorBg(flag: FlagType) {
-	return STYLE_BY_FLAG_TYPE[flag].bg;
-}
-
-export function getTrackColorHex(flag: FlagType) {
-	return STYLE_BY_FLAG_TYPE[flag].trackHex;
-}
-
-export function getTrackColorFlagHex(flag: FlagType) {
-	return STYLE_BY_FLAG_TYPE[flag].flagHex;
-}
-
 export function getComputedFlagStyle(flag: FlagType): ComputedFlagStyle {
 	return {
 		...STYLE_BY_FLAG_TYPE[flag],

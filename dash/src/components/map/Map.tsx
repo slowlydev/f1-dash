@@ -6,7 +6,7 @@ import type { PositionCar } from "@/types/state.type";
 
 import { objectEntries } from "@/lib/driverHelper";
 import { fetchMap } from "@/lib/fetchMap";
-import { getTrackColorStroke, getTrackStatusMessage } from "@/lib/getTrackStatusMessage";
+import { getComputedFlagStyle, getTrackStatusMessage } from "@/lib/getTrackStatusMessage";
 import {
 	createSectors,
 	findYellowSectors,
@@ -107,7 +107,7 @@ export default function Map() {
 		return sectors
 			.map((sector) => {
 				const flagType = getSectorColor(sector, status?.bySector, status?.flagType, yellowSectors);
-				const stroke = getTrackColorStroke(flagType);
+				const { stroke } = getComputedFlagStyle(flagType);
 				return {
 					color: stroke,
 					pulse: status?.pulse,
