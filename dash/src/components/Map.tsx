@@ -50,6 +50,7 @@ export default function Map() {
 	const [corners, setCorners] = useState<Corner[]>([]);
 	const [rotation, setRotation] = useState<number>(0);
 
+	const darkMode = useSettingsStore((state) => state.darkMode);
 	useEffect(() => {
 		(async () => {
 			if (!circuitKey) return;
@@ -102,7 +103,6 @@ export default function Map() {
 
 	const renderedSectors = useMemo(() => {
 		const status = getTrackStatusMessage(trackStatus?.status ? parseInt(trackStatus.status) : undefined);
-
 		return sectors
 			.map((sector) => {
 				const color = getSectorColor(sector, status?.bySector, status?.trackColor, yellowSectors);
@@ -120,7 +120,9 @@ export default function Map() {
 	if (!points || !minX || !minY || !widthX || !widthY) {
 		return (
 			<div className="h-full w-full p-2" style={{ minHeight: "35rem" }}>
-				<div className="h-full w-full animate-pulse rounded-lg bg-zinc-800" />
+				<div
+					className={`h-full w-full animate-pulse rounded-lg ${darkMode ? "bg-primary-dark" : "bg-primary-light"}`}
+				/>
 			</div>
 		);
 	}
@@ -209,8 +211,15 @@ type CornerNumberProps = {
 };
 
 const CornerNumber: React.FC<CornerNumberProps> = ({ number, x, y }) => {
+	const darkMode = useSettingsStore((state) => state.darkMode);
 	return (
-		<text x={x} y={y} className="fill-zinc-700" fontSize={300} fontWeight="semibold">
+		<text
+			x={x}
+			y={y}
+			className={`${darkMode ? "fill-secondary-dark" : "fill-secondary-light"}`}
+			fontSize={300}
+			fontWeight="semibold"
+		>
 			{number}
 		</text>
 	);
@@ -235,9 +244,14 @@ const CarDot = ({ pos, name, color, favoriteDriver, pit, hidden, rotation, cente
 	const rotatedPos = rotate(pos.X, pos.Y, rotation, centerX, centerY);
 	const transform = [`translateX(${rotatedPos.x}px)`, `translateY(${rotatedPos.y}px)`].join(" ");
 
+	const darkMode = useSettingsStore((state) => state.darkMode);
 	return (
 		<g
-			className={clsx("fill-zinc-700", { "opacity-30": pit }, { "!opacity-0": hidden })}
+			className={clsx(
+				darkMode ? "fill-secondary-dark" : "fill-secondary-light",
+				{ "opacity-30": pit },
+				{ "!opacity-0": hidden },
+			)}
 			style={{
 				transition: "all 1s linear",
 				transform,

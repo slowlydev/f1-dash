@@ -1,3 +1,5 @@
+"use client";
+import { useSettingsStore } from "@/stores/useSettingsStore";
 import Image from "next/image";
 
 type Props = {
@@ -5,6 +7,7 @@ type Props = {
 };
 
 export default function Flag({ countryCode }: Props) {
+	const darkMode = useSettingsStore((state) => state.darkMode);
 	return (
 		<div className="flex h-12 w-16 content-center justify-center">
 			{countryCode ? (
@@ -16,7 +19,9 @@ export default function Flag({ countryCode }: Props) {
 					className="h-full w-full overflow-hidden rounded-lg"
 				/>
 			) : (
-				<div className="h-full w-full animate-pulse overflow-hidden rounded-lg bg-zinc-800" />
+				<div
+					className={`h-full w-full animate-pulse overflow-hidden rounded-lg ${darkMode ? "bg-primary-dark" : "bg-primary-light"}`}
+				/>
 			)}
 		</div>
 	);

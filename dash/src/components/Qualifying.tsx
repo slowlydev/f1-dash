@@ -9,6 +9,7 @@ import { sortQuali } from "@/lib/sorting";
 import { objectEntries } from "@/lib/driverHelper";
 
 import QualifyingDriver from "@/components/QualifyingDriver";
+import { useSettingsStore } from "@/stores/useSettingsStore";
 
 export default function Qualifying() {
 	const driversTiming = useDataStore((state) => state.timingData);
@@ -59,7 +60,8 @@ export default function Qualifying() {
 }
 
 const SkeletonQualifyingDriver = () => {
-	const animateClass = "h-8 animate-pulse rounded-md bg-zinc-800";
+	const darkMode = useSettingsStore((state) => state.darkMode);
+	const animateClass = `h-8 animate-pulse rounded-md ${darkMode ? "bg-primary-dark" : "bg-primary-light"}`;
 
 	return (
 		<div className="flex min-w-72 flex-col gap-2">

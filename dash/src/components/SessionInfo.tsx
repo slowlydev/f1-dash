@@ -24,7 +24,7 @@ export default function SessionInfo() {
 	const timingData = useDataStore((state) => state.timingData);
 
 	const delay = useSettingsStore((state) => state.delay);
-
+	const darkMode = useSettingsStore((state) => state.darkMode);
 	const timeRemaining =
 		!!clock && !!clock.remaining
 			? clock.extrapolating
@@ -42,18 +42,22 @@ export default function SessionInfo() {
 
 			<div className="flex flex-col justify-center">
 				{session ? (
-					<h1 className="truncate text-sm font-medium leading-none text-white">
+					<h1 className={`truncate text-sm font-medium leading-none ${darkMode ? "text-white" : "text-black"}`}>
 						{session.meeting.name}: {session.name ?? "Unknown"}
 						{timingData?.sessionPart ? ` ${sessionPartPrefix(session.name)}${timingData.sessionPart}` : ""}
 					</h1>
 				) : (
-					<div className="h-4 w-[250px] animate-pulse rounded-md bg-zinc-800" />
+					<div
+						className={`h-4 w-[250px] animate-pulse rounded-md ${darkMode ? "bg-primary-dark" : "bg-primary-light"}`}
+					/>
 				)}
 
 				{timeRemaining !== undefined ? (
 					<p className="text-2xl font-extrabold leading-none">{timeRemaining}</p>
 				) : (
-					<div className="mt-1 h-6 w-[150px] animate-pulse rounded-md bg-zinc-800 font-semibold" />
+					<div
+						className={`mt-1 h-6 w-[150px] animate-pulse rounded-md font-semibold ${darkMode ? "bg-primary-dark" : "bg-primary-light"}`}
+					/>
 				)}
 			</div>
 		</div>

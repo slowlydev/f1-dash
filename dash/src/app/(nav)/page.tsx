@@ -1,3 +1,4 @@
+"use client";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -6,10 +7,14 @@ import Button from "@/components/Button";
 import Footer from "@/components/Footer";
 
 import icon from "public/tag-logo.svg";
+import { useSettingsStore } from "@/stores/useSettingsStore";
 
 export default function Home() {
+	const darkMode = useSettingsStore((state) => state.darkMode);
 	return (
-		<div className="container mx-auto max-w-screen-lg px-4">
+		<div
+			className={`container mx-auto max-w-screen-lg px-4 ${darkMode ? "bg-background-dark text-white" : "bg-background-light text-black"}`}
+		>
 			<section className="flex h-screen w-full flex-col items-center pt-20 sm:justify-center sm:pt-0">
 				<Image src={icon} alt="f1-dash tag logo" width={200} />
 
@@ -24,7 +29,9 @@ export default function Home() {
 					</Link>
 
 					<Link href="/schedule">
-						<Button className="!rounded-xl border-2 border-zinc-700 !bg-transparent p-4 font-medium">
+						<Button
+							className={`!rounded-xl border-2 !bg-transparent p-4 font-medium ${darkMode ? "text-white" : "!text-black"}`}
+						>
 							Check Schedule
 						</Button>
 					</Link>

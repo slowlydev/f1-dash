@@ -19,6 +19,7 @@ type Props = {
 
 export default function DashboardLayout({ children }: Props) {
 	const stores = useStores();
+	const darkMode = useSettingsStore((state) => state.darkMode);
 	const { handleInitial, handleUpdate, maxDelay } = useDataEngine(stores);
 	const { connected } = useSocket({ handleInitial, handleUpdate });
 
@@ -28,8 +29,12 @@ export default function DashboardLayout({ children }: Props) {
 	useWakeLock();
 
 	return (
-		<div className="w-full">
-			<div className="flex items-center justify-between gap-4 border-b border-zinc-800 bg-black p-2">
+		<div
+			className={`h-screen w-full ${darkMode ? "border-primary-dark bg-black text-white" : "border-primary-light bg-white text-black"}`}
+		>
+			<div
+				className={`flex items-center justify-between gap-4 border-b p-2 ${darkMode ? "border-primary-dark bg-black text-white" : "border-primary-light bg-white text-black"}`}
+			>
 				<Menubar connected={connected} />
 				<DelayInput />
 			</div>

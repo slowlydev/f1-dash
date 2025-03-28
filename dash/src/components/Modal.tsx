@@ -1,3 +1,5 @@
+"use client";
+import { useSettingsStore } from "@/stores/useSettingsStore";
 import { AnimatePresence, motion } from "framer-motion";
 import { type MouseEvent, type ReactNode } from "react";
 
@@ -7,6 +9,7 @@ type Props = {
 };
 
 export default function Modal({ children, open }: Props) {
+	const darkMode = useSettingsStore((state) => state.darkMode);
 	return (
 		<AnimatePresence>
 			{open && (
@@ -27,7 +30,7 @@ export default function Modal({ children, open }: Props) {
 								initial={{ opacity: 0, scale: 0.9 }}
 								exit={{ opacity: 0, scale: 0.9 }}
 								animate={{ opacity: 1, scale: 1 }}
-								className="relative overflow-hidden rounded-xl bg-zinc-900 p-4 shadow-xl"
+								className={`relative overflow-hidden rounded-xl p-4 shadow-xl ${darkMode ? "bg-modal-dark" : "bg-modal-light"}`}
 							>
 								{children}
 							</motion.div>
