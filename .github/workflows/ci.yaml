@@ -1,0 +1,81 @@
+name: ci
+
+on:
+  push:
+    branches: [main, develop]
+
+env:
+  REGISTRY: ghcr.io
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - dockerfile: ./dockerfile
+            context: .
+            image: ghcr.io/slowlydev/f1-dash-live
+            target: live
+          - dockerfile: ./dockerfile
+            context: .
+            image: ghcr.io/slowlydev/f1-dash-api
+            target: api
+          # - dockerfile: ./dash/dockerfile
+          #   context: ./dash
+          #   image: ghcr.io/slowlydev/f1-dash
+          #   args: |
+          #     ENABLE_TRACKING="true"
+          #     LIVE_SOCKET_URL="https://live-backend.f1-dash.com"
+          #     API_URL="https://api-backend.f1-dash.com"
+
+    permissions:
+      contents: read
+      packages: write
+      attestations: write
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Login to GHCR
+        uses: docker/login-action@3.4.0
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@3.10.0
+
+      - name: Extract Metadata
+        id: meta
+        uses: docker/metadata-action@5.7.0
+        with:
+          images: ${{ matrix.image }}
+          tags: |
+            type=ref,event=branch
+            type=semver,pattern={{version}}
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Build and Push
+        id: push
+        uses: docker/build-push-action@v6
+        with:
+          file: ${{ matrix.dockerfile }}
+          context: ${{ matrix.context }}
+          target: ${{ matrix.target }}
+          build-args: ${{ matrix.args }}
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Attest
+        id: attest
+        uses: actions/attest-build-provenance@2.2.3
+        with:
+          subject-name: ${{ matrix.image }}
+          subject-digest: ${{ steps.push.outputs.digest }}
+          push-to-registry: true
