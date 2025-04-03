@@ -6,7 +6,10 @@ variable "TAG" {
   default = "latest"
 }
 
+target "docker-metadata-action" {}
+
 target "dash" {
+  inherits = ["docker-metadata-action"]
   context = "./dash"
   dockerfile = "dockerfile"
   args = {
@@ -18,12 +21,14 @@ target "dash" {
 }
 
 target "api" {
+  inherits = ["docker-metadata-action"]
   context = "."
   dockerfile = "dockerfile"
   tags = ["ghcr.io/slowlydev/f1-dash-api:${TAG}"]
 }
 
 target "live" {
+  inherits = ["docker-metadata-action"]
   context = "."
   dockerfile = "dockerfile"
   tags = ["ghcr.io/slowlydev/f1-dash-live:${TAG}"]
