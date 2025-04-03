@@ -2,7 +2,7 @@ name: ci
 
 on:
   push:
-    branches: [main, develop, feature/improved-deployment]
+    branches: [main, develop]
 
 env:
   REGISTRY: ghcr.io
