@@ -5,13 +5,14 @@ import clsx from "clsx";
 import { useDataStore } from "@/stores/useDataStore";
 
 import { getTrackStatusMessage } from "@/lib/getTrackStatusMessage";
+import { useSettingsStore } from "@/stores/useSettingsStore";
 
 export default function TrackInfo() {
 	const lapCount = useDataStore((state) => state.lapCount);
 	const track = useDataStore((state) => state.trackStatus);
 
 	const currentTrackStatus = getTrackStatusMessage(track?.status ? parseInt(track?.status) : undefined);
-
+	const darkMode = useSettingsStore((state) => state.darkMode);
 	return (
 		<div className="flex w-fit flex-row items-center gap-4">
 			{!!lapCount && (
@@ -30,7 +31,9 @@ export default function TrackInfo() {
 					<p className="text-xl font-semibold">{currentTrackStatus.message}</p>
 				</div>
 			) : (
-				<div className="relative h-8 w-28 animate-pulse overflow-hidden rounded-lg bg-zinc-800" />
+				<div
+					className={`relative h-8 w-28 animate-pulse overflow-hidden rounded-lg ${darkMode ? "bg-primary-dark" : "bg-primary-light"}`}
+				/>
 			)}
 		</div>
 	);

@@ -9,6 +9,7 @@ import DriverTag from "./driver/DriverTag";
 import { getSectorColorBG, getSectorColorText } from "@/lib/getTimeColor";
 
 import { Driver as DriverType, TimingAppDataDriver, TimingDataDriver } from "@/types/state.type";
+import { useSettingsStore } from "@/stores/useSettingsStore";
 
 type Props = {
 	driver: DriverType;
@@ -31,7 +32,7 @@ export default function DriverQuali({
 	const unknownCompound = !["soft", "medium", "hard", "intermediate", "wet"].includes(
 		currentStint?.compound?.toLowerCase() ?? "",
 	);
-
+	const darkMode = useSettingsStore((state) => state.darkMode);
 	const currentTime = timingDriver.sectors[2].value
 		? timingDriver.sectors[2].value
 		: timingDriver.sectors[1].value
@@ -64,7 +65,11 @@ export default function DriverQuali({
 						<Image src={`/tires/unknown.svg`} width={32} height={32} alt={"unknown"} />
 					)}
 
-					{!currentStint && <div className="h-8 w-8 animate-pulse rounded-md bg-zinc-800 font-semibold" />}
+					{!currentStint && (
+						<div
+							className={`h-8 w-8 animate-pulse rounded-md font-semibold ${darkMode ? "bg-primary-dark" : "bg-primary-light"}`}
+						/>
+					)}
 				</div>
 			</div>
 

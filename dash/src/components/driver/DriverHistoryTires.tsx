@@ -1,12 +1,16 @@
+"use client";
+
 import Image from "next/image";
 
 import { Stint } from "@/types/state.type";
+import { useSettingsStore } from "@/stores/useSettingsStore";
 
 type Props = {
 	stints: Stint[] | undefined;
 };
 
 export default function DriverHistoryTires({ stints }: Props) {
+	const darkMode = useSettingsStore((state) => state.darkMode);
 	const unknownCompound = (stint: Stint) =>
 		!["soft", "medium", "hard", "intermediate", "wet"].includes(stint.compound?.toLowerCase() ?? "");
 
@@ -25,7 +29,11 @@ export default function DriverHistoryTires({ stints }: Props) {
 							/>
 						)}
 
-						<p className="whitespace-nowrap text-sm font-medium leading-none text-zinc-600">{stint.totalLaps}L</p>
+						<p
+							className={`whitespace-nowrap text-sm font-medium leading-none ${darkMode ? "text-tertiary-dark" : "text-tertiary-light"}`}
+						>
+							{stint.totalLaps}L
+						</p>
 					</div>
 				))}
 
@@ -41,10 +49,11 @@ export default function DriverHistoryTires({ stints }: Props) {
 }
 
 function LoadingTire() {
+	const darkMode = useSettingsStore((state) => state.darkMode);
 	return (
 		<div className="flex flex-col items-center gap-1">
-			<div className="h-8 w-8 animate-pulse rounded-full bg-zinc-800" />
-			<div className="h-4 w-8 animate-pulse rounded-md bg-zinc-800" />
+			<div className={`h-8 w-8 animate-pulse rounded-full ${darkMode ? "bg-primary-dark" : "bg-primary-light"}`} />
+			<div className={`h-4 w-8 animate-pulse rounded-md ${darkMode ? "bg-primary-dark" : "bg-primary-light"}`} />
 		</div>
 	);
 }

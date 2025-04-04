@@ -1,5 +1,8 @@
+"use client";
+
 import clsx from "clsx";
 import { TimingDataDriver } from "@/types/state.type";
+import { useSettingsStore } from "@/stores/useSettingsStore";
 
 type Props = {
 	timingDriver: TimingDataDriver;
@@ -20,18 +23,20 @@ export default function DriverGap({ timingDriver, sessionPart }: Props) {
 		"";
 
 	const catching = timingDriver.intervalToPositionAhead?.catching;
-
+	const darkMode = useSettingsStore((state) => state.darkMode);
 	return (
 		<div className="place-self-start text-lg font-semibold" id="walkthrough-driver-gap">
 			<p
 				className={clsx("leading-none", {
 					"text-emerald-500": catching,
-					"text-zinc-600": !gapToFront,
+					[darkMode ? "text-tertiary-dark" : "text-tertiary-light"]: !gapToFront,
 				})}
 			>
 				{!!gapToFront ? gapToFront : "-- ---"}
 			</p>
-			<p className="text-sm font-medium leading-none text-zinc-600">{!!gapToLeader ? gapToLeader : "-- ---"}</p>
+			<p className={`text-sm font-medium leading-none ${darkMode ? "text-tertiary-dark" : "text-tertiary-light"}`}>
+				{!!gapToLeader ? gapToLeader : "-- ---"}
+			</p>
 		</div>
 	);
 }

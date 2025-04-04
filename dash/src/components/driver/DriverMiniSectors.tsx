@@ -1,3 +1,5 @@
+"use client";
+
 import clsx from "clsx";
 
 import { getTimeColor } from "@/lib/getTimeColor";
@@ -14,6 +16,7 @@ export default function DriverMiniSectors({ sectors = [], bestSectors, tla }: Pr
 	const showMiniSectors = useSettingsStore((state) => state.showMiniSectors);
 	const showBestSectors = useSettingsStore((state) => state.showBestSectors);
 
+	const darkMode = useSettingsStore((state) => state.darkMode);
 	return (
 		<div className="flex gap-2">
 			{sectors.map((sector, i) => (
@@ -35,14 +38,16 @@ export default function DriverMiniSectors({ sectors = [], bestSectors, tla }: Pr
 							className={clsx(
 								"text-lg font-semibold leading-none",
 								getTimeColor(sector.overallFastest, sector.personalFastest),
-								!sector.value ? "text-zinc-600" : "",
+								!sector.value && (darkMode ? "text-tertiary-dark" : "text-tertiary-light"),
 							)}
 						>
 							{!!sector.value ? sector.value : !!sector.previousValue ? sector.previousValue : "-- ---"}
 						</p>
 
 						{showBestSectors && (
-							<p className="text-sm font-medium leading-none text-zinc-600">
+							<p
+								className={`text-sm font-medium leading-none ${darkMode ? "text-tertiary-dark" : "text-tertiary-light"}`}
+							>
 								{bestSectors && bestSectors[i].value ? bestSectors[i].value : "-- ---"}
 							</p>
 						)}
@@ -54,6 +59,7 @@ export default function DriverMiniSectors({ sectors = [], bestSectors, tla }: Pr
 }
 
 function MiniSector({ status, wide }: { status: number; wide: boolean }) {
+	const darkMode = useSettingsStore((state) => state.darkMode);
 	return (
 		<div
 			style={wide ? { width: 10, height: 5, borderRadius: 2 } : { height: 10, width: 8, borderRadius: 3.2 }}
@@ -62,7 +68,7 @@ function MiniSector({ status, wide }: { status: number; wide: boolean }) {
 				"bg-emerald-500": status === 2049,
 				"bg-violet-600": status === 2051,
 				"bg-blue-500": status === 2064,
-				"bg-zinc-700": status === 0,
+				[darkMode ? "bg-secondary-dark" : "bg-secondary-light"]: status === 0,
 			})}
 		/>
 	);

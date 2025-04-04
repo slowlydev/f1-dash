@@ -1,5 +1,6 @@
 "use client";
 
+import { useSettingsStore } from "@/stores/useSettingsStore";
 import {
 	motion,
 	useMotionValue,
@@ -70,7 +71,7 @@ export default function Timeline({ playing, maxDelay, time, setTime }: Props) {
 	// let progressPrecise = useTransform(currentTimePrecise, (v) => (v / DURATION) * 100);
 	// let progressPreciseWidth = useMotionTemplate`${progressPrecise}%`;
 	let dragControls = useDragControls();
-
+	const darkMode = useSettingsStore((state) => state.darkMode);
 	let mins = Math.floor(time / 60);
 	let secs = `${time % 60}`.padStart(2, "0");
 	let timecode = `${mins}:${secs}`;
@@ -116,7 +117,10 @@ export default function Timeline({ playing, maxDelay, time, setTime }: Props) {
 					currentTimePrecise.set(newProgress * DURATION);
 				}}
 			>
-				<div ref={fullBarRef} className="h-1 w-full rounded-full bg-zinc-800" />
+				<div
+					ref={fullBarRef}
+					className={`h-1 w-full rounded-full ${darkMode ? "bg-primary-dark" : "bg-primary-light"}`}
+				/>
 
 				{/* <motion.div layout style={{ width: progressPreciseWidth }} className="absolute top-0">
 					<div className="bg- absolute inset-0 h-[3px] rounded-full bg-slate-500"></div>

@@ -1,3 +1,5 @@
+"use client";
+
 import { AnimatePresence } from "framer-motion";
 import { utc } from "moment";
 import clsx from "clsx";
@@ -7,6 +9,7 @@ import { useDataStore } from "@/stores/useDataStore";
 import { sortUtc } from "@/lib/sorting";
 
 import TeamRadioMessage from "@/components/TeamRadioMessage";
+import { useSettingsStore } from "@/stores/useSettingsStore";
 
 export default function TeamRadios() {
 	const drivers = useDataStore((state) => state.driverList);
@@ -41,7 +44,8 @@ export default function TeamRadios() {
 }
 
 const SkeletonMessage = () => {
-	const animateClass = "h-6 animate-pulse rounded-md bg-zinc-800";
+	const darkMode = useSettingsStore((state) => state.darkMode);
+	const animateClass = `h-6 animate-pulse rounded-md ${darkMode ? "bg-primary-dark" : "bg-primary-light"}`;
 
 	return (
 		<li className="flex flex-col gap-1 p-2">
