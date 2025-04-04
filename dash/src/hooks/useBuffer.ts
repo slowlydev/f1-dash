@@ -69,6 +69,7 @@ export const useBuffer = <T>() => {
 
 		// Handle empty buffer
 		if (length === 0) return;
+		if (length === 1) return;
 
 		// Calculate the threshold time
 		const thresholdTime = delayedTime - KEEP_BUFFER_SECS * 1000;
