@@ -1,6 +1,13 @@
 .next/
 .vscode/
+.yarn/
 node_modules/
+
+.dockeringore
 
 .env
 .env.example
+
+dockerfile
+
+.prettier.config.cjs
