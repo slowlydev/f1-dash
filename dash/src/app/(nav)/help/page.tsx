@@ -5,6 +5,10 @@ import Footer from "@/components/Footer";
 import DriverDRS from "@/components/driver/DriverDRS";
 import DriverTire from "@/components/driver/DriverTire";
 import DriverPedals from "@/components/driver/DriverPedals";
+import TemperatureComplication from "@/components/complications/Temperature";
+import HumidityComplication from "@/components/complications/Humidity";
+import WindSpeedComplication from "@/components/complications/WindSpeed";
+import RainComplication from "@/components/complications/Rain";
 
 import unknownTireIcon from "public/tires/unknown.svg";
 import mediumTireIcon from "public/tires/medium.svg";
@@ -12,11 +16,6 @@ import interTireIcon from "public/tires/intermediate.svg";
 import hardTireIcon from "public/tires/hard.svg";
 import softTireIcon from "public/tires/soft.svg";
 import wetTireIcon from "public/tires/wet.svg";
-
-import TemperatureComplication from "@/components/complications/Temperature";
-import HumidityComplication from "@/components/complications/Humidity";
-import WindSpeedComplication from "@/components/complications/WindSpeed";
-import RainComplication from "@/components/complications/Rain";
 
 export default function HelpPage() {
 	return (
@@ -267,33 +266,32 @@ export default function HelpPage() {
 
 			<h2 className="my-4 text-2xl">Weather</h2>
 
-			<div className="flex flex-col gap-2">
+			<div className="mb-4 flex flex-col gap-2">
 				<div className="flex flex-row items-center gap-2">
 					<TemperatureComplication value={39} label="TRC" />
 					<p>This shows the current track temperature.</p>
 				</div>
+
 				<div className="flex flex-row items-center gap-2">
 					<TemperatureComplication value={26} label="AIR" />
 					<p>This shows the current air temperature.</p>
 				</div>
+
 				<div className="flex flex-row items-center gap-2">
 					<HumidityComplication value={36} />
 					<p>This shows the current humidity.</p>
 				</div>
+
 				<div className="flex flex-row items-center gap-2">
 					<RainComplication rain={true} />
 					<p>This shows if it's raining or not.</p>
 				</div>
+
 				<div className="flex flex-row items-center gap-2">
 					<WindSpeedComplication speed={2.9} directionDeg={250} />
-					<p>
-						This shows the current windspeed and direction. Windspeed in m/s and direction (in blue) with North, East,
-						South, West.
-					</p>
+					<p>This shows the current wind speed in m/s and cardinal direction.</p>
 				</div>
 			</div>
-
-			<p></p>
 
 			<Footer />
 		</div>
