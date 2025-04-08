@@ -11,20 +11,18 @@ import { GeistSans } from "geist/font/sans";
 export { metadata } from "@/metadata";
 export { viewport } from "@/viewport";
 
-export default function RootLayout({ children }: { children: ReactNode }) {
-	const enableTracking = !!env.NEXT_PUBLIC_ENABLE_TRACKING;
+type Props = Readonly<{
+	children: ReactNode;
+}>;
 
+export default function RootLayout({ children }: Props) {
 	return (
 		<html lang="en" className={`${GeistSans.variable} ${GeistMono.variable} bg-zinc-950 font-sans text-white`}>
 			<head />
 
-			{enableTracking && (
-				<Script
-					async
-					defer
-					data-website-id="f1f0eb93-0656-4791-900d-b9a1b0e7af96"
-					src="https://base.slowly.dev/rep.js"
-				/>
+			{env.NEXT_PUBLIC_TRACKING_ID && env.NEXT_PUBLIC_TRACKING_URL && (
+				// Umami Analytics
+				<Script async defer data-website-id={env.NEXT_PUBLIC_TRACKING_ID} src={env.NEXT_PUBLIC_TRACKING_URL} />
 			)}
 
 			<body>{children}</body>
