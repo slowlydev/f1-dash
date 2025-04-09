@@ -28,10 +28,18 @@ export default function DriverGap({ timingDriver, sessionPart }: Props) {
 					"text-emerald-500": catching,
 					"text-zinc-600": !gapToFront,
 				})}
+				data-tooltip-id="tooltip"
+				data-tooltip-content={!!gapToFront ? "Gap to next car" : null}
 			>
 				{!!gapToFront ? gapToFront : "-- ---"}
 			</p>
-			<p className="text-sm font-medium leading-none text-zinc-600">{!!gapToLeader ? gapToLeader : "-- ---"}</p>
+			<p
+				className="text-sm font-medium leading-none text-zinc-600"
+				data-tooltip-id="tooltip"
+				data-tooltip-content={!!gapToFront ? "Gap to leader" : null}
+			>
+				{!!gapToLeader ? gapToLeader : "-- ---"}
+			</p>
 		</div>
 	);
 }

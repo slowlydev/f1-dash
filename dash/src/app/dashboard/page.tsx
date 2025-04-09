@@ -4,8 +4,10 @@ import { useEffect, useRef } from "react";
 import clsx from "clsx";
 
 import Fireworks, { FireworksHandlers } from "@fireworks-js/react";
+import { Tooltip } from "react-tooltip";
 
 import { useDataStore } from "@/stores/useDataStore";
+import { useSettingsStore } from "@/stores/useSettingsStore";
 
 import SessionInfo from "@/components/SessionInfo";
 import WeatherInfo from "@/components/WeatherInfo";
@@ -25,6 +27,7 @@ export default function Page() {
 	const sessionType = useDataStore((state) => state.sessionInfo?.type);
 
 	const raceControlMessages = useDataStore((state) => state.raceControlMessages?.messages);
+	const showTooltips = useSettingsStore((state) => state.showTooltips);
 
 	useEffect(() => {
 		if (sessionType === "Race") {
@@ -145,6 +148,7 @@ export default function Page() {
 					background: "#00000000",
 				}}
 			/>
+			{showTooltips && <Tooltip id="tooltip" />}
 		</div>
 	);
 }

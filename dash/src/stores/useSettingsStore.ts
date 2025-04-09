@@ -34,6 +34,9 @@ type SettingsStore = {
 
 	raceControlChimeVolume: number;
 	setRaceControlChimeVolume: (raceControlChimeVolume: number) => void;
+
+	showTooltips: boolean;
+	setShowTooltips: (showTooltips: boolean) => void;
 };
 
 export const useSettingsStore = create(
@@ -71,6 +74,9 @@ export const useSettingsStore = create(
 
 				raceControlChimeVolume: 50,
 				setRaceControlChimeVolume: (raceControlChimeVolume: number) => set({ raceControlChimeVolume }),
+
+				showTooltips: true,
+				setShowTooltips: (showTooltips: boolean) => set({ showTooltips }),
 			}),
 			{
 				name: "settings-storage",

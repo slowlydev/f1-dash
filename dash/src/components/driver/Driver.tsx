@@ -27,7 +27,10 @@ const hasDRS = (drs: number) => drs > 9;
 
 const possibleDRS = (drs: number) => drs === 8;
 
-const inDangerZone = (position: number, sessionPart: number) => {
+const inDangerZone = (position: number, sessionPart?: number) => {
+	if (sessionPart == null) {
+		return false;
+	}
 	switch (sessionPart) {
 		case 1:
 			return position > 15;
@@ -53,6 +56,21 @@ export default function Driver({ driver, timingDriver, position }: Props) {
 
 	const favoriteDriver = useSettingsStore((state) => state.favoriteDrivers.includes(driver.racingNumber));
 
+	let statusTooltip = undefined;
+	if (timingDriver.knockedOut) {
+		statusTooltip = "Knocked out";
+	} else if (timingDriver.retired) {
+		statusTooltip = "Retired";
+	} else if (timingDriver.stopped) {
+		statusTooltip = "Stopped";
+	} else if (hasFastest) {
+		statusTooltip = "Fastest Lap";
+	} else if (favoriteDriver) {
+		statusTooltip = "Favorite Driver";
+	} else if (inDangerZone(position, sessionPart)) {
+		statusTooltip = "In Danger Zone";
+	}
+
 	return (
 		<motion.div
 			layout="position"
@@ -60,7 +78,7 @@ export default function Driver({ driver, timingDriver, position }: Props) {
 				"opacity-50": timingDriver.knockedOut || timingDriver.retired || timingDriver.stopped,
 				"bg-sky-800 bg-opacity-30": favoriteDriver,
 				"bg-violet-800 bg-opacity-30": hasFastest,
-				"bg-red-800 bg-opacity-30": sessionPart != undefined && inDangerZone(position, sessionPart),
+				"bg-red-800 bg-opacity-30": inDangerZone(position, sessionPart),
 			})}
 		>
 			<div
@@ -71,7 +89,7 @@ export default function Driver({ driver, timingDriver, position }: Props) {
 						: "5.5rem 4rem 5.5rem 4rem 5rem 5.5rem auto",
 				}}
 			>
-				<DriverTag className="!min-w-full" short={driver.tla} teamColor={driver.teamColour} position={position} />
+				<DriverTag className="!min-w-full" driver={driver} position={position} statusTooltip={statusTooltip} />
 				<DriverDRS
 					on={carData ? hasDRS(carData[45]) : false}
 					possible={carData ? possibleDRS(carData[45]) : false}

@@ -1,13 +1,17 @@
 import clsx from "clsx";
 
+import type { Driver } from "@/types/state.type";
+
 type Props = {
-	teamColor: string;
-	short: string;
+	driver: Driver;
 	position?: number;
 	className?: string;
+	statusTooltip?: string;
 };
 
-export default function DriverTag({ position, teamColor, short, className }: Props) {
+export default function DriverTag({ driver, position, className, statusTooltip }: Props) {
+	const teamColor = driver.teamColour;
+	const short = driver.tla;
 	return (
 		<div
 			id="walkthrough-driver-position"
@@ -16,10 +20,16 @@ export default function DriverTag({ position, teamColor, short, className }: Pro
 				className,
 			)}
 			style={{ backgroundColor: `#${teamColor}` }}
+			data-tooltip-id="tooltip"
+			data-tooltip-content={statusTooltip}
 		>
 			{position && <p className="px-1 text-xl leading-none">{position}</p>}
 
-			<div className="flex h-min w-min items-center justify-center rounded-md bg-white px-1">
+			<div
+				className="flex h-min w-min items-center justify-center rounded-md bg-white px-1"
+				data-tooltip-id="tooltip"
+				data-tooltip-content={`${driver.fullName} #${driver.racingNumber}`}
+			>
 				<p className="font-mono text-zinc-600" style={{ ...(teamColor && { color: `#${teamColor}` }) }}>
 					{short}
 				</p>

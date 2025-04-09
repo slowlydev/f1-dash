@@ -2,6 +2,7 @@ import { type ReactNode } from "react";
 import Script from "next/script";
 
 import "@/styles/globals.css";
+import "react-tooltip/dist/react-tooltip.css";
 
 import { env } from "@/env.mjs";
 
