@@ -2,17 +2,19 @@
 
 import { useEffect, useRef, useState } from "react";
 
-import maplibregl, { Map } from "maplibre-gl";
+import maplibregl, { Map, Marker } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 
 import { env } from "@/env";
-
-import type { MapItem, Rainviewer } from "@/types/rainviewer.type";
 
 import { fetchCoords } from "@/lib/geocode";
 import { getRainviewer } from "@/lib/rainviewer";
 
 import { useDataStore } from "@/stores/useDataStore";
+
+import PlayControls from "@/components/ui/PlayControls";
+
+import Timeline from "./map-timeline";
 
 export function WeatherMap() {
 	const meeting = useDataStore((state) => state?.sessionInfo?.meeting);
@@ -22,23 +24,10 @@ export function WeatherMap() {
 	const mapContainerRef = useRef<HTMLDivElement>(null);
 	const mapRef = useRef<Map>(null);
 
-	const framesRef = useRef<MapItem[]>([]);
+	const [playing, setPlaying] = useState<boolean>(false);
+
+	const [frames, setFrames] = useState<{ id: number; time: number }[]>([]);
 	const currentFrameRef = useRef<number>(0);
-
-	const intervalRef = useRef<NodeJS.Timeout | null>(null);
-
-	const updateFrameVisibility = () => {
-		const currentFrameIndex = currentFrameRef.current;
-		const nextFrameIndex = (currentFrameIndex + 1) % framesRef.current.length;
-
-		// mapRef.current?.setLayoutProperty(`rainviewer-frame-${currentFrameIndex}`, "visibility", "none");
-		// mapRef.current?.setLayoutProperty(`rainviewer-frame-${nextFrameIndex}`, "visibility", "visible");
-
-		mapRef.current?.setPaintProperty(`rainviewer-frame-${currentFrameIndex}`, "raster-opacity", 0);
-		mapRef.current?.setPaintProperty(`rainviewer-frame-${nextFrameIndex}`, "raster-opacity", 0.8);
-
-		currentFrameRef.current = nextFrameIndex;
-	};
 
 	const handleMapLoad = async () => {
 		if (!mapRef.current) return;
@@ -46,10 +35,10 @@ export function WeatherMap() {
 		const rainviewer = await getRainviewer();
 		if (!rainviewer) return;
 
-		framesRef.current = [...rainviewer.radar.past, ...rainviewer.radar.nowcast];
+		const pathFrames = [...rainviewer.radar.past, ...rainviewer.radar.nowcast];
 
-		for (let i = 0; i < framesRef.current.length; i++) {
-			const frame = framesRef.current[i];
+		for (let i = 0; i < pathFrames.length; i++) {
+			const frame = pathFrames[i];
 
 			mapRef.current.addLayer({
 				id: `rainviewer-frame-${i}`,
@@ -59,9 +48,6 @@ export function WeatherMap() {
 					tiles: [`${rainviewer.host}/${frame.path}/256/{z}/{x}/{y}/8/1_0.webp`],
 					tileSize: 256,
 				},
-				// layout: {
-				// 	visibility: "none",
-				// },
 				paint: {
 					"raster-opacity": 0,
 					"raster-fade-duration": 200,
@@ -70,7 +56,11 @@ export function WeatherMap() {
 			});
 		}
 
-		intervalRef.current = setInterval(updateFrameVisibility, 1000);
+		setFrames(pathFrames.map((frame, i) => ({ time: frame.time, id: i })));
+
+		// maybe set loading of controls here
+
+		// intervalRef.current = setInterval(updateFrameVisibility, 1000);
 	};
 
 	useEffect(() => {
@@ -79,7 +69,7 @@ export function WeatherMap() {
 
 			if (!meeting) return;
 
-			const coords = await fetchCoords(`${meeting.country.name}, ${meeting.location}`);
+			const coords = await fetchCoords(`${meeting.country.name}, ${meeting.location} circuit`);
 			if (!coords) {
 				console.error("no coords found");
 				return;
@@ -97,22 +87,33 @@ export function WeatherMap() {
 
 			libMap.on("load", async () => {
 				setLoading(false);
+
+				new Marker().setLngLat([coords.lon, coords.lat]).addTo(libMap);
+
 				await handleMapLoad();
 			});
 
 			mapRef.current = libMap;
 		})();
-
-		return () => {
-			if (intervalRef.current) {
-				clearInterval(intervalRef.current);
-			}
-		};
 	}, [meeting]);
+
+	const setFrame = (idx: number) => {
+		mapRef.current?.setPaintProperty(`rainviewer-frame-${currentFrameRef.current}`, "raster-opacity", 0);
+		mapRef.current?.setPaintProperty(`rainviewer-frame-${idx}`, "raster-opacity", 0.8);
+		currentFrameRef.current = idx;
+	};
 
 	return (
 		<div className="relative h-full w-full">
 			<div ref={mapContainerRef} className="absolute h-full w-full" />
+
+			{!loading && frames.length > 0 && (
+				<div className="absolute bottom-0 left-0 z-20 m-2 flex w-lg gap-4 rounded-lg border border-zinc-800 bg-black/80 p-4 backdrop-blur-xs">
+					<PlayControls playing={playing} onClick={() => setPlaying((v) => !v)} />
+
+					<Timeline frames={frames} setFrame={setFrame} playing={playing} setPlaying={setPlaying} />
+				</div>
+			)}
 
 			{loading && <div className="h-full w-full animate-pulse rounded-lg bg-zinc-800" />}
 		</div>
