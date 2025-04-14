@@ -22,33 +22,31 @@ export default function TrackMap() {
 	const driversTiming = useDataStore((state) => state?.timingData);
 
 	return (
-		<LayoutGroup key="track-map">
-			<div className="flex h-full divide-x divide-zinc-800">
-				<div className="flex w-fit flex-col divide-y divide-zinc-800">
-					{(!drivers || !driversTiming) &&
-						new Array(20).fill("").map((_, index) => <SkeletonDriver key={`driver.loading.${index}`} />)}
+		<div className="flex flex-col-reverse divide-y divide-zinc-800 md:h-full md:flex-row md:divide-x md:divide-y-0">
+			<div className="flex w-full flex-col divide-y divide-zinc-800 md:h-full md:w-fit">
+				{(!drivers || !driversTiming) &&
+					new Array(20).fill("").map((_, index) => <SkeletonDriver key={`driver.loading.${index}`} />)}
 
-					{drivers && driversTiming && (
-						<AnimatePresence>
-							{objectEntries(driversTiming.lines)
-								.sort(sortPos)
-								.map((timingDriver, index) => (
-									<TrackMapDriver
-										key={`trackmap.driver.${timingDriver.racingNumber}`}
-										position={index + 1}
-										driver={drivers[timingDriver.racingNumber]}
-										timingDriver={timingDriver}
-									/>
-								))}
-						</AnimatePresence>
-					)}
-				</div>
-
-				<div className="flex-1">
-					<Map />
-				</div>
+				{drivers && driversTiming && (
+					<AnimatePresence>
+						{objectEntries(driversTiming.lines)
+							.sort(sortPos)
+							.map((timingDriver, index) => (
+								<TrackMapDriver
+									key={`trackmap.driver.${timingDriver.racingNumber}`}
+									position={index + 1}
+									driver={drivers[timingDriver.racingNumber]}
+									timingDriver={timingDriver}
+								/>
+							))}
+					</AnimatePresence>
+				)}
 			</div>
-		</LayoutGroup>
+
+			<div className="md:flex-1">
+				<Map />
+			</div>
+		</div>
 	);
 }
 
