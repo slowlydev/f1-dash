@@ -1,6 +1,6 @@
 {
 	"name": "f1-dash",
-	"version": "2.5.3",
+	"version": "2.6.1",
 	"private": true,
 	"scripts": {
 		"build": "next build",
@@ -16,11 +16,11 @@
 		"maplibre-gl": "5.2.0",
 		"moment": "2.30.1",
 		"motion": "12.4.7",
-		"next": "15.1.7",
+		"next": "15.2.4",
 		"pako": "2.1.0",
 		"react": "19.0.0",
 		"react-dom": "19.0.0",
-		"sharp": "0.33.5",
+		"sharp": "0.34.1",
 		"zod": "3.23.8",
 		"zustand": "5.0.1"
 	},

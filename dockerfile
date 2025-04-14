@@ -1,9 +1,12 @@
-FROM rust:alpine AS builder
-
-WORKDIR /usr/src/app
-COPY . .
+FROM rust:alpine AS base
 
 RUN apk add --no-cache musl-dev pkgconfig openssl libressl-dev
+
+FROM base AS builder
+
+WORKDIR /usr/src/app
+
+COPY . .
 
 # only builds default members (live and api)
 RUN cargo b -r

@@ -10,6 +10,7 @@ import { useSocket } from "@/hooks/useSocket";
 
 import { useSettingsStore } from "@/stores/useSettingsStore";
 import { useSidebarStore } from "@/stores/useSidebarStore";
+import { useDataStore } from "@/stores/useDataStore";
 
 import Sidebar from "@/components/Sidebar";
 import SidenavButton from "@/components/SidenavButton";
@@ -31,14 +32,18 @@ export default function DashboardLayout({ children }: Props) {
 	const delay = useSettingsStore((state) => state.delay);
 	const syncing = delay > maxDelay;
 
+	useWakeLock();
+
+	const ended = useDataStore((state) => state.sessionStatus?.status === "Ends");
+
 	return (
-		<div className="flex h-screen w-full md:pt-2 md:pr-2 md:pb-2">
+		<div className="flex h-screen w-full md:pb-2 md:pr-2 md:pt-2">
 			<Sidebar key="sidebar" connected={connected} />
 
 			<motion.div
 				layout="size"
 				className={
-					syncing
+					syncing && !ended
 						? "flex h-full flex-1 flex-col items-center justify-center gap-2 rounded-lg border border-zinc-800"
 						: "hidden"
 				}
@@ -48,7 +53,7 @@ export default function DashboardLayout({ children }: Props) {
 				<p>Or make your delay smaller.</p>
 			</motion.div>
 
-			<motion.div layout="size" className={!syncing ? "flex h-full flex-1 flex-col md:gap-2" : "hidden"}>
+			<motion.div layout="size" className={!syncing || ended ? "flex h-full flex-1 flex-col md:gap-2" : "hidden"}>
 				<HeaderBar />
 
 				<div className="w-full flex-1 overflow-auto border-zinc-800 md:rounded-lg md:border">{children}</div>

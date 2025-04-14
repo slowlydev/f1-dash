@@ -4,6 +4,10 @@ import Note from "@/components/Note";
 import DriverDRS from "@/components/driver/DriverDRS";
 import DriverTire from "@/components/driver/DriverTire";
 import DriverPedals from "@/components/driver/DriverPedals";
+import TemperatureComplication from "@/components/complications/Temperature";
+import HumidityComplication from "@/components/complications/Humidity";
+import WindSpeedComplication from "@/components/complications/WindSpeed";
+import RainComplication from "@/components/complications/Rain";
 
 import unknownTireIcon from "public/tires/unknown.svg";
 import mediumTireIcon from "public/tires/medium.svg";
@@ -68,11 +72,11 @@ export default function HelpPage() {
 				their lap times, and all text in the UI would be yellow.
 			</Note>
 
-			<h2 className="my-4 text-2xl">Leader board</h2>
+			<h2 className="my-4 text-2xl">Leaderboard</h2>
 
 			<p className="mb-4">
-				The leader board shows all the drivers of the ongoing session. Depending on the driver's status and the
-				session's progression, some drivers may have a colored background.
+				The leaderboard shows all the drivers of the ongoing session. Depending on the driver's status and the session's
+				progression, some drivers may have a colored background.
 			</p>
 
 			<div className="grid grid-cols-1 gap-x-4 divide-y divide-zinc-800 sm:grid-cols-3 sm:divide-y-0">
@@ -256,6 +260,35 @@ export default function HelpPage() {
 					<p>
 						Shows the engine's RPM <span className="text-zinc-500">(0 - 15'000)</span>
 					</p>
+				</div>
+			</div>
+
+			<h2 className="my-4 text-2xl">Weather</h2>
+
+			<div className="mb-4 flex flex-col gap-2">
+				<div className="flex flex-row items-center gap-2">
+					<TemperatureComplication value={39} label="TRC" />
+					<p>This shows the current track temperature.</p>
+				</div>
+
+				<div className="flex flex-row items-center gap-2">
+					<TemperatureComplication value={26} label="AIR" />
+					<p>This shows the current air temperature.</p>
+				</div>
+
+				<div className="flex flex-row items-center gap-2">
+					<HumidityComplication value={36} />
+					<p>This shows the current humidity.</p>
+				</div>
+
+				<div className="flex flex-row items-center gap-2">
+					<RainComplication rain={true} />
+					<p>This shows if it's raining or not.</p>
+				</div>
+
+				<div className="flex flex-row items-center gap-2">
+					<WindSpeedComplication speed={2.9} directionDeg={250} />
+					<p>This shows the current wind speed in m/s and cardinal direction.</p>
 				</div>
 			</div>
 		</div>

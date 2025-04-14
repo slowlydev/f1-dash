@@ -7,17 +7,22 @@ const server = z.object({
 const client = z.object({
 	NEXT_PUBLIC_LIVE_SOCKET_URL: z.string().min(1).includes("http"),
 	NEXT_PUBLIC_API_URL: z.string().min(1).includes("http"),
-	NEXT_PUBLIC_ENABLE_TRACKING: z.string().optional(),
 
 	NEXT_PUBLIC_MAP_KEY: z.string().optional(),
+
+	NEXT_PUBLIC_TRACKING_ID: z.string().optional(),
+	NEXT_PUBLIC_TRACKING_URL: z.string().includes("http").optional(),
 });
 
 const processEnv = {
 	NODE_ENV: process.env.NODE_ENV,
 	NEXT_PUBLIC_LIVE_SOCKET_URL: process.env.NEXT_PUBLIC_LIVE_SOCKET_URL,
 	NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
-	NEXT_PUBLIC_ENABLE_TRACKING: process.env.NEXT_PUBLIC_ENABLE_TRACKING,
+
 	NEXT_PUBLIC_MAP_KEY: process.env.NEXT_PUBLIC_MAP_KEY,
+
+	NEXT_PUBLIC_TRACKING_ID: process.env.NEXT_PUBLIC_TRACKING_ID,
+	NEXT_PUBLIC_TRACKING_URL: process.env.NEXT_PUBLIC_TRACKING_URL,
 };
 
 // Don't touch the part below
