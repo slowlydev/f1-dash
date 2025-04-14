@@ -37,7 +37,7 @@ export default function DashboardLayout({ children }: Props) {
 	const ended = useDataStore((state) => state.sessionStatus?.status === "Ends");
 
 	return (
-		<div className="flex h-screen w-full md:pb-2 md:pr-2 md:pt-2">
+		<div className="flex h-screen w-full md:pt-2 md:pr-2 md:pb-2">
 			<Sidebar key="sidebar" connected={connected} />
 
 			<motion.div
