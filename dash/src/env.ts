@@ -9,7 +9,7 @@ const client = z.object({
 	NEXT_PUBLIC_API_URL: z.string().min(1).includes("http"),
 	NEXT_PUBLIC_ENABLE_TRACKING: z.string().optional(),
 
-	NEXT_PUBLIC_MAP_KEY: z.string().min(1),
+	NEXT_PUBLIC_MAP_KEY: z.string().optional(),
 });
 
 const processEnv = {
