@@ -1,22 +1,21 @@
-FROM node:20-alpine AS base
+FROM node:22-alpine AS dependencies
 
 WORKDIR /app
-COPY package*.json ./
-COPY yarn.lock ./
+COPY package*.json yarn.lock .yarnrc.yml ./
 
-RUN yarn install --frozen-lockfile
+RUN corepack enable
 
-FROM base as builder
+RUN yarn install --immutable
 
-ARG NODE_ENV
-ARG NEXT_PUBLIC_ENABLE_TRACKING
-ARG NEXT_PUBLIC_LIVE_SOCKET_URL
-ARG NEXT_PUBLIC_API_URL
+FROM dependencies AS builder
 
-ENV NODE_ENV $NODE_ENV
-ENV NEXT_PUBLIC_ENABLE_TRACKING $NEXT_PUBLIC_ENABLE_TRACKING
-ENV NEXT_PUBLIC_LIVE_SOCKET_URL $NEXT_PUBLIC_LIVE_SOCKET_URL
-ENV NEXT_PUBLIC_API_URL $NEXT_PUBLIC_API_URL
+ARG ENABLE_TRACKING
+ARG LIVE_SOCKET_URL
+ARG API_URL
+
+ENV NEXT_PUBLIC_ENABLE_TRACKING=$ENABLE_TRACKING
+ENV NEXT_PUBLIC_LIVE_SOCKET_URL=$LIVE_SOCKET_URL
+ENV NEXT_PUBLIC_API_URL=$API_URL
 
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV SKIP_ENV_VALIDATION=1
@@ -26,18 +25,19 @@ COPY . .
 
 RUN yarn build
 
-FROM node:20-alpine AS runtime
+FROM node:22-alpine AS runtime
 
 WORKDIR /app
 
+COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 
 ENV NEXT_TELEMETRY_DISABLED=1
-ENV BUILD_STANDALONE=1
 
 ENV NODE_ENV=production
+ENV HOSTNAME="0.0.0.0"
 
 EXPOSE 3000
 
-CMD HOSTNAME="0.0.0.0" node server.js
+ENTRYPOINT [ "node", "server.js" ]

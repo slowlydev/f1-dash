@@ -1,0 +1,47 @@
+services:
+  live:
+    image: ghcr.io/slowlydev/f1-dash-live:latest
+    build:
+      context: .
+      target: live
+    restart: always
+    ports:
+      - 4000:4000
+    environment:
+      - ORIGIN=http://localhost:3000
+      - LIVE_BACKEND_ADDRESS=0.0.0.0:4000
+    env_file:
+      - path: ./compose.env
+        required: false
+
+  api:
+    image: ghcr.io/slowlydev/f1-dash-api:latest
+    build:
+      context: .
+      target: api
+    restart: always
+    ports:
+      - 4001:4001
+    environment:
+      - ORIGIN=http://localhost:3000
+      - API_BACKEND_ADDRESS=0.0.0.0:4001
+    env_file:
+      - path: ./compose.env
+        required: false
+
+  frontend:
+    image: ghcr.io/slowlydev/f1-dash:latest
+    build:
+      context: ./dash/
+    restart: always
+    ports:
+      - 3000:3000
+    depends_on:
+      - api
+      - live
+    environment:
+      - NEXT_PUBLIC_LIVE_SOCKET_URL=http://localhost:4000
+      - NEXT_PUBLIC_API_URL=http://localhost:4001
+    env_file:
+      - path: ./compose.env
+        required: false

@@ -2,25 +2,23 @@ import { AnimatePresence } from "framer-motion";
 import { utc } from "moment";
 import clsx from "clsx";
 
-import { sortUtc } from "@/lib/sorting/sortUtc";
+import { useDataStore } from "@/stores/useDataStore";
 
-import { DriverList, TeamRadio } from "@/types/state.type";
+import { sortUtc } from "@/lib/sorting";
 
 import TeamRadioMessage from "@/components/TeamRadioMessage";
 
-type Props = {
-	sessionPath: string | undefined;
-	drivers: DriverList | undefined;
-	teamRadios: TeamRadio | undefined;
-};
+export default function TeamRadios() {
+	const drivers = useDataStore((state) => state.driverList);
+	const teamRadios = useDataStore((state) => state.teamRadio);
+	const sessionPath = useDataStore((state) => state.sessionInfo?.path);
 
-export default function TeamRadios({ sessionPath, drivers, teamRadios }: Props) {
 	const basePath = `https://livetiming.formula1.com/static/${sessionPath}`;
 
 	// TODO add notice that we only show 20
 
 	return (
-		<ul className="flex flex-col gap-2">
+		<ul className="flex flex-col">
 			{!teamRadios && new Array(6).fill("").map((_, index) => <SkeletonMessage key={`radio.loading.${index}`} />)}
 
 			{teamRadios && drivers && teamRadios.captures && (
@@ -46,7 +44,7 @@ const SkeletonMessage = () => {
 	const animateClass = "h-6 animate-pulse rounded-md bg-zinc-800";
 
 	return (
-		<li className="flex flex-col gap-1">
+		<li className="flex flex-col gap-1 p-2">
 			<div className={clsx(animateClass, "!h-4 w-16")} />
 
 			<div

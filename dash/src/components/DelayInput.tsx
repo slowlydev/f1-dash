@@ -1,42 +1,34 @@
 "use client";
 
-import { clsx } from "clsx";
-import { useEffect, useState, type FormEvent } from "react";
+import clsx from "clsx";
+
+import { useSettingsStore } from "@/stores/useSettingsStore";
 
 type Props = {
-	id?: string;
 	className?: string;
-	delay: number;
-	setDebouncedDelay: (delay: number) => void;
 };
 
-export default function DelayInput({ id, className, delay, setDebouncedDelay }: Props) {
-	const [delayI, setDelayI] = useState<string>("");
+export default function DelayInput({ className }: Props) {
+	const currentDelay = useSettingsStore((s) => s.delay);
+	const setDelay = useSettingsStore((s) => s.setDelay);
 
-	const updateDebounced = () => {
-		const nextDelay = delayI ? parseInt(delayI) : 0;
-		if (nextDelay < 0) return;
-		setDebouncedDelay(nextDelay);
+	const handleChange = (v: string) => {
+		const delay = v ? parseInt(v) : 0;
+		if (delay < 0) return;
+		setDelay(delay);
 	};
-
-	const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-		event.preventDefault();
-		updateDebounced();
-	};
-
-	useEffect(() => {
-		setDelayI(delay.toString());
-	}, [delay]);
 
 	return (
-		<form id={id} className={clsx("flex rounded-lg bg-zinc-800 p-2", className)} onSubmit={handleSubmit}>
-			<input
-				value={delayI}
-				onChange={(e) => setDelayI(e.target.value)}
-				onBlur={() => updateDebounced()}
-				placeholder="0s"
-				className="w-16 bg-zinc-800 text-center leading-none text-white placeholder-white"
-			/>
-		</form>
+		<input
+			className={clsx(
+				"w-12 rounded-lg bg-zinc-800 p-1 text-center text-sm [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none",
+				className,
+			)}
+			type="number"
+			min={0}
+			placeholder="0s"
+			value={currentDelay}
+			onChange={(e) => handleChange(e.target.value)}
+		/>
 	);
 }

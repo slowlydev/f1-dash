@@ -1,29 +1,23 @@
 import { AnimatePresence, LayoutGroup } from "framer-motion";
 import clsx from "clsx";
 
-import { sortPos } from "@/lib/sorting/sortPos";
+import { useSettingsStore } from "@/stores/useSettingsStore";
+import { useDataStore } from "@/stores/useDataStore";
+
+import { sortPos } from "@/lib/sorting";
 import { objectEntries } from "@/lib/driverHelper";
-
-import { useMode } from "@/context/ModeContext";
-
-import { CarsData, DriverList, TimingAppData, TimingData, TimingStats } from "@/types/state.type";
 
 import Driver from "@/components/driver/Driver";
 
-type Props = {
-	drivers: DriverList | undefined;
-	driversTiming: TimingData | undefined;
-	driversTimingStats: TimingStats | undefined;
-	driversAppTiming: TimingAppData | undefined;
-	carsData: CarsData | null;
-};
+export default function LeaderBoard() {
+	const drivers = useDataStore((state) => state?.driverList);
+	const driversTiming = useDataStore((state) => state?.timingData);
 
-export default function LeaderBoard({ drivers, driversTiming, driversTimingStats, driversAppTiming, carsData }: Props) {
-	const { uiElements } = useMode();
+	const showTableHeader = useSettingsStore((state) => state.tableHeaders);
 
 	return (
 		<div className="flex w-fit flex-col divide-y divide-zinc-800">
-			{uiElements.tableHeaders && <TableHeaders />}
+			{showTableHeader && <TableHeaders />}
 
 			{(!drivers || !driversTiming) &&
 				new Array(20).fill("").map((_, index) => <SkeletonDriver key={`driver.loading.${index}`} />)}
@@ -36,13 +30,9 @@ export default function LeaderBoard({ drivers, driversTiming, driversTimingStats
 							.map((timingDriver, index) => (
 								<Driver
 									key={`leaderBoard.driver.${timingDriver.racingNumber}`}
+									position={index + 1}
 									driver={drivers[timingDriver.racingNumber]}
 									timingDriver={timingDriver}
-									appTimingDriver={driversAppTiming?.lines[timingDriver.racingNumber]}
-									timingStatsDriver={driversTimingStats?.lines[timingDriver.racingNumber]}
-									position={index + 1}
-									sessionPart={driversTiming.sessionPart}
-									carData={carsData ? carsData[timingDriver.racingNumber].Channels : undefined}
 								/>
 							))}
 					</AnimatePresence>

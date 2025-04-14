@@ -17,7 +17,11 @@ type Props<T> = {
 export default function SegmentedControls<T>({ id, className, options, selected, onSelect }: Props<T>) {
 	return (
 		<LayoutGroup>
-			<div id={id} className={clsx("m-0 inline-flex h-fit justify-between rounded-lg bg-zinc-800 p-0.5", className)}>
+			<motion.div
+				id={id}
+				layoutRoot
+				className={clsx("m-0 inline-flex h-fit justify-between rounded-lg bg-zinc-800 p-0.5", className)}
+			>
 				{options.map((option, i) => {
 					const isActive = option.value === selected;
 					return (
@@ -32,6 +36,7 @@ export default function SegmentedControls<T>({ id, className, options, selected,
 							>
 								{isActive && (
 									<motion.div
+										layoutDependency={isActive}
 										layoutId={`segment-${id}`}
 										className="absolute bottom-0 left-0 right-0 top-0 z-[1] rounded-md bg-zinc-600"
 									/>
@@ -41,7 +46,7 @@ export default function SegmentedControls<T>({ id, className, options, selected,
 						</motion.div>
 					);
 				})}
-			</div>
+			</motion.div>
 		</LayoutGroup>
 	);
 }

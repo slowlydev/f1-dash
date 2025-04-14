@@ -1,156 +1,102 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
+import Image from "next/image";
 
-import { modes, type UiElements } from "@/context/ModeContext";
+import xIcon from "public/icons/xmark.svg";
 
+import type { Driver } from "@/types/state.type";
+
+import SegmentedControls from "@/components/SegmentedControls";
+import SelectMultiple from "@/components/SelectMultiple";
+import DriverTag from "@/components/driver/DriverTag";
 import DelayInput from "@/components/DelayInput";
 import Button from "@/components/Button";
 import Toggle from "@/components/Toggle";
 import Footer from "@/components/Footer";
-import Note from "@/components/Note";
-import SegmentedControls from "@/components/SegmentedControls";
-import { SpeedPreference } from "@/context/SpeedPreferenceContext";
+import Slider from "@/components/Slider";
+import Input from "@/components/Input";
+
+import { useSettingsStore } from "@/stores/useSettingsStore";
+
+import { env } from "@/env.mjs";
 
 export default function SettingsPage() {
-	const router = useRouter();
-
-	const [tableHeaders, setTableHeaders] = useState<boolean>(false);
-	const [sectorFastest, setSectorFastest] = useState<boolean>(false);
-	const [carMetrics, setCarMetrics] = useState<boolean>(false);
-	const [showCornerNumbers, setShowCornerNumbers] = useState<boolean>(false);
-
-	const [speedPreference, setSpeedPreference] = useState<SpeedPreference>("km/h");
-
-	const [delay, setDelay] = useState<number>(0);
-
-	useEffect(() => {
-		if (typeof window != undefined) {
-			const delayStorage = localStorage.getItem("delay");
-			const delayValue = delayStorage ? parseInt(delayStorage) : 0;
-
-			setDelay(delayValue);
-
-			const customStorage = localStorage.getItem("custom");
-			const customSettings: UiElements = customStorage ? JSON.parse(customStorage) : modes.custom;
-
-			setTableHeaders(customSettings.tableHeaders);
-			setSectorFastest(customSettings.sectorFastest);
-			setCarMetrics(customSettings.carMetrics);
-			setShowCornerNumbers(customSettings.showCornerNumbers);
-
-			const speedPreferenceStorage = (localStorage.getItem("speedPreference") as SpeedPreference) ?? "km/h";
-			setSpeedPreference(speedPreferenceStorage);
-		}
-	}, []);
-
-	const handleUpdate = (type: "sector" | "table" | "car" | "corner", newValue: boolean) => {
-		if (typeof window != undefined) {
-			const customStorage = localStorage.getItem("custom");
-			const customSettings: UiElements = customStorage ? JSON.parse(customStorage) : modes.custom;
-
-			switch (type) {
-				case "car": {
-					customSettings.carMetrics = newValue;
-					break;
-				}
-				case "table": {
-					customSettings.tableHeaders = newValue;
-					break;
-				}
-				case "sector": {
-					customSettings.sectorFastest = newValue;
-					break;
-				}
-				case "corner": {
-					customSettings.showCornerNumbers = newValue;
-					break;
-				}
-			}
-
-			localStorage.setItem("custom", JSON.stringify(customSettings));
-		}
-	};
-
-	const updateDelay = (newDelay: number) => {
-		setDelay(newDelay);
-
-		if (typeof window != undefined) {
-			localStorage.setItem("delay", `${newDelay}`);
-		}
-	};
-
-	const updateSpeedPreference = (newSpeedPreference: SpeedPreference) => {
-		setSpeedPreference(newSpeedPreference);
-
-		if (typeof window != undefined) {
-			localStorage.setItem("speedPreference", newSpeedPreference);
-		}
-	};
-
-	// const startWalkthrough = () => {
-	// 	if (typeof window != undefined) {
-	// 		localStorage.removeItem("walkthrough");
-	// 		router.push("/dashboard");
-	// 	}
-	// };
-
+	const settings = useSettingsStore();
 	return (
 		<div className="container mx-auto max-w-screen-lg px-4">
 			<h1 className="my-4 text-3xl">Settings</h1>
 
-			<h2 className="my-4 text-2xl">Configure Custom Mode</h2>
-
-			<p className="mb-4">
-				Here you can setup the "custom" mode that you can activate with the slider in the top right on the dashboard.
-				Its here to toggle some parts of the UI you might want or not want to see, as you might prefer more or less data
-				or information and/or a simpler UI.
-			</p>
+			<h2 className="my-4 text-2xl">Visual</h2>
 
 			<div className="flex gap-2">
-				<Toggle
-					enabled={tableHeaders}
-					setEnabled={(v) => {
-						setTableHeaders(v);
-						handleUpdate("table", v);
-					}}
-				/>
-				<p className="text-zinc-500">Show Table Headers</p>
-			</div>
-
-			<div className="flex gap-2">
-				<Toggle
-					enabled={sectorFastest}
-					setEnabled={(v) => {
-						setSectorFastest(v);
-						handleUpdate("sector", v);
-					}}
-				/>
-				<p className="text-zinc-500">Show Fastest Sector Times</p>
-			</div>
-
-			<div className="flex gap-2">
-				<Toggle
-					enabled={carMetrics}
-					setEnabled={(v) => {
-						setCarMetrics(v);
-						handleUpdate("car", v);
-					}}
-				/>
+				<Toggle enabled={settings.carMetrics} setEnabled={(v) => settings.setCarMetrics(v)} />
 				<p className="text-zinc-500">Show Car Metrics (RPM, Gear, Speed)</p>
 			</div>
 
 			<div className="flex gap-2">
-				<Toggle
-					enabled={showCornerNumbers}
-					setEnabled={(v) => {
-						setShowCornerNumbers(v);
-						handleUpdate("corner", v);
-					}}
-				/>
+				<Toggle enabled={settings.showCornerNumbers} setEnabled={(v) => settings.setShowCornerNumbers(v)} />
 				<p className="text-zinc-500">Show Corner Numbers on Track Map</p>
 			</div>
+
+			<div className="flex gap-2">
+				<Toggle enabled={settings.tableHeaders} setEnabled={(v) => settings.setTableHeaders(v)} />
+				<p className="text-zinc-500">Show Driver Table Header</p>
+			</div>
+
+			<div className="flex gap-2">
+				<Toggle enabled={settings.showBestSectors} setEnabled={(v) => settings.setShowBestSectors(v)} />
+				<p className="text-zinc-500">Show Drivers Best Sectors</p>
+			</div>
+
+			<div className="flex gap-2">
+				<Toggle enabled={settings.showMiniSectors} setEnabled={(v) => settings.setShowMiniSectors(v)} />
+				<p className="text-zinc-500">Show Drivers Mini Sectors</p>
+			</div>
+
+			<div className="flex gap-2">
+				<Toggle enabled={settings.raceControlChime} setEnabled={(v) => settings.setRaceControlChime(v)} />
+				<p className="text-zinc-500">Play Race Control Chime</p>
+			</div>
+
+			{settings.raceControlChime && (
+				<div className="flex max-w-52 flex-col gap-2">
+					<p>Race Control Chime Volume</p>
+					<div className="flex flex-row items-center gap-2">
+						<Slider value={settings.raceControlChimeVolume} setValue={(v) => settings.setRaceControlChimeVolume(v)} />
+						<Input
+							value={String(settings.raceControlChimeVolume)}
+							setValue={(v) => {
+								const numericValue = Number(v);
+								if (!isNaN(numericValue)) {
+									settings.setRaceControlChimeVolume(numericValue);
+								}
+							}}
+						/>
+					</div>
+				</div>
+			)}
+
+			<h2 className="my-4 text-2xl">Favorite Drivers</h2>
+
+			<p className="mb-4">Select your favorite drivers to highlight them on the dashboard.</p>
+
+			<FavoriteDrivers />
+
+			<h2 className="my-4 text-2xl">Speed Metric</h2>
+
+			<p className="mb-4">Choose the unit in which you want to display speeds.</p>
+
+			<SegmentedControls
+				id="speed-unit"
+				selected={settings.speedUnit}
+				onSelect={settings.setSpeedUnit}
+				options={[
+					{ label: "km/h", value: "metric" },
+					{ label: "mp/h", value: "imperial" },
+				]}
+			/>
 
 			<h2 className="my-4 text-2xl">Delay</h2>
 
@@ -161,42 +107,69 @@ export default function SettingsPage() {
 			</p>
 
 			<div className="flex items-center gap-2">
-				<DelayInput delay={delay} setDebouncedDelay={updateDelay} />
+				<DelayInput />
 				<p className="text-zinc-500">Delay in seconds</p>
 			</div>
 
-			<Button className="mt-2 !bg-red-500" onClick={() => updateDelay(0)}>
+			<Button className="mt-2 !bg-red-500" onClick={() => settings.setDelay(0)}>
 				Reset delay
 			</Button>
-
-			<h2 className="my-4 text-2xl">Speed Metric</h2>
-
-			<p className="mb-4">Choose the unit in which you want to display speeds.</p>
-
-			<SegmentedControls
-				id="speed"
-				selected={speedPreference}
-				options={[
-					{ label: "km/h", value: "km/h" },
-					{ label: "mp/h", value: "mp/h" },
-				]}
-				onSelect={updateSpeedPreference}
-			/>
-
-			{/* <h2 className="my-4 text-2xl">Walkthrough</h2>
-
-			<p className="mb-4">
-				Here you start the walkthrough of the dashboard again if you skipped it or you want to be refreshed. It is
-				explaining the different parts of the UI and how to use them.
-			</p>
-
-			<Note className="mb-4">
-				This will move you to the dashboard page and might show data of an ongoing or ended session and might spoil you.
-			</Note>
-
-			<Button onClick={() => startWalkthrough()}>Start Walkthrough</Button> */}
 
 			<Footer />
 		</div>
 	);
 }
+
+const FavoriteDrivers = () => {
+	const [drivers, setDrivers] = useState<Driver[] | null>(null);
+	const [error, setError] = useState<string | null>(null);
+
+	const { favoriteDrivers, setFavoriteDrivers, removeFavoriteDriver } = useSettingsStore();
+
+	useEffect(() => {
+		(async () => {
+			try {
+				const res = await fetch(`${env.NEXT_PUBLIC_LIVE_SOCKET_URL}/api/drivers`);
+				const data = await res.json();
+				setDrivers(data);
+			} catch (e) {
+				setError("failed to fetch favorite drivers");
+			}
+		})();
+	}, []);
+
+	return (
+		<div className="flex flex-col gap-2">
+			<div className="flex gap-2">
+				{favoriteDrivers.map((driverNumber) => {
+					const driver = drivers?.find((d) => d.racingNumber === driverNumber);
+
+					if (!driver) return null;
+
+					return (
+						<div key={driverNumber} className="flex items-center gap-1 rounded-xl border border-zinc-700 p-1">
+							<DriverTag teamColor={driver.teamColour} short={driver.tla} />
+
+							<motion.button
+								whileHover={{ scale: 1.05 }}
+								whileTap={{ scale: 0.95 }}
+								onClick={() => removeFavoriteDriver(driverNumber)}
+							>
+								<Image src={xIcon} alt="x" width={30} />
+							</motion.button>
+						</div>
+					);
+				})}
+			</div>
+
+			<div className="w-80">
+				<SelectMultiple
+					placeholder="Select favorite drivers"
+					options={drivers ? drivers.map((d) => ({ label: d.fullName, value: d.racingNumber })) : []}
+					selected={favoriteDrivers}
+					setSelected={setFavoriteDrivers}
+				/>
+			</div>
+		</div>
+	);
+};
