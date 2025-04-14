@@ -13,8 +13,8 @@ export default function Standings() {
 	const drivers = useDataStore((state) => state.driverList);
 
 	return (
-		<div className="grid h-full grid-cols-2 divide-x divide-zinc-800">
-			<div className="h-full overflow-scroll p-4">
+		<div className="grid h-full grid-cols-1 lg:grid-cols-2 divide-x divide-zinc-800">
+			<div className="h-full overflow-auto p-4">
 				<h2 className="text-xl">Predicted Driver Championship Standings</h2>
 
 				<div className="divide flex flex-col divide-y divide-zinc-800">
@@ -57,7 +57,7 @@ export default function Standings() {
 				</div>
 			</div>
 
-			<div className="h-full overflow-scroll p-4">
+			<div className="h-full overflow-auto p-4">
 				<h2 className="text-xl">Predicted Team Championship Standings</h2>
 
 				<div className="divide flex flex-col divide-y divide-zinc-800">
