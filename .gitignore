@@ -3,6 +3,7 @@
 
 # creds
 .env
+compose.env
 
 # compiled
 **/target

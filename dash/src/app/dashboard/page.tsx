@@ -2,56 +2,47 @@
 
 import clsx from "clsx";
 
-import { useDataStore } from "@/stores/useDataStore";
-
 import LeaderBoard from "@/components/dashboard/LeaderBoard";
-import Qualifying from "@/components/Qualifying";
 import RaceControl from "@/components/RaceControl";
 import TeamRadios from "@/components/dashboard/TeamRadios";
 import Map from "@/components/dashboard/Map";
+import TrackViolations from "@/components/dashboard/TrackViolations";
 
 export default function Page() {
-	const sessionType = useDataStore((state) => state.sessionInfo?.type);
-
 	return (
-		<div className={clsx("flex w-full flex-col divide-y divide-zinc-800 xl:divide-none")}>
-			<div className={clsx("flex w-full flex-col divide-y divide-zinc-800", "xl:flex-row xl:divide-x xl:divide-y-0")}>
-				<div className={clsx("mb-2 overflow-x-auto md:overflow-visible", "xl:flex-[0,0,auto]")}>
+		<div className="flex flex-col gap-2 p-2">
+			<div className="flex flex-col gap-2 2xl:flex-row">
+				<Card className="w-fit">
 					<LeaderBoard />
-				</div>
+				</Card>
 
-				<div className={clsx("flex flex-col divide-y divide-zinc-800", "xl:min-w-0 xl:grow")}>
-					{sessionType === "Qualifying" && (
-						<div className="overflow-x-auto">
-							<Qualifying />
-						</div>
-					)}
-
-					<div className="hidden w-full xl:block">
-						<Map />
-					</div>
-
-					<div
-						className={clsx(
-							"flex w-full flex-col divide-y divide-zinc-800",
-							"md:min-w-0 md:flex-row md:divide-x md:divide-y-0",
-							"xl:flex-1 xl:flex-col xl:divide-x-0 xl:divide-y",
-						)}
-					>
-						<div className={clsx("h-96 overflow-y-auto", "md:w-1/2", "xl:auto xl:mr-0 xl:w-auto xl:grow")}>
-							<RaceControl />
-						</div>
-
-						<div className={clsx("h-96 overflow-y-auto", "md:w-1/2", "xl:auto xl:mr-0 xl:w-auto xl:grow")}>
-							<TeamRadios />
-						</div>
-					</div>
-				</div>
+				<Card className="flex-1">
+					<Map />
+				</Card>
 			</div>
 
-			<div className="xl:hidden">
-				<Map />
+			<div className="grid grid-cols-1 gap-2 *:h-96 *:overflow-y-scroll md:grid-cols-2 lg:grid-cols-3">
+				<Card>
+					<RaceControl />
+				</Card>
+
+				<Card>
+					<TeamRadios />
+				</Card>
+
+				<Card>
+					<TrackViolations />
+				</Card>
 			</div>
 		</div>
 	);
+}
+
+type Props = {
+	children: React.ReactNode;
+	className?: string;
+};
+
+function Card({ children, className }: Props) {
+	return <div className={clsx("rounded-lg border border-zinc-800", className)}>{children}</div>;
 }
