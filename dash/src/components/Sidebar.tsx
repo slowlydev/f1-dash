@@ -96,7 +96,7 @@ export default function Sidebar({ connected }: Props) {
 				onHoverStart={!pinned ? () => open() : undefined}
 				//
 				animate={{ left: pinned || opened ? 0 : -216 }}
-				transition={{ type: "spring", bounce: 0.18 }}
+				transition={{ type: "spring", bounce: 0.1 }}
 			>
 				<nav
 					className={clsx("m-2 flex w-52 flex-col bg-zinc-950 p-2", {
