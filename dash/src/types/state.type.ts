@@ -77,7 +77,7 @@ export type TrackStatus = {
 
 export type SessionStatus = {
 	status: "Started" | "Finished" | "Finalised" | "Ends";
-}
+};
 
 export type DriverList = {
 	[key: string]: Driver;
@@ -158,7 +158,7 @@ export type SessionData = {
 export type StatusSeries = {
 	utc: string;
 	trackStatus?: string;
-	sesionStatus?: "Started" | "Finished" | "Finalised" | "Ends"
+	sesionStatus?: "Started" | "Finished" | "Finalised" | "Ends";
 };
 
 export type Series = {
