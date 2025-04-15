@@ -31,7 +31,7 @@ export function RaceControlMessage({ msg, gmtOffset }: Props) {
 		<motion.li
 			animate={{ opacity: 1, y: 0 }}
 			initial={{ opacity: 0, y: -20 }}
-			className={clsx("flex flex-col gap-1 p-2", { "bg-sky-800/30": favoriteDriver })}
+			className={clsx("flex flex-col gap-1 rounded-lg p-2", { "bg-sky-800/30": favoriteDriver })}
 		>
 			<div className="flex items-center gap-1 text-sm leading-none font-medium text-gray-500">
 				{msg.lap && (

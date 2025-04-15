@@ -27,8 +27,6 @@ export default function DashboardLayout({ children }: Props) {
 	const { handleInitial, handleUpdate, maxDelay } = useDataEngine(stores);
 	const { connected } = useSocket({ handleInitial, handleUpdate });
 
-	useWakeLock();
-
 	const delay = useSettingsStore((state) => state.delay);
 	const syncing = delay > maxDelay;
 
@@ -56,7 +54,7 @@ export default function DashboardLayout({ children }: Props) {
 			<motion.div layout="size" className={!syncing || ended ? "flex h-full flex-1 flex-col md:gap-2" : "hidden"}>
 				<HeaderBar />
 
-				<div className="w-full flex-1 overflow-auto border-zinc-800 md:rounded-lg md:border">{children}</div>
+				<div className="no-scrollbar w-full flex-1 overflow-auto md:rounded-lg">{children}</div>
 			</motion.div>
 		</div>
 	);

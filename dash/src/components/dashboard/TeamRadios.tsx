@@ -18,7 +18,7 @@ export default function TeamRadios() {
 	// TODO add notice that we only show 20
 
 	return (
-		<ul className="flex flex-col">
+		<ul className="flex flex-col gap-2">
 			{!teamRadios && new Array(6).fill("").map((_, index) => <SkeletonMessage key={`radio.loading.${index}`} />)}
 
 			{teamRadios && drivers && teamRadios.captures && (
@@ -28,7 +28,7 @@ export default function TeamRadios() {
 						.slice(0, 20)
 						.map((teamRadio, i) => (
 							<RadioMessage
-								key={`radio.${utc(teamRadio.utc).unix()}.${i}`}
+								key={`radio.${i}`}
 								driver={drivers[teamRadio.racingNumber]}
 								capture={teamRadio}
 								basePath={basePath}
