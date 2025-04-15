@@ -12,6 +12,7 @@ import SegmentedControls from "@/components/SegmentedControls";
 import SelectMultiple from "@/components/SelectMultiple";
 import DriverTag from "@/components/driver/DriverTag";
 import DelayInput from "@/components/DelayInput";
+import DelayTimer from "@/components/DelayTimer";
 import Button from "@/components/Button";
 import Toggle from "@/components/Toggle";
 import Footer from "@/components/Footer";
@@ -107,6 +108,7 @@ export default function SettingsPage() {
 			</p>
 
 			<div className="flex items-center gap-2">
+				<DelayTimer />
 				<DelayInput />
 				<p className="text-zinc-500">Delay in seconds</p>
 			</div>
