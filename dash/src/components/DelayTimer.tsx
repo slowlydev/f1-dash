@@ -2,25 +2,26 @@
 
 import { useState, useRef } from "react";
 import { useSettingsStore } from "@/stores/useSettingsStore";
-import clsx from "clsx";
+import PlayControls from "@/components/PlayControls";
 
 export default function DelayTimer() {
     const [isRunning, setIsRunning] = useState(false);
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
     const startTimeRef = useRef<number>(0);
     const setDelay = useSettingsStore((s) => s.setDelay);
+    const currentDelay = useSettingsStore((s) => s.delay);
 
     const handleClick = () => {
         if (!isRunning) {
-            // Start timer
-            startTimeRef.current = Date.now();
+            // Start timer from current delay
+            startTimeRef.current = Date.now() - (currentDelay * 1000);
             intervalRef.current = setInterval(() => {
                 const elapsed = Math.floor((Date.now() - startTimeRef.current) / 1000);
                 setDelay(elapsed);
             }, 100);
             setIsRunning(true);
         } else {
-            // Stop timer
+            // Stop timer but keep current delay
             if (intervalRef.current) {
                 clearInterval(intervalRef.current);
                 intervalRef.current = null;
@@ -30,16 +31,10 @@ export default function DelayTimer() {
     };
 
     return (
-        <button
+        <PlayControls
+            playing={isRunning}
             onClick={handleClick}
-            className={clsx(
-                "flex items-center justify-center rounded-lg px-3 py-1 text-sm transition-colors",
-                isRunning 
-                    ? "bg-red-500 hover:bg-red-600" 
-                    : "bg-zinc-800 hover:bg-zinc-700"
-            )}
-        >
-            {isRunning ? "Stop" : "Start"}
-        </button>
+            className="bg-zinc-800 rounded-lg hover:bg-zinc-700"
+        />
     );
 } 
