@@ -12,7 +12,7 @@ import { useDataStore } from "@/stores/useDataStore";
 
 import Menubar from "@/components/Menubar";
 import DelayInput from "@/components/DelayInput";
-
+import DelayTimer from "@/components/DelayTimer";
 
 type Props = {
 	children: ReactNode;
@@ -34,7 +34,10 @@ export default function DashboardLayout({ children }: Props) {
 		<div className="w-full">
 			<div className="flex items-center justify-between gap-4 border-b border-zinc-800 bg-black p-2">
 				<Menubar connected={connected} />
-				<DelayInput />
+				<div className="flex items-center gap-2">
+					<DelayTimer />
+					<DelayInput />
+				</div>
 			</div>
 
 			{(syncing && !ended) && (
