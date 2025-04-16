@@ -49,7 +49,7 @@ export default function Sidebar({ connected }: Props) {
 	const driverItems = drivers
 		? favoriteDrivers.map((nr) => ({
 				href: `/dashboard/driver/${nr}`,
-				name: drivers[nr].fullName,
+				name: `${drivers[nr].firstName} ${drivers[nr].lastName}`,
 			}))
 		: null;
 
