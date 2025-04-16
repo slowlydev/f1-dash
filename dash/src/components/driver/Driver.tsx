@@ -82,11 +82,7 @@ export default function Driver({ driver, timingDriver, position }: Props) {
 				<DriverInfo timingDriver={timingDriver} gridPos={appTimingDriver ? parseInt(appTimingDriver.gridPos) : 0} />
 				<DriverGap timingDriver={timingDriver} sessionPart={sessionPart} />
 				<DriverLapTime last={timingDriver.lastLapTime} best={timingDriver.bestLapTime} hasFastest={hasFastest} />
-				<DriverMiniSectors
-					sectors={timingDriver.sectors}
-					bestSectors={timingStatsDriver?.bestSectors}
-					tla={driver.tla}
-				/>
+				<DriverMiniSectors sectors={timingDriver.sectors} bestSectors={timingStatsDriver?.bestSectors} />
 
 				{carMetrics && carData && <DriverCarMetrics carData={carData} />}
 			</div>
