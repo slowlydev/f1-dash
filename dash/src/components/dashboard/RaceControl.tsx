@@ -7,7 +7,7 @@ import { useDataStore } from "@/stores/useDataStore";
 
 import { sortUtc } from "@/lib/sorting";
 
-import { RaceControlMessage } from "@/components/RaceControlMessage";
+import { RaceControlMessage } from "@/components/dashboard/RaceControlMessage";
 
 export default function RaceControl() {
 	const messages = useDataStore((state) => state.raceControlMessages?.messages);
@@ -51,7 +51,7 @@ export default function RaceControl() {
 	}, [messages]);
 
 	return (
-		<ul className="flex flex-col">
+		<ul className="flex flex-col gap-2">
 			{!messages &&
 				new Array(7).fill("").map((_, index) => <SkeletonMessage key={`msg.loading.${index}`} index={index} />)}
 

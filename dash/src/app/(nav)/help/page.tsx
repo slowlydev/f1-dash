@@ -40,7 +40,7 @@ export default function HelpPage() {
 
 				<div className="flex gap-1">
 					<p className="flex items-center gap-1 text-yellow-500">
-						<span className="size-4 rounded-md bg-yellow-500" /> Yellow
+						<span className="size-4 rounded-md bg-amber-400" /> Yellow
 					</p>
 					<p>Slower than personal best</p>
 				</div>

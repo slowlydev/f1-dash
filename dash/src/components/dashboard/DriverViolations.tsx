@@ -19,15 +19,9 @@ export default function DriverViolations({ driver, driverViolations, driversTimi
 		<div className="flex gap-2 p-2" key={`violation.${driver.racingNumber}`}>
 			<DriverTag className="h-fit" teamColor={driver.teamColour} short={driver.tla} />
 
-			{/* <div className="flex items-center gap-2">
-				{new Array(driverViolations).fill("").map((_, i) => (
-					<Image src={octagonX} className="size-6" alt="x in octagon" />
-				))}
-			</div> */}
-
-			<div className="flex flex-col justify-center text-sm text-zinc-600">
+			<div className="flex flex-col justify-around text-sm leading-none text-zinc-600">
 				<p>
-					{driverViolations} Violations
+					{driverViolations} Violation{driverViolations > 1 ? "s" : ""}
 					{driverViolations > 4 && <span> - {Math.round(driverViolations / 5) * 5}s Penalty</span>}
 				</p>
 				{driverViolations > 4 && driversTiming && (

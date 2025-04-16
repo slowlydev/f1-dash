@@ -56,7 +56,7 @@ export default function Driver({ driver, timingDriver, position }: Props) {
 	return (
 		<motion.div
 			layout="position"
-			className={clsx("flex flex-col gap-1 p-1.5 select-none", {
+			className={clsx("flex flex-col gap-1 rounded-lg p-1.5 select-none", {
 				"opacity-50": timingDriver.knockedOut || timingDriver.retired || timingDriver.stopped,
 				"bg-sky-800/30": favoriteDriver,
 				"bg-violet-800/30": hasFastest,
@@ -67,8 +67,8 @@ export default function Driver({ driver, timingDriver, position }: Props) {
 				className="grid items-center gap-2"
 				style={{
 					gridTemplateColumns: carMetrics
-						? "5.5rem 4rem 5.5rem 4rem 5rem 5.5rem auto auto"
-						: "5.5rem 4rem 5.5rem 4rem 5rem 5.5rem auto",
+						? "5.5rem 3.5rem 5.5rem 4rem 5rem 5.5rem auto auto"
+						: "5.5rem 3.5rem 5.5rem 4rem 5rem 5.5rem auto",
 				}}
 			>
 				<DriverTag className="min-w-full!" short={driver.tla} teamColor={driver.teamColour} position={position} />

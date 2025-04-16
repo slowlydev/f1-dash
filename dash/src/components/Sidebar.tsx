@@ -90,7 +90,7 @@ export default function Sidebar({ connected }: Props) {
 			</AnimatePresence>
 
 			<motion.div
-				className="fixed top-0 bottom-0 left-0 z-40 flex"
+				className="no-scrollbar fixed top-0 bottom-0 left-0 z-40 flex overflow-y-auto"
 				//
 				onHoverEnd={!pinned ? () => close() : undefined}
 				onHoverStart={!pinned ? () => open() : undefined}

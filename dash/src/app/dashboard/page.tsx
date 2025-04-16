@@ -3,14 +3,14 @@
 import clsx from "clsx";
 
 import LeaderBoard from "@/components/dashboard/LeaderBoard";
-import RaceControl from "@/components/RaceControl";
+import RaceControl from "@/components/dashboard/RaceControl";
 import TeamRadios from "@/components/dashboard/TeamRadios";
-import Map from "@/components/dashboard/Map";
 import TrackViolations from "@/components/dashboard/TrackViolations";
+import Map from "@/components/dashboard/Map";
 
 export default function Page() {
 	return (
-		<div className="flex flex-col gap-2 p-2">
+		<div className="flex flex-col gap-2">
 			<div className="flex flex-col gap-2 2xl:flex-row">
 				<Card className="w-fit">
 					<LeaderBoard />
@@ -21,7 +21,7 @@ export default function Page() {
 				</Card>
 			</div>
 
-			<div className="grid grid-cols-1 gap-2 *:h-96 *:overflow-y-scroll md:grid-cols-2 lg:grid-cols-3">
+			<div className="grid grid-cols-1 gap-2 *:h-[30rem] *:overflow-y-scroll lg:grid-cols-3">
 				<Card>
 					<RaceControl />
 				</Card>
@@ -44,5 +44,5 @@ type Props = {
 };
 
 function Card({ children, className }: Props) {
-	return <div className={clsx("rounded-lg border border-zinc-800", className)}>{children}</div>;
+	return <div className={clsx("rounded-lg", className)}>{children}</div>;
 }
