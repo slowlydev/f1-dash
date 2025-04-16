@@ -29,7 +29,7 @@ export default function SpeedGauge({
 	progressClassName,
 	className,
 }: Props) {
-	const progress = ((value - min) / (max - min)) * 100;
+	const progress = value > min ? (value > max ? 100 : ((value - min) / (max - min)) * 100) : 0;
 
 	const finalEndAngle = startAngle + (endAngle - startAngle) * (progress / 100);
 
