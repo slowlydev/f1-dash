@@ -12,6 +12,7 @@ services:
       - LIVE_BACKEND_ADDRESS=${LIVE_BACKEND_ADDRESS}
       - RUST_BACKTRACE=${RUST_BACKTRACE}
       - RUST_LOG=${RUST_LOG}
+    user: "1000:1000"
 
   api:
     image: ghcr.io/slowlydev/f1-dash-api:latest
@@ -26,6 +27,7 @@ services:
       - API_BACKEND_ADDRESS=${API_BACKEND_ADDRESS}
       - RUST_LOG=${RUST_LOG}
       - RUST_BACKTRACE=${RUST_BACKTRACE}
+    user: "1000:1000"
 
   frontend:
     image: ghcr.io/slowlydev/f1-dash:latest
@@ -43,3 +45,4 @@ services:
     environment:
       - NEXT_PUBLIC_LIVE_SOCKET_URL=${NEXT_PUBLIC_LIVE_SOCKET_URL}
       - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+    user: "1000:1000"
