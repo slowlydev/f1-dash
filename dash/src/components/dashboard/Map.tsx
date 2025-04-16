@@ -31,7 +31,11 @@ type Corner = {
 	labelPos: TrackPosition;
 };
 
-export default function Map() {
+type Props = {
+	filter?: string[];
+};
+
+export default function Map({ filter }: Props) {
 	const showCornerNumbers = useSettingsStore((state) => state.showCornerNumbers);
 	const favoriteDrivers = useSettingsStore((state) => state.favoriteDrivers);
 
@@ -174,6 +178,7 @@ export default function Map() {
 			{centerX && centerY && positions && drivers && (
 				<>
 					{objectEntries(drivers)
+						.filter((driver) => (filter ? filter.includes(driver.racingNumber) : true))
 						.reverse()
 						.filter((driver) => !!positions[driver.racingNumber].X && !!positions[driver.racingNumber].Y)
 						.map((driver) => {
