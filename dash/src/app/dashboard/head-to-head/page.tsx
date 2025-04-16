@@ -1,19 +1,21 @@
 "use client";
 
-import { useState } from "react";
-
-import { objectEntries } from "@/lib/driverHelper";
+import clsx from "clsx";
 
 import { useDataStore } from "@/stores/useDataStore";
+import { useHeadToHeadStore } from "@/stores/useHeadToHeadStore";
 
-import Select from "@/components/ui/Select";
-import HeadToHeadDriver from "@/components/HeadToHeadDriver";
+import SegmentedControls from "@/components/ui/SegmentedControls";
+
+import HeadToHeadDriver from "./h2h-driver";
+import DriverSelect from "./h2h-select";
+import HeadToHeadMap from "./h2h-map";
 
 export default function HeadToHeadPage() {
 	const drivers = useDataStore((state) => state?.driverList);
 	const driversTiming = useDataStore((state) => state?.timingData);
 
-	const [[first, second], setSelected] = useState<[string | null, string | null]>([null, null]);
+	const { first, second } = useHeadToHeadStore();
 
 	if (!drivers || !driversTiming) {
 		return (
@@ -24,44 +26,72 @@ export default function HeadToHeadPage() {
 	}
 
 	return (
-		<div className="flex w-full flex-col">
-			<div className="grid grid-cols-2 divide-x divide-zinc-800">
+		<div className="flex h-full w-full flex-col">
+			<div className="flex w-full flex-1">
 				{first ? (
-					<HeadToHeadDriver driver={drivers[first]} timingDriver={driversTiming.lines[first]} />
+					<HeadToHeadDriver driverNr={first} side="left" />
 				) : (
-					<div className="flex h-96 flex-col items-center justify-center">
-						<Select
-							placeholder={`Search & Select a driver`}
-							options={objectEntries(drivers)
-								.map((driver) => ({
-									value: driver.racingNumber,
-									label: driver.fullName,
-								}))
-								.filter((driver) => driver.value !== second)}
-							selected={first}
-							setSelected={(v) => setSelected(([_, second]) => [v, second])}
-						/>
+					<div className="flex-1 p-4">
+						<DriverSelect number={"first"} />
 					</div>
 				)}
 
+				<div className="flex h-full flex-col items-center p-4">
+					<hr className="my-1 h-full w-[1px] bg-zinc-800 text-transparent" />
+
+					<p className="text-2xl">VS</p>
+
+					<hr className="my-1 h-full w-[1px] bg-zinc-800 text-transparent" />
+				</div>
+
 				{second ? (
-					<HeadToHeadDriver driver={drivers[second]} timingDriver={driversTiming.lines[second]} />
+					<HeadToHeadDriver driverNr={second} side="right" />
 				) : (
-					<div className="flex h-96 flex-col items-center justify-center">
-						<Select
-							placeholder={`Search & Select a driver`}
-							options={objectEntries(drivers)
-								.map((driver) => ({
-									value: driver.racingNumber,
-									label: driver.fullName,
-								}))
-								.filter((driver) => driver.value !== first)}
-							selected={second}
-							setSelected={(v) => setSelected(([first, _]) => [first, v])}
-						/>
+					<div className="flex-1 p-4">
+						<DriverSelect number={"second"} />
 					</div>
 				)}
 			</div>
+
+			<HeadToHeadMap first={first} second={second} />
+
+			<div className="grid grid-cols-2 gap-2 p-2">
+				<Card className="h-96 p-2">
+					<SegmentedControls
+						options={[
+							{ label: "Gap", value: "gap" },
+							{ label: "Laptime", value: "lap" },
+							{ label: "Sectors", value: "sector" },
+						]}
+						selected={"gap"}
+					/>
+
+					{/* <TimingGraphs /> */}
+				</Card>
+
+				<Card className="h-96 p-2">
+					<SegmentedControls
+						options={[
+							{ label: "Throttle", value: "throttle" },
+							{ label: "Break", value: "break" },
+							{ label: "Gear", value: "gear" },
+							{ label: "Speed", value: "speed" },
+						]}
+						selected={"throttle"}
+					/>
+
+					{/* <TimingGraphs /> */}
+				</Card>
+			</div>
 		</div>
 	);
+}
+
+type Props = {
+	children: React.ReactNode;
+	className?: string;
+};
+
+function Card({ children, className }: Props) {
+	return <div className={clsx("rounded-lg border border-zinc-800", className)}>{children}</div>;
 }
