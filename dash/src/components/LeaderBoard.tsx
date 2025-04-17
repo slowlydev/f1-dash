@@ -3,41 +3,82 @@ import clsx from "clsx";
 
 import { useSettingsStore } from "@/stores/useSettingsStore";
 import { useDataStore } from "@/stores/useDataStore";
+import { useSortingStore, type SortingCriteria } from "@/stores/useSortingStore";
 
-import { sortPos } from "@/lib/sorting";
+import { sortDrivers } from "@/lib/sorting";
 import { objectEntries } from "@/lib/driverHelper";
 
 import Driver from "@/components/driver/Driver";
 
+const sortOptions: { label: string; value: SortingCriteria }[] = [
+	{ label: "Position", value: "position" },
+	{ label: "Best Lap", value: "bestLap" },
+	{ label: "Last Lap", value: "lastLap" },
+	{ label: "Pit Status", value: "pitStatus" },
+	{ label: "Position Change", value: "positionChange" },
+	{ label: "Sector 1", value: "sector1" },
+	{ label: "Sector 2", value: "sector2" },
+	{ label: "Sector 3", value: "sector3" },
+	{ label: "Tyre Age", value: "tyreAge" },
+];
+
 export default function LeaderBoard() {
 	const drivers = useDataStore((state) => state?.driverList);
 	const driversTiming = useDataStore((state) => state?.timingData);
+	const driversAppTiming = useDataStore((state) => state?.timingAppData);
 
 	const showTableHeader = useSettingsStore((state) => state.tableHeaders);
+	const sortCriteria = useSortingStore((state) => state.criteria);
+	const setSortCriteria = useSortingStore((state) => state.setCriteria);
 
 	return (
-		<div className="flex w-fit flex-col divide-y divide-zinc-800">
-			{showTableHeader && <TableHeaders />}
+		<div className="flex flex-col gap-4">
+			<div className="flex items-center gap-2 px-2">
+				<label className="text-sm font-medium text-zinc-500">Sort by:</label>
+				<select
+					value={sortCriteria}
+					onChange={(e) => setSortCriteria(e.target.value as SortingCriteria)}
+					className="rounded bg-zinc-800 px-3 py-1 text-sm font-medium text-zinc-300 outline-none hover:bg-zinc-700 focus:ring-2 focus:ring-sky-500"
+				>
+					{sortOptions.map((option) => (
+						<option key={option.value} value={option.value} className="bg-zinc-800">
+							{option.label}
+						</option>
+					))}
+				</select>
+			</div>
 
-			{(!drivers || !driversTiming) &&
-				new Array(20).fill("").map((_, index) => <SkeletonDriver key={`driver.loading.${index}`} />)}
+			<div className="flex w-fit flex-col divide-y divide-zinc-800">
+				{showTableHeader && <TableHeaders />}
 
-			<LayoutGroup key="drivers">
-				{drivers && driversTiming && (
-					<AnimatePresence>
-						{objectEntries(driversTiming.lines)
-							.sort(sortPos)
-							.map((timingDriver, index) => (
-								<Driver
-									key={`leaderBoard.driver.${timingDriver.racingNumber}`}
-									position={index + 1}
-									driver={drivers[timingDriver.racingNumber]}
-									timingDriver={timingDriver}
-								/>
-							))}
-					</AnimatePresence>
-				)}
-			</LayoutGroup>
+				{(!drivers || !driversTiming) &&
+					new Array(20).fill("").map((_, index) => <SkeletonDriver key={`driver.loading.${index}`} />)}
+
+				<LayoutGroup key="drivers">
+					{drivers && driversTiming && (
+						<AnimatePresence>
+							{objectEntries(driversTiming.lines)
+								.sort((a, b) => 
+									sortDrivers(
+										sortCriteria,
+										a,
+										b,
+										driversAppTiming?.lines[a.racingNumber],
+										driversAppTiming?.lines[b.racingNumber]
+									)
+								)
+								.map((timingDriver, index) => (
+									<Driver
+										key={`leaderBoard.driver.${timingDriver.racingNumber}`}
+										position={index + 1}
+										driver={drivers[timingDriver.racingNumber]}
+										timingDriver={timingDriver}
+									/>
+								))}
+						</AnimatePresence>
+					)}
+				</LayoutGroup>
+			</div>
 		</div>
 	);
 }
