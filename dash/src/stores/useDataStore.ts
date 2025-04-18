@@ -32,7 +32,7 @@ type DataStore = {
 	timingAppData: TimingAppData | null;
 	weatherData: WeatherData | null;
 	trackStatus: TrackStatus | null;
-	sessionStatus: SessionStatus | null
+	sessionStatus: SessionStatus | null;
 	driverList: DriverList | null;
 	raceControlMessages: RaceControlMessages | null;
 	sessionInfo: SessionInfo | null;

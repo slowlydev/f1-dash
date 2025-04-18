@@ -13,6 +13,7 @@ import { useDataStore } from "@/stores/useDataStore";
 import ConnectionStatus from "@/components/ConnectionStatus";
 import DelayInput from "@/components/DelayInput";
 import SidenavButton from "@/components/SidenavButton";
+import DelayTimer from "@/components/DelayTimer";
 
 const liveTimingItems = [
 	{
@@ -106,6 +107,7 @@ export default function Sidebar({ connected }: Props) {
 					<div className="flex items-center justify-between gap-2">
 						<div className="flex items-center gap-2">
 							<DelayInput />
+							<DelayTimer />
 
 							<p className={clsx("rounded-lg p-1 px-2 text-sm", delay > 0 ? "bg-gray-600" : "bg-red-700")}>
 								{delay > 0 ? "Delayed" : "Live"}

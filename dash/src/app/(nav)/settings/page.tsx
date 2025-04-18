@@ -8,6 +8,7 @@ import Input from "@/components/ui/Input";
 import FavoriteDrivers from "@/components/settings/FavoriteDrivers";
 
 import DelayInput from "@/components/DelayInput";
+import DelayTimer from "@/components/DelayTimer";
 import Toggle from "@/components/ui/Toggle";
 
 import { useSettingsStore } from "@/stores/useSettingsStore";
@@ -97,6 +98,7 @@ export default function SettingsPage() {
 			</p>
 
 			<div className="flex items-center gap-2">
+				<DelayTimer />
 				<DelayInput />
 				<p className="text-zinc-500">Delay in seconds</p>
 			</div>
