@@ -7,5 +7,11 @@ type Props = {
 };
 
 export default function ConnectionStatus({ connected }: Props) {
-	return <div className={clsx("size-3 rounded-full", connected ? "bg-emerald-500" : "animate-pulse bg-red-500")} />;
+	return (
+		<div
+			className={clsx("size-3 rounded-full", connected ? "bg-emerald-500" : "animate-pulse bg-red-500")}
+			data-tooltip-id="tooltip"
+			data-tooltip-content={connected ? "Connected" : "Reconnecting..."}
+		/>
+	);
 }

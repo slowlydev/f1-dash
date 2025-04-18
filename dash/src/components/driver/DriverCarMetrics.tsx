@@ -17,9 +17,15 @@ export default function DriverCarMetrics({ carData }: Props) {
 
 	return (
 		<div className="flex items-center gap-2 place-self-start">
-			<p className="flex h-8 w-8 items-center justify-center font-mono text-lg">{carData[3]}</p>
+			<p
+				className="flex h-8 w-8 items-center justify-center font-mono text-lg"
+				data-tooltip-id="tooltip"
+				data-tooltip-content="Gear"
+			>
+				{carData[3]}
+			</p>
 
-			<div>
+			<div data-tooltip-id="tooltip" data-tooltip-content="Speed">
 				<p className="text-right font-mono font-medium leading-none">
 					{speedUnit === "metric" ? carData[2] : convertKmhToMph(carData[2])}
 				</p>
@@ -28,9 +34,9 @@ export default function DriverCarMetrics({ carData }: Props) {
 
 			<div className="flex flex-col">
 				<div className="flex flex-col gap-1">
-					<DriverPedals className="bg-red-500" value={carData[5]} maxValue={1} />
-					<DriverPedals className="bg-emerald-500" value={carData[4]} maxValue={100} />
-					<DriverPedals className="bg-blue-500" value={carData[0]} maxValue={15000} />
+					<DriverPedals className="bg-red-500" value={carData[5]} maxValue={1} tooltip="Brake" />
+					<DriverPedals className="bg-emerald-500" value={carData[4]} maxValue={100} tooltip="Throttle" />
+					<DriverPedals className="bg-blue-500" value={carData[0]} maxValue={15000} tooltip="RPM" />
 				</div>
 			</div>
 		</div>
