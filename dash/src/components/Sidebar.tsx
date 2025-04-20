@@ -24,10 +24,10 @@ const liveTimingItems = [
 		href: "/dashboard/track-map",
 		name: "Track Map",
 	},
-	{
-		href: "/dashboard/head-to-head",
-		name: "Head to Head",
-	},
+	// {
+	// 	href: "/dashboard/head-to-head",
+	// 	name: "Head to Head",
+	// },
 	{
 		href: "/dashboard/standings",
 		name: "Standings",
@@ -109,9 +109,9 @@ export default function Sidebar({ connected }: Props) {
 							<DelayInput />
 							<DelayTimer />
 
-							<p className={clsx("rounded-lg p-1 px-2 text-sm", delay > 0 ? "bg-gray-600" : "bg-red-700")}>
+							{/* <p className={clsx("rounded-lg p-1 px-2 text-sm", delay > 0 ? "bg-gray-600" : "bg-red-700")}>
 								{delay > 0 ? "Delayed" : "Live"}
-							</p>
+							</p> */}
 
 							<ConnectionStatus connected={connected} />
 						</div>
@@ -128,7 +128,7 @@ export default function Sidebar({ connected }: Props) {
 						))}
 					</div>
 
-					<p className="mt-4 p-2 text-sm text-zinc-500">Favorite Drivers</p>
+					{/* <p className="mt-4 p-2 text-sm text-zinc-500">Favorite Drivers</p>
 
 					<div className="flex flex-col gap-1">
 						{driverItems === null && (
@@ -139,7 +139,7 @@ export default function Sidebar({ connected }: Props) {
 						)}
 						{driverItems !== null && driverItems.length === 0 && <div className="p-2">No favorites</div>}
 						{driverItems?.map((item) => <Item key={item.href} item={item} />)}
-					</div>
+					</div> */}
 
 					<p className="mt-4 p-2 text-sm text-zinc-500">General</p>
 
