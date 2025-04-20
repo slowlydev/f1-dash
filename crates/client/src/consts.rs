@@ -16,6 +16,7 @@ pub const SIGNALR_SUBSCRIBE: &str = r#"{
         "TimingAppData",
         "WeatherData",
         "TrackStatus",
+        "SessionStatus",
         "DriverList",
         "RaceControlMessages",
         "SessionInfo",
@@ -23,7 +24,8 @@ pub const SIGNALR_SUBSCRIBE: &str = r#"{
         "LapCount",
         "TimingData",
         "TeamRadio",
-        "PitLaneTimeCollection"
+        "PitLaneTimeCollection",
+        "ChampionshipPrediction"
     ]],
     "I": 1,
 }"#;

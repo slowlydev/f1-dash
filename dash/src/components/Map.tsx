@@ -1,158 +1,29 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import clsx from "clsx";
 
-import {
-	DriverList,
-	TimingData,
-	TrackStatus,
-	Message as RaceControlMessage,
-	Positions,
-	PositionCar,
-} from "@/types/state.type";
+import type { PositionCar } from "@/types/state.type";
+import type { Map, TrackPosition } from "@/types/map.type";
 
-import { objectEntries } from "@/lib/driverHelper";
 import { fetchMap } from "@/lib/fetchMap";
-import { MapType, TrackPosition } from "@/types/map.type";
-import { sortUtc } from "@/lib/sorting/sortUtc";
+import { objectEntries } from "@/lib/driverHelper";
+import { useDataStore, usePositionStore } from "@/stores/useDataStore";
+import { useSettingsStore } from "@/stores/useSettingsStore";
 import { getTrackStatusMessage } from "@/lib/getTrackStatusMessage";
+import {
+	createSectors,
+	findYellowSectors,
+	getSectorColor,
+	MapSector,
+	prioritizeColoredSectors,
+	rad,
+	rotate,
+} from "@/lib/map";
 
 // This is basically fearlessly copied from
 // https://github.com/tdjsnelling/monaco
 
-import { useMode } from "@/context/ModeContext";
-
-type Props = {
-	circuitKey: number | undefined;
-	drivers: DriverList | undefined;
-	timingDrivers: TimingData | undefined;
-	positions: Positions | null;
-
-	trackStatus: TrackStatus | undefined;
-	raceControlMessages: RaceControlMessage[] | undefined;
-};
-
-const space = 1000;
-
-const rad = (deg: number) => deg * (Math.PI / 180);
-
-const rotate = (x: number, y: number, a: number, px: number, py: number) => {
-	const c = Math.cos(rad(a));
-	const s = Math.sin(rad(a));
-
-	x -= px;
-	y -= py;
-
-	const newX = x * c - y * s;
-	const newY = y * c + x * s;
-
-	return { y: newX + px, x: newY + py };
-};
-
-type Sector = {
-	number: number;
-	start: TrackPosition;
-	end: TrackPosition;
-	points: TrackPosition[];
-};
-
-const calculateDistance = (x1: number, y1: number, x2: number, y2: number) => {
-	return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
-};
-
-const findMinDistance = (point: TrackPosition, points: TrackPosition[]) => {
-	let min = Infinity;
-	let minIndex = -1;
-	for (let i = 0; i < points.length; i++) {
-		const distance = calculateDistance(point.x, point.y, points[i].x, points[i].y);
-		if (distance < min) {
-			min = distance;
-			minIndex = i;
-		}
-	}
-	return minIndex;
-};
-
-const createSectors = (map: MapType) => {
-	const sectors: Sector[] = [];
-	const points: TrackPosition[] = map.x.map((x, index) => ({ x, y: map.y[index] }));
-
-	for (let i = 0; i < map.marshalSectors.length; i++) {
-		sectors.push({
-			number: i + 1,
-			start: map.marshalSectors[i].trackPosition,
-			end: map.marshalSectors[i + 1] ? map.marshalSectors[i + 1].trackPosition : map.marshalSectors[0].trackPosition,
-			points: [],
-		});
-	}
-
-	let dividers: number[] = sectors.map((s) => findMinDistance(s.start, points));
-	for (let i = 0; i < dividers.length; i++) {
-		let start = dividers[i];
-		let end = dividers[i + 1] ? dividers[i + 1] : dividers[0];
-		if (start < end) {
-			sectors[i].points = points.slice(start, end + 1);
-		} else {
-			sectors[i].points = points.slice(start).concat(points.slice(0, end + 1));
-		}
-	}
-
-	return sectors;
-};
-
-const findYellowSectors = (messages: RaceControlMessage[] | undefined): Set<number> => {
-	const msgs = messages?.sort(sortUtc).filter((msg) => {
-		return msg.flag === "YELLOW" || msg.flag === "DOUBLE YELLOW" || msg.flag === "CLEAR";
-	});
-
-	if (!msgs) {
-		return new Set();
-	}
-
-	const done: Set<number> = new Set();
-	const sectors: Set<number> = new Set();
-	for (let i = 0; i < msgs.length; i++) {
-		const msg = msgs[i];
-		if (msg.scope === "Track" && msg.flag !== "CLEAR") {
-			// Spam with sectors so all sectors are yellow no matter what
-			// number of sectors there really are
-			for (let j = 0; j < 100; j++) {
-				sectors.add(j);
-			}
-			return sectors;
-		}
-		if (msg.scope === "Sector") {
-			if (!msg.sector || done.has(msg.sector)) {
-				continue;
-			}
-			if (msg.flag === "CLEAR") {
-				done.add(msg.sector);
-			} else {
-				sectors.add(msg.sector);
-			}
-		}
-	}
-	return sectors;
-};
-
-type RenderedSector = {
-	number: number;
-	d: string;
-	color: string;
-	stroke_width: number;
-	pulse?: number;
-};
-
-const priorizeColoredSectors = (a: RenderedSector, b: RenderedSector) => {
-	if (a.color === "stroke-white" && b.color !== "stroke-white") {
-		return -1;
-	}
-	if (a.color !== "stroke-white" && b.color === "stroke-white") {
-		return 1;
-	}
-	return a.number - b.number;
-};
-
-const rotationFIX = 90;
+const SPACE = 1000;
+const ROTATION_FIX = 90;
 
 type Corner = {
 	number: number;
@@ -160,25 +31,24 @@ type Corner = {
 	labelPos: TrackPosition;
 };
 
-export default function Map({
-	circuitKey,
-	drivers,
-	timingDrivers,
-	trackStatus,
-	raceControlMessages,
-	positions,
-}: Props) {
-	const { uiElements } = useMode();
+export default function Map() {
+	const showCornerNumbers = useSettingsStore((state) => state.showCornerNumbers);
+	const favoriteDrivers = useSettingsStore((state) => state.favoriteDrivers);
 
-	const [points, setPoints] = useState<null | { x: number; y: number }[]>(null);
-	const [sectors, setSectors] = useState<Sector[]>([]);
-
-	const [corners, setCorners] = useState<Corner[]>([]);
-
-	const [rotation, setRotation] = useState<number>(0);
+	const positions = usePositionStore((state) => state.positions);
+	const drivers = useDataStore((state) => state?.driverList);
+	const trackStatus = useDataStore((state) => state?.trackStatus);
+	const timingDrivers = useDataStore((state) => state?.timingData);
+	const raceControlMessages = useDataStore((state) => state?.raceControlMessages?.messages);
+	const circuitKey = useDataStore((state) => state?.sessionInfo?.meeting.circuit.key);
 
 	const [[minX, minY, widthX, widthY], setBounds] = useState<(null | number)[]>([null, null, null, null]);
 	const [[centerX, centerY], setCenter] = useState<(null | number)[]>([null, null]);
+
+	const [points, setPoints] = useState<null | { x: number; y: number }[]>(null);
+	const [sectors, setSectors] = useState<MapSector[]>([]);
+	const [corners, setCorners] = useState<Corner[]>([]);
+	const [rotation, setRotation] = useState<number>(0);
 
 	useEffect(() => {
 		(async () => {
@@ -188,45 +58,36 @@ export default function Map({
 			const centerX = (Math.max(...mapJson.x) - Math.min(...mapJson.x)) / 2;
 			const centerY = (Math.max(...mapJson.y) - Math.min(...mapJson.y)) / 2;
 
-			const fixedRotation = mapJson.rotation + rotationFIX;
+			const fixedRotation = mapJson.rotation + ROTATION_FIX;
 
-			const sectors = createSectors(mapJson).map((s) => {
-				const start = rotate(s.start.x, s.start.y, fixedRotation, centerX, centerY);
-				const end = rotate(s.end.x, s.end.y, fixedRotation, centerX, centerY);
-				const points = s.points.map((p) => rotate(p.x, p.y, fixedRotation, centerX, centerY));
-				return {
-					...s,
-					start,
-					end,
-					points,
-				};
-			});
+			const sectors = createSectors(mapJson).map((s) => ({
+				...s,
+				start: rotate(s.start.x, s.start.y, fixedRotation, centerX, centerY),
+				end: rotate(s.end.x, s.end.y, fixedRotation, centerX, centerY),
+				points: s.points.map((p) => rotate(p.x, p.y, fixedRotation, centerX, centerY)),
+			}));
 
-			const cornerPositions: Corner[] = mapJson.corners.map((corner) => {
-				const pos = rotate(corner.trackPosition.x, corner.trackPosition.y, fixedRotation, centerX, centerY);
-				const labelPos = rotate(
+			const cornerPositions: Corner[] = mapJson.corners.map((corner) => ({
+				number: corner.number,
+				pos: rotate(corner.trackPosition.x, corner.trackPosition.y, fixedRotation, centerX, centerY),
+				labelPos: rotate(
 					corner.trackPosition.x + 540 * Math.cos(rad(corner.angle)),
 					corner.trackPosition.y + 540 * Math.sin(rad(corner.angle)),
 					fixedRotation,
 					centerX,
 					centerY,
-				);
-				return {
-					number: corner.number,
-					pos,
-					labelPos,
-				};
-			});
+				),
+			}));
 
 			const rotatedPoints = mapJson.x.map((x, index) => rotate(x, mapJson.y[index], fixedRotation, centerX, centerY));
 
 			const pointsX = rotatedPoints.map((item) => item.x);
 			const pointsY = rotatedPoints.map((item) => item.y);
 
-			const cMinX = Math.min(...pointsX) - space;
-			const cMinY = Math.min(...pointsY) - space;
-			const cWidthX = Math.max(...pointsX) - cMinX + space * 2;
-			const cWidthY = Math.max(...pointsY) - cMinY + space * 2;
+			const cMinX = Math.min(...pointsX) - SPACE;
+			const cMinY = Math.min(...pointsY) - SPACE;
+			const cWidthX = Math.max(...pointsX) - cMinX + SPACE * 2;
+			const cWidthY = Math.max(...pointsY) - cMinY + SPACE * 2;
 
 			setCenter([centerX, centerY]);
 			setBounds([cMinX, cMinY, cWidthX, cWidthY]);
@@ -237,48 +98,32 @@ export default function Map({
 		})();
 	}, [circuitKey]);
 
-	const [renderedSectors, setRenderedSectors] = useState<RenderedSector[]>([]);
-	useEffect(() => {
-		const status = getTrackStatusMessage(trackStatus?.status ? parseInt(trackStatus?.status) : undefined);
-		let color: (sector: Sector) => string;
-		if (status?.bySector) {
-			const yellowSectors = findYellowSectors(raceControlMessages);
-			color = (sector) => {
-				if (yellowSectors.has(sector.number)) {
-					return status?.trackColor || "stroke-white";
-				} else {
-					return "stroke-white";
-				}
-			};
-		} else {
-			color = (_) => status?.trackColor || "stroke-white";
-		}
+	const yellowSectors = useMemo(() => findYellowSectors(raceControlMessages), [raceControlMessages]);
 
-		const newSectors: RenderedSector[] = sectors
+	const renderedSectors = useMemo(() => {
+		const status = getTrackStatusMessage(trackStatus?.status ? parseInt(trackStatus.status) : undefined);
+
+		return sectors
 			.map((sector) => {
-				const start = `M${sector.points[0].x},${sector.points[0].y}`;
-				const rest = sector.points.map((point) => `L${point.x},${point.y}`).join(" ");
-
-				const c = color(sector);
+				const color = getSectorColor(sector, status?.bySector, status?.trackColor, yellowSectors);
 				return {
-					number: sector.number,
-					d: `${start} ${rest}`,
-					color: c,
-					stroke_width: c === "stroke-white" ? 60 : 120,
+					color,
 					pulse: status?.pulse,
+					number: sector.number,
+					strokeWidth: color === "stroke-white" ? 60 : 120,
+					d: `M${sector.points[0].x},${sector.points[0].y} ${sector.points.map((point) => `L${point.x},${point.y}`).join(" ")}`,
 				};
 			})
-			.sort(priorizeColoredSectors);
+			.sort(prioritizeColoredSectors);
+	}, [trackStatus, sectors]);
 
-		setRenderedSectors(newSectors);
-	}, [trackStatus, raceControlMessages, sectors]);
-
-	if (!points || !minX || !minY || !widthX || !widthY)
+	if (!points || !minX || !minY || !widthX || !widthY) {
 		return (
 			<div className="h-full w-full p-2" style={{ minHeight: "35rem" }}>
 				<div className="h-full w-full animate-pulse rounded-lg bg-zinc-800" />
 			</div>
 		);
+	}
 
 	return (
 		<svg
@@ -304,7 +149,7 @@ export default function Map({
 					<path
 						key={`map.sector.${sector.number}`}
 						className={sector.color}
-						strokeWidth={sector.stroke_width}
+						strokeWidth={sector.strokeWidth}
 						strokeLinecap="round"
 						strokeLinejoin="round"
 						fill="transparent"
@@ -314,7 +159,7 @@ export default function Map({
 				);
 			})}
 
-			{uiElements.showCornerNumbers &&
+			{showCornerNumbers &&
 				corners.map((corner) => (
 					<CornerNumber
 						key={`corner.${corner.number}`}
@@ -326,22 +171,6 @@ export default function Map({
 
 			{centerX && centerY && positions && drivers && (
 				<>
-					{/* 241 is safty car */}
-					{/* theres also 242 and 243 which might be medical car and something else  */}
-					{positions["241"] && (
-						<CarDot
-							key={`map.car.241`}
-							name="Safety Car"
-							pit={false}
-							hidden={false}
-							pos={positions["241"]}
-							color={undefined}
-							rotation={rotation}
-							centerX={centerX}
-							centerY={centerY}
-						/>
-					)}
-
 					{objectEntries(drivers)
 						.reverse()
 						.filter((driver) => !!positions[driver.racingNumber].X && !!positions[driver.racingNumber].Y)
@@ -355,6 +184,7 @@ export default function Map({
 							return (
 								<CarDot
 									key={`map.driver.${driver.racingNumber}`}
+									favoriteDriver={favoriteDrivers.length > 0 ? favoriteDrivers.includes(driver.racingNumber) : false}
 									name={driver.tla}
 									color={driver.teamColour}
 									pit={pit}
@@ -389,6 +219,7 @@ const CornerNumber: React.FC<CornerNumberProps> = ({ number, x, y }) => {
 type CarDotProps = {
 	name: string;
 	color: string | undefined;
+	favoriteDriver: boolean;
 
 	pit: boolean;
 	hidden: boolean;
@@ -400,7 +231,7 @@ type CarDotProps = {
 	centerY: number;
 };
 
-const CarDot = ({ pos, name, color, pit, hidden, rotation, centerX, centerY }: CarDotProps) => {
+const CarDot = ({ pos, name, color, favoriteDriver, pit, hidden, rotation, centerX, centerY }: CarDotProps) => {
 	const rotatedPos = rotate(pos.X, pos.Y, rotation, centerX, centerY);
 	const transform = [`translateX(${rotatedPos.x}px)`, `translateY(${rotatedPos.y}px)`].join(" ");
 
@@ -424,6 +255,17 @@ const CarDot = ({ pos, name, color, pit, hidden, rotation, centerX, centerY }: C
 			>
 				{name}
 			</text>
+
+			{favoriteDriver && (
+				<circle
+					id={`map.driver.favorite`}
+					className="stroke-sky-400"
+					r={180}
+					fill="transparent"
+					strokeWidth={40}
+					style={{ transition: "all 1s linear" }}
+				/>
+			)}
 		</g>
 	);
 };

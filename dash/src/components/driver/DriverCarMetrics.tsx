@@ -1,3 +1,5 @@
+import { useSettingsStore } from "@/stores/useSettingsStore";
+
 import { CarDataChannels } from "@/types/state.type";
 
 import DriverPedals from "./DriverPedals";
@@ -6,14 +8,22 @@ type Props = {
 	carData: CarDataChannels;
 };
 
+function convertKmhToMph(kmhValue: number) {
+	return Math.floor(kmhValue / 1.609344);
+}
+
 export default function DriverCarMetrics({ carData }: Props) {
+	const speedUnit = useSettingsStore((state) => state.speedUnit);
+
 	return (
 		<div className="flex items-center gap-2 place-self-start">
 			<p className="flex h-8 w-8 items-center justify-center font-mono text-lg">{carData[3]}</p>
 
 			<div>
-				<p className="text-right font-mono font-medium leading-none">{carData[2]}</p>
-				<p className="text-sm leading-none text-zinc-600">km/h</p>
+				<p className="text-right font-mono font-medium leading-none">
+					{speedUnit === "metric" ? carData[2] : convertKmhToMph(carData[2])}
+				</p>
+				<p className="text-sm leading-none text-zinc-600">{speedUnit === "metric" ? "km/h" : "mp/h"}</p>
 			</div>
 
 			<div className="flex flex-col">
