@@ -3,15 +3,17 @@ import { AnimatePresence } from "framer-motion";
 import { utc } from "moment";
 import clsx from "clsx";
 
+import { env } from "@/env.mjs";
+
+import { RadioCapture } from "@/types/state.type";
+
+import { useTranscriptionStore } from "@/stores/useTranscriptionStore";
 import { useDataStore } from "@/stores/useDataStore";
 
+import { SAMPLING_RATE, DEFAULT_QUANTIZED } from "@/lib/constants";
 import { sortUtc } from "@/lib/sorting";
 
 import TeamRadioMessage from "@/components/TeamRadioMessage";
-import { TranscriptionSettings } from "@/context/ModeContext";
-import { SAMPLING_RATE, DEFAULT_QUANTIZED } from "@/lib/constants";
-import { env } from "@/env.mjs";
-import { RadioCapture } from "@/types/state.type";
 
 type TranscriberCompleteData = {
 	key: string;
@@ -45,13 +47,13 @@ export default function TeamRadios() {
 	const teamRadios = useDataStore((state) => state.teamRadio);
 	const sessionPath = useDataStore((state) => state.sessionInfo?.path);
 
+	const transcription = useTranscriptionStore();
+
 	const basePath = `https://livetiming.formula1.com/static/${sessionPath}`;
 
 	const workerRef = useRef<Worker | null>(null);
 
-	const [enableTranscription, setEnableTranscription] = useState<boolean>(false);
 	const [transcriptions, setTranscriptions] = useState<{ [key: string]: string }>({});
-	const [transcriptionModel, setTranscriptionModel] = useState<string>("");
 
 	const workerEventHandler = (event: MessageEvent) => {
 		const message = event.data;
@@ -77,40 +79,38 @@ export default function TeamRadios() {
 
 		for (const teamRadio of teamRadios) {
 			const audio = await loadAudioFromRadioCapture(audioContext, `${sessionPath}${teamRadio.path}`);
+			
 			workerRef.current?.postMessage({
 				key: teamRadio.path,
 				audio,
-				model: transcriptionModel,
+				model: transcription.model,
 				multilingual: false,
 				quantized: DEFAULT_QUANTIZED,
 				subtask: null,
 				language: null,
 			});
+
 			await new Promise((res) => setTimeout(res, 1000)); // To avoid rate limit
 		}
 	};
 
 	useEffect(() => {
-		if (typeof window != undefined) {
-			const worker = new Worker(new URL("../asr-worker.js", import.meta.url), {
-				type: "module",
-			});
-			// Listen for messages from the Web Worker
-			worker.addEventListener("message", workerEventHandler);
-			workerRef.current = worker;
+		const worker = new Worker(new URL("../asr-worker.js", import.meta.url), {
+			type: "module",
+		});
 
-			const transcriptionStorage = localStorage.getItem("transcription");
-			const transcriptionSettings: TranscriptionSettings = transcriptionStorage
-				? JSON.parse(transcriptionStorage)
-				: { enableTranscription: false, whisperModel: "" };
+		worker.addEventListener("message", workerEventHandler);
 
-			setEnableTranscription(transcriptionSettings.enableTranscription);
-			setTranscriptionModel(transcriptionSettings.whisperModel);
-		}
+		workerRef.current = worker;
+
+		return () => {
+			worker.terminate();
+			workerRef.current = null;
+		};
 	}, []);
 
 	useEffect(() => {
-		if (teamRadios && drivers && teamRadios.captures && enableTranscription && transcriptionModel) {
+		if (teamRadios && drivers && teamRadios.captures && transcription.enabled) {
 			const targetRadios = teamRadios.captures.sort(sortUtc).slice(0, 20);
 
 			setTranscriptions((oldTranscriptions) => {
@@ -122,7 +122,7 @@ export default function TeamRadios() {
 				return newTranscriptions;
 			});
 		}
-	}, [teamRadios, drivers, enableTranscription, transcriptionModel]);
+	}, [teamRadios, drivers, transcription.enabled]);
 
 	return (
 		<ul className="flex flex-col">
