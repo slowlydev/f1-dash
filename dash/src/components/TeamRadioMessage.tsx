@@ -10,7 +10,6 @@ import PlayControls from "./PlayControls";
 import AudioProgress from "./AudioProgress";
 
 import { Driver, RadioCapture } from "@/types/state.type";
-import clsx from "clsx";
 
 type Props = {
 	driver: Driver;
