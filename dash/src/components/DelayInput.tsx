@@ -8,13 +8,14 @@ import { useSettingsStore } from "@/stores/useSettingsStore";
 
 type Props = {
 	className?: string;
+	saveDelay?: number;
 };
 
-export default function DelayInput({ className }: Props) {
-	const [delayState, setDelayState] = useState("0");
-
+export default function DelayInput({ className, saveDelay }: Props) {
 	const currentDelay = useSettingsStore((s) => s.delay);
 	const setDelay = useSettingsStore((s) => s.setDelay);
+
+	const [delayState, setDelayState] = useState<string>(currentDelay.toString());
 
 	const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -26,7 +27,7 @@ export default function DelayInput({ className }: Props) {
 
 	useEffect(() => {
 		if (timeoutRef.current) clearTimeout(timeoutRef.current);
-		timeoutRef.current = setTimeout(updateDelay, 500);
+		timeoutRef.current = setTimeout(updateDelay, saveDelay || 0);
 	}, [delayState]);
 
 	const handleChange = (v: string) => {
