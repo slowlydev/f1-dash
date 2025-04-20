@@ -4,7 +4,7 @@ import { useState, useRef } from "react";
 
 import { useSettingsStore } from "@/stores/useSettingsStore";
 
-import PlayControls from "@/components/PlayControls";
+import PlayControls from "@/components/ui/PlayControls";
 
 export default function DelayTimer() {
 	const [isRunning, setIsRunning] = useState(false);
