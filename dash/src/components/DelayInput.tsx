@@ -14,11 +14,11 @@ type Props = {
 export default function DelayInput({ className, saveDelay }: Props) {
 	const currentDelay = useSettingsStore((s) => s.delay);
 	const setDelay = useSettingsStore((s) => s.setDelay);
+	const hasHydrated = useSettingsStore((s) => s.hasHydrated);
 
 	const [delayState, setDelayState] = useState<string>(currentDelay.toString());
 
 	const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-	const inputRef = useRef<HTMLInputElement>(null);
 
 	const updateDelay = (updateInput: boolean = false) => {
 		const delay = delayState ? Math.max(parseInt(delayState), 0) : 0;
@@ -27,15 +27,14 @@ export default function DelayInput({ className, saveDelay }: Props) {
 	};
 
 	useEffect(() => {
+		if (!hasHydrated) return;
 		if (timeoutRef.current) clearTimeout(timeoutRef.current);
 		timeoutRef.current = setTimeout(updateDelay, saveDelay || 0);
 	}, [delayState]);
 
 	useEffect(() => {
-		if (inputRef.current != document.activeElement) {
-			setDelayState(currentDelay.toString());
-		}
-	}, [currentDelay]);
+		if (hasHydrated) setDelayState(currentDelay.toString());
+	}, [hasHydrated]);
 
 	const handleChange = (v: string) => {
 		setDelayState(v);
@@ -55,7 +54,6 @@ export default function DelayInput({ className, saveDelay }: Props) {
 			onChange={(e) => handleChange(e.target.value)}
 			onKeyDown={(e) => e.code == "Enter" && updateDelay(true)}
 			onBlur={() => updateDelay(true)}
-			ref={inputRef}
 		/>
 	);
 }
