@@ -75,7 +75,7 @@ export default function DriverQuali({
 					{currentBestTime && (
 						<>
 							<p className="text-xl leading-none text-gray-500">{currentBestTime}</p>
-							<p className="text-sm font-medium leading-none text-gray-500">{currentBestName}</p>
+							<p className="text-sm leading-none font-medium text-gray-500">{currentBestName}</p>
 						</>
 					)}
 				</div>
@@ -93,7 +93,7 @@ export default function DriverQuali({
 						/>
 						<p
 							className={clsx(
-								"text-center text-lg font-semibold leading-none",
+								"text-center text-lg leading-none font-semibold",
 								getSectorColorText(sector.overallFastest, sector.personalFastest),
 								!sector.value ? "text-gray-500!" : "",
 							)}

@@ -31,7 +31,7 @@ export default function DriverGap({ timingDriver, sessionPart }: Props) {
 			>
 				{!!gapToFront ? gapToFront : "-- ---"}
 			</p>
-			<p className="text-sm font-medium leading-none text-zinc-600">{!!gapToLeader ? gapToLeader : "-- ---"}</p>
+			<p className="text-sm leading-none font-medium text-zinc-600">{!!gapToLeader ? gapToLeader : "-- ---"}</p>
 		</div>
 	);
 }

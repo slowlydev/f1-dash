@@ -44,7 +44,7 @@ export default function DriverInfo({ timingDriver, gridPos }: Props) {
 					: `${timingDriver.numberOfLaps}L`}
 			</p>
 
-			<p className="text-sm font-medium leading-none text-zinc-600">{status ?? "-"}</p>
+			<p className="text-sm leading-none font-medium text-zinc-600">{status ?? "-"}</p>
 		</div>
 	);
 }

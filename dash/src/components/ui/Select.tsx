@@ -30,7 +30,7 @@ export default function Select<T>({ placeholder, options, selected, setSelected 
 				<ComboboxInput
 					placeholder={placeholder}
 					className={clsx(
-						"w-full rounded-lg border-none bg-white/5 py-1.5 pl-3 pr-8 text-sm/6 text-white",
+						"w-full rounded-lg border-none bg-white/5 py-1.5 pr-8 pl-3 text-sm/6 text-white",
 						"focus:outline-hidden data-focus:outline-2 data-focus:-outline-offset-2 data-focus:outline-white/25",
 					)}
 					displayValue={(option: Option<T> | null) => option?.label ?? ""}
@@ -52,7 +52,7 @@ export default function Select<T>({ placeholder, options, selected, setSelected 
 					<ComboboxOption
 						key={idx}
 						value={option.value}
-						className="group flex cursor-pointer select-none items-center gap-2 rounded-lg px-3 py-1.5 data-focus:bg-white/10"
+						className="group flex cursor-pointer items-center gap-2 rounded-lg px-3 py-1.5 select-none data-focus:bg-white/10"
 					>
 						{/* <CheckIcon className="invisible size-4 fill-white group-data-selected:visible" /> */}
 						<div className="text-sm/6 text-white">{option.label}</div>
