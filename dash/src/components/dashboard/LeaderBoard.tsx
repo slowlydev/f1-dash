@@ -16,7 +16,7 @@ export default function LeaderBoard() {
 	const showTableHeader = useSettingsStore((state) => state.tableHeaders);
 
 	return (
-		<div className="flex w-fit flex-col gap-1">
+		<div className="flex w-fit flex-col gap-0.5">
 			{showTableHeader && <TableHeaders />}
 
 			{(!drivers || !driversTiming) &&
