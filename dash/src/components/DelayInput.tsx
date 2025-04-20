@@ -2,6 +2,8 @@
 
 import clsx from "clsx";
 
+import { useState, useRef, useEffect } from "react";
+
 import { useSettingsStore } from "@/stores/useSettingsStore";
 
 type Props = {
@@ -9,13 +11,26 @@ type Props = {
 };
 
 export default function DelayInput({ className }: Props) {
+	const [delayState, setDelayState] = useState("0");
+
 	const currentDelay = useSettingsStore((s) => s.delay);
 	const setDelay = useSettingsStore((s) => s.setDelay);
 
-	const handleChange = (v: string) => {
-		const delay = v ? parseInt(v) : 0;
-		if (delay < 0) return;
+	const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+	const updateDelay = (updateInput: boolean = false) => {
+		const delay = delayState ? Math.max(parseInt(delayState), 0) : 0;
 		setDelay(delay);
+		if (updateInput) setDelayState(delay.toString());
+	};
+
+	useEffect(() => {
+		if (timeoutRef.current) clearTimeout(timeoutRef.current);
+		timeoutRef.current = setTimeout(updateDelay, 500);
+	}, [delayState]);
+
+	const handleChange = (v: string) => {
+		setDelayState(v);
 	};
 
 	return (
@@ -25,10 +40,13 @@ export default function DelayInput({ className }: Props) {
 				className,
 			)}
 			type="number"
+			inputMode="numeric"
 			min={0}
 			placeholder="0s"
-			value={currentDelay}
+			value={delayState}
 			onChange={(e) => handleChange(e.target.value)}
+			onKeyDown={(e) => e.code == "Enter" && updateDelay(true)}
+			onBlur={() => updateDelay(true)}
 		/>
 	);
 }
