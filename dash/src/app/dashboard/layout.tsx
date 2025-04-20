@@ -51,7 +51,10 @@ export default function DashboardLayout({ children }: Props) {
 				<p>Or make your delay smaller.</p>
 			</motion.div>
 
-			<motion.div layout="size" className={!syncing || ended ? "flex h-full flex-1 flex-col md:gap-2" : "hidden"}>
+			<motion.div
+				layout="size"
+				className={!syncing || ended ? "flex h-full w-full flex-1 flex-col md:gap-2" : "hidden"}
+			>
 				<HeaderBar />
 
 				<div className="no-scrollbar w-full flex-1 overflow-auto md:rounded-lg">{children}</div>
@@ -75,7 +78,7 @@ function HeaderBar() {
 
 			<div className="flex items-center gap-2 p-2 md:p-0">
 				<AnimatePresence>
-					{!pinned && <SidenavButton key="desktop" className="hidden md:flex" onClick={() => pin()} />}
+					{!pinned && <SidenavButton key="desktop" className="hidden shrink-0 md:flex" onClick={() => pin()} />}
 
 					<motion.div key="session-info" layout="position">
 						<SessionInfo />
