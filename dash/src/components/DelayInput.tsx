@@ -18,6 +18,7 @@ export default function DelayInput({ className, saveDelay }: Props) {
 	const [delayState, setDelayState] = useState<string>(currentDelay.toString());
 
 	const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+	const inputRef = useRef<HTMLInputElement>(null);
 
 	const updateDelay = (updateInput: boolean = false) => {
 		const delay = delayState ? Math.max(parseInt(delayState), 0) : 0;
@@ -29,6 +30,12 @@ export default function DelayInput({ className, saveDelay }: Props) {
 		if (timeoutRef.current) clearTimeout(timeoutRef.current);
 		timeoutRef.current = setTimeout(updateDelay, saveDelay || 0);
 	}, [delayState]);
+
+	useEffect(() => {
+		if (inputRef.current != document.activeElement) {
+			setDelayState(currentDelay.toString());
+		}
+	}, [currentDelay]);
 
 	const handleChange = (v: string) => {
 		setDelayState(v);
@@ -48,6 +55,7 @@ export default function DelayInput({ className, saveDelay }: Props) {
 			onChange={(e) => handleChange(e.target.value)}
 			onKeyDown={(e) => e.code == "Enter" && updateDelay(true)}
 			onBlur={() => updateDelay(true)}
+			ref={inputRef}
 		/>
 	);
 }
