@@ -12,6 +12,16 @@ export default function Standings() {
 
 	const drivers = useDataStore((state) => state.driverList);
 
+	const isRace = useDataStore((state) => state.sessionInfo?.type === "Race");
+
+	if (!isRace) {
+		return (
+			<div className="flex h-full items-center justify-center">
+				<p>Championship prediction is currently only available during a race</p>
+			</div>
+		);
+	}
+
 	return (
 		<div className="grid h-full grid-cols-1 divide-y divide-zinc-800 lg:grid-cols-2 lg:divide-x lg:divide-y-0">
 			<div className="h-full p-4">
