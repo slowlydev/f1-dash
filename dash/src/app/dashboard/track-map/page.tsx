@@ -22,8 +22,8 @@ export default function TrackMap() {
 	const driversTiming = useDataStore((state) => state?.timingData);
 
 	return (
-		<div className="flex flex-col-reverse divide-y divide-zinc-800 md:h-full md:flex-row md:divide-x md:divide-y-0">
-			<div className="flex w-full flex-col divide-y divide-zinc-800 md:h-full md:w-fit">
+		<div className="flex flex-col-reverse md:h-full md:flex-row">
+			<div className="flex w-full flex-col gap-0.5 md:h-full md:w-fit">
 				{(!drivers || !driversTiming) &&
 					new Array(20).fill("").map((_, index) => <SkeletonDriver key={`driver.loading.${index}`} />)}
 
@@ -87,7 +87,7 @@ const TrackMapDriver = ({ position, driver, timingDriver }: TrackMapDriverProps)
 	return (
 		<motion.div
 			layout="position"
-			className={clsx("flex flex-col gap-1 p-1.5 select-none", {
+			className={clsx("flex flex-col gap-1 rounded-lg p-1.5 select-none", {
 				"opacity-50": timingDriver.knockedOut || timingDriver.retired || timingDriver.stopped,
 				"bg-sky-800/30": favoriteDriver,
 				"bg-violet-800/30": hasFastest,
@@ -97,7 +97,7 @@ const TrackMapDriver = ({ position, driver, timingDriver }: TrackMapDriverProps)
 			<div
 				className="grid items-center gap-2"
 				style={{
-					gridTemplateColumns: "5.5rem 4rem 4rem 5rem 5rem",
+					gridTemplateColumns: "5.5rem 3.5rem 4rem 5rem 5rem",
 				}}
 			>
 				<DriverTag className="min-w-full!" short={driver.tla} teamColor={driver.teamColour} position={position} />
