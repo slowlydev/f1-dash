@@ -21,11 +21,7 @@ export default function DriverMiniSectors({ sectors = [], bestSectors, tla }: Pr
 					{showMiniSectors && (
 						<div className="flex flex-row gap-1">
 							{sector.segments.map((segment, j) => (
-								<MiniSector
-									wide={showBestSectors && showMiniSectors}
-									status={segment.status}
-									key={`sector.mini.${tla}.${j}`}
-								/>
+								<MiniSector status={segment.status} key={`sector.mini.${tla}.${j}`} />
 							))}
 						</div>
 					)}
@@ -53,10 +49,10 @@ export default function DriverMiniSectors({ sectors = [], bestSectors, tla }: Pr
 	);
 }
 
-function MiniSector({ status, wide }: { status: number; wide: boolean }) {
+function MiniSector({ status }: { status: number }) {
 	return (
 		<div
-			style={wide ? { width: 10, height: 5, borderRadius: 2 } : { height: 10, width: 8, borderRadius: 3.2 }}
+			style={{ width: 10, height: 5, borderRadius: 2 }}
 			className={clsx({
 				"bg-amber-400": status === 2048 || status === 2052, // TODO unsure
 				"bg-emerald-500": status === 2049,
