@@ -90,28 +90,19 @@ export default function RadioMessage({ driver, capture, basePath, gmtOffset }: P
 				</time>
 			</div>
 
-			<div
-				className="grid place-items-center items-center gap-1"
-				style={{
-					gridTemplateColumns: "2rem 20rem",
-				}}
-			>
-				<div className="w-10 place-self-start">
-					<DriverTag teamColor={driver.teamColour} short={driver.tla} />
-				</div>
+			<div className="flex items-center gap-1">
+				<DriverTag className="!w-fit" teamColor={driver.teamColour} short={driver.tla} />
 
-				<div className="flex items-center gap-1">
-					<PlayControls playing={playing} onClick={togglePlayback} />
-					<Progress duration={duration} progress={progress} />
+				<PlayControls playing={playing} onClick={togglePlayback} />
+				<Progress duration={duration} progress={progress} />
 
-					<audio
-						preload="none"
-						src={`${basePath}${capture.path}`}
-						ref={audioRef}
-						onEnded={() => onEnded()}
-						onLoadedMetadata={() => loadMeta()}
-					/>
-				</div>
+				<audio
+					preload="none"
+					src={`${basePath}${capture.path}`}
+					ref={audioRef}
+					onEnded={() => onEnded()}
+					onLoadedMetadata={() => loadMeta()}
+				/>
 			</div>
 		</motion.li>
 	);
