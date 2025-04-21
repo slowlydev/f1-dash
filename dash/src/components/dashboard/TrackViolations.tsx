@@ -6,17 +6,16 @@ import { objectEntries } from "@/lib/driverHelper";
 
 import DriverViolations from "./DriverViolations";
 
-type DriverViolations = {
+type Violations = {
 	[key: string]: number;
 };
 
 const findCarNumber = (message: string): string | undefined => {
-	const carNumberRegex = /CAR (\d+)/;
-	const match = message.match(carNumberRegex);
+	const match = message.match(/CAR (\d+)/);
 	return match?.[1];
 };
 
-const sortViolations = (driverA: Driver, driverB: Driver, violations: DriverViolations): number => {
+const sortViolations = (driverA: Driver, driverB: Driver, violations: Violations): number => {
 	const a = violations[driverA.racingNumber];
 	const b = violations[driverB.racingNumber];
 	return b - a;
@@ -31,7 +30,7 @@ export default function TrackViolations() {
 		messages?.messages
 			.filter((rcm) => rcm.category == "Other")
 			.filter((rcm) => rcm.message.includes("TRACK LIMITS"))
-			.reduce((acc: DriverViolations, violations) => {
+			.reduce((acc: Violations, violations) => {
 				const carNr = findCarNumber(violations.message);
 				if (!carNr) return acc;
 
@@ -50,7 +49,7 @@ export default function TrackViolations() {
 		: undefined;
 
 	return (
-		<div className="flex flex-col gap-2">
+		<div className="flex flex-col gap-0.5">
 			{violationDrivers && violationDrivers.length < 1 && (
 				<div className="flex h-96 w-full flex-col items-center justify-center">
 					<p className="text-gray-500">No violations yet</p>

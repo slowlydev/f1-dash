@@ -16,8 +16,9 @@ export default function Standings() {
 
 	if (!isRace) {
 		return (
-			<div className="flex h-full items-center justify-center">
-				<p>Championship prediction is currently only available during a race</p>
+			<div className="flex h-full w-full flex-col items-center justify-center">
+				<p>championship standings unavailable</p>
+				<p className="text-sm text-zinc-500">currently only available during a race</p>
 			</div>
 		);
 	}
