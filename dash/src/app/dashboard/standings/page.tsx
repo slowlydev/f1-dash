@@ -25,7 +25,7 @@ export default function Standings() {
 	return (
 		<div className="grid h-full grid-cols-1 divide-y divide-zinc-800 lg:grid-cols-2 lg:divide-x lg:divide-y-0">
 			<div className="h-full p-4">
-				<h2 className="text-xl">Predicted Driver Championship Standings</h2>
+				<h2 className="text-xl">Driver Championship Standings</h2>
 
 				<div className="divide flex flex-col divide-y divide-zinc-800">
 					{!driverStandings &&
@@ -46,7 +46,7 @@ export default function Standings() {
 									<div
 										className="grid p-2"
 										style={{
-											gridTemplateColumns: "2rem 2rem auto 4rem 4rem 4rem",
+											gridTemplateColumns: "2rem 2rem auto 4rem 4rem",
 										}}
 										key={driver.racingNumber}
 									>
@@ -57,7 +57,6 @@ export default function Standings() {
 											{driverDetails.firstName} {driverDetails.lastName}
 										</p>
 
-										<p className="text-zinc-500">{driver.currentPoints}</p>
 										<p>{driver.predictedPoints}</p>
 
 										<NumberDiff old={driver.predictedPoints} current={driver.currentPoints} />
@@ -68,7 +67,7 @@ export default function Standings() {
 			</div>
 
 			<div className="h-full p-4">
-				<h2 className="text-xl">Predicted Team Championship Standings</h2>
+				<h2 className="text-xl">Team Championship Standings</h2>
 
 				<div className="divide flex flex-col divide-y divide-zinc-800">
 					{!teamStandings && new Array(10).fill("").map((_, index) => <SkeletonItem key={`team.loading.${index}`} />)}
@@ -80,7 +79,7 @@ export default function Standings() {
 								<div
 									className="grid p-2"
 									style={{
-										gridTemplateColumns: "2rem 2rem auto 4rem 4rem 4rem",
+										gridTemplateColumns: "2rem 2rem auto 4rem 4rem",
 									}}
 									key={team.teamName}
 								>
@@ -89,7 +88,6 @@ export default function Standings() {
 
 									<p>{team.teamName}</p>
 
-									<p className="text-zinc-500">{team.currentPoints}</p>
 									<p>{team.predictedPoints}</p>
 
 									<NumberDiff old={team.predictedPoints} current={team.currentPoints} />
