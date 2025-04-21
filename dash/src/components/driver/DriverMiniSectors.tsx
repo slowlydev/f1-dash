@@ -33,16 +33,16 @@ export default function DriverMiniSectors({ sectors = [], bestSectors, tla }: Pr
 					<div className={clsx("flex", showMiniSectors ? "items-center gap-1" : "flex-col")}>
 						<p
 							className={clsx(
-								"text-lg leading-none font-semibold",
+								"text-lg leading-none font-medium tabular-nums",
 								getTimeColor(sector.overallFastest, sector.personalFastest),
-								!sector.value ? "text-zinc-600" : "",
+								!sector.value ? "text-zinc-500" : "",
 							)}
 						>
 							{!!sector.value ? sector.value : !!sector.previousValue ? sector.previousValue : "-- ---"}
 						</p>
 
 						{showBestSectors && (
-							<p className="text-sm leading-none font-medium text-zinc-600">
+							<p className="text-sm leading-none text-zinc-600 tabular-nums">
 								{bestSectors && bestSectors[i].value ? bestSectors[i].value : "-- ---"}
 							</p>
 						)}

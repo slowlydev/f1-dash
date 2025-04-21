@@ -8,7 +8,7 @@ export default async function SchedulePage() {
 		<div>
 			<div className="my-4">
 				<h1 className="text-3xl">Up Next</h1>
-				<p className="text-zinc-600">All times are local time</p>
+				<p className="text-zinc-500">All times are local time</p>
 			</div>
 
 			<Suspense fallback={<NextRoundLoading />}>
@@ -17,7 +17,7 @@ export default async function SchedulePage() {
 
 			<div className="my-4">
 				<h1 className="text-3xl">Schedule</h1>
-				<p className="text-zinc-600">All times are local time</p>
+				<p className="text-zinc-500">All times are local time</p>
 			</div>
 
 			<Suspense fallback={<FullScheduleLoading />}>

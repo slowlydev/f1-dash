@@ -24,7 +24,7 @@ export default function WeekendSchedule({ sessions }: Props) {
 							>
 								<p className="w-28 overflow-hidden text-ellipsis whitespace-nowrap sm:w-auto">{session.kind}</p>
 
-								<p className="text-sm leading-none text-zinc-600">
+								<p className="text-sm leading-none text-zinc-500">
 									{utc(session.start).local().format("HH:mm")} - {utc(session.end).local().format("HH:mm")}
 								</p>
 							</div>

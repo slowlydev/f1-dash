@@ -27,12 +27,12 @@ export default function DriverInfo({ timingDriver, gridPos }: Props) {
 							: null;
 
 	return (
-		<div className="place-self-start text-lg font-semibold" id="walkthrough-driver-info">
+		<div className="place-self-start">
 			<p
-				className={clsx("leading-none", {
+				className={clsx("text-lg leading-none font-medium tabular-nums", {
 					"text-emerald-500": gain,
 					"text-red-500": loss,
-					"text-gray-700": !gain && !loss,
+					"text-zinc-500": !gain && !loss,
 				})}
 			>
 				{positionChange !== undefined
@@ -44,7 +44,7 @@ export default function DriverInfo({ timingDriver, gridPos }: Props) {
 					: `${timingDriver.numberOfLaps}L`}
 			</p>
 
-			<p className="text-sm leading-none font-medium text-zinc-600">{status ?? "-"}</p>
+			<p className="text-sm leading-none text-zinc-500">{status ?? "-"}</p>
 		</div>
 	);
 }

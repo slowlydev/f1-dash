@@ -202,7 +202,7 @@ export default function Timeline({ frames, setFrame, playing, setPlaying }: Prop
 				{Array.from({ length: legendCount }).map((_, i) => {
 					const legendTime = startTime + i * timeInterval;
 					return (
-						<div key={i} className="text-xs text-zinc-400">
+						<div key={i} className="text-xs text-zinc-500">
 							{unix(legendTime).format("HH:mm")}
 						</div>
 					);

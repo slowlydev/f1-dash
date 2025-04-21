@@ -15,12 +15,12 @@ export default function Page() {
 					<LeaderBoard />
 				</div>
 
-				<div className="flex-1">
+				<div className="flex-1 2xl:max-h-[50rem]">
 					<Map />
 				</div>
 			</div>
 
-			<div className="grid grid-cols-1 gap-2 divide-y divide-zinc-600 *:h-[30rem] *:overflow-y-auto md:divide-y-0 lg:grid-cols-3">
+			<div className="grid grid-cols-1 gap-2 divide-y divide-zinc-800 *:h-[30rem] *:overflow-y-auto *:rounded-lg *:border *:border-zinc-800 *:p-2 md:divide-y-0 lg:grid-cols-3">
 				<div>
 					<RaceControl />
 				</div>

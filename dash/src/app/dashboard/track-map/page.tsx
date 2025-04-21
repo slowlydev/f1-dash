@@ -23,7 +23,7 @@ export default function TrackMap() {
 
 	return (
 		<div className="flex flex-col-reverse md:h-full md:flex-row">
-			<div className="flex w-full flex-col gap-0.5 md:h-full md:w-fit">
+			<div className="flex w-full flex-col gap-0.5 overflow-y-auto border-zinc-800 md:h-full md:w-fit md:rounded-lg md:border md:p-2">
 				{(!drivers || !driversTiming) &&
 					new Array(20).fill("").map((_, index) => <SkeletonDriver key={`driver.loading.${index}`} />)}
 

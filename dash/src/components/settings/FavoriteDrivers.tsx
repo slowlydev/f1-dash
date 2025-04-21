@@ -41,7 +41,7 @@ export default function FavoriteDrivers() {
 					if (!driver) return null;
 
 					return (
-						<div key={driverNumber} className="flex items-center gap-1 rounded-xl border border-zinc-700 p-1">
+						<div key={driverNumber} className="flex items-center gap-1 rounded-xl border border-zinc-800 p-1">
 							<DriverTag teamColor={driver.teamColour} short={driver.tla} />
 
 							<motion.button

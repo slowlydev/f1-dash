@@ -17,7 +17,7 @@ export default function SettingsPage() {
 	const settings = useSettingsStore();
 	return (
 		<div>
-			<h1 className="my-4 text-3xl">Settings</h1>
+			<h1 className="mb-4 text-3xl">Settings</h1>
 
 			<h2 className="my-4 text-2xl">Visual</h2>
 

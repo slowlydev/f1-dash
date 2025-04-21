@@ -14,7 +14,7 @@ export default function DriverTire({ stints }: Props) {
 	);
 
 	return (
-		<div className="flex flex-row items-center gap-2 place-self-start" id="walkthrough-driver-tire">
+		<div className="flex flex-row items-center gap-2 place-self-start">
 			{currentStint && !unknownCompound && currentStint.compound && (
 				<Image
 					src={"/tires/" + currentStint.compound.toLowerCase() + ".svg"}
@@ -33,11 +33,12 @@ export default function DriverTire({ stints }: Props) {
 			{!currentStint && <div className="h-8 w-8 animate-pulse rounded-full bg-zinc-800 font-semibold" />}
 
 			<div>
-				<p className="leading-none font-bold">
+				<p className="leading-none font-medium">
 					L {currentStint?.totalLaps ?? 0}
 					{currentStint?.new ? "" : "*"}
 				</p>
-				<p className="text-sm leading-none font-medium text-zinc-600">PIT {stops}</p>
+
+				<p className="text-sm leading-none text-zinc-500">PIT {stops}</p>
 			</div>
 		</div>
 	);

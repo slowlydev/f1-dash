@@ -14,18 +14,18 @@ export default function DriverLapTime({ last, best, hasFastest }: Props) {
 		<div className="place-self-start">
 			<p
 				className={clsx(
-					"text-lg leading-none font-semibold",
+					"text-lg leading-none font-medium tabular-nums",
 					getTimeColor(last.overallFastest, last.personalFastest),
-					!last.value ? "text-zinc-600" : "",
+					!last.value ? "text-zinc-500" : "",
 				)}
 			>
 				{!!last.value ? last.value : "-- -- ---"}
 			</p>
 			<p
 				className={clsx(
-					"text-sm leading-none font-medium text-zinc-600",
+					"text-sm leading-none text-zinc-500 tabular-nums",
 					getTimeColor(hasFastest, true),
-					!best.value ? "text-zinc-600" : "",
+					!best.value ? "text-zinc-500" : "",
 				)}
 			>
 				{!!best.value ? best.value : "-- -- ---"}

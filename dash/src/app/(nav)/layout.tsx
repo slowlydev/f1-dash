@@ -19,7 +19,6 @@ export default function Layout({ children }: Props) {
 					<MotionLink href="/">Home</MotionLink>
 					<MotionLink href="/dashboard">Dashboard</MotionLink>
 					<MotionLink href="/schedule">Schedule</MotionLink>
-					<MotionLink href="/settings">Settings</MotionLink>
 					<MotionLink href="/help">Help</MotionLink>
 				</div>
 

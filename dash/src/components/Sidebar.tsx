@@ -43,16 +43,15 @@ type Props = {
 };
 
 export default function Sidebar({ connected }: Props) {
-	const delay = useSettingsStore((state) => state.delay);
-	const favoriteDrivers = useSettingsStore((state) => state.favoriteDrivers);
-	const drivers = useDataStore((state) => state.driverList);
+	// const favoriteDrivers = useSettingsStore((state) => state.favoriteDrivers);
+	// const drivers = useDataStore((state) => state.driverList);
 
-	const driverItems = drivers
-		? favoriteDrivers.map((nr) => ({
-				href: `/dashboard/driver/${nr}`,
-				name: drivers[nr].fullName,
-			}))
-		: null;
+	// const driverItems = drivers
+	// 	? favoriteDrivers.map((nr) => ({
+	// 			href: `/dashboard/driver/${nr}`,
+	// 			name: drivers[nr].fullName,
+	// 		}))
+	// 	: null;
 
 	const { opened, pinned } = useSidebarStore();
 	const close = useSidebarStore((state) => state.close);
@@ -109,10 +108,6 @@ export default function Sidebar({ connected }: Props) {
 							<DelayInput />
 							<DelayTimer />
 
-							{/* <p className={clsx("rounded-lg p-1 px-2 text-sm", delay > 0 ? "bg-gray-600" : "bg-red-700")}>
-								{delay > 0 ? "Delayed" : "Live"}
-							</p> */}
-
 							<ConnectionStatus connected={connected} />
 						</div>
 
@@ -144,8 +139,9 @@ export default function Sidebar({ connected }: Props) {
 					<p className="mt-4 p-2 text-sm text-zinc-500">General</p>
 
 					<div className="flex flex-col gap-1">
+						<Item item={{ href: "/dashboard/settings", name: "Settings" }} />
+
 						<Item target="_blank" item={{ href: "/schedule", name: "Schedule" }} />
-						<Item target="_blank" item={{ href: "/settings", name: "Settings" }} />
 						<Item target="_blank" item={{ href: "/help", name: "Help" }} />
 						<Item target="_blank" item={{ href: "/", name: "Home" }} />
 					</div>

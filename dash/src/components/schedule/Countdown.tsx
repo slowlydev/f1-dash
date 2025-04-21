@@ -60,7 +60,7 @@ export default function Countdown({ next, type }: Props) {
 							<div className="h-9 w-12 animate-pulse rounded-md bg-zinc-800" />
 						)}
 
-						<p className="text-base text-zinc-600">days</p>
+						<p className="text-base text-zinc-500">days</p>
 					</div>
 
 					<div>
@@ -78,7 +78,7 @@ export default function Countdown({ next, type }: Props) {
 							<div className="h-9 w-12 animate-pulse rounded-md bg-zinc-800" />
 						)}
 
-						<p className="text-base text-zinc-600">hours</p>
+						<p className="text-base text-zinc-500">hours</p>
 					</div>
 
 					<div>
@@ -96,7 +96,7 @@ export default function Countdown({ next, type }: Props) {
 							<div className="h-9 w-12 animate-pulse rounded-md bg-zinc-800" />
 						)}
 
-						<p className="text-base text-zinc-600">minutes</p>
+						<p className="text-base text-zinc-500">minutes</p>
 					</div>
 
 					<div>
@@ -114,7 +114,7 @@ export default function Countdown({ next, type }: Props) {
 							<div className="h-9 w-12 animate-pulse rounded-md bg-zinc-800" />
 						)}
 
-						<p className="text-base text-zinc-600">seconds</p>
+						<p className="text-base text-zinc-500">seconds</p>
 					</div>
 				</div>
 			</AnimatePresence>

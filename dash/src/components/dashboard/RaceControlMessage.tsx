@@ -15,52 +15,49 @@ type Props = {
 };
 
 const getDriverNumber = (msg: Message) => {
-	const groups = msg.message.match(/\d+/);
-
-	if (!groups) {
-		return null;
-	}
-
-	return groups[0];
+	const match = msg.message.match(/CAR (\d+)/);
+	return match?.[1];
 };
 
 export function RaceControlMessage({ msg, gmtOffset }: Props) {
 	const favoriteDriver = useSettingsStore((state) => state.favoriteDrivers.includes(getDriverNumber(msg) ?? ""));
 
+	const localTime = utc(msg.utc).local().format("HH:mm:ss");
+	const trackTime = utc(toTrackTime(msg.utc, gmtOffset)).format("HH:mm");
+
 	return (
 		<motion.li
-			animate={{ opacity: 1, y: 0 }}
-			initial={{ opacity: 0, y: -20 }}
-			className={clsx("flex flex-col gap-1 rounded-lg p-2", { "bg-sky-800/30": favoriteDriver })}
+			layout="position"
+			animate={{ opacity: 1, scale: 1 }}
+			initial={{ opacity: 0, scale: 0.8 }}
+			className={clsx("flex items-center justify-between gap-1 rounded-lg p-2", { "bg-sky-800/30": favoriteDriver })}
 		>
-			<div className="flex items-center gap-1 text-sm leading-none font-medium text-gray-500">
-				{msg.lap && (
-					<>
-						<p>LAP {msg.lap}</p>
-						{"·"}
-					</>
-				)}
-				<time dateTime={utc(msg.utc).local().format("HH:mm:ss")}>{utc(msg.utc).local().format("HH:mm:ss")}</time>
-				{"·"}
-				<time className="text-gray-600" dateTime={utc(msg.utc).format("HH:mm")}>
-					{utc(toTrackTime(msg.utc, gmtOffset)).format("HH:mm")}
-				</time>
-			</div>
-
-			<div className="flex gap-1">
-				{msg.flag && msg.flag !== "CLEAR" && (
-					<div>
-						<Image
-							src={`/flags/${msg.flag.toLowerCase().replaceAll(" ", "-")}-flag.svg`}
-							alt={msg.flag}
-							width={20}
-							height={20}
-						/>
-					</div>
-				)}
+			<div>
+				<div className="flex items-center gap-1 text-sm leading-none text-zinc-500">
+					{msg.lap && (
+						<>
+							<p>Lap {msg.lap}</p>
+							{"·"}
+						</>
+					)}
+					<time dateTime={localTime}>{localTime}</time>
+					{"·"}
+					<time className="text-zinc-700" dateTime={trackTime}>
+						{trackTime}
+					</time>
+				</div>
 
 				<p className="text-sm">{msg.message}</p>
 			</div>
+
+			{msg.flag && msg.flag !== "CLEAR" && (
+				<Image
+					src={`/flags/${msg.flag.toLowerCase().replaceAll(" ", "-")}-flag.svg`}
+					alt={msg.flag}
+					width={25}
+					height={25}
+				/>
+			)}
 		</motion.li>
 	);
 }
