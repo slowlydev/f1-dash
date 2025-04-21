@@ -14,7 +14,7 @@ type Props = {
 export default function Layout({ children }: Props) {
 	return (
 		<>
-			<nav className="sticky top-0 left-0 z-10 flex h-12 w-full items-center justify-between gap-4 border-b border-zinc-800 bg-black p-2 px-4">
+			<nav className="sticky top-0 left-0 z-10 flex h-12 w-full items-center justify-between gap-4 border-b border-zinc-800 p-2 px-4 backdrop-blur-lg">
 				<div className="flex gap-4">
 					<MotionLink href="/">Home</MotionLink>
 					<MotionLink href="/dashboard">Dashboard</MotionLink>
