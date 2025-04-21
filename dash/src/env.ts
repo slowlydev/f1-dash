@@ -12,6 +12,8 @@ const client = z.object({
 
 	NEXT_PUBLIC_TRACKING_ID: z.string().optional(),
 	NEXT_PUBLIC_TRACKING_URL: z.string().includes("http").optional(),
+
+	NEXT_PUBLIC_DISABLE_IFRAME: z.string().optional(),
 });
 
 const processEnv = {
@@ -23,6 +25,8 @@ const processEnv = {
 
 	NEXT_PUBLIC_TRACKING_ID: process.env.NEXT_PUBLIC_TRACKING_ID,
 	NEXT_PUBLIC_TRACKING_URL: process.env.NEXT_PUBLIC_TRACKING_URL,
+
+	NEXT_PUBLIC_DISABLE_IFRAME: process.env.NEXT_PUBLIC_DISABLE_IFRAME,
 };
 
 // Don't touch the part below

@@ -18,7 +18,17 @@ type Props = Readonly<{
 export default function RootLayout({ children }: Props) {
 	return (
 		<html lang="en" className={`${GeistSans.variable} ${GeistMono.variable} bg-zinc-950 font-sans text-white`}>
-			<head />
+			<head>
+				{env.NEXT_PUBLIC_DISABLE_IFRAME === "1" && (
+					<Script strategy="beforeInteractive" id="no-embed">
+						{`
+						if (window.self !== window.top && window.location.pathname !== "/embed") {
+							window.location.href = "/embed";
+						}
+						`}
+					</Script>
+				)}
+			</head>
 
 			{env.NEXT_PUBLIC_TRACKING_ID && env.NEXT_PUBLIC_TRACKING_URL && (
 				// Umami Analytics
