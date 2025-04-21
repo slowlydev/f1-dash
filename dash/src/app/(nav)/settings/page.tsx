@@ -46,26 +46,31 @@ export default function SettingsPage() {
 				<p className="text-zinc-500">Show Drivers Mini Sectors</p>
 			</div>
 
+			<h2 className="my-4 text-2xl">Race Control</h2>
+
 			<div className="flex gap-2">
 				<Toggle enabled={settings.raceControlChime} setEnabled={(v) => settings.setRaceControlChime(v)} />
-				<p className="text-zinc-500">Play Race Control Chime</p>
+				<p className="text-zinc-500">Play Chime on new Race Control Message</p>
 			</div>
 
 			{settings.raceControlChime && (
-				<div className="flex max-w-52 flex-col gap-2">
-					<p>Race Control Chime Volume</p>
-					<div className="flex flex-row items-center gap-2">
-						<Slider value={settings.raceControlChimeVolume} setValue={(v) => settings.setRaceControlChimeVolume(v)} />
-						<Input
-							value={String(settings.raceControlChimeVolume)}
-							setValue={(v) => {
-								const numericValue = Number(v);
-								if (!isNaN(numericValue)) {
-									settings.setRaceControlChimeVolume(numericValue);
-								}
-							}}
-						/>
-					</div>
+				<div className="flex flex-row items-center gap-2">
+					<Input
+						value={String(settings.raceControlChimeVolume)}
+						setValue={(v) => {
+							const numericValue = Number(v);
+							if (!isNaN(numericValue)) {
+								settings.setRaceControlChimeVolume(numericValue);
+							}
+						}}
+					/>
+					<Slider
+						className="!w-52"
+						value={settings.raceControlChimeVolume}
+						setValue={(v) => settings.setRaceControlChimeVolume(v)}
+					/>
+
+					<p className="text-zinc-500">Race Control Chime Volume</p>
 				</div>
 			)}
 
