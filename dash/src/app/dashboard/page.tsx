@@ -21,7 +21,7 @@ export default function Page() {
 				</Card>
 			</div>
 
-			<div className="grid grid-cols-1 gap-2 *:h-[30rem] *:overflow-y-scroll lg:grid-cols-3">
+			<div className="grid grid-cols-1 gap-2 divide-y divide-zinc-600 *:h-[30rem] *:overflow-y-auto lg:grid-cols-3">
 				<Card>
 					<RaceControl />
 				</Card>
@@ -44,5 +44,5 @@ type Props = {
 };
 
 function Card({ children, className }: Props) {
-	return <div className={clsx("rounded-lg", className)}>{children}</div>;
+	return <div className={className}>{children}</div>;
 }

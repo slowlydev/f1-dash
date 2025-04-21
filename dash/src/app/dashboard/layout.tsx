@@ -69,7 +69,7 @@ function HeaderBar() {
 	const open = useSidebarStore((state) => state.open);
 
 	return (
-		<div className="grid w-full grid-cols-1 divide-y divide-zinc-800 overflow-hidden border-zinc-800 md:grid-cols-3 md:divide-y-0 md:rounded-lg md:border md:px-3">
+		<div className="flex w-full flex-col justify-between divide-y divide-zinc-800 overflow-hidden border-zinc-800 md:h-18 md:flex-row md:divide-y-0 md:rounded-lg md:border md:px-3">
 			<div className="flex items-center justify-between overflow-hidden p-2 md:hidden">
 				{!pinned && <SidenavButton key="mobile" onClick={() => open()} />}
 
@@ -86,7 +86,7 @@ function HeaderBar() {
 				</AnimatePresence>
 			</div>
 
-			<div className="p-2 md:flex md:items-center">
+			<div className="p-2 md:hidden md:items-center md:p-0 lg:flex">
 				<WeatherInfo />
 			</div>
 
