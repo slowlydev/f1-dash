@@ -108,7 +108,7 @@ export function WeatherMap() {
 			<div ref={mapContainerRef} className="absolute h-full w-full" />
 
 			{!loading && frames.length > 0 && (
-				<div className="absolute bottom-0 left-0 z-20 m-2 flex w-lg gap-4 rounded-lg bg-black/80 p-4 backdrop-blur-xs">
+				<div className="absolute right-0 bottom-0 left-0 z-20 m-2 flex gap-4 rounded-lg bg-black/80 p-4 backdrop-blur-xs md:right-auto md:w-lg">
 					<PlayControls playing={playing} onClick={() => setPlaying((v) => !v)} />
 
 					<Timeline frames={frames} setFrame={setFrame} playing={playing} setPlaying={setPlaying} />
