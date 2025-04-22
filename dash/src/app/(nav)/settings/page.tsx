@@ -57,6 +57,16 @@ export default function SettingsPage() {
 			</div>
 
 			<div className="flex gap-2">
+				<Toggle enabled={settings.showCompass} setEnabled={(v) => settings.setShowCompass(v)} />
+				<p className="text-zinc-500">Show Compass on Track Map</p>
+			</div>
+
+			<div className="flex gap-2">
+				<Toggle enabled={settings.rotateTrackNorth} setEnabled={(v) => settings.setRotateTrackNorth(v)} />
+				<p className="text-zinc-500">Rotate the Track Map to Face North</p>
+			</div>
+
+			<div className="flex gap-2">
 				<Toggle enabled={settings.raceControlChime} setEnabled={(v) => settings.setRaceControlChime(v)} />
 				<p className="text-zinc-500">Play Race Control Chime</p>
 			</div>

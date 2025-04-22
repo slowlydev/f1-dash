@@ -33,6 +33,8 @@ type Corner = {
 
 export default function Map() {
 	const showCornerNumbers = useSettingsStore((state) => state.showCornerNumbers);
+	const showCompass = useSettingsStore((state) => state.showCompass);
+	const rotateTrackNorth = useSettingsStore((state) => state.rotateTrackNorth);
 	const favoriteDrivers = useSettingsStore((state) => state.favoriteDrivers);
 
 	const positions = usePositionStore((state) => state.positions);
@@ -49,6 +51,7 @@ export default function Map() {
 	const [sectors, setSectors] = useState<MapSector[]>([]);
 	const [corners, setCorners] = useState<Corner[]>([]);
 	const [rotation, setRotation] = useState<number>(0);
+	const [compass, setCompass] = useState<null | CompassProps>(null);
 
 	useEffect(() => {
 		(async () => {
@@ -58,7 +61,7 @@ export default function Map() {
 			const centerX = (Math.max(...mapJson.x) - Math.min(...mapJson.x)) / 2;
 			const centerY = (Math.max(...mapJson.y) - Math.min(...mapJson.y)) / 2;
 
-			const fixedRotation = mapJson.rotation + ROTATION_FIX;
+			const fixedRotation = rotateTrackNorth ? 90 : mapJson.rotation + ROTATION_FIX;
 
 			const sectors = createSectors(mapJson).map((s) => ({
 				...s,
@@ -86,9 +89,14 @@ export default function Map() {
 
 			const cMinX = Math.min(...pointsX) - SPACE;
 			const cMinY = Math.min(...pointsY) - SPACE;
-			const cWidthX = Math.max(...pointsX) - cMinX + SPACE * 2;
+			const cWidthX = Math.max(...pointsX) - cMinX + SPACE * 2 + 1000;
 			const cWidthY = Math.max(...pointsY) - cMinY + SPACE * 2;
 
+			const compassX = cMinX + cWidthX - 1500;
+			const compassY = cMinY + 1500;
+
+
+			setCompass({ x: compassX, y: compassY, angle: fixedRotation });
 			setCenter([centerX, centerY]);
 			setBounds([cMinX, cMinY, cWidthX, cWidthY]);
 			setSectors(sectors);
@@ -96,7 +104,7 @@ export default function Map() {
 			setRotation(fixedRotation);
 			setCorners(cornerPositions);
 		})();
-	}, [circuitKey]);
+	}, [circuitKey, rotateTrackNorth]);
 
 	const yellowSectors = useMemo(() => findYellowSectors(raceControlMessages), [raceControlMessages]);
 
@@ -158,6 +166,8 @@ export default function Map() {
 					/>
 				);
 			})}
+
+			{showCompass && compass && <Compass x={compass.x} y={compass.y} angle={compass.angle} />}
 
 			{showCornerNumbers &&
 				corners.map((corner) => (
@@ -269,3 +279,26 @@ const CarDot = ({ pos, name, color, favoriteDriver, pit, hidden, rotation, cente
 		</g>
 	);
 };
+
+type CompassProps = {
+	x: number;
+	y: number;
+	angle: number;
+}
+
+const Compass = ({ x, y, angle }: CompassProps) => {
+	let northPos = rotate(0, 400, angle, 0, 0);
+	let sideDif = rotate(100, 0, angle, 0, 0);
+	return (
+		<>
+			<polygon
+				points={`${x + northPos.x},${y + northPos.y} ${x - sideDif.x},${y - sideDif.y} ${x + sideDif.x},${y + sideDif.y}`}
+				fill={'red'}
+			/>
+			<polygon
+				points={`${x - northPos.x},${y - northPos.y} ${x - sideDif.x},${y - sideDif.y} ${x + sideDif.x},${y + sideDif.y}`}
+				fill={'white'}
+			/>
+		</>
+	);
+}
