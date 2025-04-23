@@ -1,5 +1,6 @@
 import { AnimatePresence, LayoutGroup } from "framer-motion";
 import clsx from "clsx";
+import { BiSortAlt2, BiSortDown, BiSortUp } from "react-icons/bi";
 
 import { useSettingsStore } from "@/stores/useSettingsStore";
 import { useDataStore } from "@/stores/useDataStore";
@@ -9,18 +10,28 @@ import { sortDrivers } from "@/lib/sorting";
 import { objectEntries } from "@/lib/driverHelper";
 
 import Driver from "@/components/driver/Driver";
+import Select from "@/components/Select";
 
-const sortOptions: { label: string; value: SortingCriteria }[] = [
-	{ label: "Position", value: "position" },
-	{ label: "Best Lap", value: "bestLap" },
-	{ label: "Last Lap", value: "lastLap" },
-	{ label: "Pit Status", value: "pitStatus" },
-	{ label: "Position Change", value: "positionChange" },
-	{ label: "Sector 1", value: "sector1" },
-	{ label: "Sector 2", value: "sector2" },
-	{ label: "Sector 3", value: "sector3" },
-	{ label: "Tyre Age", value: "tyreAge" },
+const sortOptions = [
+	{ label: "Position", value: "position" as SortingCriteria },
+	{ label: "Best Lap", value: "bestLap" as SortingCriteria },
+	{ label: "Last Lap", value: "lastLap" as SortingCriteria },
+	{ label: "Pit Status", value: "pitStatus" as SortingCriteria },
+	{ label: "Position Change", value: "positionChange" as SortingCriteria },
+	{ label: "Sector 1", value: "sector1" as SortingCriteria },
+	{ label: "Sector 2", value: "sector2" as SortingCriteria },
+	{ label: "Sector 3", value: "sector3" as SortingCriteria },
+	{ label: "Tyre Age", value: "tyreAge" as SortingCriteria },
 ];
+
+const columnSortMapping: Record<string, SortingCriteria> = {
+	"Position": "position",
+	"Tire": "tyreAge",
+	"Info": "positionChange",
+	"Gap": "position",
+	"LapTime": "bestLap",
+	"Sectors": "sector1",
+};
 
 export default function LeaderBoard() {
 	const drivers = useDataStore((state) => state?.driverList);
@@ -29,27 +40,48 @@ export default function LeaderBoard() {
 
 	const showTableHeader = useSettingsStore((state) => state.tableHeaders);
 	const sortCriteria = useSortingStore((state) => state.criteria);
+	const sortDirection = useSortingStore((state) => state.direction);
+	const showSortOptions = useSortingStore((state) => state.showSortOptions);
 	const setSortCriteria = useSortingStore((state) => state.setCriteria);
+	const toggleDirection = useSortingStore((state) => state.toggleDirection);
+	const toggleSortOptions = useSortingStore((state) => state.toggleSortOptions);
+	const setSort = useSortingStore((state) => state.setSort);
 
 	return (
-		<div className="flex flex-col gap-4">
-			<div className="flex items-center gap-2 px-2">
-				<label className="text-sm font-medium text-zinc-500">Sort by:</label>
-				<select
-					value={sortCriteria}
-					onChange={(e) => setSortCriteria(e.target.value as SortingCriteria)}
-					className="rounded bg-zinc-800 px-3 py-1 text-sm font-medium text-zinc-300 outline-none hover:bg-zinc-700 focus:ring-2 focus:ring-sky-500"
+		<div className="flex flex-col">
+			<div className="h-10 flex items-center gap-2 px-2 mb-2">
+				<button
+					onClick={toggleSortOptions}
+					className="flex items-center gap-1 rounded bg-zinc-800 px-3 py-1 text-sm font-medium text-zinc-300 hover:bg-zinc-700"
+					title="Toggle sort options"
 				>
-					{sortOptions.map((option) => (
-						<option key={option.value} value={option.value} className="bg-zinc-800">
-							{option.label}
-						</option>
-					))}
-				</select>
+					<BiSortAlt2 className="h-4 w-4" />
+					<span>Sort</span>
+				</button>
+				
+				{sortDirection === "asc" ? 
+					<BiSortUp className="h-5 w-5 cursor-pointer text-zinc-400 hover:text-zinc-200" onClick={toggleDirection} title="Sort Direction: Ascending" /> : 
+					<BiSortDown className="h-5 w-5 cursor-pointer text-zinc-400 hover:text-zinc-200" onClick={toggleDirection} title="Sort Direction: Descending" />
+				}
+
+				{showSortOptions && (
+					<div className="w-48">
+						<Select<SortingCriteria>
+							placeholder="Sort by"
+							options={sortOptions}
+							selected={sortCriteria}
+							setSelected={(value) => value && setSortCriteria(value)}
+						/>
+					</div>
+				)}
 			</div>
 
 			<div className="flex w-fit flex-col divide-y divide-zinc-800">
-				{showTableHeader && <TableHeaders />}
+				{showTableHeader && <TableHeaders 
+					currentSort={sortCriteria} 
+					direction={sortDirection} 
+					onSortChange={setSort} 
+				/>}
 
 				{(!drivers || !driversTiming) &&
 					new Array(20).fill("").map((_, index) => <SkeletonDriver key={`driver.loading.${index}`} />)}
@@ -61,6 +93,7 @@ export default function LeaderBoard() {
 								.sort((a, b) => 
 									sortDrivers(
 										sortCriteria,
+										sortDirection,
 										a,
 										b,
 										driversAppTiming?.lines[a.racingNumber],
@@ -83,7 +116,34 @@ export default function LeaderBoard() {
 	);
 }
 
-const TableHeaders = () => {
+type TableHeadersProps = {
+	currentSort: SortingCriteria;
+	direction: "asc" | "desc";
+	onSortChange: (criteria: SortingCriteria) => void;
+};
+
+const TableHeaders = ({ currentSort, direction, onSortChange }: TableHeadersProps) => {
+	const renderSortIcon = (column: string) => {
+		const criteria = columnSortMapping[column];
+		if (!criteria || currentSort !== criteria) return null;
+		
+		return direction === "asc" 
+			? <BiSortUp className="ml-1 inline h-4 w-4" /> 
+			: <BiSortDown className="ml-1 inline h-4 w-4" />;
+	};
+
+	const createClickHandler = (column: string) => {
+		const criteria = columnSortMapping[column];
+		if (!criteria) return undefined;
+		
+		return () => onSortChange(criteria);
+	};
+
+	const headerClass = (column: string) => clsx(
+		"cursor-pointer hover:text-zinc-300 transition-colors duration-150 flex items-center",
+		columnSortMapping[column] && currentSort === columnSortMapping[column] ? "text-sky-400" : ""
+	);
+
 	return (
 		<div
 			className="grid items-center gap-2 p-1 px-2 text-sm font-medium text-zinc-500"
@@ -91,13 +151,31 @@ const TableHeaders = () => {
 				gridTemplateColumns: "5.5rem 4rem 5.5rem 4rem 5rem 5.5rem auto auto",
 			}}
 		>
-			<p>Position</p>
+			<div className={headerClass("Position")} onClick={createClickHandler("Position")}>
+				<span>Position</span>
+				{renderSortIcon("Position")}
+			</div>
 			<p>DRS</p>
-			<p>Tire</p>
-			<p>Info</p>
-			<p>Gap</p>
-			<p>LapTime</p>
-			<p>Sectors</p>
+			<div className={headerClass("Tire")} onClick={createClickHandler("Tire")}>
+				<span>Tire</span>
+				{renderSortIcon("Tire")}
+			</div>
+			<div className={headerClass("Info")} onClick={createClickHandler("Info")}>
+				<span>Info</span>
+				{renderSortIcon("Info")}
+			</div>
+			<div className={headerClass("Gap")} onClick={createClickHandler("Gap")}>
+				<span>Gap</span>
+				{renderSortIcon("Gap")}
+			</div>
+			<div className={headerClass("LapTime")} onClick={createClickHandler("LapTime")}>
+				<span>LapTime</span>
+				{renderSortIcon("LapTime")}
+			</div>
+			<div className={headerClass("Sectors")} onClick={createClickHandler("Sectors")}>
+				<span>Sectors</span>
+				{renderSortIcon("Sectors")}
+			</div>
 		</div>
 	);
 };
