@@ -95,7 +95,6 @@ export default function Map() {
 			const compassX = cMinX + cWidthX - 1500;
 			const compassY = cMinY + 1500;
 
-
 			setCompass({ x: compassX, y: compassY, angle: fixedRotation });
 			setCenter([centerX, centerY]);
 			setBounds([cMinX, cMinY, cWidthX, cWidthY]);
@@ -284,7 +283,7 @@ type CompassProps = {
 	x: number;
 	y: number;
 	angle: number;
-}
+};
 
 const Compass = ({ x, y, angle }: CompassProps) => {
 	let northPos = rotate(0, 400, angle, 0, 0);
@@ -293,12 +292,12 @@ const Compass = ({ x, y, angle }: CompassProps) => {
 		<>
 			<polygon
 				points={`${x + northPos.x},${y + northPos.y} ${x - sideDif.x},${y - sideDif.y} ${x + sideDif.x},${y + sideDif.y}`}
-				fill={'red'}
+				fill={"red"}
 			/>
 			<polygon
 				points={`${x - northPos.x},${y - northPos.y} ${x - sideDif.x},${y - sideDif.y} ${x + sideDif.x},${y + sideDif.y}`}
-				fill={'white'}
+				fill={"white"}
 			/>
 		</>
 	);
-}
+};
