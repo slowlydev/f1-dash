@@ -15,7 +15,7 @@ To get started with the frontend do the following
 
 > [!NOTE]
 > FOR WINOWS USERS <br>
-> Download nmv [here](https://github.com/coreybutler/nvm-windows/releases) and chose `nvm-setup.exe` then in admin cmd run `nvm install x.x.x` where x is version number then `nvm use x.x.x`. <br>
+> Download nvm [here](https://github.com/coreybutler/nvm-windows/releases) and chose `nvm-setup.exe` then in admin cmd run `nvm install x.x.x` where x is version number then `nvm use x.x.x`. <br>
 > And also anywhere in the code bellow where it says "cp" replace that with "copy"
 
 ```bash
