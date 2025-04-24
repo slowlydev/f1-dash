@@ -13,6 +13,11 @@ To get started with the frontend do the following
 > You will need multiple terminal sessions, if you want to run everything,
 > you will need 4 sessions. (frontend, live backend, api backend, simulator)
 
+> [!NOTE]
+> FOR WINOWS USERS <br>
+> Download nmv [here](https://github.com/coreybutler/nvm-windows/releases) and chose `nvm-setup.exe` then in admin cmd run `nvm install x.x.x` where x is version number then `nvm use x.x.x`. <br>
+> And also anywhere in the code bellow where it says "cp" replace that with "copy"
+
 ```bash
 # clone the repository or your fork
 git clone git@github.com:slowlydev/f1-dash.git
