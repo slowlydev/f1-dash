@@ -7,6 +7,7 @@ import type { Round as RoundType } from "@/types/schedule.type";
 
 import { groupSessionByDay } from "@/lib/groupSessionByDay";
 import { formatDayRange, formatMonth } from "@/lib/dateFormatter";
+import { CountryFlag } from "@/components/CountryFlag";
 
 type Props = {
 	round: RoundType;
@@ -18,7 +19,10 @@ export default function Round({ round, nextName }: Props) {
 		<div className={clsx(round.over && "opacity-50")}>
 			<div className="flex items-center justify-between border-b border-zinc-600 pb-2">
 				<div className="flex items-center gap-2">
-					<p className="text-2xl">{round.countryName}</p>
+					<div className="flex items-center">
+						<CountryFlag country={round.countryName} />
+						<p className="text-2xl">{round.countryName}</p>
+					</div>
 					{round.name === nextName && (
 						<>
 							{utc().isBetween(utc(round.start), utc(round.end)) ? (
