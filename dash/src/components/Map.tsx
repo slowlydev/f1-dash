@@ -290,6 +290,18 @@ const Compass = ({ x, y, angle }: CompassProps) => {
 	let sideDif = rotate(100, 0, angle, 0, 0);
 	return (
 		<>
+			<text
+				x={x + northPos.x * 1.5}
+				y={y + northPos.y * 1.5}
+				textAnchor={"middle"}
+				dominantBaseline={"middle"}
+				className={"fill-zinc-700"}
+				fontSize={300}
+				fontWeight={"semibold"}
+			>
+				N
+			</text>
+
 			<polygon
 				points={`${x + northPos.x},${y + northPos.y} ${x - sideDif.x},${y - sideDif.y} ${x + sideDif.x},${y + sideDif.y}`}
 				fill={"red"}
