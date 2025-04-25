@@ -73,18 +73,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@headlessui/react@npm:2.2.0":
-  version: 2.2.0
-  resolution: "@headlessui/react@npm:2.2.0"
+"@headlessui/react@npm:2.2.2":
+  version: 2.2.2
+  resolution: "@headlessui/react@npm:2.2.2"
   dependencies:
     "@floating-ui/react": "npm:^0.26.16"
     "@react-aria/focus": "npm:^3.17.1"
     "@react-aria/interactions": "npm:^3.21.3"
-    "@tanstack/react-virtual": "npm:^3.8.1"
+    "@tanstack/react-virtual": "npm:^3.13.6"
+    use-sync-external-store: "npm:^1.5.0"
   peerDependencies:
     react: ^18 || ^19 || ^19.0.0-rc
     react-dom: ^18 || ^19 || ^19.0.0-rc
-  checksum: 10c0/af64ef2868405e629f55925d06ab6723b40a9d0802c1bd91e8ae834b6d50e51e0942bcdee44f4b51ce3b82be7c23df49e93713a29486a899d0d56b7ddce78039
+  checksum: 10c0/73d2687295e755b0a4057399a93097fb493b54001e80331669535d79e1071dad66a7f8e273932fa43f6b6584e9d6220ae5e92518d96b7fe3f0ded1e8b7697ca1
   languageName: node
   linkType: hard
 
@@ -666,7 +667,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/react-virtual@npm:^3.8.1":
+"@tanstack/react-virtual@npm:^3.13.6":
   version: 3.13.6
   resolution: "@tanstack/react-virtual@npm:3.13.6"
   dependencies:
@@ -870,7 +871,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "f1-dash@workspace:."
   dependencies:
-    "@headlessui/react": "npm:2.2.0"
+    "@headlessui/react": "npm:2.2.2"
     "@tailwindcss/postcss": "npm:4.0.8"
     "@types/node": "npm:22.13.5"
     "@types/pako": "npm:2.0.3"
@@ -878,29 +879,29 @@ __metadata:
     "@types/react-dom": "npm:19.0.4"
     clsx: "npm:2.1.1"
     geist: "npm:1.3.1"
-    maplibre-gl: "npm:5.2.0"
+    maplibre-gl: "npm:5.4.0"
     moment: "npm:2.30.1"
-    motion: "npm:12.4.7"
+    motion: "npm:12.9.2"
     next: "npm:15.3.1"
     pako: "npm:2.1.0"
     prettier: "npm:3.3.3"
     prettier-plugin-tailwindcss: "npm:0.6.11"
-    react: "npm:19.0.0"
-    react-dom: "npm:19.0.0"
+    react: "npm:19.1.0"
+    react-dom: "npm:19.1.0"
     sharp: "npm:0.34.1"
     tailwindcss: "npm:4.0.8"
     typescript: "npm:5.6.3"
     zod: "npm:3.23.8"
-    zustand: "npm:5.0.1"
+    zustand: "npm:5.0.3"
   languageName: unknown
   linkType: soft
 
-"framer-motion@npm:^12.4.7":
-  version: 12.6.5
-  resolution: "framer-motion@npm:12.6.5"
+"framer-motion@npm:^12.9.2":
+  version: 12.9.2
+  resolution: "framer-motion@npm:12.9.2"
   dependencies:
-    motion-dom: "npm:^12.6.5"
-    motion-utils: "npm:^12.6.5"
+    motion-dom: "npm:^12.9.1"
+    motion-utils: "npm:^12.8.3"
     tslib: "npm:^2.4.0"
   peerDependencies:
     "@emotion/is-prop-valid": "*"
@@ -913,7 +914,7 @@ __metadata:
       optional: true
     react-dom:
       optional: true
-  checksum: 10c0/31a75726fb65c38f902e5f0ad2065804449f5498ce475366e01fa57d18c329f845f9cb4910299a06a4f2df22b54032bce88dd14ce269bfd0399a9e0154cfc69f
+  checksum: 10c0/467a486675b04c612168151f5f8fc66d9f8d85016cff025351b33da8889521e98185e08e43f9ae050f982c810ca9fa22089839afff22ea5d0c602610d8c6f020
   languageName: node
   linkType: hard
 
@@ -1133,9 +1134,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"maplibre-gl@npm:5.2.0":
-  version: 5.2.0
-  resolution: "maplibre-gl@npm:5.2.0"
+"maplibre-gl@npm:5.4.0":
+  version: 5.4.0
+  resolution: "maplibre-gl@npm:5.4.0"
   dependencies:
     "@mapbox/geojson-rewind": "npm:^0.5.2"
     "@mapbox/jsonlint-lines-primitives": "npm:^2.0.2"
@@ -1163,7 +1164,7 @@ __metadata:
     supercluster: "npm:^8.0.1"
     tinyqueue: "npm:^3.0.0"
     vt-pbf: "npm:^3.1.3"
-  checksum: 10c0/fc156b728685181fa5696e8697d3fa2308524181ee5e60d56fc7e10581658601a0c8e4485f2c74f3fca1095806d2623e7779ce9cd3fa4ae4197eb0001310a918
+  checksum: 10c0/e071fa93c90620ef6277cfa1ae937587552da7609057b551f1d1c1571fb6ea797fc28b0eb76940e0c3a67f2dc675a89533e20ed6fecdf738e1db8de8da0a8724
   languageName: node
   linkType: hard
 
@@ -1181,27 +1182,27 @@ __metadata:
   languageName: node
   linkType: hard
 
-"motion-dom@npm:^12.6.5":
-  version: 12.6.5
-  resolution: "motion-dom@npm:12.6.5"
+"motion-dom@npm:^12.9.1":
+  version: 12.9.1
+  resolution: "motion-dom@npm:12.9.1"
   dependencies:
-    motion-utils: "npm:^12.6.5"
-  checksum: 10c0/1e2dd988986b96d04311aed681309fcbc08c6546621feeec3308cdf03b6de59ba9bb7d92fa34d4143852cf389bfd46c359aba09f8811c0baa8af2e90ebe14dc3
+    motion-utils: "npm:^12.8.3"
+  checksum: 10c0/008875fbbfdff639f03b1e7a07c17327d590d0d270de270c4ad65e642bfaa4feb5caeadada235249f88412ce15c0f51a96218b9f3293aaf98bb4d5309c124c0b
   languageName: node
   linkType: hard
 
-"motion-utils@npm:^12.6.5":
-  version: 12.6.5
-  resolution: "motion-utils@npm:12.6.5"
-  checksum: 10c0/0b48d5411505cc4c4c3f83850ef68da833fab3a69328c075eec50b2a7bced1d64a50983d09c0d48e765ee96eb1c1797853688c95cdf91ace03f8bfefb3a15799
+"motion-utils@npm:^12.8.3":
+  version: 12.8.3
+  resolution: "motion-utils@npm:12.8.3"
+  checksum: 10c0/94eb9e1692ccf9f13ad98ba6fabc39159da9885ae06c7a5afcbaf96fdbbd55f6093b922b74bbf174783152dbf7126f439851d8e5a787459a7d634510795f8ab2
   languageName: node
   linkType: hard
 
-"motion@npm:12.4.7":
-  version: 12.4.7
-  resolution: "motion@npm:12.4.7"
+"motion@npm:12.9.2":
+  version: 12.9.2
+  resolution: "motion@npm:12.9.2"
   dependencies:
-    framer-motion: "npm:^12.4.7"
+    framer-motion: "npm:^12.9.2"
     tslib: "npm:^2.4.0"
   peerDependencies:
     "@emotion/is-prop-valid": "*"
@@ -1214,7 +1215,7 @@ __metadata:
       optional: true
     react-dom:
       optional: true
-  checksum: 10c0/369b41600b507d12cf963ec686ca297ca843a3908b1526e2de9593b95416dc89d4b446d4cd7a1fe31e2ca06fcfc1237e5f0d52bcd324649040e90ba012760541
+  checksum: 10c0/47d48e4a47afd6ccb2162dfc2dfbdc5e04312706923782c243bef25f2328f64e3d6e89548c82095cd51dd4ace6edadf74765b2fe09c3927b47df1a82482de55f
   languageName: node
   linkType: hard
 
@@ -1431,21 +1432,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-dom@npm:19.0.0":
-  version: 19.0.0
-  resolution: "react-dom@npm:19.0.0"
+"react-dom@npm:19.1.0":
+  version: 19.1.0
+  resolution: "react-dom@npm:19.1.0"
   dependencies:
-    scheduler: "npm:^0.25.0"
+    scheduler: "npm:^0.26.0"
   peerDependencies:
-    react: ^19.0.0
-  checksum: 10c0/a36ce7ab507b237ae2759c984cdaad4af4096d8199fb65b3815c16825e5cfeb7293da790a3fc2184b52bfba7ba3ff31c058c01947aff6fd1a3701632aabaa6a9
+    react: ^19.1.0
+  checksum: 10c0/3e26e89bb6c67c9a6aa86cb888c7a7f8258f2e347a6d2a15299c17eb16e04c19194e3452bc3255bd34000a61e45e2cb51e46292392340432f133e5a5d2dfb5fc
   languageName: node
   linkType: hard
 
-"react@npm:19.0.0":
-  version: 19.0.0
-  resolution: "react@npm:19.0.0"
-  checksum: 10c0/9cad8f103e8e3a16d15cb18a0d8115d8bd9f9e1ce3420310aea381eb42aa0a4f812cf047bb5441349257a05fba8a291515691e3cb51267279b2d2c3253f38471
+"react@npm:19.1.0":
+  version: 19.1.0
+  resolution: "react@npm:19.1.0"
+  checksum: 10c0/530fb9a62237d54137a13d2cfb67a7db6a2156faed43eecc423f4713d9b20c6f2728b026b45e28fcd72e8eadb9e9ed4b089e99f5e295d2f0ad3134251bdd3698
   languageName: node
   linkType: hard
 
@@ -1465,10 +1466,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"scheduler@npm:^0.25.0":
-  version: 0.25.0
-  resolution: "scheduler@npm:0.25.0"
-  checksum: 10c0/a4bb1da406b613ce72c1299db43759526058fdcc413999c3c3e0db8956df7633acf395cb20eb2303b6a65d658d66b6585d344460abaee8080b4aa931f10eaafe
+"scheduler@npm:^0.26.0":
+  version: 0.26.0
+  resolution: "scheduler@npm:0.26.0"
+  checksum: 10c0/5b8d5bfddaae3513410eda54f2268e98a376a429931921a81b5c3a2873aab7ca4d775a8caac5498f8cbc7d0daeab947cf923dbd8e215d61671f9f4e392d34356
   languageName: node
   linkType: hard
 
@@ -1663,6 +1664,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"use-sync-external-store@npm:^1.5.0":
+  version: 1.5.0
+  resolution: "use-sync-external-store@npm:1.5.0"
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+  checksum: 10c0/1b8663515c0be34fa653feb724fdcce3984037c78dd4a18f68b2c8be55cc1a1084c578d5b75f158d41b5ddffc2bf5600766d1af3c19c8e329bb20af2ec6f52f4
+  languageName: node
+  linkType: hard
+
 "vt-pbf@npm:^3.1.3":
   version: 3.1.3
   resolution: "vt-pbf@npm:3.1.3"
@@ -1692,9 +1702,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zustand@npm:5.0.1":
-  version: 5.0.1
-  resolution: "zustand@npm:5.0.1"
+"zustand@npm:5.0.3":
+  version: 5.0.3
+  resolution: "zustand@npm:5.0.3"
   peerDependencies:
     "@types/react": ">=18.0.0"
     immer: ">=9.0.6"
@@ -1709,6 +1719,6 @@ __metadata:
       optional: true
     use-sync-external-store:
       optional: true
-  checksum: 10c0/b4239c8bf3988bfdaaed1c48f3958d0b047b721c4908a76bd78e73387d107963cda774541cf303c2ea89261481c995aa6666e7e77c30717ad440cdb499d9e5ca
+  checksum: 10c0/dad96c6c123fda088c583d5df6692e9245cd207583078dc15f93d255a67b0f346bad4535545c98852ecde93d254812a0c799579dfde2ab595016b99fbe20e4d5
   languageName: node
   linkType: hard

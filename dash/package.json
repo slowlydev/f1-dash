@@ -1,6 +1,6 @@
 {
 	"name": "f1-dash",
-	"version": "2.7.0",
+	"version": "3.0.0",
 	"private": true,
 	"scripts": {
 		"build": "next build",
@@ -10,19 +10,19 @@
 		"prettier": "prettier --write src"
 	},
 	"dependencies": {
-		"@headlessui/react": "2.2.0",
+		"@headlessui/react": "2.2.2",
 		"clsx": "2.1.1",
 		"geist": "1.3.1",
-		"maplibre-gl": "5.2.0",
+		"maplibre-gl": "5.4.0",
 		"moment": "2.30.1",
-		"motion": "12.4.7",
+		"motion": "12.9.2",
 		"next": "15.3.1",
 		"pako": "2.1.0",
-		"react": "19.0.0",
-		"react-dom": "19.0.0",
+		"react": "19.1.0",
+		"react-dom": "19.1.0",
 		"sharp": "0.34.1",
 		"zod": "3.23.8",
-		"zustand": "5.0.1"
+		"zustand": "5.0.3"
 	},
 	"devDependencies": {
 		"@tailwindcss/postcss": "4.0.8",
@@ -35,5 +35,5 @@
 		"tailwindcss": "4.0.8",
 		"typescript": "5.6.3"
 	},
-	"packageManager": "yarn@4.7.0+sha512.5a0afa1d4c1d844b3447ee3319633797bcd6385d9a44be07993ae52ff4facabccafb4af5dcd1c2f9a94ac113e5e9ff56f6130431905884414229e284e37bb7c9"
+	"packageManager": "yarn@4.9.1+sha512.f95ce356460e05be48d66401c1ae64ef84d163dd689964962c6888a9810865e39097a5e9de748876c2e0bf89b232d583c33982773e9903ae7a76257270986538"
 }
