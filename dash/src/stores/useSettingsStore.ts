@@ -34,6 +34,9 @@ type SettingsStore = {
 
 	raceControlChimeVolume: number;
 	setRaceControlChimeVolume: (raceControlChimeVolume: number) => void;
+
+	hasHydrated: boolean;
+	setHasHydrated: (hasHydrated: boolean) => void;
 };
 
 export const useSettingsStore = create<SettingsStore>()(
@@ -71,10 +74,16 @@ export const useSettingsStore = create<SettingsStore>()(
 
 				raceControlChimeVolume: 50,
 				setRaceControlChimeVolume: (raceControlChimeVolume: number) => set({ raceControlChimeVolume }),
+
+				hasHydrated: false,
+				setHasHydrated: (hasHydrated: boolean) => set({ hasHydrated }),
 			}),
 			{
 				name: "settings-storage",
 				storage: createJSONStorage(() => localStorage),
+				onRehydrateStorage: (state) => {
+					return () => state.setHasHydrated(true);
+				},
 			},
 		),
 	),
