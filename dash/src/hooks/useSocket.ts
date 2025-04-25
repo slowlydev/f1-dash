@@ -15,7 +15,7 @@ export const useSocket = ({ handleInitial, handleUpdate }: Props) => {
 	const [connected, setConnected] = useState<boolean>(false);
 
 	useEffect(() => {
-		const sse = new EventSource(`${env.NEXT_PUBLIC_LIVE_SOCKET_URL}/api/sse`);
+		const sse = new EventSource(`${env.NEXT_PUBLIC_LIVE_URL}/api/sse`);
 
 		sse.onerror = () => setConnected(false);
 		sse.onopen = () => setConnected(true);

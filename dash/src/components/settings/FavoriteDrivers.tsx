@@ -23,7 +23,7 @@ export default function FavoriteDrivers() {
 	useEffect(() => {
 		(async () => {
 			try {
-				const res = await fetch(`${env.NEXT_PUBLIC_LIVE_SOCKET_URL}/api/drivers`);
+				const res = await fetch(`${env.NEXT_PUBLIC_LIVE_URL}/api/drivers`);
 				const data = await res.json();
 				setDrivers(data);
 			} catch (e) {
