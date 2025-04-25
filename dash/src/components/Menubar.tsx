@@ -8,6 +8,12 @@ import Image from "next/image";
 import Modal from "@/components/Modal";
 import Button from "@/components/Button";
 
+import home from "public/icons/home.svg";
+import flag from "public/icons/flag.svg";
+import calendar from "public/icons/calendar.svg";
+import settings from "public/icons/settings.svg";
+import help from "public/icons/help-circle.svg";
+
 import alertIcon from "public/icons/alert-triangle.svg";
 import ConnectionStatus from "./ConnectionStatus";
 
@@ -55,20 +61,50 @@ export default function Menubar({ connected }: Props) {
 
 	return (
 		<div className="flex select-none flex-wrap gap-x-4 gap-y-2 px-2" id="walkthrough-menu">
-			<motion.a className="cursor-pointer" whileTap={{ scale: 0.95 }} onClick={() => liveTimingGuard("/")}>
+			<motion.a
+				className="flex cursor-pointer items-center gap-x-3"
+				whileHover={{ scale: 1.05 }}
+				whileTap={{ scale: 0.95 }}
+				onClick={() => liveTimingGuard("/")}
+			>
+				<Image src={home} alt={"Home"} width={20} height={20} />
 				Home
 			</motion.a>
 			{/* TODO add spoiler guard (check if race is in progress, then show modal) */}
-			<motion.a className="cursor-pointer" whileTap={{ scale: 0.95 }} onClick={() => router.push("/dashboard")}>
+			<motion.a
+				className="flex cursor-pointer items-center gap-x-3"
+				whileHover={{ scale: 1.05 }}
+				whileTap={{ scale: 0.95 }}
+				onClick={() => router.push("/dashboard")}
+			>
+				<Image src={flag} alt={"Dashboard"} width={20} height={20} />
 				Dashboard
 			</motion.a>
-			<motion.a className="cursor-pointer" whileTap={{ scale: 0.95 }} onClick={() => liveTimingGuard("/schedule")}>
+			<motion.a
+				className="flex cursor-pointer items-center gap-x-3"
+				whileHover={{ scale: 1.05 }}
+				whileTap={{ scale: 0.95 }}
+				onClick={() => liveTimingGuard("/schedule")}
+			>
+				<Image src={calendar} alt={"Schedule"} width={20} height={20} />
 				Schedule
 			</motion.a>
-			<motion.a className="cursor-pointer" whileTap={{ scale: 0.95 }} onClick={() => liveTimingGuard("/settings")}>
+			<motion.a
+				className="flex cursor-pointer items-center gap-x-3"
+				whileHover={{ scale: 1.05 }}
+				whileTap={{ scale: 0.95 }}
+				onClick={() => liveTimingGuard("/settings")}
+			>
+				<Image src={settings} alt={"Settings"} width={20} height={20} />
 				Settings
 			</motion.a>
-			<motion.a className="cursor-pointer" whileTap={{ scale: 0.95 }} onClick={() => liveTimingGuard("/help")}>
+			<motion.a
+				className="flex cursor-pointer items-center gap-x-3"
+				whileHover={{ scale: 1.05 }}
+				whileTap={{ scale: 0.95 }}
+				onClick={() => liveTimingGuard("/help")}
+			>
+				<Image src={help} alt={"Help"} width={20} height={20} />
 				Help
 			</motion.a>
 
