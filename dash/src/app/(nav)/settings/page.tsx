@@ -109,7 +109,7 @@ export default function SettingsPage() {
 
 			<div className="flex items-center gap-2">
 				<DelayTimer />
-				<DelayInput />
+				<DelayInput saveDelay={0} />
 				<p className="text-zinc-500">Delay in seconds</p>
 			</div>
 
