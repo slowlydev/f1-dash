@@ -1,48 +1,48 @@
 services:
   live:
-    image: ghcr.io/slowlydev/f1-dash-live:latest
+    # image: ghcr.io/slowlydev/f1-dash-live:latest
     build:
       context: .
       target: live
-    restart: always
+    restart: unless-stopped
     ports:
       - 4000:4000
     environment:
-      - ORIGIN=${ORIGIN}
-      - LIVE_BACKEND_ADDRESS=${LIVE_BACKEND_ADDRESS}
-      - RUST_BACKTRACE=${RUST_BACKTRACE}
-      - RUST_LOG=${RUST_LOG}
-    user: "1000:1000"
+      - ORIGIN=http://localhost:3000
+      - LIVE_BACKEND_ADDRESS=0.0.0.0:4000
+      - RUST_LOG="live=debug"
 
   api:
     image: ghcr.io/slowlydev/f1-dash-api:latest
     build:
       context: .
       target: api
-    restart: always
+    restart: unless-stopped
     ports:
       - 4001:4001
     environment:
-      - ORIGIN=${ORIGIN}
-      - API_BACKEND_ADDRESS=${API_BACKEND_ADDRESS}
-      - RUST_LOG=${RUST_LOG}
-      - RUST_BACKTRACE=${RUST_BACKTRACE}
-    user: "1000:1000"
+      - ORIGIN=http://localhost:3000
+      - API_BACKEND_ADDRESS=0.0.0.0:4001
+      - RUST_LOG="api=debug"
 
   frontend:
     image: ghcr.io/slowlydev/f1-dash:latest
     build:
       context: ./dash/
-      args:
-        - LIVE_SOCKET_URL=${NEXT_PUBLIC_LIVE_SOCKET_URL}
-        - API_URL=${NEXT_PUBLIC_API_URL}
-    restart: always
+    restart: unless-stopped
     ports:
       - 3000:3000
+
     depends_on:
       - api
       - live
     environment:
-      - NEXT_PUBLIC_LIVE_SOCKET_URL=${NEXT_PUBLIC_LIVE_SOCKET_URL}
-      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
-    user: "1000:1000"
+      - NEXT_PUBLIC_LIVE_URL=http://localhost:4000
+      - API_URL=http://api:4001
+
+      - DISABLE_IFRAME=1
+
+      - TRACKING_ID=G-3ZKX0JY1QW
+      - TRACKING_URL=https://base.slowly.dev/rep.js
+
+      - NEXT_PUBLIC_MAP_KEY=lcgTreisBzMYLrFFSTK2

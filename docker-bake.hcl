@@ -1,42 +1,39 @@
 group "default" {
-  targets = ["dash", "live", "api"]
+  targets = ["f1-dash", "f1-dash-live", "f1-dash-api"]
 }
 
 variable "TAG" {
   default = "latest"
 }
 
-target "docker-metadata-action" {}
-
-target "dash" {
-  inherits = ["docker-metadata-action"]
+target "f1-dash" {
 
   context = "./dash"
   dockerfile = "dockerfile"
 
-  args = {
-    ENABLE_TRACKING = "true",
-    LIVE_SOCKET_URL = "http://localhost:4000",
-    API_URL = "http://localhost:4001"
-  }
+  platforms = ["linux/amd64", "linux/arm64"]
 
   tags = ["ghcr.io/slowlydev/f1-dash:${TAG}"]
 }
 
-target "api" {
-  inherits = ["docker-metadata-action"]
+target "f1-dash-api" {
 
   context = "."
   dockerfile = "dockerfile"
+  target = "api"
+
+  platforms = ["linux/amd64", "linux/arm64"]
 
   tags = ["ghcr.io/slowlydev/f1-dash-api:${TAG}"]
 }
 
-target "live" {
-  inherits = ["docker-metadata-action"]
+target "f1-dash-live" {
 
   context = "."
   dockerfile = "dockerfile"
+  target = "live"
+
+  platforms = ["linux/amd64", "linux/arm64"]
 
   tags = ["ghcr.io/slowlydev/f1-dash-live:${TAG}"]
 }
