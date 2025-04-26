@@ -12,8 +12,7 @@
 
 ---
 
-<img src="https://github.com/user-attachments/assets/b13a7b33-bd38-4ef2-8930-9f5f75002ec6" alt="img" align="right" width="566px" height="280px" border-radius="200px">  
-
+<img src="https://github.com/user-attachments/assets/9949dbd6-e2c1-4993-85c8-fe52c0afd443" alt="img" align="right" width="566px" height="280px" border-radius="200px">  
 
 ### Features
 - Live Timing
