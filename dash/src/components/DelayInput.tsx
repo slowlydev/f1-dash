@@ -2,20 +2,42 @@
 
 import clsx from "clsx";
 
+import { useState, useRef, useEffect } from "react";
+
 import { useSettingsStore } from "@/stores/useSettingsStore";
 
 type Props = {
 	className?: string;
+	saveDelay?: number;
 };
 
-export default function DelayInput({ className }: Props) {
+export default function DelayInput({ className, saveDelay }: Props) {
 	const currentDelay = useSettingsStore((s) => s.delay);
 	const setDelay = useSettingsStore((s) => s.setDelay);
+	const hasHydrated = useSettingsStore((s) => s.hasHydrated);
+
+	const [delayState, setDelayState] = useState<string>(currentDelay.toString());
+
+	const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+	const updateDelay = (updateInput: boolean = false) => {
+		const delay = delayState ? Math.max(parseInt(delayState), 0) : 0;
+		setDelay(delay);
+		if (updateInput) setDelayState(delay.toString());
+	};
+
+	useEffect(() => {
+		if (!hasHydrated) return;
+		if (timeoutRef.current) clearTimeout(timeoutRef.current);
+		timeoutRef.current = setTimeout(updateDelay, saveDelay || 0);
+	}, [delayState]);
+
+	useEffect(() => {
+		if (hasHydrated) setDelayState(currentDelay.toString());
+	}, [hasHydrated]);
 
 	const handleChange = (v: string) => {
-		const delay = v ? parseInt(v) : 0;
-		if (delay < 0) return;
-		setDelay(delay);
+		setDelayState(v);
 	};
 
 	return (
@@ -25,10 +47,13 @@ export default function DelayInput({ className }: Props) {
 				className,
 			)}
 			type="number"
+			inputMode="numeric"
 			min={0}
 			placeholder="0s"
-			value={currentDelay}
+			value={delayState}
 			onChange={(e) => handleChange(e.target.value)}
+			onKeyDown={(e) => e.code == "Enter" && updateDelay(true)}
+			onBlur={() => updateDelay(true)}
 		/>
 	);
 }
