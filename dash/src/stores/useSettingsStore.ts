@@ -25,6 +25,12 @@ type SettingsStore = {
 	showMiniSectors: boolean;
 	setShowMiniSectors: (showMiniSectors: boolean) => void;
 
+	showCompass: boolean;
+	setShowCompass: (showCompass: boolean) => void;
+
+	rotateTrackNorth: boolean;
+	setRotateTrackNorth: (rotateTrackNorth: boolean) => void;
+
 	favoriteDrivers: string[];
 	setFavoriteDrivers: (favoriteDrivers: string[]) => void;
 	removeFavoriteDriver: (driver: string) => void;
@@ -63,6 +69,12 @@ export const useSettingsStore = create(
 
 				showMiniSectors: true,
 				setShowMiniSectors: (showMiniSectors: boolean) => set({ showMiniSectors }),
+
+				showCompass: false,
+				setShowCompass: (showCompass: boolean) => set({ showCompass }),
+
+				rotateTrackNorth: false,
+				setRotateTrackNorth: (rotateTrackNorth: boolean) => set({ rotateTrackNorth }),
 
 				favoriteDrivers: [],
 				setFavoriteDrivers: (favoriteDrivers: string[]) => set({ favoriteDrivers }),
