@@ -12,6 +12,7 @@ import DelayTimer from "@/components/DelayTimer";
 import Toggle from "@/components/ui/Toggle";
 
 import { useSettingsStore } from "@/stores/useSettingsStore";
+import Footer from "@/components/Footer";
 
 export default function SettingsPage() {
 	const settings = useSettingsStore();
@@ -111,6 +112,9 @@ export default function SettingsPage() {
 			<Button className="mt-2 bg-red-500!" onClick={() => settings.setDelay(0)}>
 				Reset delay
 			</Button>
+
+
+			<Footer />
 		</div>
 	);
 }
