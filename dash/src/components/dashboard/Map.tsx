@@ -173,6 +173,21 @@ export default function Map() {
 
 			{centerX && centerY && positions && drivers && (
 				<>
+				{positions["241"] && (
+					<CarDot
+						key={`map.car.241`}
+						favoriteDriver={false}
+						name="Safety Car"
+						pit={false}
+						hidden={false}
+						pos={positions["241"]}
+						color={undefined}
+						rotation={rotation}
+						centerX={centerX}
+						centerY={centerY}
+					/>
+				)}
+
 					{objectEntries(drivers)
 						.reverse()
 						.filter((driver) => !!positions[driver.racingNumber].X && !!positions[driver.racingNumber].Y)
