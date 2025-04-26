@@ -1,6 +1,6 @@
 services:
   live:
-    # image: ghcr.io/slowlydev/f1-dash-live:latest
+    image: ghcr.io/slowlydev/f1-dash-live:latest
     build:
       context: .
       target: live
