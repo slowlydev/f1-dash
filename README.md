@@ -1,4 +1,4 @@
-<h3 align="center"><a href="https://f1-dash.com"><img src="./dash/public/tag-logo.png" width="400px"></a></h3>
+<h3 align="center"><a href="https://f1-dash.com"><img src="./dash/public/tag-logo.png" width="300px"></a></h3>
 <p align="center">
    <a href="https://github.com/slowlydev/f1-dash/releases/latest"><img src="https://img.shields.io/github/release/slowlydev/f1-dash/all.svg?colorB=3fba11?label=Version"></a>
    <a href="https://discord.gg/unJwu66NuB"><img src="https://img.shields.io/discord/1226563654359580692?label=Chat&logo=discord&logoColor=discord"></a>
