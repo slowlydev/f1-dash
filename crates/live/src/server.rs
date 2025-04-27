@@ -9,6 +9,7 @@ use tracing::info;
 
 use crate::{LiveEvent, LiveState};
 
+mod audio;
 mod cors;
 mod drivers;
 mod health;
@@ -58,6 +59,7 @@ pub async fn init(
     let app = Router::new()
         .route("/api/sse", get(live::sse_handler))
         .route("/api/health", get(health::check))
+        .route("/api/audio", get(audio::get_audio))
         .route("/api/drivers", get(drivers::get_drivers))
         .layer(cors)
         .layer(governor)
