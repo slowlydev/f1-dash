@@ -5,7 +5,6 @@ import { useSettingsStore } from "@/stores/useSettingsStore";
 import { useDataStore } from "@/stores/useDataStore";
 
 import { sortPos } from "@/lib/sorting";
-import { objectEntries } from "@/lib/driverHelper";
 
 import Driver from "@/components/driver/Driver";
 
@@ -25,7 +24,7 @@ export default function LeaderBoard() {
 			<LayoutGroup key="drivers">
 				{drivers && driversTiming && (
 					<AnimatePresence>
-						{objectEntries(driversTiming.lines)
+						{Object.values(driversTiming.lines)
 							.sort(sortPos)
 							.map((timingDriver, index) => (
 								<Driver

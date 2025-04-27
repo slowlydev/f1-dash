@@ -2,8 +2,6 @@ import type { Driver } from "@/types/state.type";
 
 import { useDataStore } from "@/stores/useDataStore";
 
-import { objectEntries } from "@/lib/driverHelper";
-
 import DriverViolations from "./DriverViolations";
 
 type Violations = {
@@ -45,7 +43,7 @@ export default function TrackViolations() {
 			}, {}) ?? {};
 
 	const violationDrivers = drivers
-		? objectEntries(drivers).filter((driver) => trackLimits[driver.racingNumber] > 0)
+		? Object.values(drivers).filter((driver) => trackLimits[driver.racingNumber] > 0)
 		: undefined;
 
 	return (

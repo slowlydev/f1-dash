@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
-import moment, { duration, now, utc } from "moment";
+import { duration, now, utc } from "moment";
 
 import { Session } from "@/types/schedule.type";
 
@@ -20,24 +20,24 @@ export default function Countdown({ next, type }: Props) {
 
 	const requestRef = useRef<number | null>(null);
 
-	const animateNextFrame = () => {
-		const diff = duration(nextMoment.diff(now()));
-
-		const days = parseInt(diff.asDays().toString());
-
-		if (diff.asSeconds() > 0) {
-			setDuration([days, diff.hours(), diff.minutes(), diff.seconds()]);
-		} else {
-			setDuration([0, 0, 0, 0]);
-		}
-
-		requestRef.current = requestAnimationFrame(animateNextFrame);
-	};
-
 	useEffect(() => {
+		const animateNextFrame = () => {
+			const diff = duration(nextMoment.diff(now()));
+
+			const days = parseInt(diff.asDays().toString());
+
+			if (diff.asSeconds() > 0) {
+				setDuration([days, diff.hours(), diff.minutes(), diff.seconds()]);
+			} else {
+				setDuration([0, 0, 0, 0]);
+			}
+
+			requestRef.current = requestAnimationFrame(animateNextFrame);
+		};
+
 		requestRef.current = requestAnimationFrame(animateNextFrame);
 		return () => (requestRef.current ? cancelAnimationFrame(requestRef.current) : void 0);
-	}, []);
+	}, [nextMoment]);
 
 	return (
 		<div>

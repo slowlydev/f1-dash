@@ -1,7 +1,5 @@
 "use client";
 
-import { objectEntries } from "@/lib/driverHelper";
-
 import { useDataStore } from "@/stores/useDataStore";
 
 import NumberDiff from "@/components/NumberDiff";
@@ -34,7 +32,7 @@ export default function Standings() {
 
 					{driverStandings &&
 						drivers &&
-						objectEntries(driverStandings)
+						Object.values(driverStandings)
 							.sort((a, b) => a.predictedPosition - b.predictedPosition)
 							.map((driver) => {
 								const driverDetails = drivers[driver.racingNumber];
@@ -74,7 +72,7 @@ export default function Standings() {
 					{!teamStandings && new Array(10).fill("").map((_, index) => <SkeletonItem key={`team.loading.${index}`} />)}
 
 					{teamStandings &&
-						objectEntries(teamStandings)
+						Object.values(teamStandings)
 							.sort((a, b) => a.predictedPosition - b.predictedPosition)
 							.map((team) => (
 								<div

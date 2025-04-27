@@ -113,7 +113,6 @@ export default function SettingsPage() {
 				Reset delay
 			</Button>
 
-
 			<Footer />
 		</div>
 	);

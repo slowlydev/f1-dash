@@ -3,16 +3,34 @@
 import { unix } from "moment";
 import { motion, useMotionValue, useDragControls, AnimatePresence } from "motion/react";
 
-import { useState, useRef, useEffect, RefObject, Dispatch, SetStateAction } from "react";
+import { useState, useRef, useEffect, RefObject } from "react";
 
-function getProgressFromX({ x, containerRef }: { x: number; containerRef: RefObject<any> }) {
-	let bounds = containerRef.current.getBoundingClientRect();
-	let progress = (x - bounds.x) / bounds.width;
+function getProgressFromX<T extends HTMLElement>({
+	x,
+	containerRef,
+}: {
+	x: number;
+	containerRef: RefObject<T | null>;
+}) {
+	const bounds = containerRef.current?.getBoundingClientRect();
+
+	if (!bounds) return 0;
+
+	const progress = (x - bounds.x) / bounds.width;
 	return clamp(progress, 0, 1);
 }
 
-function getXFromProgress({ progress, containerRef }: { progress: number; containerRef: RefObject<any> }) {
-	let bounds = containerRef.current.getBoundingClientRect();
+function getXFromProgress<T extends HTMLElement>({
+	progress,
+	containerRef,
+}: {
+	progress: number;
+	containerRef: RefObject<T | null>;
+}) {
+	const bounds = containerRef.current?.getBoundingClientRect();
+
+	if (!bounds) return 0;
+
 	return progress * bounds.width;
 }
 
@@ -54,10 +72,9 @@ type Props = {
 	setFrame: (id: number) => void;
 
 	playing: boolean;
-	setPlaying: Dispatch<SetStateAction<boolean>>;
 };
 
-export default function Timeline({ frames, setFrame, playing, setPlaying }: Props) {
+export default function Timeline({ frames, setFrame, playing }: Props) {
 	const constraintsRef = useRef<HTMLDivElement | null>(null);
 	const fullBarRef = useRef<null | HTMLDivElement>(null);
 	const scrubberRef = useRef<null | HTMLButtonElement>(null);
@@ -90,7 +107,7 @@ export default function Timeline({ frames, setFrame, playing, setPlaying }: Prop
 		if (nearestFrame) {
 			setFrame(nearestFrame.id);
 		}
-	}, [time]);
+	}, [time, frames, setFrame, startTime]);
 
 	// every 0.5s, advance 10 minutes
 	useInterval(
@@ -110,7 +127,7 @@ export default function Timeline({ frames, setFrame, playing, setPlaying }: Prop
 			if (currentTimePrecise.get() < DURATION) {
 				currentTimePrecise.set(currentTimePrecise.get() + 0.2 * 60); // 12
 
-				let newX = getXFromProgress({
+				const newX = getXFromProgress({
 					containerRef: fullBarRef,
 					progress: currentTimePrecise.get() / DURATION,
 				});
@@ -132,7 +149,7 @@ export default function Timeline({ frames, setFrame, playing, setPlaying }: Prop
 			<div
 				className="relative mt-2"
 				onPointerDown={(event) => {
-					let newProgress = getProgressFromX({
+					const newProgress = getProgressFromX({
 						containerRef: fullBarRef,
 						x: event.clientX,
 					});

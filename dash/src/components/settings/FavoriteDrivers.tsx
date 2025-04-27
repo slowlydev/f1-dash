@@ -16,6 +16,10 @@ import SelectMultiple from "@/components/ui/SelectMultiple";
 
 export default function FavoriteDrivers() {
 	const [drivers, setDrivers] = useState<Driver[] | null>(null);
+
+	// TODO handle loading state
+	// TODO handle error state
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [error, setError] = useState<string | null>(null);
 
 	const { favoriteDrivers, setFavoriteDrivers, removeFavoriteDriver } = useSettingsStore();
@@ -26,7 +30,7 @@ export default function FavoriteDrivers() {
 				const res = await fetch(`${env.NEXT_PUBLIC_LIVE_URL}/api/drivers`);
 				const data = await res.json();
 				setDrivers(data);
-			} catch (e) {
+			} catch {
 				setError("failed to fetch favorite drivers");
 			}
 		})();

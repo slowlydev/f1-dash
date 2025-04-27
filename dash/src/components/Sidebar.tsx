@@ -6,9 +6,7 @@ import { useEffect } from "react";
 import Link from "next/link";
 import clsx from "clsx";
 
-import { useSettingsStore } from "@/stores/useSettingsStore";
 import { useSidebarStore } from "@/stores/useSidebarStore";
-import { useDataStore } from "@/stores/useDataStore";
 
 import ConnectionStatus from "@/components/ConnectionStatus";
 import DelayInput from "@/components/DelayInput";
@@ -71,7 +69,7 @@ export default function Sidebar({ connected }: Props) {
 		handleResize();
 
 		return () => window.removeEventListener("resize", handleResize, false);
-	}, []);
+	}, [unpin]);
 
 	return (
 		<div>

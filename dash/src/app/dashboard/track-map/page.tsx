@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, LayoutGroup, motion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import clsx from "clsx";
 
 import Map from "@/components/dashboard/Map";
@@ -10,7 +10,6 @@ import DriverInfo from "@/components/driver/DriverInfo";
 import DriverGap from "@/components/driver/DriverGap";
 import DriverLapTime from "@/components/driver/DriverLapTime";
 
-import { objectEntries } from "@/lib/driverHelper";
 import { sortPos } from "@/lib/sorting";
 
 import { useCarDataStore, useDataStore } from "@/stores/useDataStore";
@@ -29,7 +28,7 @@ export default function TrackMap() {
 
 				{drivers && driversTiming && (
 					<AnimatePresence>
-						{objectEntries(driversTiming.lines)
+						{Object.values(driversTiming.lines)
 							.sort(sortPos)
 							.map((timingDriver, index) => (
 								<TrackMapDriver

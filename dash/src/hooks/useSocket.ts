@@ -31,6 +31,7 @@ export const useSocket = ({ handleInitial, handleUpdate }: Props) => {
 		});
 
 		return () => sse.close();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	return { connected };

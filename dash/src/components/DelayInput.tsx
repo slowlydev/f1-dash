@@ -30,10 +30,12 @@ export default function DelayInput({ className, saveDelay }: Props) {
 		if (!hasHydrated) return;
 		if (timeoutRef.current) clearTimeout(timeoutRef.current);
 		timeoutRef.current = setTimeout(updateDelay, saveDelay || 0);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [delayState]);
 
 	useEffect(() => {
 		if (hasHydrated) setDelayState(currentDelay.toString());
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [hasHydrated]);
 
 	const handleChange = (v: string) => {

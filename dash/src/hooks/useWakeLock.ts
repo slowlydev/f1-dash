@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 
 export const useWakeLock = () => {
-	let wakeLock = useRef<null | WakeLockSentinel>(null);
+	const wakeLock = useRef<null | WakeLockSentinel>(null);
 
 	useEffect(() => {
 		if (typeof window != undefined) {

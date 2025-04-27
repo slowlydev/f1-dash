@@ -6,7 +6,6 @@ import clsx from "clsx";
 import { useDataStore } from "@/stores/useDataStore";
 
 import { sortQuali } from "@/lib/sorting";
-import { objectEntries } from "@/lib/driverHelper";
 
 import QualifyingDriver from "@/components/QualifyingDriver";
 
@@ -18,7 +17,7 @@ export default function Qualifying() {
 	const qualifyingDrivers =
 		!driversTiming?.lines || !drivers
 			? []
-			: objectEntries(driversTiming.lines)
+			: Object.values(driversTiming.lines)
 					.filter((d) => !d.pitOut && !d.inPit && !d.knockedOut && !d.stopped) // no out, no pit, no stopped
 					.filter((d) => d.sectors.every((sec) => !sec.segments.find((s) => s.status === 2064))) // no in/out lap
 					.filter((d) => d.sectors.map((s) => s.personalFastest).includes(true)); // has any personal fastest
@@ -26,7 +25,7 @@ export default function Qualifying() {
 	const sessionPart = driversTiming?.sessionPart;
 	const comparingDriverPosition = sessionPart === 1 ? 15 : sessionPart === 2 ? 10 : sessionPart === 3 ? 1 : 1;
 	const comparingDriver = driversTiming
-		? objectEntries(driversTiming.lines).find((d) => parseInt(d.position) === comparingDriverPosition)
+		? Object.values(driversTiming.lines).find((d) => parseInt(d.position) === comparingDriverPosition)
 		: undefined;
 
 	return (

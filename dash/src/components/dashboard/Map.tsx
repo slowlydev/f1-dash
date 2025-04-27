@@ -5,7 +5,7 @@ import type { PositionCar } from "@/types/state.type";
 import type { Map, TrackPosition } from "@/types/map.type";
 
 import { fetchMap } from "@/lib/fetchMap";
-import { objectEntries } from "@/lib/driverHelper";
+
 import { useDataStore, usePositionStore } from "@/stores/useDataStore";
 import { useSettingsStore } from "@/stores/useSettingsStore";
 import { getTrackStatusMessage } from "@/lib/getTrackStatusMessage";
@@ -117,7 +117,7 @@ export default function Map() {
 				};
 			})
 			.sort(prioritizeColoredSectors);
-	}, [trackStatus, sectors]);
+	}, [trackStatus, sectors, yellowSectors]);
 
 	if (!points || !minX || !minY || !widthX || !widthY) {
 		return (
@@ -173,22 +173,22 @@ export default function Map() {
 
 			{centerX && centerY && positions && drivers && (
 				<>
-				{positions["241"] && (
-					<CarDot
-						key={`map.car.241`}
-						favoriteDriver={false}
-						name="Safety Car"
-						pit={false}
-						hidden={false}
-						pos={positions["241"]}
-						color={undefined}
-						rotation={rotation}
-						centerX={centerX}
-						centerY={centerY}
-					/>
-				)}
+					{positions["241"] && (
+						<CarDot
+							key={`map.car.241`}
+							favoriteDriver={false}
+							name="Safety Car"
+							pit={false}
+							hidden={false}
+							pos={positions["241"]}
+							color={undefined}
+							rotation={rotation}
+							centerX={centerX}
+							centerY={centerY}
+						/>
+					)}
 
-					{objectEntries(drivers)
+					{Object.values(drivers)
 						.reverse()
 						.filter((driver) => !!positions[driver.racingNumber].X && !!positions[driver.racingNumber].Y)
 						.map((driver) => {
