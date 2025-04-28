@@ -36,11 +36,11 @@ export default function DashboardLayout({ children }: Props) {
 				<Menubar connected={connected} />
 				<div className="flex items-center gap-2">
 					<DelayTimer />
-					<DelayInput />
+					<DelayInput saveDelay={500} />
 				</div>
 			</div>
 
-			{(syncing && !ended) && (
+			{syncing && !ended && (
 				<div className="flex w-full flex-col items-center justify-center">
 					<h1 className="my-20 text-center text-5xl font-bold">Syncing...</h1>
 					<p>Please wait for {delay - maxDelay} seconds.</p>
