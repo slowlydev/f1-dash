@@ -55,30 +55,51 @@ export default function DashboardLayout({ children }: Props) {
 				layout="size"
 				className={!syncing || ended ? "flex h-full w-full flex-1 flex-col md:gap-2" : "hidden"}
 			>
-				<HeaderBar />
+				<DesktopStaticBar />
+				<MobileStaticBar />
 
-				<div className="no-scrollbar w-full flex-1 overflow-auto md:rounded-lg">{children}</div>
+				<div className="no-scrollbar w-full flex-1 overflow-auto md:rounded-lg">
+					<MobileDynamicBar />
+					{children}
+				</div>
 			</motion.div>
 		</div>
 	);
 }
 
-function HeaderBar() {
-	const pinned = useSidebarStore((state) => state.pinned);
-	const pin = useSidebarStore((state) => state.pin);
+function MobileDynamicBar() {
+	return (
+		<div className="flex flex-col divide-y divide-zinc-800 border-b border-zinc-800 md:hidden">
+			<div className="p-2">
+				<SessionInfo />
+			</div>
+			<div className="p-2">
+				<WeatherInfo />
+			</div>
+		</div>
+	);
+}
+
+function MobileStaticBar() {
 	const open = useSidebarStore((state) => state.open);
 
 	return (
-		<div className="flex w-full flex-col justify-between divide-y divide-zinc-800 overflow-hidden border-zinc-800 md:h-18 md:flex-row md:divide-y-0 md:rounded-lg md:border md:px-3">
-			<div className="flex items-center justify-between overflow-hidden p-2 md:hidden">
-				{!pinned && <SidenavButton key="mobile" onClick={() => open()} />}
+		<div className="flex w-full items-center justify-between overflow-hidden border-b border-zinc-800 p-2 md:hidden">
+			<SidenavButton key="mobile" onClick={() => open()} />
+			<TrackInfo />
+		</div>
+	);
+}
 
-				<TrackInfo />
-			</div>
+function DesktopStaticBar() {
+	const pinned = useSidebarStore((state) => state.pinned);
+	const pin = useSidebarStore((state) => state.pin);
 
-			<div className="flex items-center gap-2 p-2 md:p-0">
+	return (
+		<div className="hidden w-full flex-row justify-between overflow-hidden rounded-lg border border-zinc-800 p-2 md:flex">
+			<div className="flex items-center gap-2">
 				<AnimatePresence>
-					{!pinned && <SidenavButton key="desktop" className="hidden shrink-0 md:flex" onClick={() => pin()} />}
+					{!pinned && <SidenavButton key="desktop" className="shrink-0" onClick={() => pin()} />}
 
 					<motion.div key="session-info" layout="position">
 						<SessionInfo />
@@ -86,11 +107,11 @@ function HeaderBar() {
 				</AnimatePresence>
 			</div>
 
-			<div className="p-2 md:hidden md:items-center md:p-0 lg:flex">
+			<div className="hidden md:items-center lg:flex">
 				<WeatherInfo />
 			</div>
 
-			<div className="hidden p-2 md:flex md:justify-end">
+			<div className="flex justify-end">
 				<TrackInfo />
 			</div>
 		</div>
