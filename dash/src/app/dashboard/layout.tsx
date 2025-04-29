@@ -1,6 +1,7 @@
 "use client";
 
 import { type ReactNode } from "react";
+import { AnimatePresence, motion } from "motion/react";
 
 import { useDataEngine } from "@/hooks/useDataEngine";
 import { useWakeLock } from "@/hooks/useWakeLock";
@@ -8,11 +9,14 @@ import { useStores } from "@/hooks/useStores";
 import { useSocket } from "@/hooks/useSocket";
 
 import { useSettingsStore } from "@/stores/useSettingsStore";
+import { useSidebarStore } from "@/stores/useSidebarStore";
 import { useDataStore } from "@/stores/useDataStore";
 
-import Menubar from "@/components/Menubar";
-import DelayInput from "@/components/DelayInput";
-import DelayTimer from "@/components/DelayTimer";
+import Sidebar from "@/components/Sidebar";
+import SidenavButton from "@/components/SidenavButton";
+import SessionInfo from "@/components/SessionInfo";
+import WeatherInfo from "@/components/WeatherInfo";
+import TrackInfo from "@/components/TrackInfo";
 
 type Props = {
 	children: ReactNode;
@@ -31,24 +35,85 @@ export default function DashboardLayout({ children }: Props) {
 	const ended = useDataStore((state) => state.sessionStatus?.status === "Ends");
 
 	return (
-		<div className="w-full">
-			<div className="flex items-center justify-between gap-4 border-b border-zinc-800 bg-black p-2">
-				<Menubar connected={connected} />
-				<div className="flex items-center gap-2">
-					<DelayTimer />
-					<DelayInput saveDelay={500} />
+		<div className="flex h-screen w-full md:pt-2 md:pr-2 md:pb-2">
+			<Sidebar key="sidebar" connected={connected} />
+
+			<motion.div
+				layout="size"
+				className={
+					syncing && !ended
+						? "flex h-full flex-1 flex-col items-center justify-center gap-2 rounded-lg border border-zinc-800"
+						: "hidden"
+				}
+			>
+				<h1 className="my-20 text-center text-5xl font-bold">Syncing...</h1>
+				<p>Please wait for {delay - maxDelay} seconds.</p>
+				<p>Or make your delay smaller.</p>
+			</motion.div>
+
+			<motion.div
+				layout="size"
+				className={!syncing || ended ? "flex h-full w-full flex-1 flex-col md:gap-2" : "hidden"}
+			>
+				<DesktopStaticBar />
+				<MobileStaticBar />
+
+				<div className="no-scrollbar w-full flex-1 overflow-auto md:rounded-lg">
+					<MobileDynamicBar />
+					{children}
 				</div>
+			</motion.div>
+		</div>
+	);
+}
+
+function MobileDynamicBar() {
+	return (
+		<div className="flex flex-col divide-y divide-zinc-800 border-b border-zinc-800 md:hidden">
+			<div className="p-2">
+				<SessionInfo />
+			</div>
+			<div className="p-2">
+				<WeatherInfo />
+			</div>
+		</div>
+	);
+}
+
+function MobileStaticBar() {
+	const open = useSidebarStore((state) => state.open);
+
+	return (
+		<div className="flex w-full items-center justify-between overflow-hidden border-b border-zinc-800 p-2 md:hidden">
+			<SidenavButton key="mobile" onClick={() => open()} />
+			<TrackInfo />
+		</div>
+	);
+}
+
+function DesktopStaticBar() {
+	const pinned = useSidebarStore((state) => state.pinned);
+	const pin = useSidebarStore((state) => state.pin);
+
+	return (
+		<div className="hidden w-full flex-row justify-between overflow-hidden rounded-lg border border-zinc-800 p-2 md:flex">
+			<div className="flex items-center gap-2">
+				<AnimatePresence>
+					{!pinned && <SidenavButton key="desktop" className="shrink-0" onClick={() => pin()} />}
+
+					<motion.div key="session-info" layout="position">
+						<SessionInfo />
+					</motion.div>
+				</AnimatePresence>
 			</div>
 
-			{syncing && !ended && (
-				<div className="flex w-full flex-col items-center justify-center">
-					<h1 className="my-20 text-center text-5xl font-bold">Syncing...</h1>
-					<p>Please wait for {delay - maxDelay} seconds.</p>
-					<p>Or make your delay smaller.</p>
-				</div>
-			)}
+			<div className="hidden md:items-center lg:flex">
+				<WeatherInfo />
+			</div>
 
-			{(!syncing || ended) && <div className="h-max w-full">{children}</div>}
+			<div className="flex justify-end">
+				<TrackInfo />
+			</div>
 		</div>
 	);
 }

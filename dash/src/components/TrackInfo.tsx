@@ -13,9 +13,9 @@ export default function TrackInfo() {
 	const currentTrackStatus = getTrackStatusMessage(track?.status ? parseInt(track?.status) : undefined);
 
 	return (
-		<div className="flex w-fit flex-row items-center gap-4">
+		<div className="flex flex-row items-center gap-4 md:justify-self-end">
 			{!!lapCount && (
-				<p className="hidden whitespace-nowrap text-3xl font-extrabold sm:block">
+				<p className="text-3xl font-extrabold whitespace-nowrap">
 					{lapCount?.currentLap} / {lapCount?.totalLaps}
 				</p>
 			)}
@@ -27,7 +27,7 @@ export default function TrackInfo() {
 						boxShadow: `0 0 60px 10px ${currentTrackStatus.hex}`,
 					}}
 				>
-					<p className="text-xl font-semibold">{currentTrackStatus.message}</p>
+					<p className="text-lg font-medium">{currentTrackStatus.message}</p>
 				</div>
 			) : (
 				<div className="relative h-8 w-28 animate-pulse overflow-hidden rounded-lg bg-zinc-800" />

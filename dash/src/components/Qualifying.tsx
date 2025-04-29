@@ -1,12 +1,11 @@
 "use client";
 
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "motion/react";
 import clsx from "clsx";
 
 import { useDataStore } from "@/stores/useDataStore";
 
 import { sortQuali } from "@/lib/sorting";
-import { objectEntries } from "@/lib/driverHelper";
 
 import QualifyingDriver from "@/components/QualifyingDriver";
 
@@ -18,7 +17,7 @@ export default function Qualifying() {
 	const qualifyingDrivers =
 		!driversTiming?.lines || !drivers
 			? []
-			: objectEntries(driversTiming.lines)
+			: Object.values(driversTiming.lines)
 					.filter((d) => !d.pitOut && !d.inPit && !d.knockedOut && !d.stopped) // no out, no pit, no stopped
 					.filter((d) => d.sectors.every((sec) => !sec.segments.find((s) => s.status === 2064))) // no in/out lap
 					.filter((d) => d.sectors.map((s) => s.personalFastest).includes(true)); // has any personal fastest
@@ -26,7 +25,7 @@ export default function Qualifying() {
 	const sessionPart = driversTiming?.sessionPart;
 	const comparingDriverPosition = sessionPart === 1 ? 15 : sessionPart === 2 ? 10 : sessionPart === 3 ? 1 : 1;
 	const comparingDriver = driversTiming
-		? objectEntries(driversTiming.lines).find((d) => parseInt(d.position) === comparingDriverPosition)
+		? Object.values(driversTiming.lines).find((d) => parseInt(d.position) === comparingDriverPosition)
 		: undefined;
 
 	return (
@@ -72,16 +71,16 @@ const SkeletonQualifyingDriver = () => {
 				<div className={clsx(animateClass, "w-8")} />
 
 				<div className="flex flex-col items-end gap-1">
-					<div className={clsx(animateClass, "!h-4 w-10")} />
-					<div className={clsx(animateClass, "!h-3 w-14")} />
+					<div className={clsx(animateClass, "h-4! w-10")} />
+					<div className={clsx(animateClass, "h-3! w-14")} />
 				</div>
 			</div>
 
 			<div className="flex w-full gap-1">
 				{new Array(3).fill(null).map((_, index) => (
 					<div className="flex w-full flex-col gap-1" key={`skeleton.sector.${index}`}>
-						<div className={clsx(animateClass, "!h-4")} />
-						<div className={clsx(animateClass, "!h-3")} />
+						<div className={clsx(animateClass, "h-4!")} />
+						<div className={clsx(animateClass, "h-3!")} />
 					</div>
 				))}
 			</div>

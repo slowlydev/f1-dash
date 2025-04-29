@@ -1,8 +1,8 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
-import moment, { duration, now, utc } from "moment";
+import { duration, now, utc } from "moment";
 
 import { Session } from "@/types/schedule.type";
 
@@ -20,24 +20,24 @@ export default function Countdown({ next, type }: Props) {
 
 	const requestRef = useRef<number | null>(null);
 
-	const animateNextFrame = () => {
-		const diff = duration(nextMoment.diff(now()));
-
-		const days = parseInt(diff.asDays().toString());
-
-		if (diff.asSeconds() > 0) {
-			setDuration([days, diff.hours(), diff.minutes(), diff.seconds()]);
-		} else {
-			setDuration([0, 0, 0, 0]);
-		}
-
-		requestRef.current = requestAnimationFrame(animateNextFrame);
-	};
-
 	useEffect(() => {
+		const animateNextFrame = () => {
+			const diff = duration(nextMoment.diff(now()));
+
+			const days = parseInt(diff.asDays().toString());
+
+			if (diff.asSeconds() > 0) {
+				setDuration([days, diff.hours(), diff.minutes(), diff.seconds()]);
+			} else {
+				setDuration([0, 0, 0, 0]);
+			}
+
+			requestRef.current = requestAnimationFrame(animateNextFrame);
+		};
+
 		requestRef.current = requestAnimationFrame(animateNextFrame);
 		return () => (requestRef.current ? cancelAnimationFrame(requestRef.current) : void 0);
-	}, []);
+	}, [nextMoment]);
 
 	return (
 		<div>
@@ -60,7 +60,7 @@ export default function Countdown({ next, type }: Props) {
 							<div className="h-9 w-12 animate-pulse rounded-md bg-zinc-800" />
 						)}
 
-						<p className="text-base text-zinc-600">days</p>
+						<p className="text-base text-zinc-500">days</p>
 					</div>
 
 					<div>
@@ -78,7 +78,7 @@ export default function Countdown({ next, type }: Props) {
 							<div className="h-9 w-12 animate-pulse rounded-md bg-zinc-800" />
 						)}
 
-						<p className="text-base text-zinc-600">hours</p>
+						<p className="text-base text-zinc-500">hours</p>
 					</div>
 
 					<div>
@@ -96,7 +96,7 @@ export default function Countdown({ next, type }: Props) {
 							<div className="h-9 w-12 animate-pulse rounded-md bg-zinc-800" />
 						)}
 
-						<p className="text-base text-zinc-600">minutes</p>
+						<p className="text-base text-zinc-500">minutes</p>
 					</div>
 
 					<div>
@@ -114,7 +114,7 @@ export default function Countdown({ next, type }: Props) {
 							<div className="h-9 w-12 animate-pulse rounded-md bg-zinc-800" />
 						)}
 
-						<p className="text-base text-zinc-600">seconds</p>
+						<p className="text-base text-zinc-500">seconds</p>
 					</div>
 				</div>
 			</AnimatePresence>

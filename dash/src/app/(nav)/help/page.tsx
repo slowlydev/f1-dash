@@ -1,7 +1,6 @@
 import Image from "next/image";
 
 import Note from "@/components/Note";
-import Footer from "@/components/Footer";
 import DriverDRS from "@/components/driver/DriverDRS";
 import DriverTire from "@/components/driver/DriverTire";
 import DriverPedals from "@/components/driver/DriverPedals";
@@ -19,7 +18,7 @@ import wetTireIcon from "public/tires/wet.svg";
 
 export default function HelpPage() {
 	return (
-		<div className="container mx-auto mb-10 max-w-screen-lg px-4">
+		<div>
 			<h1 className="my-4 text-3xl">Help Page</h1>
 
 			<p>This page explains some core features and UI elements of f1-dash.</p>
@@ -41,7 +40,7 @@ export default function HelpPage() {
 
 				<div className="flex gap-1">
 					<p className="flex items-center gap-1 text-yellow-500">
-						<span className="size-4 rounded-md bg-yellow-500" /> Yellow
+						<span className="size-4 rounded-md bg-amber-400" /> Yellow
 					</p>
 					<p>Slower than personal best</p>
 				</div>
@@ -76,13 +75,13 @@ export default function HelpPage() {
 			<h2 className="my-4 text-2xl">Leaderboard</h2>
 
 			<p className="mb-4">
-				The leaderboard shows all the drivers of the ongoing session. Depending on the driver's status and the session's
-				progression, some drivers may have a colored background.
+				The leaderboard shows all the drivers of the ongoing session. Depending on the driver&apos;s status and the
+				session&apos;s progression, some drivers may have a colored background.
 			</p>
 
 			<div className="grid grid-cols-1 gap-x-4 divide-y divide-zinc-800 sm:grid-cols-3 sm:divide-y-0">
 				<div>
-					<p className="rounded-md bg-violet-800 bg-opacity-30 p-2">Driver has purple background</p>
+					<p className="rounded-md bg-violet-800/30 p-2">Driver has purple background</p>
 					<p className="p-2">Driver has the fastest overall lap time.</p>
 				</div>
 
@@ -92,7 +91,7 @@ export default function HelpPage() {
 				</div>
 
 				<div className="pt-4 sm:pt-0">
-					<p className="rounded-md bg-red-800 bg-opacity-30 p-2">Red background.</p>
+					<p className="rounded-md bg-red-800/30 p-2">Red background.</p>
 					<p className="p-2">Driver is in the danger zone during qualifying.</p>
 				</div>
 			</div>
@@ -259,7 +258,7 @@ export default function HelpPage() {
 					</div>
 
 					<p>
-						Shows the engine's RPM <span className="text-zinc-500">(0 - 15'000)</span>
+						Shows the engine&apos;s RPM <span className="text-zinc-500">(0 - 15&apos;000)</span>
 					</p>
 				</div>
 			</div>
@@ -284,7 +283,7 @@ export default function HelpPage() {
 
 				<div className="flex flex-row items-center gap-2">
 					<RainComplication rain={true} />
-					<p>This shows if it's raining or not.</p>
+					<p>This shows if it&apos;s raining or not.</p>
 				</div>
 
 				<div className="flex flex-row items-center gap-2">
@@ -292,8 +291,6 @@ export default function HelpPage() {
 					<p>This shows the current wind speed in m/s and cardinal direction.</p>
 				</div>
 			</div>
-
-			<Footer />
 		</div>
 	);
 }

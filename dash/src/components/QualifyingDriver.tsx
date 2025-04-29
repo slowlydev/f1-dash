@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import Image from "next/image";
 import clsx from "clsx";
 
@@ -74,8 +74,8 @@ export default function DriverQuali({
 				<div className="flex flex-col items-end">
 					{currentBestTime && (
 						<>
-							<p className="text-xl leading-none text-gray-500">{currentBestTime}</p>
-							<p className="text-sm font-medium leading-none text-gray-500">{currentBestName}</p>
+							<p className="text-xl leading-none text-zinc-500">{currentBestTime}</p>
+							<p className="text-sm leading-none font-medium text-zinc-500">{currentBestName}</p>
 						</>
 					)}
 				</div>
@@ -88,14 +88,14 @@ export default function DriverQuali({
 							className={clsx(
 								"h-4 rounded-md",
 								getSectorColorBG(sector.overallFastest, sector.personalFastest),
-								!sector.value ? "!bg-gray-500" : "",
+								!sector.value ? "bg-zinc-500!" : "",
 							)}
 						/>
 						<p
 							className={clsx(
-								"text-center text-lg font-semibold leading-none",
+								"text-center text-lg leading-none font-semibold",
 								getSectorColorText(sector.overallFastest, sector.personalFastest),
-								!sector.value ? "!text-gray-500" : "",
+								!sector.value ? "text-zinc-500!" : "",
 							)}
 						>
 							{!!sector.value ? sector.value : "-- ---"}

@@ -16,7 +16,7 @@ export const useStatefulBuffer = <T>() => {
 	};
 
 	const push = (update: RecursivePartial<T>) => {
-		currentRef.current = merge(currentRef.current ?? {}, update);
+		currentRef.current = merge(currentRef.current ?? {}, update) as T;
 		if (currentRef.current) buffer.push(currentRef.current);
 	};
 
