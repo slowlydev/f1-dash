@@ -15,26 +15,6 @@ import { useStatefulBuffer } from "@/hooks/useStatefulBuffer";
 
 const UPDATE_MS = 200;
 
-const bufferTypes = [
-	"extrapolatedClock",
-	"topThree",
-	"timingStats",
-	"timingAppData",
-	"weatherData",
-	"trackStatus",
-	"sessionStatus",
-	"driverList",
-	"raceControlMessages",
-	"sessionInfo",
-	"sessionData",
-	"lapCount",
-	"timingData",
-	"teamRadio",
-	"championshipPrediction",
-];
-
-type Buffers = Record<(typeof bufferTypes)[number], ReturnType<typeof useStatefulBuffer>>;
-
 type Props = {
 	updateState: (state: State) => void;
 	updatePosition: (pos: Positions) => void;
@@ -42,10 +22,23 @@ type Props = {
 };
 
 export const useDataEngine = ({ updateState, updatePosition, updateCarData }: Props) => {
-	const buffers = bufferTypes.reduce<Buffers>((acc, type) => {
-		acc[type] = useStatefulBuffer();
-		return acc;
-	}, {} as Buffers);
+	const buffers = {
+		extrapolatedClock: useStatefulBuffer(),
+		topThree: useStatefulBuffer(),
+		timingStats: useStatefulBuffer(),
+		timingAppData: useStatefulBuffer(),
+		weatherData: useStatefulBuffer(),
+		trackStatus: useStatefulBuffer(),
+		sessionStatus: useStatefulBuffer(),
+		driverList: useStatefulBuffer(),
+		raceControlMessages: useStatefulBuffer(),
+		sessionInfo: useStatefulBuffer(),
+		sessionData: useStatefulBuffer(),
+		lapCount: useStatefulBuffer(),
+		timingData: useStatefulBuffer(),
+		teamRadio: useStatefulBuffer(),
+		championshipPrediction: useStatefulBuffer(),
+	};
 
 	const carBuffer = useBuffer<CarsData>();
 	const posBuffer = useBuffer<Positions>();
@@ -116,12 +109,12 @@ export const useDataEngine = ({ updateState, updatePosition, updateCarData }: Pr
 		const delay = delayRef.current;
 
 		if (delay === 0) {
-			let newStateFrame: State = {} as State;
+			const newStateFrame: Record<string, State[keyof State]> = {};
 
 			Object.keys(buffers).forEach((key) => {
 				const buffer = buffers[key as keyof typeof buffers];
-				const latest = buffer.latest();
-				if (latest) newStateFrame[key as keyof typeof newStateFrame] = latest as any;
+				const latest = buffer.latest() as State[keyof State];
+				if (latest) newStateFrame[key] = latest;
 			});
 
 			updateState(newStateFrame);
@@ -172,6 +165,8 @@ export const useDataEngine = ({ updateState, updatePosition, updateCarData }: Pr
 	useEffect(() => {
 		intervalRef.current = setInterval(handleCurrentState, UPDATE_MS);
 		return () => (intervalRef.current ? clearInterval(intervalRef.current) : void 0);
+		// TODO investigate if this might have performance issues
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	return {

@@ -1,20 +1,24 @@
+import { connection } from "next/server";
 import { utc } from "moment";
-
-import { env } from "@/env.mjs";
-
-import { Round as RoundType } from "@/types/schedule.type";
 
 import Countdown from "@/components/schedule/Countdown";
 import Round from "@/components/schedule/Round";
 
-const getNext = async (): Promise<RoundType | null> => {
+import { env } from "@/env";
+import { Round as RoundType } from "@/types/schedule.type";
+
+export const getNext = async () => {
+	await connection();
+
 	try {
-		const nextReq = await fetch(`${env.NEXT_PUBLIC_API_URL}/api/schedule/next`, {
-			next: { revalidate: 60 * 60 * 4 },
+		const nextReq = await fetch(`${env.API_URL}/api/schedule/next`, {
+			cache: "no-store",
 		});
-		const schedule: RoundType = await nextReq.json();
-		return schedule;
+		const next: RoundType = await nextReq.json();
+
+		return next;
 	} catch (e) {
+		console.error("error fetching next round", e);
 		return null;
 	}
 };

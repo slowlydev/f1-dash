@@ -30,10 +30,12 @@ export default function DelayInput({ className, saveDelay }: Props) {
 		if (!hasHydrated) return;
 		if (timeoutRef.current) clearTimeout(timeoutRef.current);
 		timeoutRef.current = setTimeout(updateDelay, saveDelay || 0);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [delayState]);
 
 	useEffect(() => {
 		if (hasHydrated) setDelayState(currentDelay.toString());
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [hasHydrated]);
 
 	const handleChange = (v: string) => {
@@ -43,7 +45,7 @@ export default function DelayInput({ className, saveDelay }: Props) {
 	return (
 		<input
 			className={clsx(
-				"w-12 rounded-lg bg-zinc-800 p-1 text-center text-sm [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none",
+				"w-12 [appearance:textfield] rounded-lg bg-zinc-800 p-1 text-center text-sm [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none",
 				className,
 			)}
 			type="number"
