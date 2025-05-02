@@ -4,19 +4,15 @@
 
 You will need to install following tools:
 
-- [nvm](https://github.com/nvm-sh/nvm)
+- [nvm](https://github.com/nvm-sh/nvm) (or [fnm](https://fnm.vercel.app/), [nvm-windows](https://github.com/coreybutler/nvm-windows))
 - rust & cargo ([rustup](https://rustup.rs) is highly recommended)
 
 To get started with the frontend do the following
 
 > [!NOTE]
 > You will need multiple terminal sessions, if you want to run everything,
-> you will need 4 sessions. (frontend, live backend, api backend, simulator)
-
-> [!NOTE]
-> FOR WINOWS USERS <br>
-> Download nvm [here](https://github.com/coreybutler/nvm-windows/releases) and chose `nvm-setup.exe` then in admin cmd run `nvm install x.x.x` where x is version number then `nvm use x.x.x`. <br>
-> And also anywhere in the code bellow where it says "cp" replace that with "copy"
+> you will need 4 sessions. (frontend, live backend, api backend, simulator).
+> Also the following commands assume linux, macos or wsl. Windows commands may differ.
 
 ```bash
 # clone the repository or your fork
@@ -25,7 +21,7 @@ git clone git@github.com:slowlydev/f1-dash.git
 # go to the frontend
 cd dash/
 
-# install the correct node version using nvm
+# install the correct node version using nvm, fnm or nvm-windows
 nvm install
 
 # enable corepack
@@ -92,6 +88,8 @@ For branch names we use git flow style branching.
 For new features follow this: `feature/the-name-of-the-feature`
 For a bugfix or refactor follow this: `bugfix/a-title-for-the-bugfix`
 
+These feature and bugfix branches should be based of develop and be merged into develop.
+
 ## Commit Convetion
 
 For the commit message please use conventional commits:
@@ -110,3 +108,5 @@ https://www.conventionalcommits.org/en/v1.0.0/
 Please test your code, build the parts of the application you touched, for example if you made changes in the frontend, make sure to run `yarn build` and see if the build succeeds and maybe check out how it will look in prod via `yarn start` sometimes there is a difference between running `dev` and `start & build`.
 
 Make sure you format the files you created or touched, we use prettier for formatting so either run the command `yarn run prettier` or install the fitting extension for your preferred IDE.
+
+When opening a Pull Request please select develop as the target branch.
