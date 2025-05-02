@@ -41,19 +41,6 @@ export default function DashboardLayout({ children }: Props) {
 		<div className="flex h-screen w-full md:pt-2 md:pr-2 md:pb-2">
 			<Sidebar key="sidebar" connected={connected} />
 
-			<motion.div
-				layout="size"
-				className={
-					syncing && !ended
-						? "flex h-full flex-1 flex-col items-center justify-center gap-2 rounded-lg border border-zinc-800"
-						: "hidden"
-				}
-			>
-				<h1 className="my-20 text-center text-5xl font-bold">Syncing...</h1>
-				<p>Please wait for {delay - maxDelay} seconds.</p>
-				<p>Or make your delay smaller.</p>
-			</motion.div>
-
 			<motion.div layout="size" className="flex h-full w-full flex-1 flex-col md:gap-2">
 				<DesktopStaticBar show={!syncing || ended} />
 				<MobileStaticBar show={!syncing || ended} connected={connected} />
@@ -61,6 +48,18 @@ export default function DashboardLayout({ children }: Props) {
 				<div className={!syncing || ended ? "no-scrollbar w-full flex-1 overflow-auto md:rounded-lg" : "hidden"}>
 					<MobileDynamicBar />
 					{children}
+				</div>
+
+				<div
+					className={
+						syncing && !ended
+							? "flex h-full flex-1 flex-col items-center justify-center gap-2 border-zinc-800 md:rounded-lg md:border"
+							: "hidden"
+					}
+				>
+					<h1 className="my-20 text-center text-5xl font-bold">Syncing...</h1>
+					<p>Please wait for {delay - maxDelay} seconds.</p>
+					<p>Or make your delay smaller.</p>
 				</div>
 			</motion.div>
 		</div>
