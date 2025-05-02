@@ -51,14 +51,11 @@ export default function DashboardLayout({ children }: Props) {
 				<p>Or make your delay smaller.</p>
 			</motion.div>
 
-			<motion.div
-				layout="size"
-				className={!syncing || ended ? "flex h-full w-full flex-1 flex-col md:gap-2" : "hidden"}
-			>
-				<DesktopStaticBar />
-				<MobileStaticBar />
+			<motion.div layout="size" className="flex h-full w-full flex-1 flex-col md:gap-2">
+				<DesktopStaticBar show={!syncing || ended} />
+				<MobileStaticBar show={!syncing || ended} />
 
-				<div className="no-scrollbar w-full flex-1 overflow-auto md:rounded-lg">
+				<div className={!syncing || ended ? "no-scrollbar w-full flex-1 overflow-auto md:rounded-lg" : "hidden"}>
 					<MobileDynamicBar />
 					{children}
 				</div>
@@ -80,18 +77,18 @@ function MobileDynamicBar() {
 	);
 }
 
-function MobileStaticBar() {
+function MobileStaticBar({ show }: { show: boolean }) {
 	const open = useSidebarStore((state) => state.open);
 
 	return (
 		<div className="flex w-full items-center justify-between overflow-hidden border-b border-zinc-800 p-2 md:hidden">
 			<SidenavButton key="mobile" onClick={() => open()} />
-			<TrackInfo />
+			{show && <TrackInfo />}
 		</div>
 	);
 }
 
-function DesktopStaticBar() {
+function DesktopStaticBar({ show }: { show: boolean }) {
 	const pinned = useSidebarStore((state) => state.pinned);
 	const pin = useSidebarStore((state) => state.pin);
 
@@ -107,13 +104,9 @@ function DesktopStaticBar() {
 				</AnimatePresence>
 			</div>
 
-			<div className="hidden md:items-center lg:flex">
-				<WeatherInfo />
-			</div>
+			<div className="hidden md:items-center lg:flex">{show && <WeatherInfo />}</div>
 
-			<div className="flex justify-end">
-				<TrackInfo />
-			</div>
+			<div className="flex justify-end">{show && <TrackInfo />}</div>
 		</div>
 	);
 }
