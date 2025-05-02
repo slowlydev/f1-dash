@@ -57,10 +57,6 @@ export function WeatherMap() {
 		}
 
 		setFrames(pathFrames.map((frame, i) => ({ time: frame.time, id: i })));
-
-		// maybe set loading of controls here
-
-		// intervalRef.current = setInterval(updateFrameVisibility, 1000);
 	};
 
 	useEffect(() => {
@@ -69,16 +65,17 @@ export function WeatherMap() {
 
 			if (!meeting) return;
 
-			const coords = await fetchCoords(`${meeting.country.name}, ${meeting.location} circuit`);
-			if (!coords) {
-				console.error("no coords found");
-				return;
-			}
+			const [coordsC, coordsA] = await Promise.all([
+				fetchCoords(`${meeting.country.name}, ${meeting.location} circuit`),
+				fetchCoords(`${meeting.country.name}, ${meeting.location} autodrome`),
+			]);
+
+			const coords = coordsC || coordsA;
 
 			const libMap = new maplibregl.Map({
 				container: mapContainerRef.current,
 				style: `https://api.maptiler.com/maps/dataviz-dark/style.json?key=${env.NEXT_PUBLIC_MAP_KEY}`,
-				center: [coords.lon, coords.lat],
+				center: coords ? [coords.lon, coords.lat] : undefined,
 				zoom: 10,
 				canvasContextAttributes: {
 					antialias: true,
@@ -88,7 +85,9 @@ export function WeatherMap() {
 			libMap.on("load", async () => {
 				setLoading(false);
 
-				new Marker().setLngLat([coords.lon, coords.lat]).addTo(libMap);
+				if (coords) {
+					new Marker().setLngLat([coords.lon, coords.lat]).addTo(libMap);
+				}
 
 				await handleMapLoad();
 			});
