@@ -17,6 +17,9 @@ import SidenavButton from "@/components/SidenavButton";
 import SessionInfo from "@/components/SessionInfo";
 import WeatherInfo from "@/components/WeatherInfo";
 import TrackInfo from "@/components/TrackInfo";
+import DelayInput from "@/components/DelayInput";
+import DelayTimer from "@/components/DelayTimer";
+import ConnectionStatus from "@/components/ConnectionStatus";
 
 type Props = {
 	children: ReactNode;
@@ -53,7 +56,7 @@ export default function DashboardLayout({ children }: Props) {
 
 			<motion.div layout="size" className="flex h-full w-full flex-1 flex-col md:gap-2">
 				<DesktopStaticBar show={!syncing || ended} />
-				<MobileStaticBar show={!syncing || ended} />
+				<MobileStaticBar show={!syncing || ended} connected={connected} />
 
 				<div className={!syncing || ended ? "no-scrollbar w-full flex-1 overflow-auto md:rounded-lg" : "hidden"}>
 					<MobileDynamicBar />
@@ -77,12 +80,20 @@ function MobileDynamicBar() {
 	);
 }
 
-function MobileStaticBar({ show }: { show: boolean }) {
+function MobileStaticBar({ show, connected }: { show: boolean; connected: boolean }) {
 	const open = useSidebarStore((state) => state.open);
 
 	return (
 		<div className="flex w-full items-center justify-between overflow-hidden border-b border-zinc-800 p-2 md:hidden">
-			<SidenavButton key="mobile" onClick={() => open()} />
+			<div className="flex items-center gap-2">
+				<SidenavButton key="mobile" onClick={() => open()} />
+
+				<DelayInput saveDelay={500} />
+				<DelayTimer />
+
+				<ConnectionStatus connected={connected} />
+			</div>
+
 			{show && <TrackInfo />}
 		</div>
 	);
