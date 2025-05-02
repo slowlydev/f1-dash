@@ -57,7 +57,7 @@ async fn handle_ws(socket: WebSocket, state: Arc<AppState>) {
     tokio::select! {
         _ = async {
             while let Ok(msg) = reader_rx.recv().await {
-                match tx.send(Message::Text(msg)).await {
+                match tx.send(Message::text(msg)).await {
                     Ok(_) => {}
                     Err(_) => error!("failed to send message"),
                 }

@@ -20,7 +20,7 @@ export default function DriverCarMetrics({ carData }: Props) {
 			<p className="flex h-8 w-8 items-center justify-center font-mono text-lg">{carData[3]}</p>
 
 			<div>
-				<p className="text-right font-mono font-medium leading-none">
+				<p className="text-right font-mono leading-none font-medium">
 					{speedUnit === "metric" ? carData[2] : convertKmhToMph(carData[2])}
 				</p>
 				<p className="text-sm leading-none text-zinc-600">{speedUnit === "metric" ? "km/h" : "mp/h"}</p>

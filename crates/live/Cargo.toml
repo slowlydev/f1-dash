@@ -21,23 +21,20 @@ tokio-stream.workspace = true
 tracing.workspace = true
 tracing-subscriber.workspace = true
 
-axum = { version = "0.7.5", features = ["http2"] }
-
-tower-http = { version = "0.5.2", features = ["cors"] }
-tower_governor = { version = "0.4.2", features = ["tracing"] }
-
+axum.workspace = true
+tower-http.workspace = true
 tokio-tungstenite.workspace = true
 reqwest = { version = "0.12.4", features = ["native-tls"] }
 
 serde = { version = "1.0", features = ["derive"] }
 serde_json = { version = "1.0", features = ["raw_value"] }
 
-heck = "0.5.0"
-regex = "1.10.4"
+heck.workspace = true
+regex.workspace = true
 
-base64 = "0.22.1"
-flate2 = "1.0.30"
+base64.workspace = true
+flate2.workspace = true
 
-futures = "0.3.30"
-dotenvy = "0.15.7"
+futures.workspace = true
+dotenvy.workspace = true
 
