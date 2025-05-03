@@ -28,6 +28,9 @@ export default function Layout({ children }: Props) {
 					<Link className="transition duration-100 active:scale-95" href="/help">
 						Help
 					</Link>
+					<Link className="transition duration-100 active:scale-95" href="/release-notes">
+						Release Notes
+					</Link>
 				</div>
 
 				<div className="hidden items-center gap-4 pr-2 sm:flex">
