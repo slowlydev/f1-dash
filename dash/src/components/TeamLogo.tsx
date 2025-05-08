@@ -11,7 +11,7 @@ export default function TeamLogo({ teamName, width, height }: Props) {
         <div className="flex content-center justify-center">
             {teamName ? (
                 <Image
-                    src={`/team-logos/${teamName.toLowerCase()}.${"png"}`}
+                    src={`/team-logos/${teamName.toLowerCase()}.${"svg"}`}
                     alt={teamName}
                     width={width}
                     height={height}
