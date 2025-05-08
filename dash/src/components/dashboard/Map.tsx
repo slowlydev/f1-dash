@@ -173,18 +173,33 @@ export default function Map() {
 
 			{centerX && centerY && positions && drivers && (
 				<>
-					{positions["241"] && (
-						<CarDot
-							key={`map.car.241`}
-							favoriteDriver={false}
-							name="Safety Car"
-							pit={false}
-							hidden={false}
-							pos={positions["241"]}
-							color={undefined}
+					{positions["241"] && positions["241"].Z !== 0 && (
+						<SafetyCar
+							key="safety.car.241"
 							rotation={rotation}
 							centerX={centerX}
 							centerY={centerY}
+							pos={positions["241"]}
+						/>
+					)}
+
+					{positions["242"] && positions["242"].Z !== 0 && (
+						<SafetyCar
+							key="safety.car.242"
+							rotation={rotation}
+							centerX={centerX}
+							centerY={centerY}
+							pos={positions["242"]}
+						/>
+					)}
+
+					{positions["243"] && positions["243"].Z !== 0 && (
+						<SafetyCar
+							key="safety.car.243"
+							rotation={rotation}
+							centerX={centerX}
+							centerY={centerY}
+							pos={positions["243"]}
 						/>
 					)}
 
@@ -284,5 +299,28 @@ const CarDot = ({ pos, name, color, favoriteDriver, pit, hidden, rotation, cente
 				/>
 			)}
 		</g>
+	);
+};
+
+type SafetyCarProps = {
+	pos: PositionCar;
+	rotation: number;
+	centerX: number;
+	centerY: number;
+};
+
+const SafetyCar = ({ pos, rotation, centerX, centerY }: SafetyCarProps) => {
+	return (
+		<CarDot
+			name="Safety Car"
+			pos={pos}
+			rotation={rotation}
+			centerX={centerX}
+			centerY={centerY}
+			favoriteDriver={false}
+			pit={false}
+			hidden={false}
+			color={undefined}
+		/>
 	);
 };
