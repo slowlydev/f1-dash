@@ -173,14 +173,33 @@ export default function Map() {
 
 			{centerX && centerY && positions && drivers && (
 				<>
-					{(positions["241"] || positions["242"] || positions["243"]) && (
+					{positions["241"] && positions["241"].Z !== 0 && (
 						<SafetyCar
-							car241={positions["241"]}
-							car242={positions["242"]}
-							car243={positions["243"]}
+							key="safety.car.241"
 							rotation={rotation}
 							centerX={centerX}
 							centerY={centerY}
+							pos={positions["241"]}
+						/>
+					)}
+
+					{positions["242"] && positions["242"].Z !== 0 && (
+						<SafetyCar
+							key="safety.car.242"
+							rotation={rotation}
+							centerX={centerX}
+							centerY={centerY}
+							pos={positions["242"]}
+						/>
+					)}
+
+					{positions["243"] && positions["243"].Z !== 0 && (
+						<SafetyCar
+							key="safety.car.243"
+							rotation={rotation}
+							centerX={centerX}
+							centerY={centerY}
+							pos={positions["243"]}
 						/>
 					)}
 
@@ -284,39 +303,24 @@ const CarDot = ({ pos, name, color, favoriteDriver, pit, hidden, rotation, cente
 };
 
 type SafetyCarProps = {
-	car241: PositionCar;
-	car242: PositionCar;
-	car243: PositionCar;
-
+	pos: PositionCar;
 	rotation: number;
 	centerX: number;
 	centerY: number;
-}
+};
 
-const SafetyCar = ({ car241, car242, car243, rotation, centerX, centerY }: SafetyCarProps) => {
-	let carPosition: PositionCar | null = null;
-	if (car241 && car241.Z != 0) {
-		carPosition = car241;
-	} else if (car242 && car242.Z != 0) {
-		carPosition = car242;
-	} else if (car243 && car243.Z != 0) {
-		carPosition = car243;
-	}
-
-	if (carPosition == null) return <></>;
-
+const SafetyCar = ({ pos, rotation, centerX, centerY }: SafetyCarProps) => {
 	return (
 		<CarDot
-			key={`map.safetycar`}
-			favoriteDriver={false}
 			name="Safety Car"
-			pit={false}
-			hidden={false}
-			pos={carPosition}
-			color={undefined}
+			pos={pos}
 			rotation={rotation}
 			centerX={centerX}
 			centerY={centerY}
+			favoriteDriver={false}
+			pit={false}
+			hidden={false}
+			color={undefined}
 		/>
-	)
-}
+	);
+};
