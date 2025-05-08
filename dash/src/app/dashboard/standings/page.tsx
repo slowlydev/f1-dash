@@ -3,6 +3,7 @@
 import { useDataStore } from "@/stores/useDataStore";
 
 import NumberDiff from "@/components/NumberDiff";
+import TeamLogo from "@/components/TeamLogo";
 
 export default function Standings() {
 	const driverStandings = useDataStore((state) => state?.championshipPrediction?.drivers);
@@ -78,12 +79,14 @@ export default function Standings() {
 								<div
 									className="grid p-2"
 									style={{
-										gridTemplateColumns: "2rem 2rem auto 4rem 4rem",
+										gridTemplateColumns: "2rem 1.5rem 2rem auto 4rem 4rem",
 									}}
 									key={team.teamName}
 								>
 									<NumberDiff old={team.currentPosition} current={team.predictedPosition} />
 									<p>{team.predictedPosition}</p>
+
+									<TeamLogo teamName={team.teamName} width={24} height={24} />
 
 									<p>{team.teamName}</p>
 
