@@ -79,7 +79,7 @@ export default function Standings() {
 								<div
 									className="grid p-2"
 									style={{
-										gridTemplateColumns: "2rem 1.5rem 2rem auto 4rem 4rem",
+										gridTemplateColumns: "2rem 2rem 2rem auto 4rem 4rem",
 									}}
 									key={team.teamName}
 								>
