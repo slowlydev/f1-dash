@@ -14,7 +14,7 @@ type Props = {
 export default function DelayInput({ className, saveDelay }: Props) {
 	const currentDelay = useSettingsStore((s) => s.delay);
 	const setDelay = useSettingsStore((s) => s.setDelay);
-	const hasHydrated = useSettingsStore((s) => s.hasHydrated);
+	const isPaused = useSettingsStore((s) => s.delayIsPaused);
 
 	const [delayState, setDelayState] = useState<string>(currentDelay.toString());
 
@@ -27,16 +27,21 @@ export default function DelayInput({ className, saveDelay }: Props) {
 	};
 
 	useEffect(() => {
-		if (!hasHydrated) return;
+		if (isPaused) return;
 		if (timeoutRef.current) clearTimeout(timeoutRef.current);
 		timeoutRef.current = setTimeout(updateDelay, saveDelay || 0);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [delayState]);
 
 	useEffect(() => {
-		if (hasHydrated) setDelayState(currentDelay.toString());
+		if (!isPaused) setDelayState(currentDelay.toString());
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [hasHydrated]);
+	}, [isPaused]);
+
+	useEffect(() => {
+		if (isPaused) setDelayState(currentDelay.toString());
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [currentDelay]);
 
 	const handleChange = (v: string) => {
 		setDelayState(v);
@@ -45,7 +50,7 @@ export default function DelayInput({ className, saveDelay }: Props) {
 	return (
 		<input
 			className={clsx(
-				"w-12 [appearance:textfield] rounded-lg bg-zinc-800 p-1 text-center text-sm [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none",
+				"w-12 [appearance:textfield] rounded-lg bg-zinc-800 p-1 text-center text-sm disabled:opacity-50 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none",
 				className,
 			)}
 			type="number"
@@ -56,6 +61,7 @@ export default function DelayInput({ className, saveDelay }: Props) {
 			onChange={(e) => handleChange(e.target.value)}
 			onKeyDown={(e) => e.code == "Enter" && updateDelay(true)}
 			onBlur={() => updateDelay(true)}
+			disabled={isPaused}
 		/>
 	);
 }
