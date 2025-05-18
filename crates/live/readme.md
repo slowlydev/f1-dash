@@ -1,6 +1,6 @@
 # live
 
-connects to the f1 singalr websocket endpoint or the simulator and maintains the full current state.
+connects to the f1 signalr websocket endpoint or the simulator and maintains the full current state.
 also spins up a http server with a SSE endpoint where initially the maintained full state gets sent and then the partial updates get forwarded
 
 ## usage
