@@ -53,6 +53,8 @@ export default function Driver({ driver, timingDriver, position }: Props) {
 
 	const favoriteDriver = useSettingsStore((state) => state.favoriteDrivers.includes(driver.racingNumber));
 
+	const showDriverLastName = useSettingsStore((state) => state.showDriverLastName);
+
 	return (
 		<motion.div
 			layout="position"
@@ -71,7 +73,12 @@ export default function Driver({ driver, timingDriver, position }: Props) {
 						: "5.5rem 3.5rem 5.5rem 4rem 5rem 5.5rem auto",
 				}}
 			>
-				<DriverTag className="min-w-full!" short={driver.tla} teamColor={driver.teamColour} position={position} />
+				<DriverTag
+					className="min-w-full!"
+					short={showDriverLastName ? driver.lastName : driver.tla}
+					teamColor={driver.teamColour}
+					position={position}
+				/>
 				<DriverDRS
 					on={carData ? hasDRS(carData[45]) : false}
 					possible={carData ? possibleDRS(carData[45]) : false}
