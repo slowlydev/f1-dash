@@ -2205,6 +2205,7 @@ __metadata:
     eslint-config-next: "npm:15.3.1"
     eslint-config-prettier: "npm:10.1.2"
     geist: "npm:1.3.1"
+    lucide-react: "npm:^0.507.0"
     maplibre-gl: "npm:5.4.0"
     moment: "npm:2.30.1"
     motion: "npm:12.9.2"
@@ -3182,6 +3183,15 @@ __metadata:
   bin:
     loose-envify: cli.js
   checksum: 10c0/655d110220983c1a4b9c0c679a2e8016d4b67f6e9c7b5435ff5979ecdb20d0813f4dec0a08674fcbdd4846a3f07edbb50a36811fd37930b94aaa0d9daceb017e
+  languageName: node
+  linkType: hard
+
+"lucide-react@npm:^0.507.0":
+  version: 0.507.0
+  resolution: "lucide-react@npm:0.507.0"
+  peerDependencies:
+    react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
+  checksum: 10c0/a1ef4228512f9c4df87f48c3e38c63a23cfbf6d501d9b55e77cf76a7930f0aefdee84982109a0fdf049a2efb34f41adc7f966e683590c20321e70cb9969d1906
   languageName: node
   linkType: hard
 
