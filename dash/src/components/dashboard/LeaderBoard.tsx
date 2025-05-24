@@ -14,8 +14,18 @@ export default function LeaderBoard() {
 
 	const showTableHeader = useSettingsStore((state) => state.tableHeaders);
 
+	const carMetrics = useSettingsStore((state) => state.carMetrics);
+
 	return (
-		<div className="flex w-fit flex-col gap-0.5">
+		<div
+			className="grid w-fit gap-0.5"
+			style={{
+				gridTemplateColumns: carMetrics
+					? "max-content max-content 3.5rem 5.5rem 4rem 5rem 5.5rem auto 10.5rem"
+					: "max-content max-content 3.5rem 5.5rem 4rem 5rem 5.5rem auto",
+				gridTemplateRows: "auto",
+			}}
+		>
 			{showTableHeader && <TableHeaders />}
 
 			{(!drivers || !driversTiming) &&
@@ -45,15 +55,8 @@ const TableHeaders = () => {
 	const carMetrics = useSettingsStore((state) => state.carMetrics);
 
 	return (
-		<div
-			className="grid items-center gap-2 p-1 px-2 text-sm font-medium text-zinc-500"
-			style={{
-				gridTemplateColumns: carMetrics
-					? "5.5rem 3.5rem 5.5rem 4rem 5rem 5.5rem auto 10.5rem"
-					: "5.5rem 3.5rem 5.5rem 4rem 5rem 5.5rem auto",
-			}}
-		>
-			<p>Position</p>
+		<div className="col-span-full grid grid-cols-subgrid gap-2 p-1 px-2 text-sm font-medium text-zinc-500">
+			<p className="col-span-2">Position</p>
 			<p>DRS</p>
 			<p>Tire</p>
 			<p>Info</p>
