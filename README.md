@@ -13,7 +13,7 @@ A real-time F1 dashboard that shows the leader board, tires, gaps, laps, mini se
 
 ## Contributing
 
-I really appreciate your interest in contributing to this project. I recommend checking out the GitHub issues marked as "Good First Issue" to get started. Also, please read [CONTRIBUTING.md](CONTRIBUTING.md) to learn how to contribute and set up f1-dash on your local machine for development.
+I really appreciate your interest in contributing to this project. I recommend checking out the GitHub issues marked as "Good First Issue" to get started. Also, please read [`CONTRIBUTING.md`](CONTRIBUTING.md) to learn how to contribute and set up f1-dash on your local machine for development.
 
 ## Supporting
 
