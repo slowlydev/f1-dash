@@ -50,7 +50,7 @@ export default function Round({ round, nextName }: Props) {
 			<div className="flex items-center justify-between border-b border-zinc-800 pb-2">
 				<div className="flex items-center gap-2">
 					<div className="flex items-center gap-2">
-						<Flag countryCode={countryCode} width={45} height={30}></Flag>
+						<Flag countryCode={countryCode} className="h-8 w-11"></Flag>
 						<p className="text-2xl">{round.countryName}</p>
 					</div>
 					{round.name === nextName && (

@@ -38,7 +38,7 @@ export default function SessionInfo() {
 
 	return (
 		<div className="flex items-center gap-2">
-			<Flag countryCode={session?.meeting.country.code} width={70} height={35} />
+			<Flag countryCode={session?.meeting.country.code} />
 
 			<div className="flex flex-col justify-center">
 				{session ? (
