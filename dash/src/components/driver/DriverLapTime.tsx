@@ -23,7 +23,7 @@ export default function DriverLapTime({ last, best, hasFastest }: Props) {
 			</p>
 			<p
 				className={clsx(
-					"text-sm leading-none text-zinc-500 tabular-nums",
+					"text-sm leading-none tabular-nums",
 					getTimeColor(hasFastest, true),
 					!best.value ? "text-zinc-500" : "",
 				)}
