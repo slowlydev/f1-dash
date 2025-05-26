@@ -74,7 +74,7 @@ export function WeatherMap() {
 
 			const libMap = new maplibregl.Map({
 				container: mapContainerRef.current,
-				style: `https://api.maptiler.com/maps/dataviz-dark/style.json?key=${env.NEXT_PUBLIC_MAP_KEY}`,
+				style: "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json",
 				center: coords ? [coords.lon, coords.lat] : undefined,
 				zoom: 10,
 				canvasContextAttributes: {
