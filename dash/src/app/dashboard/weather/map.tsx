@@ -5,8 +5,6 @@ import { useEffect, useRef, useState } from "react";
 import maplibregl, { Map, Marker } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 
-import { env } from "@/env";
-
 import { fetchCoords } from "@/lib/geocode";
 import { getRainviewer } from "@/lib/rainviewer";
 
