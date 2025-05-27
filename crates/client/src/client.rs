@@ -5,9 +5,8 @@ use axum::http::HeaderValue;
 use futures::SinkExt;
 use reqwest::{header, Url};
 use serde_json::Value;
-use tokio_stream::Stream;
 
-use tokio_stream::StreamExt;
+use tokio_stream::{Stream, StreamExt};
 use tokio_tungstenite::tungstenite::client::IntoClientRequest;
 use tokio_tungstenite::{tungstenite::http::Request, MaybeTlsStream, WebSocketStream};
 use tracing::{debug, trace};
@@ -15,7 +14,13 @@ use tracing::{debug, trace};
 pub use tokio_tungstenite::tungstenite;
 
 mod consts;
+pub mod consumers;
+pub mod manager;
 pub mod message;
+
+pub use consumers::broadcast;
+pub use consumers::keep_state;
+pub use manager::manage;
 
 type WsStream = WebSocketStream<MaybeTlsStream<tokio::net::TcpStream>>;
 
@@ -32,9 +37,7 @@ pub async fn parse_stream(stream: WsStream) -> impl Stream<Item = message::Messa
 pub async fn init() -> Result<WsStream, Box<dyn Error>> {
     let req = create_request().await?;
 
-    debug!("created request");
-
-    trace!("request='{:?}'", req);
+    debug!(?req, "created request");
 
     let (mut socket, _) = tokio_tungstenite::connect_async(req).await?;
 
@@ -59,11 +62,7 @@ async fn create_request() -> Result<Request<()>, Box<dyn Error>> {
 
             let negotiation = negotiate().await?;
 
-            trace!(
-                "token='{}' cookie='{}'",
-                negotiation.token,
-                negotiation.cookie
-            );
+            trace!(negotiation.token, negotiation.cookie);
 
             let url = Url::parse_with_params(
                 &format!("wss://{}/connect", consts::F1_BASE_URL),
@@ -71,11 +70,11 @@ async fn create_request() -> Result<Request<()>, Box<dyn Error>> {
                     ("clientProtocol", "1.5"),
                     ("transport", "webSockets"),
                     ("connectionToken", &negotiation.token),
-                    ("connectionData", &consts::SIGNALR_HUB),
+                    ("connectionData", consts::SIGNALR_HUB),
                 ],
             )?;
 
-            trace!("url='{}'", url);
+            trace!(?url);
 
             let mut req: Request<()> = url.into_client_request()?;
 
@@ -89,7 +88,7 @@ async fn create_request() -> Result<Request<()>, Box<dyn Error>> {
                 HeaderValue::from_static("gzip,identity"),
             );
             headers.insert(
-                header::COOKIE, //asd
+                header::COOKIE, // asd
                 negotiation.cookie.parse().unwrap(),
             );
 
@@ -110,7 +109,7 @@ async fn negotiate() -> Result<Negotiaion, Box<dyn Error>> {
         &format!("https://{}/negotiate", consts::F1_BASE_URL),
         &[
             ("clientProtocol", "1.5"),
-            ("connectionData", &consts::SIGNALR_HUB),
+            ("connectionData", consts::SIGNALR_HUB),
         ],
     )?;
 
@@ -121,7 +120,7 @@ async fn negotiate() -> Result<Negotiaion, Box<dyn Error>> {
     let body = res.text().await?;
     let json = serde_json::from_str::<Value>(&body)?;
 
-    trace!("negotiation response='{}'", json);
+    trace!(?json, "negotiation response");
 
     Ok(Negotiaion {
         token: json["ConnectionToken"]

@@ -73,13 +73,14 @@ dependencies = [
  "axum",
  "cached",
  "chrono",
- "env",
+ "dotenvy",
  "ical",
  "regex",
  "reqwest",
  "serde",
  "serde_json",
  "tokio",
+ "tower-http",
  "tracing",
  "tracing-subscriber",
 ]
@@ -474,13 +475,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "75030f3c4f45dafd7586dd6780965a8c7e8e285a5ecb86713e63a79c5b2766f3"
 dependencies = [
  "cfg-if",
-]
-
-[[package]]
-name = "env"
-version = "0.1.0"
-dependencies = [
- "dotenvy",
 ]
 
 [[package]]
@@ -1112,21 +1106,15 @@ version = "0.3.0"
 dependencies = [
  "anyhow",
  "axum",
- "base64",
  "client",
  "data",
  "dotenvy",
- "env",
- "flate2",
  "futures",
- "heck",
- "regex",
  "reqwest",
  "serde",
  "serde_json",
  "tokio",
  "tokio-stream",
- "tokio-tungstenite",
  "tower-http",
  "tracing",
  "tracing-subscriber",
@@ -2013,6 +2001,7 @@ dependencies = [
  "signal-hook-registry",
  "socket2",
  "tokio-macros",
+ "tracing",
  "windows-sys 0.52.0",
 ]
 
