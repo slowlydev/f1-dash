@@ -82,64 +82,70 @@ export default function TyreAllocation({ drivers, timingData }: Props) {
 				</tr>
 				</thead>
 				<tbody>
-				{noDataAvailable ? (
-					<tr>
-						<td colSpan={3} className="px-4 py-8 text-center text-zinc-500">
-							No data available.
-						</td>
-					</tr>
-				) : (
-					Object.values(drivers).map(driver => {
-						const tyreSets = getTyreAllocation(driver.racingNumber);
+					{noDataAvailable ? (
+						<tr>
+							<td colSpan={3} className="px-4 py-8 text-center text-zinc-500">
+								No data available.
+							</td>
+						</tr>
+					) : (
+						Object.values(drivers).map(driver => {
+							const tyreSets = getTyreAllocation(driver.racingNumber);
 
-						return (
-							<tr
-								key={driver.racingNumber}
-								className="border-b border-zinc-800 hover:bg-zinc-900"
-							>
-								<td className="px-4 py-2 whitespace-nowrap">
-									<div className="flex items-center gap-2">
-										<div // maybe here we could use the team logo instead? Or the pilot photo?
-											className="w-3 h-3 rounded-full"
-											style={{ backgroundColor: `#${driver.teamColour}` }}
-										/>
-										<span>{driver.tla}</span>
-									</div>
-								</td>
-								<td className="px-4 py-2">
-									<div className="flex items-center gap-2">
-										{tyreSets.map((tyre, index) => (
-											<div
-												key={`${driver.racingNumber}-${index}`}
-												className={`relative group ${
-													!tyre.used ? "opacity-50" : ""
-												}`}
-											>
-												<Image
-													src={`/tires/${tyre.compound.toLowerCase()}.svg`}
-													width={32}
-													height={32}
-													alt={tyre.compound}
-													className={tyre.used ? "" : "grayscale"} // add a gray filter to unused tyres
-												/>
-												{tyre.laps > 0 && (
-													<span className="absolute -bottom-1 -right-1 bg-zinc-800 text-xs rounded-full w-5 h-5 flex items-center justify-center">
-															{tyre.laps}
-														</span>
-												)}
+							return (
+								<tr key={driver.racingNumber} className="border-b border-zinc-800 hover:bg-zinc-900">
+									<td className="px-4 py-2 whitespace-nowrap">
+										<div className="flex items-center gap-2">
+											<div // maybe here we could use the team logo instead? Or the pilot photo?
+												className="h-3 w-3 rounded-full"
+												style={{ backgroundColor: `#${driver.teamColour}` }}
+											/>
+											<span>{driver.tla}</span>
+										</div>
+									</td>
+									<td className="px-4 py-2">
+										<div className="flex items-center gap-4">
+											{Object.entries(
+												tyreSets.reduce(
+													(groups, tyre, index) => {
+														if (!groups[tyre.compound]) {
+															groups[tyre.compound] = [];
+														}
+														groups[tyre.compound].push({ ...tyre, originalIndex: index });
+														return groups;
+													},
+													{} as Record<string, (TyreSet & { originalIndex: number })[]>,
+												),
+											).map(([compound, tyres]) => (
+												<div key={compound} className="flex items-center gap-1">
+													{tyres.map((tyre) => (
+														<div key={`${driver.racingNumber}-${tyre.originalIndex}`} className="group relative">
+															<Image
+																src={`/tires/${tyre.compound.toLowerCase()}.svg`}
+																width={32}
+																height={32}
+																alt={tyre.compound}
+																className={tyre.used ? "grayscale" : ""} // grayscale for used tyres, normal color for unused
+															/>
+															{tyre.laps > 0 && (
+																<span className="absolute -right-1 -bottom-1 flex h-5 w-5 items-center justify-center rounded-full bg-zinc-800 text-xs">
+																	{tyre.laps}
+																</span>
+															)}
 
-												<div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-zinc-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
-													{tyre.compound} -{" "}
-													{tyre.used ? `${tyre.laps} laps` : "New"}
+															<div className="absolute bottom-full left-1/2 z-10 mb-2 -translate-x-1/2 transform rounded bg-zinc-800 px-2 py-1 text-xs whitespace-nowrap text-white opacity-0 transition-opacity group-hover:opacity-100">
+																{tyre.compound} - {tyre.used ? `${tyre.laps} laps` : "New"}
+															</div>
+														</div>
+													))}
 												</div>
-											</div>
-										))}
-									</div>
-								</td>
-							</tr>
-						);
-					})
-				)}
+											))}
+										</div>
+									</td>
+								</tr>
+							);
+						})
+					)}
 				</tbody>
 			</table>
 		</div>
