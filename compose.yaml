@@ -9,7 +9,7 @@ services:
       - 4000:4000
     environment:
       - ORIGIN=http://localhost:3000
-      - LIVE_BACKEND_ADDRESS=0.0.0.0:4000
+      - LIVE_ADDRESS=0.0.0.0:4000
       - RUST_LOG="live=debug"
 
   api:
@@ -22,7 +22,7 @@ services:
       - 4001:4001
     environment:
       - ORIGIN=http://localhost:3000
-      - API_BACKEND_ADDRESS=0.0.0.0:4001
+      - API_ADDRESS=0.0.0.0:4001
       - RUST_LOG="api=debug"
 
   frontend:
@@ -32,7 +32,6 @@ services:
     restart: unless-stopped
     ports:
       - 3000:3000
-
     depends_on:
       - api
       - live
@@ -42,7 +41,28 @@ services:
 
       - DISABLE_IFRAME=1
 
-      - TRACKING_ID=G-3ZKX0JY1QW
-      - TRACKING_URL=https://base.slowly.dev/rep.js
+  timescaledb:
+    image: timescale/timescaledb:latest-pg16
+    ports:
+      - 5432:5432
+    restart: unless-stopped
+    environment:
+      - POSTGRES_PASSWORD=password
 
-      - NEXT_PUBLIC_MAP_KEY=lcgTreisBzMYLrFFSTK2
+  importer:
+    image: ghcr.io/slowlydev/f1-dash-importer:latest
+    build:
+      context: .
+      target: importer
+    environment:
+      - DATABASE_URL=postgres://postgres:password@timescaledb:5432/postgres
+
+  analytics:
+    image: ghcr.io/slowlydev/f1-dash-analytics:latest
+    build:
+      context: .
+      target: analytics
+    environment:
+      - ORIGIN=http://localhost:3000
+      - ANALYTICS_ADDRESS=0.0.0.0:4002
+      - RUST_LOG="analytics=debug"
