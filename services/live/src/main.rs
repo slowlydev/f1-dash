@@ -39,7 +39,7 @@ async fn main() -> Result<(), anyhow::Error> {
         .init();
 
     let default_addr = "0.0.0.0:4000".to_string();
-    let addr = env::var("LIVE_BACKEND_ADDRESS").unwrap_or(default_addr);
+    let addr = env::var("LIVE_ADDRESS").unwrap_or(default_addr);
 
     info!(?addr, "starting live service");
 
