@@ -26,7 +26,7 @@ export default function HelpPage() {
 			<h2 className="my-4 text-2xl">Colors</h2>
 
 			<p>
-				A core element in the UI of f1-dash and formula 1 are the different colors used for lap times, sector times,
+				A core element in the UI of f1-dash, inspired by official Formula 1 graphics, is the color-coding system used for lap times, sector times,
 				mini sectors, and gaps. Each color has a meaning in the context of lap times, sector times, or mini sectors.
 			</p>
 
@@ -68,8 +68,8 @@ export default function HelpPage() {
 			</div>
 
 			<Note>
-				Only mini sectors use the yellow color as it would make the UI look bad if a lot of drivers are not improving
-				their lap times, and all text in the UI would be yellow.
+				Only mini sectors use the yellow color. Using yellow for all drivers not improving their lap times would make
+				the UI look cluttered, as many text elements would be yellow simultaneously.
 			</Note>
 
 			<h2 className="my-4 text-2xl">Leaderboard</h2>
@@ -81,18 +81,18 @@ export default function HelpPage() {
 
 			<div className="grid grid-cols-1 gap-x-4 divide-y divide-zinc-800 sm:grid-cols-3 sm:divide-y-0">
 				<div>
-					<p className="rounded-md bg-violet-800/30 p-2">Driver has purple background</p>
-					<p className="p-2">Driver has the fastest overall lap time.</p>
+					<p className="rounded-md bg-violet-800/30 p-2">Driver has a purple background</p>
+					<p className="p-2">Driver has the fastest overall lap time</p>
 				</div>
 
 				<div className="pt-4 sm:pt-0">
 					<p className="rounded-md border p-2 opacity-50">Driver is a bit transparent</p>
-					<p className="p-2">Driver has crashed or retired from the session.</p>
+					<p className="p-2">Driver has crashed or retired from the session</p>
 				</div>
 
 				<div className="pt-4 sm:pt-0">
-					<p className="rounded-md bg-red-800/30 p-2">Red background.</p>
-					<p className="p-2">Driver is in the danger zone during qualifying.</p>
+					<p className="rounded-md bg-red-800/30 p-2">Driver has a red background</p>
+					<p className="p-2">Driver is in the danger zone during qualifying</p>
 				</div>
 			</div>
 
@@ -105,7 +105,7 @@ export default function HelpPage() {
 			</p>
 
 			<p className="mb-4">
-				Overall it gives you a quick overview if the driver is going in the PITs and might drop a few places behind or
+				Overall it gives you a quick overview if the driver is going into the pits and might drop a few places behind or
 				if the driver has DRS and a chance to overtake the driver ahead.
 			</p>
 
@@ -115,7 +115,7 @@ export default function HelpPage() {
 						<DriverDRS on={false} possible={false} inPit={false} pitOut={false} />
 					</div>
 
-					<p>Off: no drs (default)</p>
+					<p>Off: No DRS (default)</p>
 				</div>
 
 				<div className="flex items-center gap-2">
@@ -123,7 +123,7 @@ export default function HelpPage() {
 						<DriverDRS on={false} possible={true} inPit={false} pitOut={false} />
 					</div>
 
-					<p>Possible: got DRS in next zone</p>
+					<p>Possible: Eligible for DRS in the next zone</p>
 				</div>
 
 				<div className="flex items-center gap-2">
@@ -139,7 +139,7 @@ export default function HelpPage() {
 						<DriverDRS on={false} possible={false} inPit={true} pitOut={false} />
 					</div>
 
-					<p>PIT: in the pit lane or leaving</p>
+					<p>PIT: In the pit lane or leaving</p>
 				</div>
 			</div>
 
@@ -147,7 +147,7 @@ export default function HelpPage() {
 
 			<p className="mb-4">
 				We also show the different tires a driver can use and how many laps they have done on them. <br />
-				In this example the driver has a soft tire which is 12 laps old and he pitted one time.
+				In this example, the driver has a soft tire which is 12 laps old and he pitted one time.
 			</p>
 
 			<div className="mb-4">
@@ -159,7 +159,7 @@ export default function HelpPage() {
 				/>
 			</div>
 
-			<p className="mb-4">These are the different icons for the different tire compounds</p>
+			<p className="mb-4">These are the different icons for the different tire compounds:</p>
 
 			<div className="mb-4 flex flex-wrap gap-4">
 				<div className="flex items-center gap-2">
@@ -214,7 +214,7 @@ export default function HelpPage() {
 
 			<Note className="mb-4">
 				Currently you can only set a delay that is the time you have been on the dashboard page. So 30s on a 20s page
-				visit make you wait 10s until playback of the updates resumes. (This will be changed in the future)
+				visit makes you wait 10s until playback of the updates resumes. (This will be changed in the future)
 			</Note>
 
 			<h3 className="my-4 text-xl">What to look for when syncing?</h3>
@@ -238,7 +238,7 @@ export default function HelpPage() {
 					</div>
 
 					<p>
-						Shows if the driver is breaking <span className="text-zinc-500">(on / off)</span>
+						Shows if the driver is braking <span className="text-zinc-500">(on / off)</span>
 					</p>
 				</div>
 
