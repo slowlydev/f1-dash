@@ -1,20 +1,20 @@
 [workspace]
 members = [
-    "crates/data",   # lib
-    "crates/client", # lib
-    # "crates/timescale", # lib
-    "services/api",  # bin - service
-    "services/live", # bin - service
-    # "services/analytics", # bin - service
-    # "services/importer",  # bin - service
-    "crates/saver",     # bin - util
-    "crates/simulator", # bin - util
+    "crates/data",        # lib
+    "crates/client",      # lib
+    "crates/timescale",   # lib
+    "services/api",       # bin - service
+    "services/live",      # bin - service
+    "services/analytics", # bin - service
+    "services/importer",  # bin - service
+    "crates/saver",       # bin - util
+    "crates/simulator",   # bin - util
 ]
 default-members = [
     "services/live",
     "services/api",
-    # "services/analytics",
-    # "services/importer",
+    "services/analytics",
+    "services/importer",
 ]
 resolver = "2"
 

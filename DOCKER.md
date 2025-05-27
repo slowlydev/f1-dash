@@ -1,5 +1,9 @@
 # Docker and Docker Compose
 
+> [!NOTE]
+> The docker compose is not meant as a porduction deployment rather a tool to setup f1-dash localy for testing or development.
+> If you want to deploy f1-dash, it can be used as a base but
+
 To substitute the environment variables in compose.yaml, use `--env-file` flag as follows:
 
 ```bash

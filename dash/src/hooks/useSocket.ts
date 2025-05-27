@@ -2,8 +2,6 @@ import { useEffect, useState } from "react";
 
 import type { MessageInitial, MessageUpdate } from "@/types/message.type";
 
-import { inflate } from "@/lib/inflate";
-
 import { env } from "@/env";
 
 type Props = {
@@ -21,13 +19,11 @@ export const useSocket = ({ handleInitial, handleUpdate }: Props) => {
 		sse.onopen = () => setConnected(true);
 
 		sse.addEventListener("initial", (message) => {
-			const decompressed = inflate<MessageInitial>(message.data);
-			handleInitial(decompressed);
+			handleInitial(JSON.parse(message.data));
 		});
 
 		sse.addEventListener("update", (message) => {
-			const decompressed = inflate<MessageUpdate>(message.data);
-			handleUpdate(decompressed);
+			handleUpdate(JSON.parse(message.data));
 		});
 
 		return () => sse.close();

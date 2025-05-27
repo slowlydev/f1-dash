@@ -9,7 +9,7 @@ use serde_json::Value;
 use tokio_stream::{Stream, StreamExt};
 use tokio_tungstenite::tungstenite::client::IntoClientRequest;
 use tokio_tungstenite::{tungstenite::http::Request, MaybeTlsStream, WebSocketStream};
-use tracing::{debug, trace};
+use tracing::{debug, info, trace};
 
 pub use tokio_tungstenite::tungstenite;
 
@@ -41,13 +41,13 @@ pub async fn init() -> Result<WsStream, Box<dyn Error>> {
 
     let (mut socket, _) = tokio_tungstenite::connect_async(req).await?;
 
-    debug!("connected");
+    info!("connected");
 
     socket
         .send(tungstenite::Message::text(consts::SIGNALR_SUBSCRIBE))
         .await?;
 
-    debug!("subscribed");
+    info!("subscribed");
 
     Ok(socket)
 }
