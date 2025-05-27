@@ -26,7 +26,7 @@ export default function HelpPage() {
 			<h2 className="my-4 text-2xl">Colors</h2>
 
 			<p>
-				A core element in the UI of f1-dash and Formula 1 is the different colors used for lap times, sector times,
+				A core element in the UI of f1-dash, inspired by official Formula 1 graphics, is the color-coding system used for lap times, sector times,
 				mini sectors, and gaps. Each color has a meaning in the context of lap times, sector times, or mini sectors.
 			</p>
 
