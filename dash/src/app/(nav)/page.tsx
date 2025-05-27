@@ -33,22 +33,22 @@ export default function Home() {
 			</section>
 
 			<section className="pb-20">
-				<h2 className="mb-4 text-2xl">Whats f1-dash?</h2>
+				<h2 className="mb-4 text-2xl">What&apos;s f1-dash?</h2>
 
 				<p className="text-md">
 					f1-dash is a hobby project of mine that I started in 2023. It is a real-time telemetry and timing dashboard
-					for Formula 1. It allows you to see the live telemetry data of the cars on the track and also the live timing.
-					Which includes things like lap times, sector times, the gaps between the drivers, their tire choices and much
+					for Formula 1. It allows you to see the live telemetry data of the cars on the track and also the live timing,
+					which includes things like lap times, sector times, the gaps between the drivers, their tire choices and much
 					more.
 				</p>
 			</section>
 
 			<section className="pb-20">
-				<h2 className="mb-4 text-2xl">Whats next?</h2>
+				<h2 className="mb-4 text-2xl">What&apos;s next?</h2>
 
 				<p className="text-md">
-					The new design of v3 enables for more pages and features. So in the future where will be incremental updates
-					and new features comming. If you have any suggestions or feedback, feel free to reach out on GitHub or the
+					The new design of v3 enables more pages and features. So in the future there will be incremental updates
+					and new features coming. If you have any suggestions or feedback, feel free to reach out on GitHub or the
 					Discord.
 				</p>
 			</section>
