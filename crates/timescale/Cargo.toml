@@ -1,0 +1,23 @@
+[package]
+name = "timescale"
+version = "0.3.0"
+edition = "2021"
+publish = false
+authors = ["slowlydev"]
+
+[lib]
+name = "timescale"
+path = "src/lib.rs"
+
+[dependencies]
+tokio.workspace = true
+
+tracing.workspace = true
+
+anyhow.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+
+sqlx.workspace = true
+
+chrono = { version = "0.4", features = ["serde"] }

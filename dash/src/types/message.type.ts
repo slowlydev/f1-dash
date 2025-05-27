@@ -1,4 +1,4 @@
-import { type State } from "./state.type";
+import type { State } from "./state.type";
 
 export type RecursivePartial<T> = {
 	[P in keyof T]?: T[P] extends (infer U)[]

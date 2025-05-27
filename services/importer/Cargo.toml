@@ -1,0 +1,28 @@
+[package]
+name = "importer"
+version = "0.3.0"
+edition = "2021"
+publish = false
+authors = ["slowlydev"]
+
+[[bin]]
+name = "importer"
+path = "src/main.rs"
+
+[dependencies]
+client.workspace = true
+timescale.workspace = true
+
+tokio.workspace = true
+tokio-stream.workspace = true
+
+tracing.workspace = true
+tracing-subscriber.workspace = true
+
+serde.workspace = true
+serde_json.workspace = true
+
+anyhow.workspace = true
+dotenvy.workspace = true
+
+sqlx.workspace = true

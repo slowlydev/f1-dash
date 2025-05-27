@@ -1,0 +1,28 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        select\n            gap as \"gap!\",\n            time as \"time!\"\n        from\n            timing_driver\n        where\n            nr = $1\n            and gap != 0\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "gap!",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 1,
+        "name": "time!",
+        "type_info": "Timestamptz"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text"
+      ]
+    },
+    "nullable": [
+      true,
+      false
+    ]
+  },
+  "hash": "242dca2d8a422e6043b05db01d42903fb29d257e5edb641211ee1148637b33d5"
+}

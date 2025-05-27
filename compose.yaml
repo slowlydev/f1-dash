@@ -4,44 +4,65 @@ services:
     build:
       context: .
       target: live
-    restart: always
+    restart: unless-stopped
     ports:
       - 4000:4000
     environment:
       - ORIGIN=http://localhost:3000
-      - LIVE_BACKEND_ADDRESS=0.0.0.0:4000
-    env_file:
-      - path: ./compose.env
-        required: false
+      - LIVE_ADDRESS=0.0.0.0:4000
+      - RUST_LOG="live=debug"
 
   api:
     image: ghcr.io/slowlydev/f1-dash-api:latest
     build:
       context: .
       target: api
-    restart: always
+    restart: unless-stopped
     ports:
       - 4001:4001
     environment:
       - ORIGIN=http://localhost:3000
-      - API_BACKEND_ADDRESS=0.0.0.0:4001
-    env_file:
-      - path: ./compose.env
-        required: false
+      - API_ADDRESS=0.0.0.0:4001
+      - RUST_LOG="api=debug"
 
   frontend:
     image: ghcr.io/slowlydev/f1-dash:latest
     build:
       context: ./dash/
-    restart: always
+    restart: unless-stopped
     ports:
       - 3000:3000
     depends_on:
       - api
       - live
     environment:
-      - NEXT_PUBLIC_LIVE_SOCKET_URL=http://localhost:4000
-      - NEXT_PUBLIC_API_URL=http://localhost:4001
-    env_file:
-      - path: ./compose.env
-        required: false
+      - NEXT_PUBLIC_LIVE_URL=http://localhost:4000
+      - API_URL=http://api:4001
+
+      - DISABLE_IFRAME=1
+
+  timescaledb:
+    image: timescale/timescaledb:latest-pg16
+    ports:
+      - 5432:5432
+    restart: unless-stopped
+    environment:
+      - POSTGRES_PASSWORD=password
+
+  importer:
+    image: ghcr.io/slowlydev/f1-dash-importer:latest
+    build:
+      context: .
+      target: importer
+    environment:
+      - DATABASE_URL=postgres://postgres:password@timescaledb:5432/postgres
+
+  analytics:
+    image: ghcr.io/slowlydev/f1-dash-analytics:latest
+    build:
+      context: .
+      target: analytics
+    environment:
+      - ORIGIN=http://localhost:3000
+      - ANALYTICS_ADDRESS=0.0.0.0:4002
+      - RUST_LOG="analytics=debug"

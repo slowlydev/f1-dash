@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-import { Stint } from "@/types/state.type";
+import type { Stint } from "@/types/state.type";
 
 type Props = {
 	stints: Stint[] | undefined;
@@ -25,7 +25,7 @@ export default function DriverHistoryTires({ stints }: Props) {
 							/>
 						)}
 
-						<p className="whitespace-nowrap text-sm font-medium leading-none text-zinc-600">{stint.totalLaps}L</p>
+						<p className="text-sm leading-none font-medium whitespace-nowrap text-zinc-600">{stint.totalLaps}L</p>
 					</div>
 				))}
 

@@ -3,7 +3,8 @@ import Script from "next/script";
 
 import "@/styles/globals.css";
 
-import { env } from "@/env.mjs";
+import { env } from "@/env";
+import EnvScript from "@/env-script";
 
 import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
@@ -18,12 +19,20 @@ type Props = Readonly<{
 export default function RootLayout({ children }: Props) {
 	return (
 		<html lang="en" className={`${GeistSans.variable} ${GeistMono.variable} bg-zinc-950 font-sans text-white`}>
-			<head />
+			<head>
+				<EnvScript />
 
-			{env.NEXT_PUBLIC_TRACKING_ID && env.NEXT_PUBLIC_TRACKING_URL && (
-				// Umami Analytics
-				<Script async defer data-website-id={env.NEXT_PUBLIC_TRACKING_ID} src={env.NEXT_PUBLIC_TRACKING_URL} />
-			)}
+				{env.DISABLE_IFRAME === "1" && (
+					<Script strategy="beforeInteractive" id="no-embed">
+						{`if (window.self !== window.top && window.location.pathname !== "/embed") {window.location.href = "/embed"; }`}
+					</Script>
+				)}
+
+				{env.TRACKING_ID && env.TRACKING_URL && (
+					// Umami Analytics
+					<Script async defer data-website-id={env.TRACKING_ID} src={env.TRACKING_URL} />
+				)}
+			</head>
 
 			<body>{children}</body>
 		</html>
