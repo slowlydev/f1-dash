@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { duration, now, utc } from "moment";
 
-import { Session } from "@/types/schedule.type";
+import type { Session } from "@/types/schedule.type";
 
 type Props = {
 	next: Session;

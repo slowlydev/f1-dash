@@ -1,4 +1,4 @@
-import { Driver, TimingData } from "@/types/state.type";
+import type { Driver, TimingData } from "@/types/state.type";
 
 import { calculatePosition } from "@/lib/calculatePosition";
 
