@@ -36,7 +36,7 @@ async fn main() -> Result<(), anyhow::Error> {
     let app = Router::new()
         .route("/api/schedule", get(endpoints::schedule::get))
         .route("/api/schedule/next", get(endpoints::schedule::get_next))
-        .route("/api/archive/:year", get(archive::get_sessions_for_year))
+        .route("/api/archive/{year}", get(archive::get_sessions_for_year))
         .route("/api/health", get(endpoints::health::check));
 
     let listener = TcpListener::bind(addr).await?;
