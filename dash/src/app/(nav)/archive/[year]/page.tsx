@@ -1,19 +1,21 @@
-import { env } from "@/env.mjs";
-import Footer from "@/components/Footer"; // Adjust the import path as necessary
-import SegmentedLinks from "@/components/SegmentedLinks";
 import { utc } from "moment";
 import Link from "next/link";
-import { Meeting } from "@/types/archive.type";
+
+import SegmentedLinks from "@/components/SegmentedLinks";
 import Dropdown from "@/components/Dropdown";
+
+import type { Meeting } from "@/types/archive.type";
+
+import { env } from "@/env";
 
 const getArchiveForYear = async (year: string): Promise<Meeting[] | null> => {
 	try {
-		const nextReq = await fetch(`${env.NEXT_PUBLIC_API_URL}/api/archive/${year}`, {
+		const nextReq = await fetch(`${env.API_URL}/api/archive/${year}`, {
 			next: { revalidate: 60 * 60 * 4 },
 		});
 		const schedule: Meeting[] = await nextReq.json();
 		return schedule;
-	} catch (e) {
+	} catch {
 		return null;
 	}
 };
@@ -35,7 +37,7 @@ export default async function ArchivePage({ params }: { params: Promise<{ year: 
 	const previousYears = years.slice(0, years.length - 3).reverse();
 
 	return (
-		<div className="container mx-auto max-w-screen-lg px-4 pb-8">
+		<div>
 			<div className="my-4 flex items-center justify-between">
 				<h1 className="text-3xl font-bold">Archive for {year}</h1>
 				<div className="flex items-center space-x-2">
@@ -43,6 +45,7 @@ export default async function ArchivePage({ params }: { params: Promise<{ year: 
 					<SegmentedLinks id="year" selected={`/archive/${year}`} options={firstThreeYears} />
 				</div>
 			</div>
+
 			{!archive ? (
 				<div className="flex h-44 flex-col items-center justify-center">
 					<p>No archive data found for {year}</p>
@@ -57,7 +60,7 @@ export default async function ArchivePage({ params }: { params: Promise<{ year: 
 									<div>
 										<h2 className="text-xl font-bold text-white">{meet.officialName}</h2>
 										<p className="text-sm text-zinc-500">{meet.country.name}</p>
-										<p className="mt-1 text-sm italic text-zinc-400">{meet.location}</p>
+										<p className="mt-1 text-sm text-zinc-400 italic">{meet.location}</p>
 									</div>
 									<div className="mt-2">
 										<p className="text-sm text-zinc-600">
@@ -76,7 +79,6 @@ export default async function ArchivePage({ params }: { params: Promise<{ year: 
 					</ul>
 				</>
 			)}
-			<Footer />
 		</div>
 	);
 }
