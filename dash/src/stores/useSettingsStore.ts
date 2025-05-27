@@ -34,6 +34,9 @@ type SettingsStore = {
 
 	raceControlChimeVolume: number;
 	setRaceControlChimeVolume: (raceControlChimeVolume: number) => void;
+
+	delayIsPaused: boolean;
+	setDelayIsPaused: (delayIsPaused: boolean) => void;
 };
 
 export const useSettingsStore = create<SettingsStore>()(
@@ -71,10 +74,16 @@ export const useSettingsStore = create<SettingsStore>()(
 
 				raceControlChimeVolume: 50,
 				setRaceControlChimeVolume: (raceControlChimeVolume: number) => set({ raceControlChimeVolume }),
+
+				delayIsPaused: true,
+				setDelayIsPaused: (delayIsPaused: boolean) => set({ delayIsPaused }),
 			}),
 			{
 				name: "settings-storage",
 				storage: createJSONStorage(() => localStorage),
+				onRehydrateStorage: (state) => {
+					return () => state.setDelayIsPaused(false);
+				},
 			},
 		),
 	),

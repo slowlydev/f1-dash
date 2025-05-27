@@ -5,7 +5,6 @@ import { useSettingsStore } from "@/stores/useSettingsStore";
 import { useDataStore } from "@/stores/useDataStore";
 
 import { sortPos } from "@/lib/sorting";
-import { objectEntries } from "@/lib/driverHelper";
 
 import Driver from "@/components/driver/Driver";
 
@@ -16,7 +15,7 @@ export default function LeaderBoard() {
 	const showTableHeader = useSettingsStore((state) => state.tableHeaders);
 
 	return (
-		<div className="flex w-fit flex-col gap-1">
+		<div className="flex w-fit flex-col gap-0.5">
 			{showTableHeader && <TableHeaders />}
 
 			{(!drivers || !driversTiming) &&
@@ -25,7 +24,7 @@ export default function LeaderBoard() {
 			<LayoutGroup key="drivers">
 				{drivers && driversTiming && (
 					<AnimatePresence>
-						{objectEntries(driversTiming.lines)
+						{Object.values(driversTiming.lines)
 							.sort(sortPos)
 							.map((timingDriver, index) => (
 								<Driver
@@ -43,11 +42,15 @@ export default function LeaderBoard() {
 }
 
 const TableHeaders = () => {
+	const carMetrics = useSettingsStore((state) => state.carMetrics);
+
 	return (
 		<div
 			className="grid items-center gap-2 p-1 px-2 text-sm font-medium text-zinc-500"
 			style={{
-				gridTemplateColumns: "5.5rem 4rem 5.5rem 4rem 5rem 5.5rem auto auto",
+				gridTemplateColumns: carMetrics
+					? "5.5rem 3.5rem 5.5rem 4rem 5rem 5.5rem auto 10.5rem"
+					: "5.5rem 3.5rem 5.5rem 4rem 5rem 5.5rem auto",
 			}}
 		>
 			<p>Position</p>
@@ -57,23 +60,28 @@ const TableHeaders = () => {
 			<p>Gap</p>
 			<p>LapTime</p>
 			<p>Sectors</p>
+			{carMetrics && <p>Car Metrics</p>}
 		</div>
 	);
 };
 
 const SkeletonDriver = () => {
+	const carMetrics = useSettingsStore((state) => state.carMetrics);
+
 	const animateClass = "h-8 animate-pulse rounded-md bg-zinc-800";
 
 	return (
 		<div
-			className="grid place-items-center items-center gap-1 p-1"
+			className="grid items-center gap-2 p-1.5"
 			style={{
-				gridTemplateColumns: "6rem 4rem 5rem 4rem 5rem 5rem 19.5rem",
+				gridTemplateColumns: carMetrics
+					? "5.5rem 3.5rem 5.5rem 4rem 5rem 5.5rem auto 10.5rem"
+					: "5.5rem 3.5rem 5.5rem 4rem 5rem 5.5rem auto",
 			}}
 		>
 			<div className={animateClass} style={{ width: "100%" }} />
 
-			<div className={animateClass} style={{ width: "90%" }} />
+			<div className={animateClass} style={{ width: "100%" }} />
 
 			<div className="flex w-full gap-2">
 				<div className={clsx(animateClass, "w-8")} />
@@ -104,6 +112,17 @@ const SkeletonDriver = () => {
 					</div>
 				))}
 			</div>
+
+			{carMetrics && (
+				<div className="flex w-full gap-2">
+					<div className={clsx(animateClass, "w-8")} />
+
+					<div className="flex flex-1 flex-col gap-1">
+						<div className={clsx(animateClass, "h-1/2!")} />
+						<div className={clsx(animateClass, "h-1/2!")} />
+					</div>
+				</div>
+			)}
 		</div>
 	);
 };

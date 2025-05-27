@@ -67,7 +67,7 @@ export default function Driver({ driver, timingDriver, position }: Props) {
 				className="grid items-center gap-2"
 				style={{
 					gridTemplateColumns: carMetrics
-						? "5.5rem 3.5rem 5.5rem 4rem 5rem 5.5rem auto auto"
+						? "5.5rem 3.5rem 5.5rem 4rem 5rem 5.5rem auto 10.5rem"
 						: "5.5rem 3.5rem 5.5rem 4rem 5rem 5.5rem auto",
 				}}
 			>

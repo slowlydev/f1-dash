@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "motion/react";
-import { type MouseEvent, type ReactNode } from "react";
+import { type ReactNode } from "react";
 
 type Props = {
 	open: boolean;

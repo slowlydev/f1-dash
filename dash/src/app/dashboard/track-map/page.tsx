@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, LayoutGroup, motion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import clsx from "clsx";
 
 import Map from "@/components/dashboard/Map";
@@ -10,11 +10,10 @@ import DriverInfo from "@/components/driver/DriverInfo";
 import DriverGap from "@/components/driver/DriverGap";
 import DriverLapTime from "@/components/driver/DriverLapTime";
 
-import { objectEntries } from "@/lib/driverHelper";
 import { sortPos } from "@/lib/sorting";
 
 import { useCarDataStore, useDataStore } from "@/stores/useDataStore";
-import { Driver, TimingDataDriver } from "@/types/state.type";
+import type { Driver, TimingDataDriver } from "@/types/state.type";
 import { useSettingsStore } from "@/stores/useSettingsStore";
 
 export default function TrackMap() {
@@ -22,14 +21,14 @@ export default function TrackMap() {
 	const driversTiming = useDataStore((state) => state?.timingData);
 
 	return (
-		<div className="flex flex-col-reverse divide-y divide-zinc-800 md:h-full md:flex-row md:divide-x md:divide-y-0">
-			<div className="flex w-full flex-col divide-y divide-zinc-800 md:h-full md:w-fit">
+		<div className="flex flex-col-reverse md:h-full md:flex-row">
+			<div className="flex w-full flex-col gap-0.5 overflow-y-auto border-zinc-800 md:h-full md:w-fit md:rounded-lg md:border md:p-2">
 				{(!drivers || !driversTiming) &&
 					new Array(20).fill("").map((_, index) => <SkeletonDriver key={`driver.loading.${index}`} />)}
 
 				{drivers && driversTiming && (
 					<AnimatePresence>
-						{objectEntries(driversTiming.lines)
+						{Object.values(driversTiming.lines)
 							.sort(sortPos)
 							.map((timingDriver, index) => (
 								<TrackMapDriver
@@ -87,7 +86,7 @@ const TrackMapDriver = ({ position, driver, timingDriver }: TrackMapDriverProps)
 	return (
 		<motion.div
 			layout="position"
-			className={clsx("flex flex-col gap-1 p-1.5 select-none", {
+			className={clsx("flex flex-col gap-1 rounded-lg p-1.5 select-none", {
 				"opacity-50": timingDriver.knockedOut || timingDriver.retired || timingDriver.stopped,
 				"bg-sky-800/30": favoriteDriver,
 				"bg-violet-800/30": hasFastest,
@@ -97,7 +96,7 @@ const TrackMapDriver = ({ position, driver, timingDriver }: TrackMapDriverProps)
 			<div
 				className="grid items-center gap-2"
 				style={{
-					gridTemplateColumns: "5.5rem 4rem 4rem 5rem 5rem",
+					gridTemplateColumns: "5.5rem 3.5rem 4rem 5rem 5rem",
 				}}
 			>
 				<DriverTag className="min-w-full!" short={driver.tla} teamColor={driver.teamColour} position={position} />

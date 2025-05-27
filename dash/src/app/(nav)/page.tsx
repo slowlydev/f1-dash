@@ -47,9 +47,9 @@ export default function Home() {
 				<h2 className="mb-4 text-2xl">Whats next?</h2>
 
 				<p className="text-md">
-					I am currently working on v3 of the dashboard. Which will allow more customization and have an updated design.
-					I will also try to improve mobile UI and ship new cool features. If you have any suggestions or feedback, feel
-					free to reach out on GitHub or the Discord.
+					The new design of v3 enables for more pages and features. So in the future where will be incremental updates
+					and new features comming. If you have any suggestions or feedback, feel free to reach out on GitHub or the
+					Discord.
 				</p>
 			</section>
 		</div>

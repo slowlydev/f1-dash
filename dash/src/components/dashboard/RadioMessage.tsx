@@ -1,23 +1,26 @@
 import { useRef, useState } from "react";
 import { motion } from "motion/react";
 import { utc } from "moment";
+import clsx from "clsx";
+
+import type { Driver, RadioCapture } from "@/types/state.type";
 
 import { useSettingsStore } from "@/stores/useSettingsStore";
 
-import DriverTag from "../driver/DriverTag";
-import PlayControls from "../ui/PlayControls";
-import Progress from "../ui/Progress";
+import { toTrackTime } from "@/lib/toTrackTime";
 
-import { Driver, RadioCapture } from "@/types/state.type";
-import clsx from "clsx";
+import DriverTag from "@/components/driver/DriverTag";
+import PlayControls from "@/components/ui/PlayControls";
+import Progress from "@/components/ui/Progress";
 
 type Props = {
 	driver: Driver;
 	capture: RadioCapture;
 	basePath: string;
+	gmtOffset: string;
 };
 
-export default function RadioMessage({ driver, capture, basePath }: Props) {
+export default function RadioMessage({ driver, capture, basePath, gmtOffset }: Props) {
 	const audioRef = useRef<HTMLAudioElement | null>(null);
 	const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -70,41 +73,36 @@ export default function RadioMessage({ driver, capture, basePath }: Props) {
 
 	const favoriteDriver = useSettingsStore((state) => state.favoriteDrivers.includes(driver.racingNumber));
 
+	const localTime = utc(capture.utc).local().format("HH:mm:ss");
+	const trackTime = utc(toTrackTime(capture.utc, gmtOffset)).format("HH:mm");
+
 	return (
 		<motion.li
-			animate={{ opacity: 1, y: 0 }}
-			initial={{ opacity: 0, y: -20 }}
+			animate={{ opacity: 1, scale: 1 }}
+			initial={{ opacity: 0, scale: 0.9 }}
 			className={clsx("flex flex-col gap-1 rounded-lg p-2", { "bg-sky-800/30": favoriteDriver })}
 		>
-			<time
-				className="text-sm leading-none font-medium text-gray-500"
-				dateTime={utc(capture.utc).local().format("HH:mm:ss")}
-			>
-				{utc(capture.utc).local().format("HH:mm:ss")}
-			</time>
+			<div className="flex items-center gap-1 text-sm leading-none text-zinc-500">
+				<time dateTime={localTime}>{localTime}</time>
+				{"·"}
+				<time className="text-zinc-700" dateTime={trackTime}>
+					{trackTime}
+				</time>
+			</div>
 
-			<div
-				className="grid place-items-center items-center gap-1"
-				style={{
-					gridTemplateColumns: "2rem 20rem",
-				}}
-			>
-				<div className="w-10 place-self-start">
-					<DriverTag teamColor={driver.teamColour} short={driver.tla} />
-				</div>
+			<div className="flex items-center gap-1">
+				<DriverTag className="!w-fit" teamColor={driver.teamColour} short={driver.tla} />
 
-				<div className="flex items-center gap-1">
-					<PlayControls playing={playing} onClick={togglePlayback} />
-					<Progress duration={duration} progress={progress} />
+				<PlayControls playing={playing} onClick={togglePlayback} />
+				<Progress duration={duration} progress={progress} />
 
-					<audio
-						preload="none"
-						src={`${basePath}${capture.path}`}
-						ref={audioRef}
-						onEnded={() => onEnded()}
-						onLoadedMetadata={() => loadMeta()}
-					/>
-				</div>
+				<audio
+					preload="none"
+					src={`${basePath}${capture.path}`}
+					ref={audioRef}
+					onEnded={() => onEnded()}
+					onLoadedMetadata={() => loadMeta()}
+				/>
 			</div>
 		</motion.li>
 	);

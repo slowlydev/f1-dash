@@ -1,0 +1,70 @@
+name: release
+
+# runs on tag push and develop branch push
+
+on:
+  push:
+    branches:
+      - develop
+    tags:
+      - v*
+
+env:
+  REGISTRY: ghcr.io
+  USER: slowlydev
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        image:
+          [
+            f1-dash,
+            f1-dash-api,
+            f1-dash-live,
+            f1-dash-importer,
+            f1-dash-analytics,
+          ]
+
+    permissions:
+      contents: read
+      packages: write
+      attestations: write
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3.4.0
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3.6.0
+
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3.10.0
+
+      - name: Extract Docker Metadata
+        id: meta
+        uses: docker/metadata-action@v5.7.0
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.USER }}/${{ matrix.image }}
+          tags: |
+            type=ref,event=branch,branch=develop,value=dev
+            type=semver,pattern={{version}}
+
+      - name: Build and push
+        id: push
+        uses: docker/bake-action@v6.6.0
+        with:
+          targets: ${{ matrix.image }}
+          push: true
+          provenance: true
+          files: |
+            cwd://${{ steps.meta.outputs.bake-file }}

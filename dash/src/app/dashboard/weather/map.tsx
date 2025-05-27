@@ -5,8 +5,6 @@ import { useEffect, useRef, useState } from "react";
 import maplibregl, { Map, Marker } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 
-import { env } from "@/env";
-
 import { fetchCoords } from "@/lib/geocode";
 import { getRainviewer } from "@/lib/rainviewer";
 
@@ -57,10 +55,6 @@ export function WeatherMap() {
 		}
 
 		setFrames(pathFrames.map((frame, i) => ({ time: frame.time, id: i })));
-
-		// maybe set loading of controls here
-
-		// intervalRef.current = setInterval(updateFrameVisibility, 1000);
 	};
 
 	useEffect(() => {
@@ -69,16 +63,17 @@ export function WeatherMap() {
 
 			if (!meeting) return;
 
-			const coords = await fetchCoords(`${meeting.country.name}, ${meeting.location} circuit`);
-			if (!coords) {
-				console.error("no coords found");
-				return;
-			}
+			const [coordsC, coordsA] = await Promise.all([
+				fetchCoords(`${meeting.country.name}, ${meeting.location} circuit`),
+				fetchCoords(`${meeting.country.name}, ${meeting.location} autodrome`),
+			]);
+
+			const coords = coordsC || coordsA;
 
 			const libMap = new maplibregl.Map({
 				container: mapContainerRef.current,
-				style: `https://api.maptiler.com/maps/dataviz-dark/style.json?key=${env.NEXT_PUBLIC_MAP_KEY}`,
-				center: [coords.lon, coords.lat],
+				style: "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json",
+				center: coords ? [coords.lon, coords.lat] : undefined,
 				zoom: 10,
 				canvasContextAttributes: {
 					antialias: true,
@@ -88,7 +83,9 @@ export function WeatherMap() {
 			libMap.on("load", async () => {
 				setLoading(false);
 
-				new Marker().setLngLat([coords.lon, coords.lat]).addTo(libMap);
+				if (coords) {
+					new Marker().setLngLat([coords.lon, coords.lat]).addTo(libMap);
+				}
 
 				await handleMapLoad();
 			});
@@ -108,10 +105,10 @@ export function WeatherMap() {
 			<div ref={mapContainerRef} className="absolute h-full w-full" />
 
 			{!loading && frames.length > 0 && (
-				<div className="absolute bottom-0 left-0 z-20 m-2 flex w-lg gap-4 rounded-lg bg-black/80 p-4 backdrop-blur-xs">
+				<div className="absolute right-0 bottom-0 left-0 z-20 m-2 flex gap-4 rounded-lg bg-black/80 p-4 backdrop-blur-xs md:right-auto md:w-lg">
 					<PlayControls playing={playing} onClick={() => setPlaying((v) => !v)} />
 
-					<Timeline frames={frames} setFrame={setFrame} playing={playing} setPlaying={setPlaying} />
+					<Timeline frames={frames} setFrame={setFrame} playing={playing} />
 				</div>
 			)}
 

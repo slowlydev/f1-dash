@@ -1,7 +1,6 @@
 import clsx from "clsx";
 
-import { getTimeColor } from "@/lib/getTimeColor";
-import { TimingDataDriver, TimingStatsDriver } from "@/types/state.type";
+import type { TimingDataDriver, TimingStatsDriver } from "@/types/state.type";
 import { useSettingsStore } from "@/stores/useSettingsStore";
 
 type Props = {
@@ -20,28 +19,24 @@ export default function DriverMiniSectors({ sectors = [], bestSectors }: Props) 
 					{showMiniSectors && (
 						<div className="flex flex-row gap-1">
 							{sector.segments.map((segment, j) => (
-								<MiniSector
-									wide={showBestSectors && showMiniSectors}
-									status={segment.status}
-									key={`sector.mini.${j}`}
-								/>
+								<MiniSector status={segment.status} key={`sector.mini.${tla}.${j}`} />
 							))}
 						</div>
 					)}
 
 					<div className={clsx("flex", showMiniSectors ? "items-center gap-1" : "flex-col")}>
 						<p
-							className={clsx(
-								"text-lg leading-none font-semibold",
-								getTimeColor(sector.overallFastest, sector.personalFastest),
-								!sector.value ? "text-zinc-600" : "",
-							)}
+							className={clsx("text-lg leading-none font-medium tabular-nums", {
+								"text-violet-600!": sector.overallFastest,
+								"text-emerald-500!": sector.personalFastest,
+								"text-zinc-500": !sector.value,
+							})}
 						>
 							{!!sector.value ? sector.value : !!sector.previousValue ? sector.previousValue : "-- ---"}
 						</p>
 
 						{showBestSectors && (
-							<p className="text-sm leading-none font-medium text-zinc-600">
+							<p className="text-sm leading-none text-zinc-500 tabular-nums">
 								{bestSectors && bestSectors[i].value ? bestSectors[i].value : "-- ---"}
 							</p>
 						)}
@@ -52,10 +47,10 @@ export default function DriverMiniSectors({ sectors = [], bestSectors }: Props) 
 	);
 }
 
-function MiniSector({ status, wide }: { status: number; wide: boolean }) {
+function MiniSector({ status }: { status: number }) {
 	return (
 		<div
-			style={wide ? { width: 10, height: 5, borderRadius: 2 } : { height: 10, width: 8, borderRadius: 3.2 }}
+			style={{ width: 10, height: 5, borderRadius: 2 }}
 			className={clsx({
 				"bg-amber-400": status === 2048 || status === 2052, // TODO unsure
 				"bg-emerald-500": status === 2049,

@@ -13,7 +13,7 @@ export default function DriverPedals({ className, value, maxValue }: Props) {
 	const progress = value / maxValue;
 
 	return (
-		<div className="h-1.5 w-20 overflow-hidden rounded-xl bg-zinc-800">
+		<div className="h-1.5 w-20 overflow-hidden rounded-xl bg-zinc-700">
 			<motion.div
 				className={clsx("h-1.5", className)}
 				style={{ width: `${progress * 100}%` }}

@@ -2,62 +2,73 @@ import { z } from "zod";
 
 const server = z.object({
 	NODE_ENV: z.enum(["development", "test", "production"]),
+
+	API_URL: z.string().min(1).includes("http"),
+
+	TRACKING_ID: z.string().optional(),
+	TRACKING_URL: z.string().includes("http").optional(),
+
+	DISABLE_IFRAME: z.string().optional(),
 });
 
 const client = z.object({
-	NEXT_PUBLIC_LIVE_SOCKET_URL: z.string().min(1).includes("http"),
-	NEXT_PUBLIC_API_URL: z.string().min(1).includes("http"),
-
-	NEXT_PUBLIC_MAP_KEY: z.string().optional(),
-
-	NEXT_PUBLIC_TRACKING_ID: z.string().optional(),
-	NEXT_PUBLIC_TRACKING_URL: z.string().includes("http").optional(),
+	NEXT_PUBLIC_LIVE_URL: z.string().min(1).includes("http"),
 });
 
 const processEnv = {
 	NODE_ENV: process.env.NODE_ENV,
-	NEXT_PUBLIC_LIVE_SOCKET_URL: process.env.NEXT_PUBLIC_LIVE_SOCKET_URL,
-	NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
 
-	NEXT_PUBLIC_MAP_KEY: process.env.NEXT_PUBLIC_MAP_KEY,
+	API_URL: process.env.API_URL,
 
-	NEXT_PUBLIC_TRACKING_ID: process.env.NEXT_PUBLIC_TRACKING_ID,
-	NEXT_PUBLIC_TRACKING_URL: process.env.NEXT_PUBLIC_TRACKING_URL,
+	TRACKING_ID: process.env.TRACKING_ID,
+	TRACKING_URL: process.env.TRACKING_URL,
+
+	DISABLE_IFRAME: process.env.DISABLE_IFRAME,
+
+	NEXT_PUBLIC_LIVE_URL: process.env.NEXT_PUBLIC_LIVE_URL,
 };
 
 // Don't touch the part below
+// This is used to validate envs and dynamically set the environment variables client-side
 // --------------------------
-const merged = server.merge(client);
 
-type MergedInput = z.input<typeof merged>;
-type MergedOutput = z.infer<typeof merged>;
-type MergedSafeParseReturn = z.SafeParseReturnType<MergedInput, MergedOutput>;
+export const PUBLIC_ENV_KEY = "__ENV";
 
-let env = process.env as unknown as MergedOutput;
+const fullSchema = server.merge(client);
+type Env = z.input<typeof fullSchema>;
 
-const skip =
-	!!process.env.SKIP_ENV_VALIDATION &&
-	process.env.SKIP_ENV_VALIDATION !== "false" &&
-	process.env.SKIP_ENV_VALIDATION !== "0";
+type SPR = z.SafeParseReturnType<Env, Env>;
 
-if (!skip) {
+declare global {
+	interface Window {
+		[PUBLIC_ENV_KEY]: Env;
+	}
+}
+
+let env = process.env as unknown as Env;
+
+if (process.env.SKIP_ENV_VALIDATION !== "1") {
 	const isServer = typeof window === "undefined";
 
-	const parsed = isServer
-		? (merged.safeParse(processEnv) as MergedSafeParseReturn) // on server we can validate all env vars
-		: (client.safeParse(processEnv) as MergedSafeParseReturn); // on client we can only validate the ones that are exposed
+	const hasEnv = !isServer && window[PUBLIC_ENV_KEY] !== undefined;
 
-	if (parsed.success === false) {
-		console.error("❌ Invalid environment variables:", parsed.error.flatten().fieldErrors);
+	const syntheticEnv = !hasEnv ? processEnv : window[PUBLIC_ENV_KEY];
+
+	const parsedEnv = isServer ? (fullSchema.safeParse(syntheticEnv) as SPR) : (client.safeParse(syntheticEnv) as SPR);
+
+	if (!parsedEnv.success) {
+		const error = parsedEnv.error.flatten().fieldErrors;
+		console.error("❌ Invalid environment variables:", error);
 		throw new Error("Invalid environment variables");
 	}
 
-	env = new Proxy(parsed.data, {
+	env = new Proxy(parsedEnv.data, {
 		get(target, prop) {
 			if (typeof prop !== "string") return undefined;
-			// Throw a descriptive error if a server-side env var is accessed on the client
-			// Otherwise it would just be returning `undefined` and be annoying to debug
-			if (!isServer && !prop.startsWith("NEXT_PUBLIC_"))
+
+			const isPublic = prop.startsWith("NEXT_PUBLIC_");
+
+			if (!isServer && !isPublic)
 				throw new Error(
 					process.env.NODE_ENV === "production"
 						? "❌ Attempted to access a server-side environment variable on the client"

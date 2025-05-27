@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function Footer() {
 	return (
-		<footer className="my-8 text-sm text-zinc-600">
+		<footer className="my-8 text-sm text-zinc-500">
 			<div className="mb-4 flex flex-wrap gap-2">
 				<p>
 					Made with ♥ by <TextLink website="https://slowly.dev">Slowly</TextLink>.

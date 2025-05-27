@@ -27,7 +27,7 @@ export default function TrackInfo() {
 						boxShadow: `0 0 60px 10px ${currentTrackStatus.hex}`,
 					}}
 				>
-					<p className="text-xl font-semibold">{currentTrackStatus.message}</p>
+					<p className="text-lg font-medium">{currentTrackStatus.message}</p>
 				</div>
 			) : (
 				<div className="relative h-8 w-28 animate-pulse overflow-hidden rounded-lg bg-zinc-800" />

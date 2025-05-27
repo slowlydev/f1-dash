@@ -1,9 +1,11 @@
 @import "tailwindcss";
 
-@theme {
+@theme inline {
 	--font-sans: var(--font-geist-sans);
 	--font-mono: var(--font-geist-mono);
+}
 
+@theme {
 	--breakpoint-3xl: 1800px;
 
 	--color-popover: rgba(37, 37, 37, 0.9);

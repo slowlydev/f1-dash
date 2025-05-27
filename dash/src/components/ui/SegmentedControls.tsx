@@ -22,7 +22,7 @@ export default function SegmentedControls<T>({ id, className, options, selected,
 				layoutRoot
 				className={clsx("m-0 inline-flex h-fit justify-between rounded-lg bg-zinc-800 p-0.5", className)}
 			>
-				{options.map((option, i) => {
+				{options.map((option) => {
 					const isActive = option.value === selected;
 					return (
 						<motion.div

@@ -5,7 +5,7 @@ import type { PositionCar } from "@/types/state.type";
 import type { Map, TrackPosition } from "@/types/map.type";
 
 import { fetchMap } from "@/lib/fetchMap";
-import { objectEntries } from "@/lib/driverHelper";
+
 import { useDataStore, usePositionStore } from "@/stores/useDataStore";
 import { useSettingsStore } from "@/stores/useSettingsStore";
 import { getTrackStatusMessage } from "@/lib/getTrackStatusMessage";
@@ -13,7 +13,7 @@ import {
 	createSectors,
 	findYellowSectors,
 	getSectorColor,
-	MapSector,
+	type MapSector,
 	prioritizeColoredSectors,
 	rad,
 	rotate,
@@ -121,7 +121,7 @@ export default function Map({ filter }: Props) {
 				};
 			})
 			.sort(prioritizeColoredSectors);
-	}, [trackStatus, sectors]);
+	}, [trackStatus, sectors, yellowSectors]);
 
 	if (!points || !minX || !minY || !widthX || !widthY) {
 		return (
@@ -177,10 +177,40 @@ export default function Map({ filter }: Props) {
 
 			{centerX && centerY && positions && drivers && (
 				<>
-					{objectEntries(drivers)
-						.filter((driver) => (filter ? filter.includes(driver.racingNumber) : true))
+					{positions["241"] && positions["241"].Z !== 0 && (
+						<SafetyCar
+							key="safety.car.241"
+							rotation={rotation}
+							centerX={centerX}
+							centerY={centerY}
+							pos={positions["241"]}
+						/>
+					)}
+
+					{positions["242"] && positions["242"].Z !== 0 && (
+						<SafetyCar
+							key="safety.car.242"
+							rotation={rotation}
+							centerX={centerX}
+							centerY={centerY}
+							pos={positions["242"]}
+						/>
+					)}
+
+					{positions["243"] && positions["243"].Z !== 0 && (
+						<SafetyCar
+							key="safety.car.243"
+							rotation={rotation}
+							centerX={centerX}
+							centerY={centerY}
+							pos={positions["243"]}
+						/>
+					)}
+
+					{Object.values(drivers)
 						.reverse()
 						.filter((driver) => !!positions[driver.racingNumber].X && !!positions[driver.racingNumber].Y)
+						.filter((driver) => (filter ? filter.includes(driver.racingNumber) : true))
 						.map((driver) => {
 							const timingDriver = timingDrivers?.lines[driver.racingNumber];
 							const hidden = timingDriver
@@ -274,5 +304,28 @@ const CarDot = ({ pos, name, color, favoriteDriver, pit, hidden, rotation, cente
 				/>
 			)}
 		</g>
+	);
+};
+
+type SafetyCarProps = {
+	pos: PositionCar;
+	rotation: number;
+	centerX: number;
+	centerY: number;
+};
+
+const SafetyCar = ({ pos, rotation, centerX, centerY }: SafetyCarProps) => {
+	return (
+		<CarDot
+			name="Safety Car"
+			pos={pos}
+			rotation={rotation}
+			centerX={centerX}
+			centerY={centerY}
+			favoriteDriver={false}
+			pit={false}
+			hidden={false}
+			color={undefined}
+		/>
 	);
 };

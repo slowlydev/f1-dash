@@ -57,7 +57,11 @@ export default function Select<T>({ placeholder, options, selected, setSelected 
 				{filteredOptions.map((option, idx) => (
 					<ComboboxOption
 						key={idx}
+<<<<<<< HEAD
 						value={option}
+=======
+						value={option.value}
+>>>>>>> 763f4a76222a25114bf53865d718280ea7e183d6
 						className="group flex cursor-pointer items-center gap-2 rounded-lg px-3 py-1.5 select-none data-focus:bg-white/10"
 					>
 						{/* <CheckIcon className="invisible size-4 fill-white group-data-selected:visible" /> */}

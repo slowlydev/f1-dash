@@ -1,8 +1,8 @@
-const isObject = (obj: any): boolean => {
+const isObject = (obj: unknown): obj is Record<string, unknown> => {
 	return obj !== null && typeof obj === "object" && !Array.isArray(obj);
 };
 
-export const merge = (base: any, update: any): any => {
+export const merge = (base: unknown, update: unknown): unknown => {
 	if (isObject(base) && isObject(update)) {
 		const result = { ...base };
 

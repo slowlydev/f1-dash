@@ -6,13 +6,12 @@ import { useEffect } from "react";
 import Link from "next/link";
 import clsx from "clsx";
 
-import { useSettingsStore } from "@/stores/useSettingsStore";
 import { useSidebarStore } from "@/stores/useSidebarStore";
-import { useDataStore } from "@/stores/useDataStore";
 
 import ConnectionStatus from "@/components/ConnectionStatus";
 import DelayInput from "@/components/DelayInput";
 import SidenavButton from "@/components/SidenavButton";
+import DelayTimer from "@/components/DelayTimer";
 
 const liveTimingItems = [
 	{
@@ -42,16 +41,15 @@ type Props = {
 };
 
 export default function Sidebar({ connected }: Props) {
-	const delay = useSettingsStore((state) => state.delay);
-	const favoriteDrivers = useSettingsStore((state) => state.favoriteDrivers);
-	const drivers = useDataStore((state) => state.driverList);
+	// const favoriteDrivers = useSettingsStore((state) => state.favoriteDrivers);
+	// const drivers = useDataStore((state) => state.driverList);
 
-	const driverItems = drivers
-		? favoriteDrivers.map((nr) => ({
-				href: `/dashboard/driver/${nr}`,
-				name: `${drivers[nr].firstName} ${drivers[nr].lastName}`,
-			}))
-		: null;
+	// const driverItems = drivers
+	// 	? favoriteDrivers.map((nr) => ({
+	// 			href: `/dashboard/driver/${nr}`,
+	// 			name: drivers[nr].fullName,
+	// 		}))
+	// 	: null;
 
 	const { opened, pinned } = useSidebarStore();
 	const close = useSidebarStore((state) => state.close);
@@ -71,7 +69,7 @@ export default function Sidebar({ connected }: Props) {
 		handleResize();
 
 		return () => window.removeEventListener("resize", handleResize, false);
-	}, []);
+	}, [unpin]);
 
 	return (
 		<div>
@@ -105,11 +103,8 @@ export default function Sidebar({ connected }: Props) {
 				>
 					<div className="flex items-center justify-between gap-2">
 						<div className="flex items-center gap-2">
-							<DelayInput />
-
-							<p className={clsx("rounded-lg p-1 px-2 text-sm", delay > 0 ? "bg-gray-600" : "bg-red-700")}>
-								{delay > 0 ? "Delayed" : "Live"}
-							</p>
+							<DelayInput saveDelay={500} />
+							<DelayTimer />
 
 							<ConnectionStatus connected={connected} />
 						</div>
@@ -126,7 +121,7 @@ export default function Sidebar({ connected }: Props) {
 						))}
 					</div>
 
-					<p className="mt-4 p-2 text-sm text-zinc-500">Favorite Drivers</p>
+					{/* <p className="mt-4 p-2 text-sm text-zinc-500">Favorite Drivers</p>
 
 					<div className="flex flex-col gap-1">
 						{driverItems === null && (
@@ -137,13 +132,14 @@ export default function Sidebar({ connected }: Props) {
 						)}
 						{driverItems !== null && driverItems.length === 0 && <div className="p-2">No favorites</div>}
 						{driverItems?.map((item) => <Item key={item.href} item={item} />)}
-					</div>
+					</div> */}
 
 					<p className="mt-4 p-2 text-sm text-zinc-500">General</p>
 
 					<div className="flex flex-col gap-1">
+						<Item item={{ href: "/dashboard/settings", name: "Settings" }} />
+
 						<Item target="_blank" item={{ href: "/schedule", name: "Schedule" }} />
-						<Item target="_blank" item={{ href: "/settings", name: "Settings" }} />
 						<Item target="_blank" item={{ href: "/help", name: "Help" }} />
 						<Item target="_blank" item={{ href: "/", name: "Home" }} />
 					</div>

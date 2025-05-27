@@ -1,7 +1,5 @@
 "use client";
 
-import { objectEntries } from "@/lib/driverHelper";
-
 import { useDataStore } from "@/stores/useDataStore";
 
 import NumberDiff from "@/components/NumberDiff";
@@ -12,10 +10,21 @@ export default function Standings() {
 
 	const drivers = useDataStore((state) => state.driverList);
 
+	const isRace = useDataStore((state) => state.sessionInfo?.type === "Race");
+
+	if (!isRace) {
+		return (
+			<div className="flex h-full w-full flex-col items-center justify-center">
+				<p>championship standings unavailable</p>
+				<p className="text-sm text-zinc-500">currently only available during a race</p>
+			</div>
+		);
+	}
+
 	return (
 		<div className="grid h-full grid-cols-1 divide-y divide-zinc-800 lg:grid-cols-2 lg:divide-x lg:divide-y-0">
 			<div className="h-full p-4">
-				<h2 className="text-xl">Predicted Driver Championship Standings</h2>
+				<h2 className="text-xl">Driver Championship Standings</h2>
 
 				<div className="divide flex flex-col divide-y divide-zinc-800">
 					{!driverStandings &&
@@ -23,7 +32,7 @@ export default function Standings() {
 
 					{driverStandings &&
 						drivers &&
-						objectEntries(driverStandings)
+						Object.values(driverStandings)
 							.sort((a, b) => a.predictedPosition - b.predictedPosition)
 							.map((driver) => {
 								const driverDetails = drivers[driver.racingNumber];
@@ -36,7 +45,7 @@ export default function Standings() {
 									<div
 										className="grid p-2"
 										style={{
-											gridTemplateColumns: "2rem 2rem auto 4rem 4rem 4rem",
+											gridTemplateColumns: "2rem 2rem auto 4rem 4rem",
 										}}
 										key={driver.racingNumber}
 									>
@@ -47,7 +56,6 @@ export default function Standings() {
 											{driverDetails.firstName} {driverDetails.lastName}
 										</p>
 
-										<p className="text-zinc-500">{driver.currentPoints}</p>
 										<p>{driver.predictedPoints}</p>
 
 										<NumberDiff old={driver.predictedPoints} current={driver.currentPoints} />
@@ -58,19 +66,19 @@ export default function Standings() {
 			</div>
 
 			<div className="h-full p-4">
-				<h2 className="text-xl">Predicted Team Championship Standings</h2>
+				<h2 className="text-xl">Team Championship Standings</h2>
 
 				<div className="divide flex flex-col divide-y divide-zinc-800">
 					{!teamStandings && new Array(10).fill("").map((_, index) => <SkeletonItem key={`team.loading.${index}`} />)}
 
 					{teamStandings &&
-						objectEntries(teamStandings)
+						Object.values(teamStandings)
 							.sort((a, b) => a.predictedPosition - b.predictedPosition)
 							.map((team) => (
 								<div
 									className="grid p-2"
 									style={{
-										gridTemplateColumns: "2rem 2rem auto 4rem 4rem 4rem",
+										gridTemplateColumns: "2rem 2rem auto 4rem 4rem",
 									}}
 									key={team.teamName}
 								>
@@ -79,7 +87,6 @@ export default function Standings() {
 
 									<p>{team.teamName}</p>
 
-									<p className="text-zinc-500">{team.currentPoints}</p>
 									<p>{team.predictedPoints}</p>
 
 									<NumberDiff old={team.predictedPoints} current={team.currentPoints} />

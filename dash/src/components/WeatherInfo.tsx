@@ -1,5 +1,3 @@
-import clsx from "clsx";
-
 import TemperatureComplication from "./complications/Temperature";
 import HumidityComplication from "./complications/Humidity";
 import WindSpeedComplication from "./complications/WindSpeed";

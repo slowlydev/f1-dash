@@ -29,6 +29,7 @@ export default function RaceControl() {
 				chimeRef.current = null;
 			};
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	useEffect(() => {
@@ -48,6 +49,7 @@ export default function RaceControl() {
 		}
 
 		pastMessageTimestamps.current = messages.map((msg) => msg.utc);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [messages]);
 
 	return (

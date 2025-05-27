@@ -16,6 +16,10 @@ import SelectMultiple from "@/components/ui/SelectMultiple";
 
 export default function FavoriteDrivers() {
 	const [drivers, setDrivers] = useState<Driver[] | null>(null);
+
+	// TODO handle loading state
+	// TODO handle error state
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [error, setError] = useState<string | null>(null);
 
 	const { favoriteDrivers, setFavoriteDrivers, removeFavoriteDriver } = useSettingsStore();
@@ -23,10 +27,10 @@ export default function FavoriteDrivers() {
 	useEffect(() => {
 		(async () => {
 			try {
-				const res = await fetch(`${env.NEXT_PUBLIC_LIVE_SOCKET_URL}/api/drivers`);
+				const res = await fetch(`${env.NEXT_PUBLIC_LIVE_URL}/api/drivers`);
 				const data = await res.json();
 				setDrivers(data);
-			} catch (e) {
+			} catch {
 				setError("failed to fetch favorite drivers");
 			}
 		})();
@@ -41,7 +45,7 @@ export default function FavoriteDrivers() {
 					if (!driver) return null;
 
 					return (
-						<div key={driverNumber} className="flex items-center gap-1 rounded-xl border border-zinc-700 p-1">
+						<div key={driverNumber} className="flex items-center gap-1 rounded-xl border border-zinc-800 p-1">
 							<DriverTag teamColor={driver.teamColour} short={driver.tla} />
 
 							<motion.button

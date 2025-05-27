@@ -57,8 +57,8 @@ export const createSectors = (map: Map): MapSector[] => {
 
 	const dividers: number[] = sectors.map((s) => findMinDistance(s.start, points));
 	for (let i = 0; i < dividers.length; i++) {
-		let start = dividers[i];
-		let end = dividers[i + 1] ? dividers[i + 1] : dividers[0];
+		const start = dividers[i];
+		const end = dividers[i + 1] ? dividers[i + 1] : dividers[0];
 		if (start < end) {
 			sectors[i].points = points.slice(start, end + 1);
 		} else {

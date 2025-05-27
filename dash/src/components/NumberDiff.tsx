@@ -15,7 +15,7 @@ export default function NumberDiff({ old, current }: Props) {
 			className={clsx({
 				"text-emerald-500": gain,
 				"text-red-500": loss,
-				"text-gray-700": !gain && !loss,
+				"text-zinc-500": !gain && !loss,
 			})}
 		>
 			{gain ? `+${positionChange}` : loss ? positionChange : "-"}

@@ -1,5 +1,4 @@
 import { AnimatePresence } from "motion/react";
-import { utc } from "moment";
 import clsx from "clsx";
 
 import { useDataStore } from "@/stores/useDataStore";
@@ -13,6 +12,8 @@ export default function TeamRadios() {
 	const teamRadios = useDataStore((state) => state.teamRadio);
 	const sessionPath = useDataStore((state) => state.sessionInfo?.path);
 
+	const gmtOffset = useDataStore((state) => state.sessionInfo?.gmtOffset);
+
 	const basePath = `https://livetiming.formula1.com/static/${sessionPath}`;
 
 	// TODO add notice that we only show 20
@@ -21,7 +22,7 @@ export default function TeamRadios() {
 		<ul className="flex flex-col gap-2">
 			{!teamRadios && new Array(6).fill("").map((_, index) => <SkeletonMessage key={`radio.loading.${index}`} />)}
 
-			{teamRadios && drivers && teamRadios.captures && (
+			{teamRadios && gmtOffset && drivers && teamRadios.captures && (
 				<AnimatePresence>
 					{teamRadios.captures
 						.sort(sortUtc)
@@ -32,6 +33,7 @@ export default function TeamRadios() {
 								driver={drivers[teamRadio.racingNumber]}
 								capture={teamRadio}
 								basePath={basePath}
+								gmtOffset={gmtOffset}
 							/>
 						))}
 				</AnimatePresence>

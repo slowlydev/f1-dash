@@ -1,17 +1,23 @@
-import { env } from "@/env";
-
-import { Round as RoundType } from "@/types/schedule.type";
+import { connection } from "next/server";
 
 import Round from "@/components/schedule/Round";
 
-const getSchedule = async () => {
+import type { Round as RoundType } from "@/types/schedule.type";
+
+import { env } from "@/env";
+
+export const getSchedule = async () => {
+	await connection();
+
 	try {
-		const scheduleReq = await fetch(`${env.NEXT_PUBLIC_API_URL}/api/schedule`, {
-			next: { revalidate: 60 * 60 * 4 },
+		const scheduleReq = await fetch(`${env.API_URL}/api/schedule`, {
+			cache: "no-store",
 		});
 		const schedule: RoundType[] = await scheduleReq.json();
+
 		return schedule;
 	} catch (e) {
+		console.error("error fetching schedule", e);
 		return null;
 	}
 };

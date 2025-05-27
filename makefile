@@ -1,8 +1,18 @@
-start-dashboard:
+dev-dashboard:
 	cd ./dash && yarn dev
 
-start-api:
+dev-api:
 	cargo r -p api
 
-start-live:
+dev-live:
 	cargo r -p live
+
+
+run-dashboard:
+	cd ./dash && yarn build && yarn start
+
+run-api:
+	cargo r -r -p api
+
+run-live:
+	cargo r -r -p live
