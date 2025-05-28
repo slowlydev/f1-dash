@@ -3,7 +3,7 @@
 import { useDataStore } from "@/stores/useDataStore";
 
 import NumberDiff from "@/components/NumberDiff";
-import TeamLogo from "@/components/TeamLogo";
+import Image from "next/image";
 
 export default function Standings() {
 	const driverStandings = useDataStore((state) => state?.championshipPrediction?.drivers);
@@ -86,7 +86,13 @@ export default function Standings() {
 									<NumberDiff old={team.currentPosition} current={team.predictedPosition} />
 									<p>{team.predictedPosition}</p>
 
-									<TeamLogo teamName={team.teamName} width={24} height={24} />
+									<Image
+										src={`/team-logos/${team.teamName.replaceAll(" ", "-").toLowerCase()}.${"svg"}`}
+										alt={team.teamName}
+										width={24}
+										height={24}
+										className="overflow-hidden rounded-lg"
+									/>
 
 									<p>{team.teamName}</p>
 
@@ -109,6 +115,7 @@ const SkeletonItem = () => {
 				gridTemplateColumns: "2rem 2rem auto 4rem 4rem 4rem",
 			}}
 		>
+			<div className="h-4 w-4 animate-pulse rounded-md bg-zinc-800" />
 			<div className="h-4 w-4 animate-pulse rounded-md bg-zinc-800" />
 			<div className="h-4 w-4 animate-pulse rounded-md bg-zinc-800" />
 			<div className="h-4 w-16 animate-pulse rounded-md bg-zinc-800" />
