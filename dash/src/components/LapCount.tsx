@@ -6,7 +6,7 @@ export default function LapCount() {
 	return (
 		<>
 			{!!lapCount && (
-				<p className="whitespace-nowrap text-3xl font-extrabold sm:hidden">
+				<p className="text-3xl font-extrabold whitespace-nowrap sm:hidden">
 					{lapCount?.currentLap} / {lapCount?.totalLaps}
 				</p>
 			)}

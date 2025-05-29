@@ -1,14 +1,12 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import Image from "next/image";
 import clsx from "clsx";
 
 import DriverTag from "./driver/DriverTag";
 
-import { getSectorColorBG, getSectorColorText } from "@/lib/getTimeColor";
-
-import { Driver as DriverType, TimingAppDataDriver, TimingDataDriver } from "@/types/state.type";
+import type { Driver as DriverType, TimingAppDataDriver, TimingDataDriver } from "@/types/state.type";
 
 type Props = {
 	driver: DriverType;
@@ -74,8 +72,8 @@ export default function DriverQuali({
 				<div className="flex flex-col items-end">
 					{currentBestTime && (
 						<>
-							<p className="text-xl leading-none text-gray-500">{currentBestTime}</p>
-							<p className="text-sm font-medium leading-none text-gray-500">{currentBestName}</p>
+							<p className="text-xl leading-none text-zinc-500">{currentBestTime}</p>
+							<p className="text-sm leading-none font-medium text-zinc-500">{currentBestName}</p>
 						</>
 					)}
 				</div>
@@ -85,18 +83,20 @@ export default function DriverQuali({
 				{timingDriver.sectors.map((sector, i) => (
 					<div className="flex flex-col gap-1" key={`quali.sector.${driver.tla}.${i}`}>
 						<div
-							className={clsx(
-								"h-4 rounded-md",
-								getSectorColorBG(sector.overallFastest, sector.personalFastest),
-								!sector.value ? "!bg-gray-500" : "",
-							)}
+							className={clsx("h-4 rounded-md", {
+								"bg-zinc-500!": !sector.value,
+								"bg-violet-500": sector.overallFastest,
+								"bg-emerald-500": sector.personalFastest,
+								"bg-amber-400": !sector.overallFastest && !sector.personalFastest,
+							})}
 						/>
 						<p
-							className={clsx(
-								"text-center text-lg font-semibold leading-none",
-								getSectorColorText(sector.overallFastest, sector.personalFastest),
-								!sector.value ? "!text-gray-500" : "",
-							)}
+							className={clsx("text-center text-lg leading-none font-semibold", {
+								"text-zinc-500!": !sector.value,
+								"text-violet-500": sector.overallFastest,
+								"text-emerald-500": sector.personalFastest,
+								"text-yellow-500": !sector.overallFastest && !sector.personalFastest,
+							})}
 						>
 							{!!sector.value ? sector.value : "-- ---"}
 						</p>

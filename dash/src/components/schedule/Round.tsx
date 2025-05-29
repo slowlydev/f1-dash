@@ -47,10 +47,10 @@ export default function Round({ round, nextName }: Props) {
 
 	return (
 		<div className={clsx(round.over && "opacity-50")}>
-			<div className="flex items-center justify-between border-b border-zinc-600 pb-2">
+			<div className="flex items-center justify-between border-b border-zinc-800 pb-2">
 				<div className="flex items-center gap-2">
 					<div className="flex items-center gap-2">
-						<Flag countryCode={countryCode} width={45} height={30}></Flag>
+						<Flag countryCode={countryCode} className="h-8 w-11"></Flag>
 						<p className="text-2xl">{round.countryName}</p>
 					</div>
 					{round.name === nextName && (
@@ -67,7 +67,7 @@ export default function Round({ round, nextName }: Props) {
 
 				<div className="flex gap-1">
 					<p className="text-xl">{formatMonth(round.start, round.end)}</p>
-					<p className="text-zinc-600">{formatDayRange(round.start, round.end)}</p>
+					<p className="text-zinc-500">{formatDayRange(round.start, round.end)}</p>
 				</div>
 			</div>
 
@@ -84,7 +84,7 @@ export default function Round({ round, nextName }: Props) {
 								>
 									<p className="w-28 overflow-hidden text-ellipsis whitespace-nowrap sm:w-auto">{session.kind}</p>
 
-									<p className="text-sm leading-none text-zinc-600">
+									<p className="text-sm leading-none text-zinc-500">
 										{utc(session.start).local().format("HH:mm")} - {utc(session.end).local().format("HH:mm")}
 									</p>
 								</div>

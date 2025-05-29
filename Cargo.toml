@@ -1,38 +1,50 @@
 [workspace]
 members = [
-    "crates/data",      # lib
-    "crates/client",    # lib
-    "crates/env",       # lib
-    "crates/api",       # bin
-    "crates/live",      # bin
-    "crates/saver",     # bin
-    "crates/simulator", # bin
+    "crates/data",        # lib
+    "crates/client",      # lib
+    "crates/timescale",   # lib
+    "services/api",       # bin - service
+    "services/live",      # bin - service
+    "services/analytics", # bin - service
+    "services/importer",  # bin - service
+    "crates/saver",       # bin - util
+    "crates/simulator",   # bin - util
 ]
-default-members = ["crates/live", "crates/api"]
+default-members = [
+    "services/live",
+    "services/api",
+    "services/analytics",
+    "services/importer",
+]
 resolver = "2"
 
 [workspace.dependencies]
 data = { path = "crates/data" }
 client = { path = "crates/client" }
-env = { path = "crates/env" }
+timescale = { path = "crates/timescale" }
 
-tokio = { version = "1.37.0", features = ["full"] }
+
+tokio = { version = "1.44.2", features = ["full", "tracing"] }
 tokio-stream = { version = "0.1.15", features = ["full"] }
+
 tracing = "0.1.40"
 tracing-subscriber = { version = "0.3.18", features = ["env-filter"] }
 
-axum = { version = "0.7.5", features = ["http2"] }
-tower-http = { version = "0.5.2", features = ["cors"] }
-tower_governor = "0.4.2"
-tokio-tungstenite = { version = "0.23.1", features = ["native-tls", "url"] }
-reqwest = { version = "0.12.4", features = ["native-tls"] }
+sqlx = { version = "0.8.6", features = ["postgres", "runtime-tokio", "chrono"] }
+
+axum = { version = "0.8.3", features = ["http2"] }
+tower-http = { version = "0.6.2", features = ["cors"] }
+
+tokio-tungstenite = { version = "0.26.2", features = ["native-tls", "url"] }
+reqwest = { version = "0.12.15", features = ["native-tls"] }
+
 serde = { version = "1.0", features = ["derive"] }
 serde_json = { version = "1.0", features = ["raw_value"] }
 
 heck = "0.5.0"
 regex = "1.10.4"
 base64 = "0.22.1"
-flate2 = "1.0.30"
+flate2 = "1.1.1"
 futures = "0.3.30"
 dotenvy = "0.15.7"
-anyhow = "1.0.86"
+anyhow = "1.0.98"

@@ -38,11 +38,11 @@ export default function SessionInfo() {
 
 	return (
 		<div className="flex items-center gap-2">
-			<Flag countryCode={session?.meeting.country.code} width={70} height={35}/>
+			<Flag countryCode={session?.meeting.country.code} />
 
 			<div className="flex flex-col justify-center">
 				{session ? (
-					<h1 className="truncate text-sm font-medium leading-none text-white">
+					<h1 className="truncate text-sm leading-none font-medium text-white">
 						{session.meeting.name}: {session.name ?? "Unknown"}
 						{timingData?.sessionPart ? ` ${sessionPartPrefix(session.name)}${timingData.sessionPart}` : ""}
 					</h1>
@@ -51,7 +51,7 @@ export default function SessionInfo() {
 				)}
 
 				{timeRemaining !== undefined ? (
-					<p className="text-2xl font-extrabold leading-none">{timeRemaining}</p>
+					<p className="text-2xl leading-none font-extrabold">{timeRemaining}</p>
 				) : (
 					<div className="mt-1 h-6 w-[150px] animate-pulse rounded-md bg-zinc-800 font-semibold" />
 				)}

@@ -20,7 +20,7 @@ pub struct AppState {
 }
 
 fn addr() -> String {
-    std::env::var("SIMULATOR_BACKEND_ADDRESS").unwrap_or("0.0.0.0:8000".to_string())
+    std::env::var("SIMULATOR_ADDRESS").unwrap_or("0.0.0.0:8000".to_string())
 }
 
 pub async fn init(tx: broadcast::Sender<String>, mpsc_tx: mpsc::Sender<()>) {
@@ -57,7 +57,7 @@ async fn handle_ws(socket: WebSocket, state: Arc<AppState>) {
     tokio::select! {
         _ = async {
             while let Ok(msg) = reader_rx.recv().await {
-                match tx.send(Message::Text(msg)).await {
+                match tx.send(Message::text(msg)).await {
                     Ok(_) => {}
                     Err(_) => error!("failed to send message"),
                 }
