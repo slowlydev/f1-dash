@@ -23,7 +23,7 @@ export default function DriverViolations({ driver, driverViolations, driversTimi
 				{driverViolations > 4 && driversTiming && (
 					<p>
 						{calculatePosition(Math.round(driverViolations / 5) * 5, driver.racingNumber, driversTiming)}
-						th after Penalty
+						th after penalty
 					</p>
 				)}
 			</div>
