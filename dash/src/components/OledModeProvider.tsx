@@ -15,5 +15,5 @@ export default function OledModeProvider({ children }: Props) {
         document.documentElement.classList.toggle("bg-black", oledMode);
     }, [oledMode]);
 
-    return <div className={oledMode ? "bg-black" : "bg-zinc-950"}>{children}</div>;
+    return <>{children}</>;
 }
