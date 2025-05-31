@@ -20,7 +20,7 @@ pub struct AppState {
 }
 
 fn addr() -> String {
-    std::env::var("SIMULATOR_BACKEND_ADDRESS").unwrap_or("0.0.0.0:8000".to_string())
+    std::env::var("SIMULATOR_ADDRESS").unwrap_or("0.0.0.0:8000".to_string())
 }
 
 pub async fn init(tx: broadcast::Sender<String>, mpsc_tx: mpsc::Sender<()>) {

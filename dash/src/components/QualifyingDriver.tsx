@@ -6,9 +6,7 @@ import clsx from "clsx";
 
 import DriverTag from "./driver/DriverTag";
 
-import { getSectorColorBG, getSectorColorText } from "@/lib/getTimeColor";
-
-import { Driver as DriverType, TimingAppDataDriver, TimingDataDriver } from "@/types/state.type";
+import type { Driver as DriverType, TimingAppDataDriver, TimingDataDriver } from "@/types/state.type";
 
 type Props = {
 	driver: DriverType;
@@ -85,18 +83,20 @@ export default function DriverQuali({
 				{timingDriver.sectors.map((sector, i) => (
 					<div className="flex flex-col gap-1" key={`quali.sector.${driver.tla}.${i}`}>
 						<div
-							className={clsx(
-								"h-4 rounded-md",
-								getSectorColorBG(sector.overallFastest, sector.personalFastest),
-								!sector.value ? "bg-zinc-500!" : "",
-							)}
+							className={clsx("h-4 rounded-md", {
+								"bg-zinc-500!": !sector.value,
+								"bg-violet-500": sector.overallFastest,
+								"bg-emerald-500": sector.personalFastest,
+								"bg-amber-400": !sector.overallFastest && !sector.personalFastest,
+							})}
 						/>
 						<p
-							className={clsx(
-								"text-center text-lg leading-none font-semibold",
-								getSectorColorText(sector.overallFastest, sector.personalFastest),
-								!sector.value ? "text-zinc-500!" : "",
-							)}
+							className={clsx("text-center text-lg leading-none font-semibold", {
+								"text-zinc-500!": !sector.value,
+								"text-violet-500": sector.overallFastest,
+								"text-emerald-500": sector.personalFastest,
+								"text-yellow-500": !sector.overallFastest && !sector.personalFastest,
+							})}
 						>
 							{!!sector.value ? sector.value : "-- ---"}
 						</p>

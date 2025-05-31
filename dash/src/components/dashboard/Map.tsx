@@ -13,7 +13,7 @@ import {
 	createSectors,
 	findYellowSectors,
 	getSectorColor,
-	MapSector,
+	type MapSector,
 	prioritizeColoredSectors,
 	rad,
 	rotate,

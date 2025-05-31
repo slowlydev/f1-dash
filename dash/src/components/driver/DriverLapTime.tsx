@@ -1,7 +1,6 @@
 import clsx from "clsx";
 
-import { getTimeColor } from "@/lib/getTimeColor";
-import { TimingDataDriver } from "@/types/state.type";
+import type { TimingDataDriver } from "@/types/state.type";
 
 type Props = {
 	last: TimingDataDriver["lastLapTime"];
@@ -13,20 +12,19 @@ export default function DriverLapTime({ last, best, hasFastest }: Props) {
 	return (
 		<div className="place-self-start">
 			<p
-				className={clsx(
-					"text-lg leading-none font-medium tabular-nums",
-					getTimeColor(last.overallFastest, last.personalFastest),
-					!last.value ? "text-zinc-500" : "",
-				)}
+				className={clsx("text-lg leading-none font-medium tabular-nums", {
+					"text-violet-600!": last.overallFastest,
+					"text-emerald-500!": last.personalFastest,
+					"text-zinc-500!": !last.value,
+				})}
 			>
 				{!!last.value ? last.value : "-- -- ---"}
 			</p>
 			<p
-				className={clsx(
-					"text-sm leading-none text-zinc-500 tabular-nums",
-					getTimeColor(hasFastest, true),
-					!best.value ? "text-zinc-500" : "",
-				)}
+				className={clsx("text-sm leading-none text-zinc-500 tabular-nums", {
+					"text-violet-600!": hasFastest,
+					"text-zinc-500!": !best.value,
+				})}
 			>
 				{!!best.value ? best.value : "-- -- ---"}
 			</p>

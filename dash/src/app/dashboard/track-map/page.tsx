@@ -13,7 +13,7 @@ import DriverLapTime from "@/components/driver/DriverLapTime";
 import { sortPos } from "@/lib/sorting";
 
 import { useCarDataStore, useDataStore } from "@/stores/useDataStore";
-import { Driver, TimingDataDriver } from "@/types/state.type";
+import type { Driver, TimingDataDriver } from "@/types/state.type";
 import { useSettingsStore } from "@/stores/useSettingsStore";
 
 export default function TrackMap() {
