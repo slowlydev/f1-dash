@@ -1,4 +1,4 @@
-use axum::extract::Path;
+use axum::{extract::Path, Json};
 use cached::proc_macro::io_cached;
 use serde::{Deserialize, Serialize};
 use serde_json;
@@ -14,10 +14,7 @@ pub struct Meeting {
     location: String,
     official_name: String,
     name: String,
-    // i think the name as string should suffice, right?...
     country: Country,
-    // might not need circuit?
-    // circuit: String,
     sessions: Vec<RaceSession>,
 }
 
@@ -56,29 +53,28 @@ pub struct RaceSession {
     disk = true,
     time = 1800
 )]
-pub async fn fetch_sessions_for_year(year: u32) -> Result<String, anyhow::Error> {
+pub async fn fetch_sessions_for_year(year: u32) -> Result<MeetingResponse, anyhow::Error> {
     let url = format!("https://livetiming.formula1.com/static/{year}/Index.json");
     let res = reqwest::get(url).await?;
     let text = res.text().await?;
-    Ok(text)
+    let json = serde_json::from_str::<MeetingResponse>(&text)?;
+    Ok(json)
 }
 
 pub async fn get_sessions_for_year(
     Path(year): Path<u32>,
 ) -> Result<axum::Json<Vec<Meeting>>, axum::http::StatusCode> {
-    let text = fetch_sessions_for_year(year).await.unwrap();
+    let res = fetch_sessions_for_year(year).await;
 
-    let json = serde_json::from_str::<MeetingResponse>(&text);
-
-    match json {
-        Ok(mut json) => {
-            for (_, el) in json.meetings.iter_mut().enumerate() {
+    match res {
+        Ok(mut res) => {
+            for (_, el) in res.meetings.iter_mut().enumerate() {
                 el.sessions.retain(|s| s.key != -1);
             }
-            Ok(axum::Json(json.meetings))
+            Ok(Json(res.meetings))
         }
         Err(err) => {
-            error!("{}", err);
+            error!(?err, ?year, "failed to get archive");
             Err(axum::http::StatusCode::INTERNAL_SERVER_ERROR)
         }
     }

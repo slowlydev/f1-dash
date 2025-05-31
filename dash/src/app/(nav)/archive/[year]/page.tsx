@@ -1,84 +1,91 @@
-import { utc } from "moment";
-import Link from "next/link";
-
-import SegmentedLinks from "@/components/SegmentedLinks";
-import Dropdown from "@/components/Dropdown";
-
-import type { Meeting } from "@/types/archive.type";
+import { notFound } from "next/navigation";
+import { connection } from "next/server";
 
 import { env } from "@/env";
 
-const getArchiveForYear = async (year: string): Promise<Meeting[] | null> => {
+import Meeting from "../meeting";
+import type { Meeting as MeetingType } from "@/types/archive.type";
+import { Suspense } from "react";
+
+const getArchiveForYear = async (year: string) => {
+	await connection();
+
 	try {
 		const nextReq = await fetch(`${env.API_URL}/api/archive/${year}`, {
-			next: { revalidate: 60 * 60 * 4 },
+			cache: "no-store",
 		});
-		const schedule: Meeting[] = await nextReq.json();
+		const schedule: MeetingType[] = await nextReq.json();
 		return schedule;
-	} catch {
+	} catch (e) {
+		console.error("error fetching next round", e);
 		return null;
 	}
 };
 
 export default async function ArchivePage({ params }: { params: Promise<{ year: string }> }) {
-	const currentYear = new Date(Date.now()).getFullYear();
-	let year = (await params).year;
-	if (year == null || year < "2018" || year > currentYear.toString() || typeof year !== "string") {
-		year = currentYear.toString();
-	}
-	const archive = await getArchiveForYear(year);
+	const { year } = await params;
 
-	const years = [];
-	for (let i = 2018; i <= currentYear; i++) {
-		years.push({ label: i.toString(), href: `/archive/${i.toString()}` });
-	}
-
-	const firstThreeYears = years.slice(years.length - 3);
-	const previousYears = years.slice(0, years.length - 3).reverse();
+	if (year < "2018") notFound();
 
 	return (
 		<div>
-			<div className="my-4 flex items-center justify-between">
-				<h1 className="text-3xl font-bold">Archive for {year}</h1>
-				<div className="flex items-center space-x-2">
-					<Dropdown options={previousYears} />
-					<SegmentedLinks id="year" selected={`/archive/${year}`} options={firstThreeYears} />
-				</div>
+			<div className="my-4">
+				<h1 className="text-3xl">{year} Archive</h1>
+				<p className="text-zinc-500">All times are local time</p>
 			</div>
 
-			{!archive ? (
-				<div className="flex h-44 flex-col items-center justify-center">
-					<p>No archive data found for {year}</p>
-				</div>
-			) : (
-				<>
-					<p className="text-zinc-600">All times are local time</p>
-					<ul className="grid grid-cols-1 gap-8 md:grid-cols-2">
-						{archive.map((meet) => (
-							<li className="rounded-md border border-zinc-700 p-4 shadow-md" key={meet.key}>
-								<div className="flex h-full flex-col justify-between">
-									<div>
-										<h2 className="text-xl font-bold text-white">{meet.officialName}</h2>
-										<p className="text-sm text-zinc-500">{meet.country.name}</p>
-										<p className="mt-1 text-sm text-zinc-400 italic">{meet.location}</p>
-									</div>
-									<div className="mt-2">
-										<p className="text-sm text-zinc-600">
-											{utc(meet.sessions[0].startDate).local().format("MMMM D, YYYY")} -{" "}
-											{utc(meet.sessions[meet.sessions.length - 1].endDate)
-												.local()
-												.format("MMMM D, YYYY")}
-										</p>
-									</div>
-									<Link href={`/archive/${year}/${meet.key}`}>
-										<div className="mt-2 text-blue-500 hover:underline">View Details</div>
-									</Link>
-								</div>
-							</li>
-						))}
-					</ul>
-				</>
-			)}
+			<Suspense fallback={<Loading />}>
+				<Meetings year={year} />
+			</Suspense>
 		</div>
 	);
 }
+
+const Meetings = async ({ year }: { year: string }) => {
+	const meetings = await getArchiveForYear(year);
+
+	if (!meetings) {
+		return (
+			<div className="flex h-44 flex-col items-center justify-center">
+				<p>No archive data found for {year}</p>
+			</div>
+		);
+	}
+
+	return (
+		<ul className="grid grid-cols-1 gap-2 md:grid-cols-2">
+			{meetings.map((meeting) => (
+				<Meeting meeting={meeting} key={meeting.key} year={year} />
+			))}
+		</ul>
+	);
+};
+
+const Loading = () => {
+	return (
+		<ul className="grid grid-cols-1 gap-2 md:grid-cols-2">
+			{Array.from({ length: 10 }).map((_, i) => (
+				<MeetingLoading key={`meeting.${i}`} />
+			))}
+		</ul>
+	);
+};
+
+const MeetingLoading = () => {
+	return (
+		<div className="flex flex-col gap-2 rounded-lg border border-zinc-800 p-3">
+			<div className="flex gap-2">
+				<div className="h-12 w-16 animate-pulse rounded-md bg-zinc-800" />
+
+				<div className="flex flex-1 flex-col gap-1">
+					<div className="h-4 w-full animate-pulse rounded-md bg-zinc-800" />
+					<div className="h-4 w-1/3 animate-pulse rounded-md bg-zinc-800" />
+				</div>
+			</div>
+
+			<div className="h-4 w-3/8 animate-pulse rounded-md bg-zinc-800" />
+
+			<div className="h-4 w-4/8 animate-pulse rounded-md bg-zinc-800" />
+		</div>
+	);
+};

@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 
 export default function ArchiveRedirectPage() {
-	redirect(`/archive/${new Date(Date.now()).getFullYear()}`);
+	const currentYear = new Date().getFullYear();
+	redirect(`/archive/${currentYear}`);
 }
