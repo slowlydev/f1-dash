@@ -7,6 +7,8 @@ import type { Round as RoundType } from "@/types/schedule.type";
 
 import { groupSessionByDay } from "@/lib/groupSessionByDay";
 import { formatDayRange, formatMonth } from "@/lib/dateFormatter";
+import { getCountryCode } from "@/lib/country";
+
 import Flag from "@/components/Flag";
 
 type Props = {
@@ -14,43 +16,13 @@ type Props = {
 	nextName?: string;
 };
 
-const countryCodeMap: Record<string, string> = {
-	Australia: "aus",
-	Austria: "aut",
-	Azerbaijan: "aze",
-	Bahrain: "brn",
-	Belgium: "bel",
-	Brazil: "bra",
-	Canada: "can",
-	China: "chn",
-	Spain: "esp",
-	France: "fra",
-	"Great Britain": "gbr",
-	"United Kingdom": "gbr",
-	Germany: "ger",
-	Hungary: "hun",
-	Italy: "ita",
-	Japan: "jpn",
-	"Saudi Arabia": "ksa",
-	Mexico: "mex",
-	Monaco: "mon",
-	Netherlands: "ned",
-	Portugal: "por",
-	Qatar: "qat",
-	Singapore: "sgp",
-	"United Arab Emirates": "uae",
-	"United States": "usa",
-};
-
 export default function Round({ round, nextName }: Props) {
-	const countryCode = countryCodeMap[round.countryName];
-
 	return (
-		<div className={clsx(round.over && "opacity-50")}>
-			<div className="flex items-center justify-between border-b border-zinc-800 pb-2">
+		<div className={clsx(round.over && "opacity-50", "rounded-lg border border-zinc-800")}>
+			<div className="flex items-center justify-between border-b border-zinc-800 p-3">
 				<div className="flex items-center gap-2">
 					<div className="flex items-center gap-2">
-						<Flag countryCode={countryCode} className="h-8 w-11"></Flag>
+						<Flag countryCode={getCountryCode(round.countryName)} className="h-8 w-11" />
 						<p className="text-2xl">{round.countryName}</p>
 					</div>
 					{round.name === nextName && (
@@ -71,10 +43,10 @@ export default function Round({ round, nextName }: Props) {
 				</div>
 			</div>
 
-			<div className="grid grid-cols-3 gap-8 pt-2">
+			<div className="grid grid-cols-3 p-3">
 				{groupSessionByDay(round.sessions).map((day, i) => (
-					<div className="flex flex-col" key={`round.day.${i}`}>
-						<p className="my-3 text-xl text-white">{utc(day.date).local().format("dddd")}</p>
+					<div className="flex flex-col gap-3" key={`round.day.${i}`}>
+						<p className="text-xl text-white">{utc(day.date).local().format("dddd")}</p>
 
 						<div className="grid grid-rows-2 gap-2">
 							{day.sessions.map((session, j) => (

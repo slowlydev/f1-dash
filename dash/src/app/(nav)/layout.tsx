@@ -12,6 +12,8 @@ type Props = {
 };
 
 export default function Layout({ children }: Props) {
+	const year = new Date().getFullYear();
+
 	return (
 		<>
 			<nav className="sticky top-0 left-0 z-10 flex h-12 w-full items-center justify-between gap-4 border-b border-zinc-800 p-2 px-4 backdrop-blur-lg">
@@ -24,6 +26,9 @@ export default function Layout({ children }: Props) {
 					</Link>
 					<Link className="transition duration-100 active:scale-95" href="/schedule">
 						Schedule
+					</Link>
+					<Link className="transition duration-100 active:scale-95" href={`/archive/${year}`}>
+						Archive
 					</Link>
 					<Link className="transition duration-100 active:scale-95" href="/help">
 						Help
