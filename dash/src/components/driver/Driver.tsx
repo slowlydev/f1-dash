@@ -53,25 +53,25 @@ export default function Driver({ driver, timingDriver, position }: Props) {
 
 	const favoriteDriver = useSettingsStore((state) => state.favoriteDrivers.includes(driver.racingNumber));
 
+	const showDriverLastName = useSettingsStore((state) => state.showDriverLastName);
+
 	return (
 		<motion.div
 			layout="position"
-			className={clsx("flex flex-col gap-1 rounded-lg p-1.5 select-none", {
+			className={clsx("col-span-full grid grid-cols-subgrid gap-1 rounded-lg p-1.5 select-none", {
 				"opacity-50": timingDriver.knockedOut || timingDriver.retired || timingDriver.stopped,
 				"bg-sky-800/30": favoriteDriver,
 				"bg-violet-800/30": hasFastest,
 				"bg-red-800/30": sessionPart != undefined && inDangerZone(position, sessionPart),
 			})}
 		>
-			<div
-				className="grid items-center gap-2"
-				style={{
-					gridTemplateColumns: carMetrics
-						? "5.5rem 3.5rem 5.5rem 4rem 5rem 5.5rem auto 10.5rem"
-						: "5.5rem 3.5rem 5.5rem 4rem 5rem 5.5rem auto",
-				}}
-			>
-				<DriverTag className="min-w-full!" short={driver.tla} teamColor={driver.teamColour} position={position} />
+			<div className="col-span-full grid grid-cols-subgrid items-center gap-2">
+				<DriverTag
+					className="col-span-2 min-w-full! grid-cols-subgrid"
+					short={showDriverLastName ? driver.lastName : driver.tla}
+					teamColor={driver.teamColour}
+					position={position}
+				/>
 				<DriverDRS
 					on={carData ? hasDRS(carData[45]) : false}
 					possible={carData ? possibleDRS(carData[45]) : false}

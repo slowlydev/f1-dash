@@ -47,6 +47,11 @@ export default function SettingsPage() {
 				<p className="text-zinc-500">Show Drivers Mini Sectors</p>
 			</div>
 
+			<div className="flex gap-2">
+				<Toggle enabled={settings.showDriverLastName} setEnabled={(v) => settings.setShowDriverLastName(v)} />
+				<p className="text-zinc-500">Show Drivers Last Name</p>
+			</div>
+
 			<h2 className="my-4 text-2xl">Race Control</h2>
 
 			<div className="flex gap-2">
