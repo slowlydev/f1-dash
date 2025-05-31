@@ -24,10 +24,10 @@ tracing-subscriber.workspace = true
 axum.workspace = true
 tower-http.workspace = true
 
-reqwest = { version = "0.12.4", features = ["native-tls"] }
+reqwest.workspace = true
 
-serde = { version = "1.0", features = ["derive"] }
-serde_json = { version = "1.0", features = ["raw_value"] }
+serde.workspace = true
+serde_json.workspace = true
 
 futures.workspace = true
 dotenvy.workspace = true
