@@ -1,5 +1,5 @@
 group "default" {
-  targets = ["f1-dash", "f1-dash-live", "f1-dash-api"]
+  targets = ["f1-dash", "f1-dash-live", "f1-dash-api", "f1-dash-importer", "f1-dash-analytics"]
 }
 
 target "docker-metadata-action" {}
@@ -27,4 +27,20 @@ target "f1-dash-live" {
   context = "."
   dockerfile = "dockerfile"
   target = "live"
+}
+
+target "f1-dash-importer" {
+  inherits = ["docker-metadata-action"]
+
+  context = "."
+  dockerfile = "dockerfile"
+  target = "importer"
+}
+
+target "f1-dash-analytics" {
+  inherits = ["docker-metadata-action"]
+
+  context = "."
+  dockerfile = "dockerfile"
+  target = "analytics"
 }

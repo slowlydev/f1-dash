@@ -2,7 +2,7 @@ use std::mem;
 
 use serde_json::{Map, Value};
 
-fn to_camel_case(string: &str) -> String {
+pub fn to_camel_case(string: &str) -> String {
     heck::AsLowerCamelCase(string).to_string()
 }
 

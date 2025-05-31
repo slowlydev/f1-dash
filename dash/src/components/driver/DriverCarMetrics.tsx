@@ -1,6 +1,6 @@
 import { useSettingsStore } from "@/stores/useSettingsStore";
 
-import { CarDataChannels } from "@/types/state.type";
+import type { CarDataChannels } from "@/types/state.type";
 
 import DriverPedals from "./DriverPedals";
 

@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-import { Stint } from "@/types/state.type";
+import type { Stint } from "@/types/state.type";
 
 type Props = {
 	stints: Stint[] | undefined;

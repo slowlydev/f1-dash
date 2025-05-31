@@ -4,7 +4,7 @@ use axum::extract::State;
 use serde_json::Value;
 use tracing::error;
 
-use super::AppState;
+use crate::AppState;
 
 fn map_to_vec(value: Value) -> Vec<Value> {
     match value {
@@ -16,8 +16,9 @@ fn map_to_vec(value: Value) -> Vec<Value> {
 pub async fn get_drivers(
     State(state): State<Arc<AppState>>,
 ) -> Result<axum::Json<Vec<Value>>, axum::http::StatusCode> {
-    let live_state = state.state.lock().unwrap().clone();
-    mem::drop(state);
+    let state_lock = state.state.lock().unwrap();
+    let live_state = state_lock.clone();
+    mem::drop(state_lock);
 
     match live_state.pointer("/driverList") {
         Some(drivers) => Ok(axum::Json(map_to_vec(drivers.clone()))),

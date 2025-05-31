@@ -1,4 +1,4 @@
-import { Rainviewer } from "@/types/rainviewer.type";
+import type { Rainviewer } from "@/types/rainviewer.type";
 
 const rainviewerUrl = "https://api.rainviewer.com/public/weather-maps.json";
 

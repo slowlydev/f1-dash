@@ -5,7 +5,7 @@ import Countdown from "@/components/schedule/Countdown";
 import Round from "@/components/schedule/Round";
 
 import { env } from "@/env";
-import { Round as RoundType } from "@/types/schedule.type";
+import type { Round as RoundType } from "@/types/schedule.type";
 
 export const getNext = async () => {
 	await connection();

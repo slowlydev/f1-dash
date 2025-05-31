@@ -2,7 +2,7 @@ import { connection } from "next/server";
 
 import Round from "@/components/schedule/Round";
 
-import { Round as RoundType } from "@/types/schedule.type";
+import type { Round as RoundType } from "@/types/schedule.type";
 
 import { env } from "@/env";
 

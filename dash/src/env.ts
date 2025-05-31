@@ -13,7 +13,6 @@ const server = z.object({
 
 const client = z.object({
 	NEXT_PUBLIC_LIVE_URL: z.string().min(1).includes("http"),
-	NEXT_PUBLIC_MAP_KEY: z.string().optional(),
 });
 
 const processEnv = {
@@ -27,7 +26,6 @@ const processEnv = {
 	DISABLE_IFRAME: process.env.DISABLE_IFRAME,
 
 	NEXT_PUBLIC_LIVE_URL: process.env.NEXT_PUBLIC_LIVE_URL,
-	NEXT_PUBLIC_MAP_KEY: process.env.NEXT_PUBLIC_MAP_KEY,
 };
 
 // Don't touch the part below

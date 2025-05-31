@@ -1,0 +1,34 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        select\n            lap,\n            min(laptime) AS \"laptime!\",\n            min(time) AS \"time!\"\n        from\n            timing_driver\n        where\n            nr = $1\n            and laptime != 0\n        group by\n            lap\n        order by\n            lap;\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "lap",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "laptime!",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 2,
+        "name": "time!",
+        "type_info": "Timestamptz"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text"
+      ]
+    },
+    "nullable": [
+      true,
+      null,
+      null
+    ]
+  },
+  "hash": "558382d26b558498dea63c4afdcc8bce1bd85adf440a424f35ac774b5535cb39"
+}

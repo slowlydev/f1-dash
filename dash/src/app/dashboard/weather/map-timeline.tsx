@@ -3,7 +3,7 @@
 import { unix } from "moment";
 import { motion, useMotionValue, useDragControls, AnimatePresence } from "motion/react";
 
-import { useState, useRef, useEffect, RefObject } from "react";
+import { useState, useRef, useEffect, type RefObject } from "react";
 
 function getProgressFromX<T extends HTMLElement>({
 	x,

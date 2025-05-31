@@ -4,7 +4,7 @@ import { merge } from "@/lib/merge";
 
 import { useBuffer } from "@/hooks/useBuffer";
 
-import { RecursivePartial } from "@/types/message.type";
+import type { RecursivePartial } from "@/types/message.type";
 
 export const useStatefulBuffer = <T>() => {
 	const currentRef = useRef<T | null>(null);

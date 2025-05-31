@@ -1,6 +1,6 @@
 import { utc } from "moment";
 
-import { Session } from "@/types/schedule.type";
+import type { Session } from "@/types/schedule.type";
 
 type SessionDayGroup = { date: string; sessions: Session[] };
 
