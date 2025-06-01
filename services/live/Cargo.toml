@@ -31,3 +31,6 @@ serde_json.workspace = true
 
 futures.workspace = true
 dotenvy.workspace = true
+
+flate2.workspace = true
+futures-util = "0.3.31"
