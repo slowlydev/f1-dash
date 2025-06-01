@@ -1,19 +1,20 @@
 "use client";
 
+import { useEffect, type ReactNode } from "react";
+
 import { useSettingsStore } from "@/stores/useSettingsStore";
-import { useEffect } from "react";
 
 type Props = {
-    children: React.ReactNode;
+	children: ReactNode;
 };
 
 export default function OledModeProvider({ children }: Props) {
-    const oledMode = useSettingsStore((state) => state.oledMode);
+	const oledMode = useSettingsStore((state) => state.oledMode);
 
-    useEffect(() => {
-        document.documentElement.classList.toggle("bg-zinc-950", !oledMode);
-        document.documentElement.classList.toggle("bg-black", oledMode);
-    }, [oledMode]);
+	useEffect(() => {
+		document.documentElement.classList.toggle("bg-zinc-950", !oledMode);
+		document.documentElement.classList.toggle("bg-black", oledMode);
+	}, [oledMode]);
 
-    return <>{children}</>;
+	return children;
 }
