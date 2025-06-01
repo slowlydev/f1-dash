@@ -10,7 +10,7 @@ services:
     environment:
       - ORIGIN=http://localhost:3000
       - LIVE_ADDRESS=0.0.0.0:4000
-      - RUST_LOG="live=debug"
+      - RUST_LOG=live=debug,client=debug
 
   api:
     image: ghcr.io/slowlydev/f1-dash-api:latest
@@ -23,7 +23,7 @@ services:
     environment:
       - ORIGIN=http://localhost:3000
       - API_ADDRESS=0.0.0.0:4001
-      - RUST_LOG="api=debug"
+      - RUST_LOG=api=debug
 
   frontend:
     image: ghcr.io/slowlydev/f1-dash:latest
@@ -65,4 +65,4 @@ services:
     environment:
       - ORIGIN=http://localhost:3000
       - ANALYTICS_ADDRESS=0.0.0.0:4002
-      - RUST_LOG="analytics=debug"
+      - RUST_LOG=analytics=debug

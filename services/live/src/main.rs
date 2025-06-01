@@ -9,6 +9,7 @@ use axum::{
     routing::get,
     Router,
 };
+use compression::compress_sse;
 use dotenvy::dotenv;
 use serde_json::Value;
 use tokio::{net::TcpListener, sync::broadcast};
@@ -18,6 +19,7 @@ use tracing_subscriber::{fmt, layer::SubscriberExt, util::SubscriberInitExt, Env
 
 use client::message::Message;
 
+mod compression;
 mod server {
     pub mod drivers;
     pub mod health;
@@ -56,6 +58,7 @@ async fn main() -> Result<(), anyhow::Error> {
         .route("/api/sse", get(server::live::sse_handler))
         .route("/api/drivers", get(server::drivers::get_drivers))
         .layer(cors)
+        .layer(axum::middleware::from_fn(compress_sse))
         .with_state(app_state)
         .into_make_service_with_connect_info::<SocketAddr>();
 
