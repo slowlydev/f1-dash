@@ -1,4 +1,4 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
 
 const title = "f1-dash | Formula 1 live timing";
 const description =

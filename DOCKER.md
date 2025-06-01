@@ -1,8 +1,10 @@
 # Docker and Docker Compose
 
-## Environment Variables
+> [!NOTE]
+> The docker compose is not meant as a production deployment rather a tool to setup f1-dash locally for testing or development.
+> If you want to deploy f1-dash, it can be used as a base but
 
-To substitute the environment variables in [`compose.yaml`](compose.yaml), use the `--env-file` flag as follows:
+To substitute the environment variables in compose.yaml, use `--env-file` flag as follows:
 
 ```bash
 docker compose --env-file ./compose.env up

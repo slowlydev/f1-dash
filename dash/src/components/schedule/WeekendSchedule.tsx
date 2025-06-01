@@ -3,7 +3,7 @@ import clsx from "clsx";
 
 import { groupSessionByDay } from "@/lib/groupSessionByDay";
 
-import { Session } from "@/types/schedule.type";
+import type { Session } from "@/types/schedule.type";
 
 type Props = {
 	sessions: Session[];

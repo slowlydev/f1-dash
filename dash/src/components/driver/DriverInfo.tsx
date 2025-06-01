@@ -1,6 +1,6 @@
 import clsx from "clsx";
 
-import { TimingDataDriver } from "@/types/state.type";
+import type { TimingDataDriver } from "@/types/state.type";
 
 type Props = {
 	timingDriver: TimingDataDriver;

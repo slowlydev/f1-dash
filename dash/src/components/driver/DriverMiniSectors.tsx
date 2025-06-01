@@ -1,7 +1,6 @@
 import clsx from "clsx";
 
-import { getTimeColor } from "@/lib/getTimeColor";
-import { TimingDataDriver, TimingStatsDriver } from "@/types/state.type";
+import type { TimingDataDriver, TimingStatsDriver } from "@/types/state.type";
 import { useSettingsStore } from "@/stores/useSettingsStore";
 
 type Props = {
@@ -28,17 +27,21 @@ export default function DriverMiniSectors({ sectors = [], bestSectors, tla }: Pr
 
 					<div className={clsx("flex", showMiniSectors ? "items-center gap-1" : "flex-col")}>
 						<p
-							className={clsx(
-								"text-lg leading-none font-medium tabular-nums",
-								getTimeColor(sector.overallFastest, sector.personalFastest),
-								!sector.value ? "text-zinc-500" : "",
-							)}
+							className={clsx("text-lg leading-none font-medium tabular-nums", {
+								"text-violet-600!": sector.overallFastest,
+								"text-emerald-500!": sector.personalFastest,
+								"text-zinc-500": !sector.value,
+							})}
 						>
 							{!!sector.value ? sector.value : !!sector.previousValue ? sector.previousValue : "-- ---"}
 						</p>
 
 						{showBestSectors && (
-							<p className="text-sm leading-none text-zinc-600 tabular-nums">
+							<p
+								className={clsx("text-sm leading-none text-zinc-500 tabular-nums", {
+									"text-violet-600!": bestSectors?.[i].position === 1,
+								})}
+							>
 								{bestSectors && bestSectors[i].value ? bestSectors[i].value : "-- ---"}
 							</p>
 						)}
