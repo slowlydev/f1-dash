@@ -28,6 +28,9 @@ type SettingsStore = {
 	oledMode: boolean;
 	setOledMode: (oledMode: boolean) => void;
 
+	useSafetyCarColors: boolean;
+	setUseSafetyCarColors: (useSafetyCarColors: boolean) => void;
+
 	favoriteDrivers: string[];
 	setFavoriteDrivers: (favoriteDrivers: string[]) => void;
 	removeFavoriteDriver: (driver: string) => void;
@@ -69,6 +72,9 @@ export const useSettingsStore = create<SettingsStore>()(
 
 				oledMode: false,
 				setOledMode: (oledMode: boolean) => set({ oledMode }),
+
+				useSafetyCarColors: false,
+				setUseSafetyCarColors: (useSafetyCarColors: boolean) => set({ useSafetyCarColors }),
 
 				favoriteDrivers: [],
 				setFavoriteDrivers: (favoriteDrivers: string[]) => set({ favoriteDrivers }),
