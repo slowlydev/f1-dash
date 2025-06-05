@@ -73,7 +73,7 @@ export const useSettingsStore = create<SettingsStore>()(
 				oledMode: false,
 				setOledMode: (oledMode: boolean) => set({ oledMode }),
 
-				useSafetyCarColors: false,
+				useSafetyCarColors: true,
 				setUseSafetyCarColors: (useSafetyCarColors: boolean) => set({ useSafetyCarColors }),
 
 				favoriteDrivers: [],
