@@ -49,6 +49,7 @@ export default function Map() {
 	const [sectors, setSectors] = useState<MapSector[]>([]);
 	const [corners, setCorners] = useState<Corner[]>([]);
 	const [rotation, setRotation] = useState<number>(0);
+	const [finishLine, setFinishLine] = useState<null | { x: number; y: number; startAngle: number }>(null);
 
 	useEffect(() => {
 		(async () => {
@@ -91,12 +92,19 @@ export default function Map() {
 			const cWidthX = Math.max(...pointsX) - cMinX + SPACE * 2;
 			const cWidthY = Math.max(...pointsY) - cMinY + SPACE * 2;
 
+			const rotatedFinishLine = rotate(mapJson.x[0], mapJson.y[0], fixedRotation, centerX, centerY);
+
+			const dx = rotatedPoints[3].x - rotatedPoints[0].x;
+			const dy = rotatedPoints[3].y - rotatedPoints[0].y;
+			const startAngle = Math.atan2(dy, dx) * (180 / Math.PI);
+
 			setCenter([centerX, centerY]);
 			setBounds([cMinX, cMinY, cWidthX, cWidthY]);
 			setSectors(sectors);
 			setPoints(rotatedPoints);
 			setRotation(fixedRotation);
 			setCorners(cornerPositions);
+			setFinishLine({ x: rotatedFinishLine.x, y: rotatedFinishLine.y, startAngle });
 		})();
 	}, [circuitKey]);
 
@@ -160,6 +168,19 @@ export default function Map() {
 					/>
 				);
 			})}
+
+			{finishLine && (
+				<rect
+					x={finishLine.x - 75}
+					y={finishLine.y}
+					width={240}
+					height={20}
+					fill="red"
+					stroke="red"
+					strokeWidth={70}
+					transform={`rotate(${finishLine.startAngle + 90}, ${finishLine.x + 25}, ${finishLine.y})`}
+				/>
+			)}
 
 			{showCornerNumbers &&
 				corners.map((corner) => (
