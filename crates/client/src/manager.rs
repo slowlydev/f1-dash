@@ -1,6 +1,9 @@
 use std::time::Duration;
 
-use tokio::{sync::mpsc, time::sleep};
+use tokio::{
+    sync::mpsc,
+    time::{sleep, timeout},
+};
 use tokio_stream::{wrappers::ReceiverStream, StreamExt};
 use tracing::error;
 
@@ -23,12 +26,28 @@ pub fn manage() -> ReceiverStream<Message> {
 
             let mut parsed_stream = parse_stream(stream).await;
 
-            while let Some(message) = parsed_stream.next().await {
-                if check_restart(&message) {
-                    continue 'manage;
-                }
+            loop {
+                let res = timeout(Duration::from_secs(30), parsed_stream.next()).await;
 
-                let _ = tx.send(message).await;
+                match res {
+                    Ok(Some(message)) => {
+                        if check_restart(&message) {
+                            continue 'manage;
+                        }
+                        let _ = tx.send(message).await;
+                    }
+                    Ok(None) => {
+                        error!("stream ended unexpectedly, restarting client");
+                        continue 'manage;
+                    }
+                    Err(err) => {
+                        error!(
+                            ?err,
+                            "timeout while waiting for next message, restarting client"
+                        );
+                        continue 'manage;
+                    }
+                }
             }
         }
     });
