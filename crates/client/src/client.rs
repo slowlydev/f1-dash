@@ -1,3 +1,4 @@
+use std::time::Duration;
 use std::{env, error::Error};
 
 use axum::http::HeaderValue;
@@ -6,6 +7,7 @@ use futures::SinkExt;
 use reqwest::{header, Url};
 use serde_json::Value;
 
+use tokio::time::timeout;
 use tokio_stream::{Stream, StreamExt};
 use tokio_tungstenite::tungstenite::client::IntoClientRequest;
 use tokio_tungstenite::{tungstenite::http::Request, MaybeTlsStream, WebSocketStream};
@@ -39,7 +41,17 @@ pub async fn init() -> Result<WsStream, Box<dyn Error>> {
 
     debug!(?req, "created request");
 
-    let (mut socket, _) = tokio_tungstenite::connect_async(req).await?;
+    let connect_result = timeout(
+        Duration::from_secs(10),
+        tokio_tungstenite::connect_async(req),
+    )
+    .await;
+
+    let (mut socket, _) = match connect_result {
+        Ok(Ok(res)) => res,
+        Ok(Err(e)) => return Err(Box::new(e)),
+        Err(_) => return Err("ws connect timed out".into()),
+    };
 
     info!("connected");
 
@@ -113,7 +125,11 @@ async fn negotiate() -> Result<Negotiaion, Box<dyn Error>> {
         ],
     )?;
 
-    let res = reqwest::get(url).await?;
+    let res = match timeout(Duration::from_secs(5), reqwest::get(url)).await {
+        Ok(Ok(r)) => r,
+        Ok(Err(e)) => return Err(Box::new(e)),
+        Err(_) => return Err("negotiation HTTP request timed out".into()),
+    };
 
     // TODO refactor this
     let headers = res.headers().clone();

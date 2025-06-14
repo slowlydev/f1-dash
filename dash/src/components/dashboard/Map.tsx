@@ -49,6 +49,7 @@ export default function Map() {
 	const [sectors, setSectors] = useState<MapSector[]>([]);
 	const [corners, setCorners] = useState<Corner[]>([]);
 	const [rotation, setRotation] = useState<number>(0);
+	const [finishLine, setFinishLine] = useState<null | { x: number; y: number; startAngle: number }>(null);
 
 	useEffect(() => {
 		(async () => {
@@ -91,12 +92,19 @@ export default function Map() {
 			const cWidthX = Math.max(...pointsX) - cMinX + SPACE * 2;
 			const cWidthY = Math.max(...pointsY) - cMinY + SPACE * 2;
 
+			const rotatedFinishLine = rotate(mapJson.x[0], mapJson.y[0], fixedRotation, centerX, centerY);
+
+			const dx = rotatedPoints[3].x - rotatedPoints[0].x;
+			const dy = rotatedPoints[3].y - rotatedPoints[0].y;
+			const startAngle = Math.atan2(dy, dx) * (180 / Math.PI);
+
 			setCenter([centerX, centerY]);
 			setBounds([cMinX, cMinY, cWidthX, cWidthY]);
 			setSectors(sectors);
 			setPoints(rotatedPoints);
 			setRotation(fixedRotation);
 			setCorners(cornerPositions);
+			setFinishLine({ x: rotatedFinishLine.x, y: rotatedFinishLine.y, startAngle });
 		})();
 	}, [circuitKey]);
 
@@ -161,6 +169,19 @@ export default function Map() {
 				);
 			})}
 
+			{finishLine && (
+				<rect
+					x={finishLine.x - 75}
+					y={finishLine.y}
+					width={240}
+					height={20}
+					fill="red"
+					stroke="red"
+					strokeWidth={70}
+					transform={`rotate(${finishLine.startAngle + 90}, ${finishLine.x + 25}, ${finishLine.y})`}
+				/>
+			)}
+
 			{showCornerNumbers &&
 				corners.map((corner) => (
 					<CornerNumber
@@ -174,32 +195,38 @@ export default function Map() {
 			{centerX && centerY && positions && drivers && (
 				<>
 					{positions["241"] && positions["241"].Z !== 0 && (
+						// Aston Martin
 						<SafetyCar
 							key="safety.car.241"
 							rotation={rotation}
 							centerX={centerX}
 							centerY={centerY}
 							pos={positions["241"]}
+							color="229971"
 						/>
 					)}
 
 					{positions["242"] && positions["242"].Z !== 0 && (
+						// Aston Martin
 						<SafetyCar
 							key="safety.car.242"
 							rotation={rotation}
 							centerX={centerX}
 							centerY={centerY}
 							pos={positions["242"]}
+							color="229971"
 						/>
 					)}
 
 					{positions["243"] && positions["243"].Z !== 0 && (
+						// Mercedes
 						<SafetyCar
 							key="safety.car.243"
 							rotation={rotation}
 							centerX={centerX}
 							centerY={centerY}
 							pos={positions["243"]}
+							color="B90F09"
 						/>
 					)}
 
@@ -307,9 +334,12 @@ type SafetyCarProps = {
 	rotation: number;
 	centerX: number;
 	centerY: number;
+	color: string;
 };
 
-const SafetyCar = ({ pos, rotation, centerX, centerY }: SafetyCarProps) => {
+const SafetyCar = ({ pos, rotation, centerX, centerY, color }: SafetyCarProps) => {
+	const useSafetyCarColors = useSettingsStore((state) => state.useSafetyCarColors);
+
 	return (
 		<CarDot
 			name="Safety Car"
@@ -320,7 +350,7 @@ const SafetyCar = ({ pos, rotation, centerX, centerY }: SafetyCarProps) => {
 			favoriteDriver={false}
 			pit={false}
 			hidden={false}
-			color={undefined}
+			color={useSafetyCarColors ? color : "DDD"}
 		/>
 	);
 };
