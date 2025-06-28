@@ -123,6 +123,7 @@ export type SessionInfo = {
 	endDate: string;
 	gmtOffset: string;
 	path: string;
+	timeZone?: string;
 	number?: number;
 };
 

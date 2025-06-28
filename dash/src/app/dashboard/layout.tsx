@@ -1,6 +1,6 @@
 "use client";
 
-import { type ReactNode } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 
 import { useDataEngine } from "@/hooks/useDataEngine";
@@ -17,6 +17,7 @@ import SidenavButton from "@/components/SidenavButton";
 import SessionInfo from "@/components/SessionInfo";
 import WeatherInfo from "@/components/WeatherInfo";
 import TrackInfo from "@/components/TrackInfo";
+import TrackTime from "@/components/TrackTime";
 import DelayInput from "@/components/DelayInput";
 import DelayTimer from "@/components/DelayTimer";
 import ConnectionStatus from "@/components/ConnectionStatus";
@@ -24,6 +25,17 @@ import ConnectionStatus from "@/components/ConnectionStatus";
 type Props = {
 	children: ReactNode;
 };
+
+function useIsMobile() {
+	const [isMobile, setIsMobile] = useState(false);
+	useEffect(() => {
+		const check = () => setIsMobile(window.innerWidth < 768);
+		check();
+		window.addEventListener("resize", check);
+		return () => window.removeEventListener("resize", check);
+	}, []);
+	return isMobile;
+}
 
 export default function DashboardLayout({ children }: Props) {
 	const stores = useStores();
@@ -37,13 +49,17 @@ export default function DashboardLayout({ children }: Props) {
 
 	const ended = useDataStore((state) => state.sessionStatus?.status === "Ends");
 
+	const isMobile = useIsMobile();
+
 	return (
 		<div className="flex h-screen w-full md:pt-2 md:pr-2 md:pb-2">
 			<Sidebar key="sidebar" connected={connected} />
 
 			<motion.div layout="size" className="flex h-full w-full flex-1 flex-col md:gap-2">
-				<DesktopStaticBar show={!syncing || ended} />
-				<MobileStaticBar show={!syncing || ended} connected={connected} />
+				{isMobile
+					? <MobileStaticBar show={!syncing || ended} connected={connected} />
+					: <DesktopStaticBar show={!syncing || ended} />
+				}
 
 				<div className={!syncing || ended ? "no-scrollbar w-full flex-1 overflow-auto md:rounded-lg" : "hidden"}>
 					<MobileDynamicBar />
@@ -93,7 +109,7 @@ function MobileStaticBar({ show, connected }: { show: boolean; connected: boolea
 				<ConnectionStatus connected={connected} />
 			</div>
 
-			{show && <TrackInfo />}
+			{show && <div className="flex items-center gap-2"><TrackTime /> <TrackInfo /></div>}
 		</div>
 	);
 }
@@ -116,7 +132,7 @@ function DesktopStaticBar({ show }: { show: boolean }) {
 
 			<div className="hidden md:items-center lg:flex">{show && <WeatherInfo />}</div>
 
-			<div className="flex justify-end">{show && <TrackInfo />}</div>
+			<div className="flex justify-end gap-2"><TrackInfo /></div>
 		</div>
 	);
 }

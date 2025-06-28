@@ -5,6 +5,7 @@ import clsx from "clsx";
 import { useDataStore } from "@/stores/useDataStore";
 
 import { getTrackStatusMessage } from "@/lib/getTrackStatusMessage";
+import TrackTime from "./TrackTime";
 
 export default function TrackInfo() {
 	const lapCount = useDataStore((state) => state.lapCount);
@@ -32,6 +33,7 @@ export default function TrackInfo() {
 			) : (
 				<div className="relative h-8 w-28 animate-pulse overflow-hidden rounded-lg bg-zinc-800" />
 			)}
+            <TrackTime />
 		</div>
 	);
 }
