@@ -3,7 +3,7 @@ use std::{
     fs::File,
     io::{self, BufRead},
     path::Path,
-    time::Duration,
+    time::{Duration, Instant},
 };
 
 use tokio::{
@@ -66,8 +66,11 @@ async fn main() {
 
         info!("reader has started broadcasting lines");
 
+        let start = Instant::now();
+
         for line in lines {
-            sleep(Duration::from_millis(interval_ms)).await;
+            let interval = interval_ms - start.elapsed().as_millis() as u64 % interval_ms;
+            sleep(Duration::from_millis(interval)).await;
 
             match line {
                 Ok(txt) => {
