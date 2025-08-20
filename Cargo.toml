@@ -9,6 +9,7 @@ members = [
     "services/importer",  # bin - service
     "crates/saver",       # bin - util
     "crates/simulator",   # bin - util
+    "crates/generator",   # lib, bin - util
 ]
 default-members = [
     "services/live",
