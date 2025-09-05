@@ -83,25 +83,25 @@ export const useDataEngine = ({ updateState, updatePosition, updateCarData }: Pr
 		}
 	};
 
-	const handleUpdate = ({ carDataZ, positionZ, ...update }: MessageUpdate) => {
-		Object.keys(buffers).forEach((key) => {
-			const data = update[key as keyof typeof update];
-			const buffer = buffers[key as keyof typeof buffers];
-			if (data) buffer.push(data);
-		});
-
-		if (carDataZ) {
-			const carData = inflate<CarData>(carDataZ);
-			for (const entry of carData.Entries) {
-				carBuffer.pushTimed(entry.Cars, utcToLocalMs(entry.Utc));
+	const handleUpdate = (updates: MessageUpdate) => {
+		for (const [topic, data] of updates) {
+			if (topic === "carDataZ" && data) {
+				const carData = inflate<CarData>(data);
+				for (const entry of carData.Entries) {
+					carBuffer.pushTimed(entry.Cars, utcToLocalMs(entry.Utc));
+				}
+				continue;
 			}
-		}
 
-		if (positionZ) {
-			const position = inflate<Position>(positionZ);
-			for (const entry of position.Position) {
-				posBuffer.pushTimed(entry.Entries, utcToLocalMs(entry.Timestamp));
+			if (topic === "positionZ" && data) {
+				const position = inflate<Position>(data);
+				for (const entry of position.Position) {
+					posBuffer.pushTimed(entry.Entries, utcToLocalMs(entry.Timestamp));
+				}
+				continue;
 			}
+
+			buffers[topic as keyof typeof buffers]?.push(data);
 		}
 	};
 

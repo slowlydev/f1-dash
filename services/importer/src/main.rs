@@ -43,7 +43,7 @@ async fn main() -> Result<(), anyhow::Error> {
             Message::Updates(updates) => {
                 trace!(?updates, "recived updates, saving");
 
-                let currnet_state = state.lock().unwrap().clone();
+                let currnet_state = state.read().await.clone();
 
                 let _ = parse_update(&pool, currnet_state, updates).await;
             }

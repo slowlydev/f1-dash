@@ -22,7 +22,7 @@ export const useSocket = ({ handleInitial, handleUpdate }: Props) => {
 			handleInitial(JSON.parse(message.data));
 		});
 
-		sse.addEventListener("update", (message) => {
+		sse.addEventListener("updates", (message) => {
 			handleUpdate(JSON.parse(message.data));
 		});
 

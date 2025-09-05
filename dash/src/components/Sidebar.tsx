@@ -7,6 +7,7 @@ import Link from "next/link";
 import clsx from "clsx";
 
 import { useSidebarStore } from "@/stores/useSidebarStore";
+import { useSettingsStore } from "@/stores/useSettingsStore";
 
 import ConnectionStatus from "@/components/ConnectionStatus";
 import DelayInput from "@/components/DelayInput";
@@ -57,6 +58,8 @@ export default function Sidebar({ connected }: Props) {
 
 	const pin = useSidebarStore((state) => state.pin);
 	const unpin = useSidebarStore((state) => state.unpin);
+	
+	const oledMode = useSettingsStore((state) => state.oledMode);
 
 	useEffect(() => {
 		const handleResize = () => {
@@ -97,8 +100,10 @@ export default function Sidebar({ connected }: Props) {
 				transition={{ type: "spring", bounce: 0.1 }}
 			>
 				<nav
-					className={clsx("m-2 flex w-52 flex-col bg-zinc-950 p-2", {
+					className={clsx("m-2 flex w-52 flex-col p-2", {
 						"rounded-lg border border-zinc-800": !pinned,
+						"bg-black": oledMode,
+						"bg-zinc-950": !oledMode,
 					})}
 				>
 					<div className="flex items-center justify-between gap-2">

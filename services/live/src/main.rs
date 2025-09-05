@@ -1,16 +1,14 @@
-use std::{
-    env,
-    net::SocketAddr,
-    sync::{Arc, Mutex},
-};
+use std::{env, net::SocketAddr, sync::Arc};
 
 use axum::{
     http::{HeaderValue, Method},
     routing::get,
     Router,
 };
+use compression::compress_sse;
 use dotenvy::dotenv;
 use serde_json::Value;
+use tokio::sync::RwLock;
 use tokio::{net::TcpListener, sync::broadcast};
 use tower_http::cors::CorsLayer;
 use tracing::info;
@@ -18,6 +16,7 @@ use tracing_subscriber::{fmt, layer::SubscriberExt, util::SubscriberInitExt, Env
 
 use client::message::Message;
 
+mod compression;
 mod server {
     pub mod drivers;
     pub mod health;
@@ -26,7 +25,7 @@ mod server {
 
 pub struct AppState {
     tx: broadcast::Sender<Message>,
-    state: Arc<Mutex<Value>>,
+    state: Arc<RwLock<Value>>,
 }
 
 #[tokio::main]
@@ -56,6 +55,7 @@ async fn main() -> Result<(), anyhow::Error> {
         .route("/api/sse", get(server::live::sse_handler))
         .route("/api/drivers", get(server::drivers::get_drivers))
         .layer(cors)
+        .layer(axum::middleware::from_fn(compress_sse))
         .with_state(app_state)
         .into_make_service_with_connect_info::<SocketAddr>();
 
@@ -67,7 +67,7 @@ async fn main() -> Result<(), anyhow::Error> {
 }
 
 pub fn cors_layer() -> Result<CorsLayer, anyhow::Error> {
-    let origin = env::var("ORIGIN")?; // origins string split by semicolumn
+    let origin = env::var("ORIGIN")?;
 
     let origins = origin
         .split(';')

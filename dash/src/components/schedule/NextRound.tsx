@@ -29,7 +29,7 @@ export default async function NextRound() {
 	if (!next) {
 		return (
 			<div className="flex h-44 flex-col items-center justify-center">
-				<p>No upcomming weekend found</p>
+				<p>No upcoming weekend found</p>
 			</div>
 		);
 	}
@@ -46,7 +46,7 @@ export default async function NextRound() {
 				</div>
 			) : (
 				<div className="flex flex-col items-center justify-center">
-					<p>No upcomming sessions found</p>
+					<p>No upcoming sessions found</p>
 				</div>
 			)}
 

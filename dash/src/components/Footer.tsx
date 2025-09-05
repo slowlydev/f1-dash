@@ -17,7 +17,7 @@ export default function Footer() {
 				</p>
 
 				<p>
-					Checkout the Community <TextLink website="https://discord.gg/unJwu66NuB">Discord</TextLink>.
+					Check out the Community <TextLink website="https://discord.gg/unJwu66NuB">Discord</TextLink>.
 				</p>
 
 				<p>
@@ -33,8 +33,8 @@ export default function Footer() {
 
 			<p>
 				This project/website is unofficial and is not associated in any way with the Formula 1 companies. F1, FORMULA
-				ONE, FORMULA 1, FIA FORMULA ONE WORLD CHAMPIONSHIP, GRAND PRIX and related marks are trade marks of Formula One
-				Licensing B.V
+				ONE, FORMULA 1, FIA FORMULA ONE WORLD CHAMPIONSHIP, GRAND PRIX and related marks are trademarks of Formula One
+				Licensing B.V.
 			</p>
 		</footer>
 	);

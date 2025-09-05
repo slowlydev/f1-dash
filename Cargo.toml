@@ -33,10 +33,10 @@ tracing-subscriber = { version = "0.3.18", features = ["env-filter"] }
 sqlx = { version = "0.8.6", features = ["postgres", "runtime-tokio", "chrono"] }
 
 axum = { version = "0.8.3", features = ["http2"] }
-tower-http = { version = "0.6.2", features = ["cors"] }
+tower-http = { version = "0.6.4", features = ["cors"] }
 
 tokio-tungstenite = { version = "0.26.2", features = ["native-tls", "url"] }
-reqwest = { version = "0.12.15", features = ["native-tls"] }
+reqwest = { version = "0.12.18", features = ["native-tls"] }
 
 serde = { version = "1.0", features = ["derive"] }
 serde_json = { version = "1.0", features = ["raw_value"] }

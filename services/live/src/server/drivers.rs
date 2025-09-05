@@ -1,4 +1,4 @@
-use std::{mem, sync::Arc};
+use std::sync::Arc;
 
 use axum::extract::State;
 use serde_json::Value;
@@ -16,11 +16,8 @@ fn map_to_vec(value: Value) -> Vec<Value> {
 pub async fn get_drivers(
     State(state): State<Arc<AppState>>,
 ) -> Result<axum::Json<Vec<Value>>, axum::http::StatusCode> {
-    let state_lock = state.state.lock().unwrap();
-    let live_state = state_lock.clone();
-    mem::drop(state_lock);
-
-    match live_state.pointer("/driverList") {
+    let state_guard = state.state.read().await;
+    match state_guard.pointer("/driverList") {
         Some(drivers) => Ok(axum::Json(map_to_vec(drivers.clone()))),
         None => {
             error!("failed to get drivers from live state");

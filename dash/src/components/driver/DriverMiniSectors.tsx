@@ -37,7 +37,11 @@ export default function DriverMiniSectors({ sectors = [], bestSectors, tla }: Pr
 						</p>
 
 						{showBestSectors && (
-							<p className="text-sm leading-none text-zinc-500 tabular-nums">
+							<p
+								className={clsx("text-sm leading-none text-zinc-500 tabular-nums", {
+									"text-violet-600!": bestSectors?.[i].position === 1,
+								})}
+							>
 								{bestSectors && bestSectors[i].value ? bestSectors[i].value : "-- ---"}
 							</p>
 						)}

@@ -1,8 +1,8 @@
-# saver
+# Saver
 
-receives messages from the f1 singalr websocket and saves it at the path passed
+Receives messages from the F1 SignalR websocket and saves them at the path passed.
 
-## usage
+## Usage
 
 ```bash
 cargo r -p saver <out file>
