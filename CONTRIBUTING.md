@@ -81,6 +81,23 @@ cargo r -p saver year-circuit.data.txt
 > I recommend naming the files with the ending 
 > ".data.txt" as this extension is in the gitignore so you won't accidentally commit the telemetry recordings.
 
+You can also create a recording of a past race using the generator. Just start it up and select the year, meeting, and session.
+
+```bash
+cd f1-dash/
+
+# Run the generator
+cargo r -p generator
+```
+
+> [!NOTE]
+> Not all past races are available using the generator. The following races are unavailable:
+> - All seasons before 2018
+> - The 2018 Australian Grand Prix
+> - 2020 and 2021 pre-season testing
+> - The 2022 season
+> - All races before Spain in 2024
+
 ## Branching Convention
 
 For branch names we use git flow style branching.
