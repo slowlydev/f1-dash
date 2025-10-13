@@ -1,8 +1,9 @@
 "use client";
 
-import { Combobox, ComboboxButton, ComboboxInput, ComboboxOption, ComboboxOptions } from "@headlessui/react";
 import { useState } from "react";
+import { Combobox, ComboboxButton, ComboboxInput, ComboboxOption, ComboboxOptions } from "@headlessui/react";
 import clsx from "clsx";
+import { BiChevronDown } from "react-icons/bi";
 
 type Option<T> = {
 	value: T;
@@ -11,9 +12,7 @@ type Option<T> = {
 
 type Props<T> = {
 	placeholder?: string;
-
 	options: Option<T>[];
-
 	selected: T | null;
 	setSelected: (value: T | null) => void;
 };
@@ -21,44 +20,43 @@ type Props<T> = {
 export default function Select<T>({ placeholder, options, selected, setSelected }: Props<T>) {
 	const [query, setQuery] = useState("");
 
+	const selectedOption = options.find((option) => option.value === selected);
+
 	const filteredOptions =
 		query === "" ? options : options.filter((option) => option.label.toLowerCase().includes(query.toLowerCase()));
 
 	return (
-		<Combobox value={selected} onChange={(value) => setSelected(value)} onClose={() => setQuery("")}>
+		<Combobox value={selected} onChange={setSelected} nullable>
 			<div className="relative">
-				<ComboboxInput
-					placeholder={placeholder}
-					className={clsx(
-						"w-full rounded-lg border-none bg-white/5 py-1.5 pr-8 pl-3 text-sm/6 text-white",
-						"focus:outline-hidden data-focus:outline-2 data-focus:-outline-offset-2 data-focus:outline-white/25",
-					)}
-					displayValue={(option: Option<T> | null) => option?.label ?? ""}
-					onChange={(event) => setQuery(event.target.value)}
-				/>
-				<ComboboxButton className="group absolute inset-y-0 right-0 px-2.5">
-					{/* <ChevronDownIcon className="size-4 fill-white/60 group-data-hover:fill-white" /> */}
-				</ComboboxButton>
+				<div className="relative w-full rounded-lg bg-zinc-800">
+					<ComboboxInput
+						className="w-full rounded-lg border-none bg-zinc-800 py-1.5 pr-8 pl-3 text-sm/6 text-white focus:outline-none"
+						displayValue={() => selectedOption?.label || ""}
+						placeholder={placeholder || "Select option"}
+						onChange={(event) => setQuery(event.target.value)}
+					/>
+					<ComboboxButton className="absolute inset-y-0 right-0 flex items-center pr-2">
+						<BiChevronDown className="h-5 w-5 text-zinc-400" aria-hidden="true" />
+					</ComboboxButton>
+				</div>
+				<ComboboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-zinc-800 py-1 text-sm shadow-lg focus:outline-none">
+					{filteredOptions.map((option, index) => (
+						<ComboboxOption
+							key={index}
+							value={option.value}
+							className={({ active, selected }) =>
+								clsx(
+									"relative cursor-default py-2 pr-9 pl-3 select-none",
+									active ? "bg-zinc-700 text-white" : "text-zinc-300",
+									selected && "bg-zinc-700",
+								)
+							}
+						>
+							{option.label}
+						</ComboboxOption>
+					))}
+				</ComboboxOptions>
 			</div>
-
-			<ComboboxOptions
-				anchor="bottom"
-				className={clsx(
-					"w-[var(--input-width)] rounded-xl border border-white/5 bg-white/5 p-1 [--anchor-gap:var(--spacing-1)] empty:invisible",
-					"transition duration-100 ease-in data-leave:data-closed:opacity-0",
-				)}
-			>
-				{filteredOptions.map((option, idx) => (
-					<ComboboxOption
-						key={idx}
-						value={option.value}
-						className="group flex cursor-pointer items-center gap-2 rounded-lg px-3 py-1.5 select-none data-focus:bg-white/10"
-					>
-						{/* <CheckIcon className="invisible size-4 fill-white group-data-selected:visible" /> */}
-						<div className="text-sm/6 text-white">{option.label}</div>
-					</ComboboxOption>
-				))}
-			</ComboboxOptions>
 		</Combobox>
 	);
 }
