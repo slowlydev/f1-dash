@@ -1,7 +1,7 @@
 "use client";
 
 import { Combobox, ComboboxButton, ComboboxInput, ComboboxOption, ComboboxOptions } from "@headlessui/react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import clsx from "clsx";
 
 type Option<T> = {
@@ -20,12 +20,21 @@ type Props<T> = {
 
 export default function SelectMultiple<T>({ placeholder, options, selected, setSelected }: Props<T>) {
 	const [query, setQuery] = useState("");
+	const inputRef = useRef<HTMLInputElement>(null);
 
 	const filteredOptions =
 		query === "" ? options : options.filter((option) => option.label.toLowerCase().includes(query.toLowerCase()));
 
 	return (
-		<Combobox value={selected} onChange={(value) => setSelected(value)} onClose={() => setQuery("")} multiple>
+		<Combobox
+			value={selected}
+			onChange={(value) => {
+				setSelected(value);
+				inputRef.current?.blur();
+				inputRef.current?.focus();
+			}}
+			multiple
+		>
 			<div className="relative">
 				<ComboboxInput
 					placeholder={placeholder}
@@ -35,6 +44,7 @@ export default function SelectMultiple<T>({ placeholder, options, selected, setS
 					)}
 					displayValue={(option: Option<T> | null) => option?.label ?? ""}
 					onChange={(event) => setQuery(event.target.value)}
+					ref={inputRef}
 				/>
 				<ComboboxButton className="group absolute inset-y-0 right-0 px-2.5">
 					{/* <ChevronDownIcon className="size-4 fill-white/60 group-data-hover:fill-white" /> */}
@@ -53,6 +63,10 @@ export default function SelectMultiple<T>({ placeholder, options, selected, setS
 						key={idx}
 						value={option.value}
 						className="group flex cursor-pointer items-center gap-2 rounded-lg px-3 py-1.5 select-none data-focus:bg-white/10"
+						onClick={() => {
+							document.documentElement.focus();
+							inputRef.current?.focus();
+						}}
 					>
 						{/* <CheckIcon className="invisible size-4 fill-white group-data-selected:visible" /> */}
 						<div className="text-sm/6 text-white">{option.label}</div>
