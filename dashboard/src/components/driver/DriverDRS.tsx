@@ -9,11 +9,15 @@ type Props = {
 
 export default function DriverDRS({ on, possible, inPit, pitOut }: Props) {
 	const pit = inPit || pitOut;
+	const label = pit ? "PIT" : "OVTK";
+	const fullLabel = pit ? "PIT" : "OVERTAKE";
 
 	return (
 		<span
+			title={fullLabel}
+			aria-label={fullLabel}
 			className={clsx(
-				"text-md inline-flex h-8 w-full items-center justify-center rounded-md border-2 font-mono font-black",
+				"inline-flex h-8 w-full items-center justify-center rounded-md border-2 font-mono text-xs leading-none font-black tracking-tight sm:text-sm",
 				{
 					"border-zinc-700 text-zinc-700": !pit && !on && !possible,
 					"border-zinc-400 text-zinc-400": !pit && !on && possible,
@@ -22,7 +26,7 @@ export default function DriverDRS({ on, possible, inPit, pitOut }: Props) {
 				},
 			)}
 		>
-			{pit ? "PIT" : "DRS"}
+			{label}
 		</span>
 	);
 }
