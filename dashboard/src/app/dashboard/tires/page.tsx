@@ -1,5 +1,3 @@
-"use client";
-
 import OutingTable from "@/components/dashboard/OutingTable";
 
 export default function TiresPage() {
