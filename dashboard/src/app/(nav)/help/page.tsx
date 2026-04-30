@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 import Note from "@/components/Note";
 import DriverDRS from "@/components/driver/DriverDRS";
@@ -150,6 +151,14 @@ export default function HelpPage() {
 				We also show the different tires a driver can use and how many laps they have done on them. <br />
 				In this example, the driver has a soft tire which is 12 laps old and he pitted one time.
 			</p>
+
+			<Note className="mb-4">
+				For a complete history of all tire stints and outings during the session, you can visit the dedicated{" "}
+				<Link href="/dashboard/tires" className="text-blue-500 underline">
+					Tires
+				</Link>{" "}
+				page in the dashboard.
+			</Note>
 
 			<div className="mb-4">
 				<DriverTire
