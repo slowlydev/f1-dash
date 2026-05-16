@@ -14,7 +14,7 @@ export default function DriverHistoryTires({ stints }: Props) {
 		<div className="flex flex-row items-center justify-start gap-1">
 			{stints &&
 				stints.map((stint, i) => (
-					<div className="flex flex-col items-center gap-1" key={`driver.${i}`}>
+					<div className="flex flex-col items-center gap-1" key={`driver.stint.${i}`}>
 						{unknownCompound(stint) && <Image src={"/tires/unknown.svg"} width={32} height={32} alt="unknown" />}
 						{!unknownCompound(stint) && stint.Compound && (
 							<Image
@@ -25,7 +25,9 @@ export default function DriverHistoryTires({ stints }: Props) {
 							/>
 						)}
 
-						<p className="text-sm leading-none font-medium whitespace-nowrap text-zinc-600">{stint.TotalLaps}L</p>
+						<p className="whitespace-nowrap text-sm font-medium leading-none text-zinc-400">
+							{stint.TotalLaps}L{stint.New !== "TRUE" ? "*" : ""}
+						</p>
 					</div>
 				))}
 
