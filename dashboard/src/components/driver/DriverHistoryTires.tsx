@@ -26,7 +26,7 @@ export default function DriverHistoryTires({ stints }: Props) {
 						)}
 
 						<p className="whitespace-nowrap text-sm font-medium leading-none text-zinc-400">
-							{stint.TotalLaps}L{stint.New === "FALSE" ? "*" : ""}
+							{stint.TotalLaps}L{stint.New !== "TRUE" ? "*" : ""}
 						</p>
 					</div>
 				))}
