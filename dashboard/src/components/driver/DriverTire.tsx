@@ -35,7 +35,7 @@ export default function DriverTire({ stints }: Props) {
 			<div>
 				<p className="leading-none font-medium">
 					L {currentStint?.TotalLaps ?? 0}
-					{currentStint?.New === "TRUE" ? "" : "*"}
+					{currentStint?.New === "true" ? "" : "*"}
 				</p>
 
 				<p className="text-sm leading-none text-zinc-500">PIT {stops}</p>

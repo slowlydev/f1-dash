@@ -57,7 +57,7 @@ export type TimingAppDataDriver = {
 export type Stint = {
 	TotalLaps?: number;
 	Compound?: "SOFT" | "MEDIUM" | "HARD" | "INTERMEDIATE" | "WET";
-	New?: "TRUE" | "FALSE";
+	New?: "true" | "false";
 };
 
 export type WeatherData = {

@@ -11,22 +11,22 @@ export default function DriverHistoryTires({ stints }: Props) {
 		!["soft", "medium", "hard", "intermediate", "wet"].includes(stint.Compound?.toLowerCase() ?? "");
 
 	return (
-		<div className="flex flex-row items-center justify-start gap-1">
+		<div className="flex flex-row items-center justify-start gap-4">
 			{stints &&
 				stints.map((stint, i) => (
 					<div className="flex flex-col items-center gap-1" key={`driver.stint.${i}`}>
 						{unknownCompound(stint) && <Image src={"/tires/unknown.svg"} width={32} height={32} alt="unknown" />}
 						{!unknownCompound(stint) && stint.Compound && (
 							<Image
-								src={`/tires/${stint.Compound.toLowerCase()}.${"svg"}`}
-								width={32}
-								height={32}
+								src={`/tires/${stint.Compound.toLowerCase()}.svg`}
+								width={24}
+								height={24}
 								alt={stint?.Compound ?? ""}
 							/>
 						)}
 
-						<p className="whitespace-nowrap text-sm font-medium leading-none text-zinc-400">
-							{stint.TotalLaps}L{stint.New !== "TRUE" ? "*" : ""}
+						<p className="text-sm leading-none font-medium whitespace-nowrap text-zinc-400">
+							{stint.TotalLaps}L{stint.New === "false" ? "*" : ""}
 						</p>
 					</div>
 				))}
