@@ -9,5 +9,6 @@ compose.env
 **/target
 **/.txt
 *.txt
+*.sh
 # data
 *.data.*
