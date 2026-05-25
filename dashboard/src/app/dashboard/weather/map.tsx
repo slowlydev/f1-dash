@@ -83,7 +83,7 @@ export function WeatherMap() {
 				container: mapContainerRef.current,
 				style: "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json",
 				center: coords ? [coords.lon, coords.lat] : undefined,
-				zoom: 10,
+				zoom: 6,
 				canvasContextAttributes: {
 					antialias: true,
 				},
