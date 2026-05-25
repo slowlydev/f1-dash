@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Simplified Cadillac-style crest placeholder -->
+  <path d="M 10,20 L 90,20 L 70,80 L 30,80 Z" fill="#d4af37" stroke="#000" stroke-width="2"/>
+  <rect x="30" y="30" width="15" height="15" fill="#e32636" />
+  <rect x="55" y="30" width="15" height="15" fill="#000" />
+  <rect x="30" y="50" width="15" height="15" fill="#000" />
+  <rect x="55" y="50" width="15" height="15" fill="#e32636" />
+  <text x="50" y="95" font-family="sans-serif" font-size="12" fill="#fff" text-anchor="middle">CADILLAC</text>
+</svg>

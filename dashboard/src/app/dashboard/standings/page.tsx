@@ -1,127 +1,186 @@
 "use client";
 
-import { useDataStore } from "@/stores/useDataStore";
-
-import NumberDiff from "@/components/NumberDiff";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 
+type DriverStanding = {
+	position: string;
+	points: string;
+	Driver: {
+		givenName: string;
+		familyName: string;
+		permanentNumber: string;
+	};
+	Constructors: {
+		constructorId: string;
+		name: string;
+	}[];
+};
+
+type ConstructorStanding = {
+	position: string;
+	points: string;
+	Constructor: {
+		constructorId: string;
+		name: string;
+	};
+};
+
+const logoMapper: Record<string, string> = {
+	red_bull: "red-bull-racing",
+	mercedes: "mercedes",
+	ferrari: "ferrari",
+	mclaren: "mclaren",
+	alpine: "alpine",
+	rb: "racing-bulls",
+	haas: "haas-f1-team",
+	williams: "williams",
+	aston_martin: "aston-martin",
+	kick_sauber: "kick-sauber",
+	sauber: "kick-sauber",
+	alfa: "kick-sauber",
+};
+
+const getLogoFileName = (constructorId: string) => {
+	const mapped = logoMapper[constructorId.toLowerCase()];
+	return mapped || constructorId.toLowerCase();
+};
+
 export default function Standings() {
-	const driverStandings = useDataStore((state) => state.state?.ChampionshipPrediction?.Drivers);
-	const teamStandings = useDataStore((state) => state.state?.ChampionshipPrediction?.Teams);
+	const [driverStandings, setDriverStandings] = useState<DriverStanding[] | null>(null);
+	const [teamStandings, setTeamStandings] = useState<ConstructorStanding[] | null>(null);
+	const [error, setError] = useState<string | null>(null);
 
-	const drivers = useDataStore((state) => state.state?.DriverList);
+	useEffect(() => {
+		const fetchStandings = async () => {
+			try {
+				const [driversRes, constructorsRes] = await Promise.all([
+					fetch("https://api.jolpi.ca/ergast/f1/current/driverstandings.json"),
+					fetch("https://api.jolpi.ca/ergast/f1/current/constructorstandings.json"),
+				]);
 
-	const isRace = useDataStore((state) => state.state?.SessionInfo?.Type === "Race");
+				if (!driversRes.ok || !constructorsRes.ok) throw new Error("Failed to fetch data");
 
-	if (!isRace) {
-		return (
-			<div className="flex h-full w-full flex-col items-center justify-center">
-				<p>championship standings unavailable</p>
-				<p className="text-sm text-zinc-500">currently only available during a race</p>
-			</div>
-		);
-	}
+				const driversData = await driversRes.json();
+				const constructorsData = await constructorsRes.json();
+
+				setDriverStandings(driversData.MRData.StandingsTable.StandingsLists[0]?.DriverStandings || []);
+				setTeamStandings(constructorsData.MRData.StandingsTable.StandingsLists[0]?.ConstructorStandings || []);
+			} catch (err) {
+				setError("Failed to load championship standings");
+				console.error(err);
+			}
+		};
+
+		fetchStandings();
+	}, []);
 
 	return (
 		<div className="grid h-full grid-cols-1 divide-y divide-zinc-800 lg:grid-cols-2 lg:divide-x lg:divide-y-0">
 			<div className="h-full p-4">
 				<h2 className="text-xl">Driver Championship Standings</h2>
 
+				{error && <p className="mt-4 text-red-500">{error}</p>}
+
 				<div className="divide flex flex-col divide-y divide-zinc-800">
 					{!driverStandings &&
-						new Array(20).fill("").map((_, index) => <SkeletonItem key={`driver.loading.${index}`} />)}
+						!error &&
+						new Array(20).fill("").map((_, index) => <DriverSkeletonItem key={`driver.loading.${index}`} />)}
 
 					{driverStandings &&
-						drivers &&
-						Object.values(driverStandings)
-							.sort((a, b) => a.PredictedPosition - b.PredictedPosition)
-							.map((driver) => {
-								const driverDetails = drivers[driver.RacingNumber];
+						driverStandings.map((driver) => {
+							return (
+								<div
+									className="grid items-center p-2"
+									style={{
+										gridTemplateColumns: "2rem 1fr 4rem",
+									}}
+									key={driver.Driver.permanentNumber || driver.Driver.familyName}
+								>
+									<p className="font-bold">{driver.position}</p>
 
-								if (!driverDetails) {
-									return null;
-								}
+									<p className="truncate">
+										{driver.Driver.givenName} {driver.Driver.familyName}
+									</p>
 
-								return (
-									<div
-										className="grid p-2"
-										style={{
-											gridTemplateColumns: "2rem 2rem auto 4rem 4rem",
-										}}
-										key={driver.RacingNumber}
-									>
-										<NumberDiff old={driver.CurrentPosition} current={driver.PredictedPosition} />
-										<p>{driver.PredictedPosition}</p>
-
-										<p>
-											{driverDetails.FirstName} {driverDetails.LastName}
-										</p>
-
-										<p>{driver.PredictedPoints}</p>
-
-										<NumberDiff old={driver.PredictedPoints} current={driver.CurrentPoints} />
-									</div>
-								);
-							})}
+									<p className="text-right whitespace-nowrap">{driver.points} pts</p>
+								</div>
+							);
+						})}
 				</div>
 			</div>
 
 			<div className="h-full p-4">
 				<h2 className="text-xl">Team Championship Standings</h2>
 
+				{error && <p className="mt-4 text-red-500">{error}</p>}
+
 				<div className="divide flex flex-col divide-y divide-zinc-800">
-					{!teamStandings && new Array(10).fill("").map((_, index) => <SkeletonItem key={`team.loading.${index}`} />)}
+					{!teamStandings &&
+						!error &&
+						new Array(10).fill("").map((_, index) => <TeamSkeletonItem key={`team.loading.${index}`} />)}
 
 					{teamStandings &&
-						Object.values(teamStandings)
-							.sort((a, b) => a.PredictedPosition - b.PredictedPosition)
-							.map((team) => (
-								<div
-									className="grid p-2"
-									style={{
-										gridTemplateColumns: "2rem 2rem 2rem auto 4rem 4rem",
+						teamStandings.map((team) => (
+							<div
+								className="grid items-center gap-2 p-2"
+								style={{
+									gridTemplateColumns: "2rem 24px 1fr 4rem",
+								}}
+								key={team.Constructor.constructorId}
+							>
+								<p className="font-bold">{team.position}</p>
+
+								<Image
+									src={`/team-logos/${getLogoFileName(team.Constructor.constructorId)}.svg`}
+									alt={team.Constructor.name}
+									width={24}
+									height={24}
+									className="overflow-hidden rounded-lg object-contain"
+									onError={(e) => {
+										// Fallback if image not found
+										(e.currentTarget as HTMLImageElement).style.visibility = "hidden";
 									}}
-									key={team.TeamName}
-								>
-									<NumberDiff old={team.CurrentPosition} current={team.PredictedPosition} />
-									<p>{team.PredictedPosition}</p>
+								/>
 
-									<Image
-										src={`/team-logos/${team.TeamName.replaceAll(" ", "-").toLowerCase()}.${"svg"}`}
-										alt={team.TeamName}
-										width={24}
-										height={24}
-										className="overflow-hidden rounded-lg"
-									/>
+								<p className="truncate">{team.Constructor.name}</p>
 
-									<p>{team.TeamName}</p>
-
-									<p>{team.PredictedPoints}</p>
-
-									<NumberDiff old={team.PredictedPoints} current={team.CurrentPoints} />
-								</div>
-							))}
+								<p className="text-right whitespace-nowrap">{team.points} pts</p>
+							</div>
+						))}
 				</div>
 			</div>
 		</div>
 	);
 }
 
-const SkeletonItem = () => {
+const DriverSkeletonItem = () => {
 	return (
 		<div
-			className="grid gap-2 p-2"
+			className="grid items-center gap-2 p-2"
 			style={{
-				gridTemplateColumns: "2rem 2rem auto 4rem 4rem 4rem",
+				gridTemplateColumns: "2rem auto 4rem",
 			}}
 		>
 			<div className="h-4 w-4 animate-pulse rounded-md bg-zinc-800" />
+			<div className="h-4 w-32 animate-pulse rounded-md bg-zinc-800" />
+			<div className="ml-auto h-4 w-12 animate-pulse rounded-md bg-zinc-800" />
+		</div>
+	);
+};
+
+const TeamSkeletonItem = () => {
+	return (
+		<div
+			className="grid items-center gap-2 p-2"
+			style={{
+				gridTemplateColumns: "2rem 24px auto 4rem",
+			}}
+		>
 			<div className="h-4 w-4 animate-pulse rounded-md bg-zinc-800" />
-			<div className="h-4 w-4 animate-pulse rounded-md bg-zinc-800" />
-			<div className="h-4 w-16 animate-pulse rounded-md bg-zinc-800" />
-			<div className="h-4 w-8 animate-pulse rounded-md bg-zinc-800" />
-			<div className="h-4 w-8 animate-pulse rounded-md bg-zinc-800" />
-			<div className="h-4 w-4 animate-pulse rounded-md bg-zinc-800" />
+			<div className="h-6 w-6 animate-pulse rounded-md bg-zinc-800" />
+			<div className="h-4 w-32 animate-pulse rounded-md bg-zinc-800" />
+			<div className="ml-auto h-4 w-12 animate-pulse rounded-md bg-zinc-800" />
 		</div>
 	);
 };
