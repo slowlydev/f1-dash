@@ -8,7 +8,8 @@ compose.env
 # compiled
 **/target
 **/.txt
-*.txt
-*.sh
+
 # data
 *.data.*
+*.txt
+*.sh
