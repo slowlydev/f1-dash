@@ -27,9 +27,7 @@ export function WeatherMap() {
 	const [frames, setFrames] = useState<{ id: number; time: number }[]>([]);
 	const currentFrameRef = useRef<number>(0);
 
-	const handleMapLoad = async () => {
-		if (!mapRef.current) return;
-
+	const handleMapLoad = async (map: Map) => {
 		const rainviewer = await getRainviewer();
 		if (!rainviewer) return;
 
@@ -38,13 +36,20 @@ export function WeatherMap() {
 		for (let i = 0; i < pathFrames.length; i++) {
 			const frame = pathFrames[i];
 
-			mapRef.current.addLayer({
+			if (map.getLayer(`rainviewer-frame-${i}`)) {
+				continue;
+			}
+
+			map.addLayer({
 				id: `rainviewer-frame-${i}`,
 				type: "raster",
 				source: {
 					type: "raster",
-					tiles: [`${rainviewer.host}/${frame.path}/256/{z}/{x}/{y}/8/1_0.webp`],
+					tiles: [`${rainviewer.host}${frame.path}/256/{z}/{x}/{y}/8/1_0.webp`],
 					tileSize: 256,
+				},
+				layout: {
+					visibility: i <= 1 ? "visible" : "none",
 				},
 				paint: {
 					"raster-opacity": 0,
@@ -58,6 +63,9 @@ export function WeatherMap() {
 	};
 
 	useEffect(() => {
+		let isMounted = true;
+		let mapInstance: Map | null = null;
+
 		(async () => {
 			if (!mapContainerRef.current) return;
 
@@ -69,6 +77,7 @@ export function WeatherMap() {
 			]);
 
 			const coords = coordsC || coordsA;
+			if (!isMounted) return;
 
 			const libMap = new maplibregl.Map({
 				container: mapContainerRef.current,
@@ -81,22 +90,45 @@ export function WeatherMap() {
 			});
 
 			libMap.on("load", async () => {
+				if (!isMounted) return;
 				setLoading(false);
 
 				if (coords) {
 					new Marker().setLngLat([coords.lon, coords.lat]).addTo(libMap);
 				}
 
-				await handleMapLoad();
+				await handleMapLoad(libMap);
 			});
 
+			mapInstance = libMap;
 			mapRef.current = libMap;
 		})();
+
+		return () => {
+			isMounted = false;
+			if (mapInstance) {
+				mapInstance.remove();
+			}
+		};
 	}, [meeting]);
 
 	const setFrame = (idx: number) => {
-		mapRef.current?.setPaintProperty(`rainviewer-frame-${currentFrameRef.current}`, "raster-opacity", 0);
-		mapRef.current?.setPaintProperty(`rainviewer-frame-${idx}`, "raster-opacity", 0.8);
+		if (mapRef.current) {
+			mapRef.current.setLayoutProperty(`rainviewer-frame-${idx}`, "visibility", "visible");
+			
+			if (idx + 1 < frames.length) {
+				mapRef.current.setLayoutProperty(`rainviewer-frame-${idx + 1}`, "visibility", "visible");
+			}
+
+			mapRef.current.setPaintProperty(`rainviewer-frame-${currentFrameRef.current}`, "raster-opacity", 0);
+			mapRef.current.setPaintProperty(`rainviewer-frame-${idx}`, "raster-opacity", 0.8);
+			
+			if (currentFrameRef.current !== idx && currentFrameRef.current !== idx + 1) {
+				// Optional: hide old frames if needed, but keeping them visible (with 0 opacity) 
+				// allows them to stay cached in Mapbox's render tree without re-requesting if panned.
+			}
+		}
+
 		currentFrameRef.current = idx;
 	};
 
