@@ -22,7 +22,7 @@ mod endpoints {
 async fn main() -> Result<(), Error> {
     tracing_subscriber();
 
-    let addr = env::var("ADDRESS").unwrap_or_else(|_| "0.0.0.0:80".to_string());
+    let addr = env::var("ADDRESS").unwrap_or_else(|_| "0.0.0.0:10000".to_string());
 
     let app = Router::new()
         .route("/api/schedule", get(endpoints::schedule::get))
