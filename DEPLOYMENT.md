@@ -100,7 +100,7 @@ If your CI/CD has already pushed images to GHCR (via the `release.yaml` workflow
    | `ORIGIN`   | `https://your-app-name.vercel.app`             |
 
    > [!WARNING]
-   > The `ORIGIN` value must match your Vercel deployment URL exactly. You can update this after deploying the dashboard in Step 2. Separate multiple origins with `;` if needed (e.g., `https://f1-dash.vercel.app;http://localhost:3000`).
+   > The `ORIGIN` value must match your Vercel deployment URL exactly **without a trailing slash** (e.g. `https://f1-dash.vercel.app`, NOT `https://f1-dash.vercel.app/`). You can update this after deploying the dashboard in Step 2. Separate multiple origins with `;` if needed (e.g., `https://f1-dash.vercel.app;http://localhost:3000`).
 
 6. Click **Deploy Web Service**
 7. Note down the service URL (e.g., `https://f1-dash-api.onrender.com`)
@@ -142,10 +142,13 @@ If you don't have pre-built images, Render can build from your Dockerfile.
    - **Root Directory**: `.` (project root)
    - **Runtime**: **Docker**
    - **Dockerfile Path**: `./dockerfile`
-   - **Docker Build Target**: `api` (or `realtime`)
+   - **Docker Command**: `/api` (for the API service) or `/realtime` (for the realtime service)
    - **Instance Type**: **Free**
 4. Set the same environment variables as Option A above
 5. Deploy
+
+> [!IMPORTANT]
+> The free tier on Render does not support the `Docker Build Target` setting. We build a single image containing both binaries, and use the **Docker Command** setting to specify which binary to run (`/api` or `/realtime`).
 
 > [!NOTE]
 > Building Rust from source on Render's free tier may be slow (~10-15 min) and could run into memory limits. Pre-built Docker images (Option A) are strongly recommended.
