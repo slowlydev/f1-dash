@@ -1,6 +1,6 @@
 FROM rust:alpine AS base
 
-RUN apk add --no-cache musl-dev pkgconfig openssl-libs-static openssl-dev
+RUN apk add --no-cache musl-dev pkgconfig
 
 FROM base AS builder-base
 WORKDIR /usr/src/app

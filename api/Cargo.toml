@@ -13,7 +13,7 @@ tokio = { version = "1.45.1", features = ["full"] }
 tracing = "0.1.41"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
-reqwest = { version = "0.13.1", features = ["native-tls", "json"] }
+reqwest = { version = "0.13.1", default-features = false, features = ["rustls", "webpki-roots", "json"] }
 anyhow = "1.0.98"
 ical = "0.11"
 chrono = { version = "0.4", features = ["serde"] }

@@ -1,3 +1,4 @@
+
 # 🏎️ F1-Dash Free Tier Deployment Guide
 
 Deploy f1-dash for a race weekend using **100% free tier services** — no credit card required.
