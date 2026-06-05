@@ -1,8 +1,6 @@
 .next/
 .vscode/
-.yarn/
 node_modules/
-./.yarn/
 
 .dockeringore
 
