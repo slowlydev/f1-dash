@@ -18,11 +18,6 @@ FROM builder-base AS builder
 RUN cargo b -r
 
 
-FROM alpine:3 AS api
+FROM alpine:3 AS runtime
 COPY --from=builder /usr/src/app/target/release/api .
-CMD [ "/api" ]
-
-
-FROM alpine:3 AS realtime
 COPY --from=builder /usr/src/app/target/release/realtime .
-CMD [ "/realtime" ]
