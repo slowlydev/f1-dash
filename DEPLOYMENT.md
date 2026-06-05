@@ -126,7 +126,7 @@ If your CI/CD has already pushed images to GHCR (via the `release.yaml` workflow
    | `ORIGIN`   | `https://your-app-name.vercel.app`             |
 
    > [!IMPORTANT]
-   > Do **NOT** set `F1_DEV_URL`. This variable is only for local development with the simulator. In production, the realtime service automatically connects to `livetiming.formula1.com/signalr`.
+   > Do **NOT** set `F1_DEV_URL`. This variable is only for local development with the simulator. In production, the realtime service automatically connects to `livetiming.formula1.com/signalrcore`.
 
 6. Click **Deploy Web Service**
 7. Note down the service URL (e.g., `https://f1-dash-realtime.onrender.com`)

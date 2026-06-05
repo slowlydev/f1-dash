@@ -6,7 +6,7 @@ use tracing::{error, trace, warn};
 
 use crate::services::state_service::StateService;
 
-const URL: &str = "livetiming.formula1.com/signalr";
+const URL: &str = "livetiming.formula1.com/signalrcore";
 const HUB: &str = "Streaming";
 
 const TOPICS: [&str; 17] = [
