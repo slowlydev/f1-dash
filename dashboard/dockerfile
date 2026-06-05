@@ -1,11 +1,9 @@
 FROM node:24-alpine AS dependencies
 
 WORKDIR /app
-COPY package*.json yarn.lock .yarnrc.yml ./
+COPY package*.json ./
 
-RUN corepack enable
-
-RUN yarn install --immutable
+RUN npm ci
 
 FROM dependencies AS builder
 
@@ -16,7 +14,7 @@ ENV NEXT_NO_COMPRESS=1
 
 COPY . .
 
-RUN yarn build
+RUN npm run build
 
 FROM node:24-alpine AS runtime
 
