@@ -1,126 +1,60 @@
-'use client';
-
 import { type ReactNode } from 'react';
-import { AnimatePresence, motion } from 'motion/react';
+import { cookies } from 'next/headers';
 
-import { useDataEngine } from '@/hooks/useDataEngine';
-import { useWakeLock } from '@/hooks/useWakeLock';
-import { useStores } from '@/hooks/useStores';
-import { useSocket } from '@/hooks/useSocket';
-
-import { useSettingsStore } from '@/stores/useSettingsStore';
-import { useSidebarStore } from '@/stores/useSidebarStore';
-import { useDataStore } from '@/stores/useDataStore';
-
-import Sidebar from '@/components/Sidebar';
-import SidenavButton from '@/components/SidenavButton';
-import SessionInfo from '@/components/SessionInfo';
-import WeatherInfo from '@/components/WeatherInfo';
-import TrackInfo from '@/components/TrackInfo';
-import DelayInput from '@/components/DelayInput';
-import DelayTimer from '@/components/DelayTimer';
-import ConnectionStatus from '@/components/ConnectionStatus';
+import DashboardClientLayout from './DashboardClientLayout';
+import PinModal from '@/components/PinModal';
 
 type Props = {
 	children: ReactNode;
 };
 
-export default function DashboardLayout({ children }: Props) {
-	const stores = useStores();
-	const { handleInitial, handleUpdate, maxDelay } = useDataEngine(stores);
-	const { connected } = useSocket({ handleInitial, handleUpdate });
+export default async function DashboardLayout({ children }: Props) {
+	const requiredPin = process.env.DASHBOARD_PIN;
 
-	const delay = useSettingsStore((state) => state.delay);
-	const syncing = delay > maxDelay;
+	// If DASHBOARD_PIN is not set, bypass PIN protection entirely.
+	if (!requiredPin) {
+		return <DashboardClientLayout>{children}</DashboardClientLayout>;
+	}
 
-	useWakeLock();
+	// PIN is configured — check the cookie.
+	const cookieStore = await cookies();
+	const pinCookie = cookieStore.get('f1-dash-pin');
+	const isAuthenticated = pinCookie?.value === requiredPin;
 
-	const ended = useDataStore(({ state }) => state?.SessionStatus?.Status === 'Ends');
+	if (isAuthenticated) {
+		return <DashboardClientLayout>{children}</DashboardClientLayout>;
+	}
 
+	// Not authenticated — show blurred placeholder + PIN modal.
 	return (
-		<div className="flex h-screen w-full md:pt-2 md:pr-2 md:pb-2">
-			<Sidebar key="sidebar" connected={connected} />
+		<div className="relative h-screen w-full overflow-hidden">
+			{/* Blurred dummy background that hints at the dashboard UI */}
+			<div className="pointer-events-none absolute inset-0 select-none blur-xl brightness-50">
+				<div className="flex h-full w-full md:pt-2 md:pr-2 md:pb-2">
+					{/* Fake sidebar */}
+					<div className="hidden h-full w-56 shrink-0 border-r border-zinc-800 md:block" />
 
-			<motion.div layout="size" className="flex h-full w-full flex-1 flex-col md:gap-2">
-				<DesktopStaticBar show={!syncing || ended} />
-				<MobileStaticBar show={!syncing || ended} connected={connected} />
+					<div className="flex h-full w-full flex-1 flex-col gap-2 p-2">
+						{/* Fake top bar */}
+						<div className="h-12 w-full rounded-lg border border-zinc-800 bg-zinc-900" />
 
-				<div
-					className={
-						!syncing || ended ? 'no-scrollbar w-full flex-1 overflow-auto md:rounded-lg' : 'hidden'
-					}
-				>
-					<MobileDynamicBar />
-					{children}
+						{/* Fake content grid */}
+						<div className="flex flex-1 gap-2">
+							<div className="flex-1 rounded-lg border border-zinc-800 bg-zinc-900/60" />
+							<div className="hidden w-80 rounded-lg border border-zinc-800 bg-zinc-900/40 2xl:block" />
+						</div>
+
+						{/* Fake bottom panels */}
+						<div className="grid grid-cols-3 gap-2">
+							<div className="h-40 rounded-lg border border-zinc-800 bg-zinc-900/50" />
+							<div className="h-40 rounded-lg border border-zinc-800 bg-zinc-900/50" />
+							<div className="h-40 rounded-lg border border-zinc-800 bg-zinc-900/50" />
+						</div>
+					</div>
 				</div>
-
-				<div
-					className={
-						syncing && !ended
-							? 'flex h-full flex-1 flex-col items-center justify-center gap-2 border-zinc-800 md:rounded-lg md:border'
-							: 'hidden'
-					}
-				>
-					<h1 className="my-20 text-center text-5xl font-bold">Syncing...</h1>
-					<p>Please wait for {delay - maxDelay} seconds.</p>
-					<p>Or make your delay smaller.</p>
-				</div>
-			</motion.div>
-		</div>
-	);
-}
-
-function MobileDynamicBar() {
-	return (
-		<div className="flex flex-col divide-y divide-zinc-800 border-b border-zinc-800 md:hidden">
-			<div className="p-2">
-				<SessionInfo />
-			</div>
-			<div className="p-2">
-				<WeatherInfo />
-			</div>
-		</div>
-	);
-}
-
-function MobileStaticBar({ show, connected }: { show: boolean; connected: boolean }) {
-	const open = useSidebarStore((state) => state.open);
-
-	return (
-		<div className="flex w-full items-center justify-between overflow-hidden border-b border-zinc-800 p-2 md:hidden">
-			<div className="flex items-center gap-2">
-				<SidenavButton key="mobile" onClick={() => open()} />
-
-				<DelayInput saveDelay={500} />
-				<DelayTimer />
-
-				<ConnectionStatus connected={connected} />
 			</div>
 
-			{show && <TrackInfo />}
-		</div>
-	);
-}
-
-function DesktopStaticBar({ show }: { show: boolean }) {
-	const pinned = useSidebarStore((state) => state.pinned);
-	const pin = useSidebarStore((state) => state.pin);
-
-	return (
-		<div className="hidden w-full flex-row justify-between overflow-hidden rounded-lg border border-zinc-800 p-2 md:flex">
-			<div className="flex items-center gap-2">
-				<AnimatePresence>
-					{!pinned && <SidenavButton key="desktop" className="shrink-0" onClick={() => pin()} />}
-
-					<motion.div key="session-info" layout="position">
-						<SessionInfo />
-					</motion.div>
-				</AnimatePresence>
-			</div>
-
-			<div className="hidden md:items-center lg:flex">{show && <WeatherInfo />}</div>
-
-			<div className="flex justify-end">{show && <TrackInfo />}</div>
+			<PinModal />
 		</div>
 	);
 }
