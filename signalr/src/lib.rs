@@ -200,40 +200,34 @@ pub async fn subscribe(
 
     debug!("subscribe invocation sent, waiting for completion...");
 
-    let response = client
-        .stream
-        .next()
-        .await
-        .ok_or_else(|| anyhow::anyhow!("No response received from server"))??;
+    loop {
+        let response = client
+            .stream
+            .next()
+            .await
+            .ok_or_else(|| anyhow::anyhow!("No response received from server"))??;
 
-    let Message::Text(txt) = response else {
-        return Err(anyhow::anyhow!("Unexpected message type: {:?}", response));
-    };
+        let Message::Text(txt) = response else {
+            continue;
+        };
 
-    let completion = deserialize::<Completion>(&txt)?;
+        for msg in split_messages(&txt) {
+            let Ok(completion) = deserialize::<Completion>(msg) else {
+                continue;
+            };
 
-    if completion.r#type != COMPLETION {
-        return Err(anyhow::anyhow!(
-            "Unexpected message type: {}",
-            completion.r#type
-        ));
-    };
+            if completion.r#type != COMPLETION || completion.invocation_id != invocation_id {
+                continue;
+            }
 
-    if completion.invocation_id != invocation_id {
-        return Err(anyhow::anyhow!(
-            "Unexpected invocation id: {}",
-            completion.invocation_id
-        ));
-    }
+            if let Some(error) = completion.error {
+                return Err(anyhow::anyhow!("Server error: {}", error));
+            }
 
-    if let Some(error) = completion.error {
-        return Err(anyhow::anyhow!("Server error: {}", error));
-    }
-
-    if let Some(result) = completion.result {
-        return Ok(result);
-    } else {
-        return Err(anyhow::anyhow!("No result received"));
+            return completion
+                .result
+                .ok_or_else(|| anyhow::anyhow!("No result received"));
+        }
     }
 }
 
@@ -279,7 +273,13 @@ pub fn listen(client: SignalrClient) -> impl Stream<Item = Vec<UpdateArgs>> {
             let mut results = Vec::new();
 
             for msg in messages {
-                let invocation = deserialize::<FeedMessage>(&msg).unwrap();
+                let invocation = match deserialize::<FeedMessage>(msg) {
+                    Ok(invocation) => invocation,
+                    Err(err) => {
+                        debug!(?err, frame = msg, "skipping non-feed signalr frame");
+                        continue;
+                    }
+                };
 
                 if invocation.r#type != INVOCATION || invocation.target != "feed" {
                     continue;
