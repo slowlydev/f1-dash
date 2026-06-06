@@ -1,7 +1,5 @@
 export const toOrdinal = (position: number) => {
-	const n = position % 10;
-
-	switch (n) {
+	switch (position % 10) {
 		case 1:
 			return `${position}st`;
 		case 2:
