@@ -13,7 +13,7 @@
 		"@headlessui/react": "2.2.10",
 		"clsx": "2.1.1",
 		"geist": "1.7.0",
-		"maplibre-gl": "5.23.0",
+		"maplibre-gl": "5.24.0",
 		"moment": "2.30.1",
 		"motion": "12.38.0",
 		"next": "^16.2.4",
