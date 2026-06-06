@@ -86,7 +86,7 @@ fn find_round_mut<'a>(rounds: &'a mut Vec<Round>, name: &str) -> Option<&'a mut 
 }
 
 fn parse_name(full_name: &str) -> Option<(String, String)> {
-    let regex = Regex::new(r"FORMULA 1 (?P<name>.+) - (?P<kind>.+)").ok()?;
+    let regex = Regex::new(r"FORMULA 1 (?P<name>.+?\d{4})\s*(?:-|\u2013)\s*(?P<kind>.+)").ok()?;
     let captures = regex.captures(full_name)?;
     Some((captures["name"].to_owned(), captures["kind"].to_owned()))
 }
