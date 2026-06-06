@@ -1,0 +1,21 @@
+[package]
+name = "api"
+version = "0.4.0"
+edition = "2024"
+publish = false
+authors = ["slowlydev"]
+
+[dependencies]
+shared = { workspace = true }
+axum = { version = "0.8.4", features = ["http2"] }
+tower-http = { version = "0.6.4", features = ["cors"] }
+tokio = { version = "1.45.1", features = ["full"] }
+tracing = "0.1.41"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+reqwest = { version = "0.13.1", features = ["native-tls", "json"] }
+anyhow = "1.0.98"
+ical = "0.11"
+chrono = { version = "0.4", features = ["serde"] }
+cached = { version = "0.56.0", features = ["disk_store", "async"] }
+regex = "1.12.2"

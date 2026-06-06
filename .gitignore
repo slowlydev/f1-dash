@@ -1,0 +1,12 @@
+# os
+.DS_Store
+
+# creds
+.env
+compose.env
+
+# compiled
+**/target
+
+# data
+*.data.*

@@ -1,0 +1,52 @@
+---
+#                         __
+# .-----.-----.----.--.--|__.----.-----.-----.
+# |__ --|  -__|   _|  |  |  |  __|  -__|__ --|
+# |_____|_____|__|  \___/|__|____|_____|_____|
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: f1-dash-web
+  namespace: f1-dash
+  labels:
+    app: f1-dash-web
+spec:
+  ports:
+    - name: f1-dash-web
+      port: 3000
+      targetPort: 3000
+  selector:
+    app: f1-dash-web
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: f1-dash-realtime
+  namespace: f1-dash
+  labels:
+    app: f1-dash-realtime
+spec:
+  ports:
+    - name: f1-dash-realtime
+      port: 80
+      targetPort: 80
+  selector:
+    app: f1-dash-realtime
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: f1-dash-api
+  namespace: f1-dash
+  labels:
+    app: f1-dash-api
+spec:
+  ports:
+    - name: f1-dash-api
+      port: 80
+      targetPort: 80
+  selector:
+    app: f1-dash-api

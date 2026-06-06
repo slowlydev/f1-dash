@@ -1,0 +1,36 @@
+FROM node:24-alpine AS dependencies
+
+WORKDIR /app
+COPY package*.json yarn.lock .yarnrc.yml ./
+
+RUN corepack enable
+
+RUN yarn install --immutable
+
+FROM dependencies AS builder
+
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV SKIP_ENV_VALIDATION=1
+ENV NEXT_STANDALONE=1
+ENV NEXT_NO_COMPRESS=1
+
+COPY . .
+
+RUN yarn build
+
+FROM node:24-alpine AS runtime
+
+WORKDIR /app
+
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
+
+ENV NEXT_TELEMETRY_DISABLED=1
+
+ENV NODE_ENV=production
+ENV HOSTNAME="0.0.0.0"
+
+EXPOSE 3000
+
+ENTRYPOINT [ "node", "server.js" ]

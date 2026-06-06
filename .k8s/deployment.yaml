@@ -1,0 +1,133 @@
+---
+#     __             __                                  __
+# .--|  .-----.-----|  .-----.--.--.--------.-----.-----|  |-.-----.
+# |  _  |  -__|  _  |  |  _  |  |  |        |  -__|     |   _|__ --|
+# |_____|_____|   __|__|_____|___  |__|__|__|_____|__|__|____|_____|
+#             |__|           |_____|
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: f1-dash-realtime
+  namespace: f1-dash
+  labels:
+    app: f1-dash-realtime
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: f1-dash-realtime
+  template:
+    metadata:
+      labels:
+        app: f1-dash-realtime
+    spec:
+      containers:
+        - name: realtime
+          image: ghcr.io/slowlydev/f1-dash-realtime:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: 80
+            initialDelaySeconds: 10
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          env:
+            - name: RUST_LOG
+              value: "realtime=debug"
+            - name: ADDRESS
+              value: "0.0.0.0:80"
+            - name: ORIGIN
+              value: "https://f1-dash.com"
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: f1-dash-api
+  namespace: f1-dash
+  labels:
+    app: f1-dash-api
+spec:
+  selector:
+    matchLabels:
+      app: f1-dash-api
+  template:
+    metadata:
+      labels:
+        app: f1-dash-api
+    spec:
+      containers:
+        - name: api
+          image: ghcr.io/slowlydev/f1-dash-api:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "100m"
+            requests:
+              memory: "64Mi"
+              cpu: "20m"
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: 80
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: 80
+          env:
+            - name: ORIGIN
+              value: "https://f1-dash.com"
+            - name: API_ADDRESS
+              value: "0.0.0.0:80"
+            - name: RUST_LOG
+              value: "api=debug"
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: f1-dash-web
+  namespace: f1-dash
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: f1-dash-web
+  template:
+    metadata:
+      labels:
+        app: f1-dash-web
+    spec:
+      containers:
+        - name: web
+          image: ghcr.io/slowlydev/f1-dash:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
+          resources:
+            requests:
+              memory: 256Mi
+              cpu: 500m
+            limits:
+              memory: 1Gi
+              cpu: 1000m
+          env:
+            - name: NEXT_PUBLIC_LIVE_URL
+              value: "https://rt-api.f1-dash.com"
+            - name: API_URL
+              value: "https://api.f1-dash.com"
+            - name: DISABLE_IFRAME
+              value: "1"

@@ -1,0 +1,11 @@
+plugins:
+  - prettier-plugin-tailwindcss
+
+arrowParens: always
+semi: true
+printWidth: 120
+singleQuote: false
+useTabs: true
+tabWidth: 2
+trailingComma: all
+endOfLine: lf
