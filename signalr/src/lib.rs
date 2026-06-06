@@ -172,7 +172,6 @@ struct InvocationMessage {
 #[serde(rename_all = "camelCase")]
 struct FeedMessage {
     r#type: i32,
-    invocation_id: String,
     target: String,
     arguments: (String, Value, String),
 }
