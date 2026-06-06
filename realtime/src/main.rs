@@ -17,7 +17,7 @@ async fn main() -> Result<(), Error> {
 
     let state_service = StateService::new();
 
-    let (sender, _) = broadcast::channel::<String>(16);
+    let (sender, _reciver) = broadcast::channel::<String>(16);
 
     {
         let state_service = state_service.clone();
