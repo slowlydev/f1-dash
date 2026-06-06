@@ -200,9 +200,6 @@ pub async fn subscribe(
 
     debug!("subscribe invocation sent, waiting for completion...");
 
-    // The Completion for our Subscribe invocation may not be the very next frame:
-    // SignalR Core can send ping/other frames first. Read until we find the
-    // Completion whose invocation id matches ours, skipping everything else.
     loop {
         let response = client
             .stream
@@ -276,9 +273,6 @@ pub fn listen(client: SignalrClient) -> impl Stream<Item = Vec<UpdateArgs>> {
             let mut results = Vec::new();
 
             for msg in messages {
-                // SignalR Core interleaves non-feed frames (ping `{"type":6}`,
-                // completion, close) that don't match FeedMessage's shape. Skip them
-                // instead of unwrapping into a panic that kills the ingest task.
                 let invocation = match deserialize::<FeedMessage>(msg) {
                     Ok(invocation) => invocation,
                     Err(err) => {
