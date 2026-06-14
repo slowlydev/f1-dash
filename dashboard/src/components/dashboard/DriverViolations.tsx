@@ -1,6 +1,7 @@
 import type { Driver, TimingData } from "@/types/state.type";
 
 import { calculatePosition } from "@/lib/calculatePosition";
+import { toOrdinal } from "@/lib/toOrdinal";
 
 import DriverTag from "@/components/driver/DriverTag";
 
@@ -22,8 +23,10 @@ export default function DriverViolations({ driver, driverViolations, driversTimi
 				</p>
 				{driverViolations > 4 && driversTiming && (
 					<p>
-						{calculatePosition(Math.round(driverViolations / 5) * 5, driver.RacingNumber, driversTiming)}
-						th after penalty
+						{toOrdinal(
+							calculatePosition(Math.round(driverViolations / 5) * 5, driver.RacingNumber, driversTiming) ?? 0,
+						)}{" "}
+						after penalty
 					</p>
 				)}
 			</div>
