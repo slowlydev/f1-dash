@@ -35,3 +35,5 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 /.yarn
+# copied from node_modules at build time
+/public/maplibre-gl-worker.mjs
