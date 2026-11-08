@@ -1,10 +1,12 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import clsx from "clsx";
 
-import type { PositionCar, TimingDataDriver } from "@/types/state.type";
+import type { TimingDataDriver } from "@/types/state.type";
 import type { Map, TrackPosition } from "@/types/map.type";
 
 import { fetchMap } from "@/lib/fetchMap";
+import { createCarMotion } from "@/lib/carMotion";
+import { toMillis } from "@/lib/lapTime";
 
 import { useDataStore } from "@/stores/useDataStore";
 import { useSettingsStore } from "@/stores/useSettingsStore";
@@ -25,77 +27,24 @@ import {
 const SPACE = 1000;
 const ROTATION_FIX = 90;
 
-// Function to calculate driver position based on their segment progress
-function getDriverPosition(
-	timingDriver: TimingDataDriver | undefined,
-	originalTrackPoints: { x: number; y: number }[] | null,
-): PositionCar | null {
-	if (!timingDriver || !originalTrackPoints || originalTrackPoints.length === 0) {
-		return null;
-	}
+type TrackPoint = { x: number; y: number };
 
-	// Get all segments from all sectors
-	const allSegments = timingDriver.Sectors.flatMap((sector) => sector.Segments);
+// Mini sectors completed in the current lap, the only track position in the feed
+function getCompletedSegments(timingDriver: TimingDataDriver) {
+	const segments = timingDriver.Sectors.flatMap((sector) => sector.Segments);
+	const lastCompleted = segments.findLastIndex((segment) => segment.Status !== undefined && segment.Status > 0);
 
-	if (allSegments.length === 0) {
-		// No segments available, position at start/finish line
-		return {
-			Status: "OnTrack",
-			X: originalTrackPoints[0].x,
-			Y: originalTrackPoints[0].y,
-			Z: 0,
-		};
-	}
+	return { completed: lastCompleted + 1, total: segments.length };
+}
 
-	// Find the furthest segment with a meaningful status
-	// Status values: 0 = not started, 1 = in progress, 2+ = completed
-	let furthestSegmentIndex = -1;
-	for (let i = allSegments.length - 1; i >= 0; i--) {
-		const status = allSegments[i].Status;
-		if (status !== undefined && status > 0) {
-			furthestSegmentIndex = i;
-			break;
-		}
-	}
+function getPointAtProgress(points: TrackPoint[], progress: number): TrackPoint {
+	const position = (progress - Math.floor(progress)) * (points.length - 1);
+	const index = Math.floor(position);
+	const current = points[index];
+	const next = points[Math.min(index + 1, points.length - 1)];
+	const ratio = position - index;
 
-	// If no completed segments found, check for any segment with status 0 (current segment)
-	if (furthestSegmentIndex === -1) {
-		for (let i = 0; i < allSegments.length; i++) {
-			if (allSegments[i].Status !== undefined) {
-				furthestSegmentIndex = i;
-				break;
-			}
-		}
-	}
-
-	// Still no segments found, default to start
-	if (furthestSegmentIndex === -1) {
-		furthestSegmentIndex = 0;
-	}
-
-	// Calculate position index based on segment progress
-	// Add small offset for in-progress segments to show forward movement
-	const baseRatio = furthestSegmentIndex / Math.max(allSegments.length - 1, 1);
-	const currentSegmentStatus = allSegments[furthestSegmentIndex]?.Status || 0;
-
-	// Add fractional progress within current segment if it's in progress (status 1)
-	const segmentProgress = currentSegmentStatus === 1 ? 0.5 : 0;
-	const segmentSize = 1 / Math.max(allSegments.length, 1);
-	const adjustedRatio = baseRatio + segmentProgress * segmentSize;
-
-	const positionIndex = Math.floor(adjustedRatio * (originalTrackPoints.length - 1));
-
-	// Ensure we don't go out of bounds
-	const safeIndex = Math.min(Math.max(positionIndex, 0), originalTrackPoints.length - 1);
-
-	const trackPoint = originalTrackPoints[safeIndex];
-
-	return {
-		Status: "OnTrack",
-		X: trackPoint.x,
-		Y: trackPoint.y,
-		Z: 0,
-	};
+	return { x: current.x + (next.x - current.x) * ratio, y: current.y + (next.y - current.y) * ratio };
 }
 
 type Corner = {
@@ -286,10 +235,8 @@ export default function Map({ filter }: Props) {
 								: false;
 							const pit = timingDriver ? timingDriver.InPit : false;
 
-							const driverPosition = getDriverPosition(timingDriver, originalTrackPoints);
-
 							// Skip rendering if we can't determine position
-							if (!driverPosition) return null;
+							if (!timingDriver || !originalTrackPoints || originalTrackPoints.length === 0) return null;
 
 							return (
 								<CarDot
@@ -299,7 +246,8 @@ export default function Map({ filter }: Props) {
 									color={driver.TeamColour}
 									pit={pit}
 									hidden={hidden}
-									pos={driverPosition}
+									timingDriver={timingDriver}
+									trackPoints={originalTrackPoints}
 									rotation={rotation}
 									centerX={centerX}
 									centerY={centerY}
@@ -334,23 +282,63 @@ type CarDotProps = {
 	pit: boolean;
 	hidden: boolean;
 
-	pos: PositionCar;
+	timingDriver: TimingDataDriver;
+	trackPoints: TrackPoint[];
 	rotation: number;
 
 	centerX: number;
 	centerY: number;
 };
 
-const CarDot = ({ pos, name, color, favoriteDriver, pit, hidden, rotation, centerX, centerY }: CarDotProps) => {
-	const rotatedPos = rotate(pos.X, pos.Y, rotation, centerX, centerY);
-	const transform = [`translateX(${rotatedPos.x}px)`, `translateY(${rotatedPos.y}px)`].join(" ");
+const CarDot = ({
+	timingDriver,
+	trackPoints,
+	name,
+	color,
+	favoriteDriver,
+	pit,
+	hidden,
+	rotation,
+	centerX,
+	centerY,
+}: CarDotProps) => {
+	const dotRef = useRef<SVGGElement>(null);
+	const [carMotion] = useState(createCarMotion);
+
+	useEffect(() => {
+		carMotion.observe(
+			{
+				...getCompletedSegments(timingDriver),
+				inPit: timingDriver.InPit || timingDriver.PitOut,
+				fallbackLapMs: toMillis(timingDriver.LastLapTime?.Value),
+			},
+			performance.now(),
+		);
+	}, [carMotion, timingDriver]);
+
+	useEffect(() => {
+		let frame: number;
+
+		const draw = () => {
+			const point = getPointAtProgress(trackPoints, carMotion.progressAt(performance.now()) ?? 0);
+			const rotated = rotate(point.x, point.y, rotation, centerX, centerY);
+
+			if (dotRef.current) dotRef.current.style.transform = `translate(${rotated.x}px, ${rotated.y}px)`;
+
+			frame = requestAnimationFrame(draw);
+		};
+
+		frame = requestAnimationFrame(draw);
+
+		return () => cancelAnimationFrame(frame);
+	}, [carMotion, trackPoints, rotation, centerX, centerY]);
 
 	return (
 		<g
+			ref={dotRef}
 			className={clsx("fill-zinc-700", { "opacity-30": pit }, { "opacity-0!": hidden })}
 			style={{
-				transition: "all 1s linear",
-				transform,
+				transition: "opacity 1s linear",
 				...(color && { fill: `#${color}` }),
 			}}
 		>
