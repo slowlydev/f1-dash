@@ -1,13 +1,18 @@
 use anyhow::Error;
 use serde_json::json;
-use tokio::sync::broadcast::Sender;
+use tokio::{sync::broadcast::Sender, time::Duration};
 use tokio_stream::StreamExt;
-use tracing::{error, trace, warn};
+use tracing::{error, info, trace, warn};
 
 use crate::services::state_service::StateService;
 
 const URL: &str = "livetiming.formula1.com/signalrcore";
 const HUB: &str = "Streaming";
+
+/// If no feed update arrives within this window the connection is considered
+/// idle or dead (e.g. the session ended or the socket silently dropped) and we
+/// return so the caller reconnects and picks up the next session.
+const IDLE_TIMEOUT: Duration = Duration::from_secs(90);
 
 const TOPICS: [&str; 17] = [
     "Heartbeat",
@@ -40,7 +45,16 @@ pub async fn ingest_f1(
 
     let mut stream = signalr::listen(client);
 
-    while let Some(items) = stream.next().await {
+    loop {
+        let items = match tokio::time::timeout(IDLE_TIMEOUT, stream.next()).await {
+            Ok(Some(items)) => items,
+            Ok(None) => break,
+            Err(_) => {
+                info!(timeout = ?IDLE_TIMEOUT, "no updates received, reconnecting...");
+                return Ok(());
+            }
+        };
+
         for update in items {
             trace!(?update.topic, "received update");
 
