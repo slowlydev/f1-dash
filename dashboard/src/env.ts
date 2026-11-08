@@ -34,10 +34,10 @@ const processEnv = {
 
 export const PUBLIC_ENV_KEY = "__ENV";
 
-const fullSchema = server.merge(client);
+const fullSchema = server.extend(client.shape);
 type Env = z.input<typeof fullSchema>;
 
-type SPR = z.SafeParseReturnType<Env, Env>;
+type SPR = z.ZodSafeParseResult<Env>;
 
 declare global {
 	interface Window {

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
-import maplibregl, { Map, Marker } from "maplibre-gl";
+import { Map, Marker, setWorkerUrl } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 
 import { fetchCoords } from "@/lib/geocode";
@@ -13,6 +13,11 @@ import { useDataStore } from "@/stores/useDataStore";
 import PlayControls from "@/components/ui/PlayControls";
 
 import Timeline from "./map-timeline";
+
+// maplibre-gl v6 resolves its worker relative to the bundled chunk, which the
+// Next.js bundler does not emit; serve it from public/ instead (see the
+// copy-maplibre-worker script in package.json).
+setWorkerUrl("/maplibre-gl-worker.mjs");
 
 export function WeatherMap() {
 	const meeting = useDataStore((state) => state.state?.SessionInfo?.Meeting);
@@ -73,7 +78,7 @@ export function WeatherMap() {
 
 			const coords = coordsC || coordsA;
 
-			const libMap = new maplibregl.Map({
+			const libMap = new Map({
 				container: mapContainerRef.current,
 				style: "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json",
 				center: coords ? [coords.lon, coords.lat] : undefined,
