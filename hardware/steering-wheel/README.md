@@ -9,7 +9,10 @@ and still an X1 Carbon project (re-slice for P1S).
 
 - Window through the face: 90.4 x 51.0 (the exact recessed dashboard panel; 1.6 mm below the bezel).
 - Rear pocket: 95.0 x 62.6, from the back face forward to 5 mm behind the front plane of the panel,
-  leaving a ~5 mm front lip that the module's glass sits against. Pocket is centred on the window.
+  leaving a ~5 mm front lip that the module's glass sits against. Pocket sits 0.7 mm below the
+  window centre so the LED hole row clears its roof.
+- LED holes straight through the body, front to back: 17 x dia 4.0 mm along the top dot row and
+  3 + 3 x dia 2.6 mm for the side dot columns (at x = +/-53.9, z = 53.6 / 59.0 / 64.3).
 - The old `Algemeen-Kubus` support blocker is removed, so slicer supports are generated for the
   roof of the window and pocket.
 
