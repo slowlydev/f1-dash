@@ -3,6 +3,7 @@
 import Gauge from "./Gauge";
 
 import { useSettingsStore } from "@/stores/useSettingsStore";
+import { convertTemperature } from "@/lib/temperature";
 
 type Props = {
 	/** temperature in degrees Celsius, as sent by the data feed */
@@ -12,7 +13,7 @@ type Props = {
 
 export default function TemperatureComplication({ value, label }: Props) {
 	const temperatureUnit = useSettingsStore((state) => state.temperatureUnit);
-	const shown = temperatureUnit === "fahrenheit" ? Math.round((value * 9) / 5 + 32) : value;
+	const shown = convertTemperature(value, temperatureUnit);
 
 	return (
 		<div className="relative flex h-[55px] w-[55px] items-center justify-center rounded-full bg-black">
