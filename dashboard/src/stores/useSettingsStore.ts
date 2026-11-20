@@ -2,6 +2,7 @@ import { persist, createJSONStorage, subscribeWithSelector } from "zustand/middl
 import { create } from "zustand";
 
 type SpeedUnit = "metric" | "imperial";
+type TemperatureUnit = "celsius" | "fahrenheit";
 
 type SettingsStore = {
 	delay: number;
@@ -9,6 +10,9 @@ type SettingsStore = {
 
 	speedUnit: SpeedUnit;
 	setSpeedUnit: (speedUnit: SpeedUnit) => void;
+
+	temperatureUnit: TemperatureUnit;
+	setTemperatureUnit: (temperatureUnit: TemperatureUnit) => void;
 
 	showCornerNumbers: boolean;
 	setShowCornerNumbers: (showCornerNumbers: boolean) => void;
@@ -54,6 +58,9 @@ export const useSettingsStore = create<SettingsStore>()(
 
 				speedUnit: "metric",
 				setSpeedUnit: (speedUnit: SpeedUnit) => set({ speedUnit }),
+
+				temperatureUnit: "fahrenheit",
+				setTemperatureUnit: (temperatureUnit: TemperatureUnit) => set({ temperatureUnit }),
 
 				showCornerNumbers: false,
 				setShowCornerNumbers: (showCornerNumbers: boolean) => set({ showCornerNumbers }),
