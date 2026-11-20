@@ -105,6 +105,20 @@ export default function SettingsPage() {
 				]}
 			/>
 
+			<h2 className="my-4 text-2xl">Temperature</h2>
+
+			<p className="mb-4">Choose the unit in which you want to display track and air temperatures.</p>
+
+			<SegmentedControls
+				id="temperature-unit"
+				selected={settings.temperatureUnit}
+				onSelect={settings.setTemperatureUnit}
+				options={[
+					{ label: "°F", value: "fahrenheit" },
+					{ label: "°C", value: "celsius" },
+				]}
+			/>
+
 			<h2 className="my-4 text-2xl">Delay</h2>
 
 			<p className="mb-4">
