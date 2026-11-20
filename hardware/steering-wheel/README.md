@@ -1,24 +1,19 @@
-# Steering wheel screen area
+# Steering wheel with screen opening
 
-`max_verstappen_steering_wheel_screen_blocker.3mf` is the "Max Verstappen Steering Wheel F1" model
-(by marconooren on MakerWorld) with one change: the `Algemeen-Kubus` support blocker inside the wheel
-body is resized to the screen area. Nothing else in the project was touched, and it has not been
-opened in Bambu Studio yet. The original project is still an X1 Carbon project.
+`max_verstappen_steering_wheel_screen_window.3mf` is the "Max Verstappen Steering Wheel F1" model
+(by marconooren on MakerWorld) with the printed dashboard face removed and a pocket for the Guition
+JC3248W535 module. Paint colours on the rest of the wheel are kept. Not yet opened in Bambu Studio,
+and still an X1 Carbon project (re-slice for P1S).
 
-## Screen area (measured from the mesh)
+## What was cut (wheel-model mm, front is the -y side)
 
-| | Wheel-model mm | In the slicer (x0.95 object scale) |
-| --- | --- | --- |
-| Width, first dot edge to last dot edge | 90.0 | 85.5 |
-| Height, bottom of dots to 1 mm below the SPEED label | 58.75 | 55.8 |
-| Centred left to right, centre height above wheel origin | 46.1 | 43.8 |
+- Window through the face: 90.4 x 51.0 (the exact recessed dashboard panel; 1.6 mm below the bezel).
+- Rear pocket: 95.0 x 62.6, from the back face forward to 5 mm behind the front plane of the panel,
+  leaving a ~5 mm front lip that the module's glass sits against. Pocket is centred on the window.
+- The old `Algemeen-Kubus` support blocker is removed, so slicer supports are generated for the
+  roof of the window and pocket.
 
-- The top edge is the lowest point of the dot row (the row is slightly arched).
-- The blocker depth was left as it was.
-- The blocker only controls where supports go. The face is still a solid recessed plate, so the
-  window for the display has to be cut separately.
+## Module
 
-## Display notes
-
-The Guition JC3248W535 has a 73.4 x 49.0 mm visible area and a 94.5 x 62.0 mm module, so it sits
-behind the face with about 6 mm of border left and right and 3 mm top and bottom.
+94.5 x 62.0 mm front glass, 73.4 x 49.0 mm active area, four threaded brass inserts in the corner
+tabs on the back. Screw hole positions are not in this file yet.
